@@ -1,0 +1,186 @@
+// Artisan Connecté - Database Schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+model User {
+  id             String    @id @default(cuid())
+  email          String    @unique
+  name           String
+  password       String
+  phone          String?
+  role           String    @default("client") // client, artisan, admin
+  avatar         String?
+  location       String?
+  country        String?
+  bio            String?
+  isVerified     Boolean   @default(false)
+  emailVerified  Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  artisanProfile Artisan?
+  clientMissions Mission[] @relation("ClientMissions")
+  sentMessages   Message[] @relation("SentMessages")
+  reviewsGiven   Review[]  @relation("ReviewAuthor")
+  notifications  Notification[]
+
+  @@index([role])
+  @@index([location])
+  @@index([isVerified])
+  @@index([createdAt])
+}
+
+model Artisan {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  specialties     String   // JSON string of specialties array
+  skills          String   // JSON string of skills array
+  hourlyRate      Int      // in FCFA
+  experience      Int      // years
+  badge           String   @default("Nouveau") // Nouveau, Vérifié, Top, Élite
+  rating          Float    @default(0)
+  reviewCount     Int      @default(0)
+  missionCount    Int      @default(0)
+  isAvailable     Boolean  @default(true)
+  portfolio       String   // JSON string of portfolio items
+  certifications  String   // JSON string
+  latitude        Float?
+  longitude       Float?
+  completedAt     DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  missions    Mission[]
+  reviews     Review[]
+
+  @@index([rating])
+  @@index([badge])
+  @@index([isAvailable])
+  @@index([specialties])
+  @@index([createdAt])
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  icon        String
+  description String?
+  artisanCount Int    @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Mission {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  category    String
+  status      String   @default("ouverte") // ouverte, assignée, en_cours, terminée, annulée
+  budget      Int?     // in FCFA
+  location    String?
+  clientId    String
+  artisanId   String?
+  client      User     @relation("ClientMissions", fields: [clientId], references: [id])
+  artisan     Artisan? @relation(fields: [artisanId], references: [id])
+  messages    Message[]
+  review      Review?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status])
+  @@index([category])
+  @@index([clientId])
+  @@index([artisanId])
+  @@index([createdAt])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int      // 1-5
+  comment   String
+  authorId  String
+  artisanId String
+  missionId String   @unique
+  author    User     @relation("ReviewAuthor", fields: [authorId], references: [id])
+  artisan   Artisan  @relation(fields: [artisanId], references: [id])
+  mission   Mission  @relation(fields: [missionId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  content   String
+  senderId  String
+  missionId String
+  isRead    Boolean  @default(false)
+  sender    User     @relation("SentMessages", fields: [senderId], references: [id])
+  mission   Mission  @relation(fields: [missionId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@index([missionId])
+  @@index([senderId])
+  @@index([createdAt])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  type      String   @default("info") // info, success, warning, mission, message
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([isRead])
+  @@index([createdAt])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  email     String
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@index([email])
+  @@index([expiresAt])
+}
+
+model Payment {
+  id              String   @id @default(cuid())
+  userId          String
+  amount          Int      // in FCFA
+  currency        String   @default("FCFA")
+  method          String   // orange_money, mtn_money, wave, moov_money, card, cash
+  status          String   @default("pending") // pending, processing, completed, failed, refunded
+  phoneNumber     String?
+  cardLast4       String?
+  reference       String   @unique
+  description     String?
+  recipientId     String?
+  recipientName   String?
+  cinetPayTransId String?
+  metadata        String?  // JSON string for additional data
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([method])
+  @@index([reference])
+  @@index([createdAt])
+}
