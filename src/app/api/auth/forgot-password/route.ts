@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
     // Send email
     const emailResult = await sendEmail({
       to: email,
-      subject: '🔧 Artisan Connecté — Réinitialisation de votre mot de passe',
+      subject: '🔧 Artisan Connect — Réinitialisation de votre mot de passe',
       html: getResetPasswordEmailHtml(resetUrl),
     })
 

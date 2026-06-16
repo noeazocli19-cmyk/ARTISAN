@@ -1,4 +1,4 @@
-// Artisan Connecté - Database Schema
+// Artisan Connect - Database Schema
 
 generator client {
   provider = "prisma-client-js"

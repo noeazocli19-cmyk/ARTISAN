@@ -1,5 +1,5 @@
 // =============================================================================
-// Artisan Connecté — Global Application Store (Zustand v5 + persist)
+// Artisan Connect — Global Application Store (Zustand v5 + persist)
 // =============================================================================
 
 import { create } from "zustand";

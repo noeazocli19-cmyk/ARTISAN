@@ -272,7 +272,7 @@ function StepWelcome({ onNext }: { onNext: () => void }) {
         >
           Bienvenue sur{' '}
           <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 bg-clip-text text-transparent">
-            Artisan Connecté
+            Artisan Connect
           </span>{' '}
           !
         </motion.h2>
@@ -1053,7 +1053,7 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
                 <Wrench className="h-4 w-4 text-white" />
               </div>
               <span className="font-bold text-sm bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
-                Artisan Connecté
+                Artisan Connect
               </span>
             </div>
             <Button

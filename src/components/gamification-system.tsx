@@ -421,7 +421,7 @@ function ProfileHeader({ profile }: { profile: GamificationProfile }) {
 
           {/* User info */}
           <div className="flex-1 text-center sm:text-left">
-            <h2 className="text-xl sm:text-2xl font-bold">{user?.name || 'Artisan Connecté'}</h2>
+            <h2 className="text-xl sm:text-2xl font-bold">{user?.name || 'Artisan Connect'}</h2>
             <div className="flex items-center justify-center sm:justify-start gap-2 mt-1">
               <Crown className="h-4 w-4 text-amber-200" />
               <span className="text-amber-100 font-medium">{level.title}</span>

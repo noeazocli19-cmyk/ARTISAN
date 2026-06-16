@@ -1,5 +1,5 @@
-// Artisan Connecté - Service Worker
-const CACHE_NAME = 'artisan-connecte-v1';
+// Artisan Connect - Service Worker
+const CACHE_NAME = 'artisan-connect-v2-rename';
 const OFFLINE_URL = '/offline.html';
 
 // App shell resources to cache on install
@@ -75,7 +75,7 @@ self.addEventListener('fetch', (event) => {
               if (offlineResponse) return offlineResponse;
               // Fallback: basic offline message
               return new Response(
-                '<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Artisan Connecté - Hors ligne</title><style>body{display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;font-family:system-ui;background:#fffaf0;color:#92400e;text-align:center;padding:2rem}h1{font-size:1.5rem;margin-bottom:0.5rem}p{color:#78716c}</style></head><body><div><h1>🔌 Vous êtes hors ligne</h1><p>Artisan Connecté nécessite une connexion internet. Vérifiez votre connexion et réessayez.</p></div></body></html>',
+                '<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Artisan Connect - Hors ligne</title><style>body{display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;font-family:system-ui;background:#fffaf0;color:#92400e;text-align:center;padding:2rem}h1{font-size:1.5rem;margin-bottom:0.5rem}p{color:#78716c}</style></head><body><div><h1>🔌 Vous êtes hors ligne</h1><p>Artisan Connect nécessite une connexion internet. Vérifiez votre connexion et réessayez.</p></div></body></html>',
                 { headers: { 'Content-Type': 'text/html; charset=utf-8' } }
               );
             });

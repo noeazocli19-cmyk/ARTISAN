@@ -49,7 +49,7 @@ export async function sendEmail({ to, subject, html }: SendEmailOptions): Promis
       })
 
       const info = await testTransporter.sendMail({
-        from: '"Artisan Connecté" <noreply@artisan-connecte.com>',
+        from: '"Artisan Connect" <noreply@artisan-connecte.com>',
         to,
         subject,
         html,
@@ -72,7 +72,7 @@ export async function sendEmail({ to, subject, html }: SendEmailOptions): Promis
 
   try {
     const info = await transporter.sendMail({
-      from: '"Artisan Connecté" <noreply@artisan-connecte.com>',
+      from: '"Artisan Connect" <noreply@artisan-connecte.com>',
       to,
       subject,
       html,
@@ -102,7 +102,7 @@ export function getResetPasswordEmailHtml(resetUrl: string): string {
               <!-- Header -->
               <tr>
                 <td style="background: linear-gradient(135deg, #f59e0b, #ea580c); padding: 40px 40px 30px; text-align: center;">
-                  <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 800;">🔧 Artisan Connecté</h1>
+                  <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 800;">🔧 Artisan Connect</h1>
                   <p style="margin: 10px 0 0; color: rgba(255,255,255,0.85); font-size: 16px;">Réinitialisation de votre mot de passe</p>
                 </td>
               </tr>
@@ -111,7 +111,7 @@ export function getResetPasswordEmailHtml(resetUrl: string): string {
                 <td style="padding: 40px;">
                   <p style="margin: 0 0 20px; font-size: 16px; color: #333333;">Bonjour,</p>
                   <p style="margin: 0 0 20px; font-size: 16px; color: #555555; line-height: 1.6;">
-                    Vous avez demandé la réinitialisation de votre mot de passe sur <strong>Artisan Connecté</strong>.
+                    Vous avez demandé la réinitialisation de votre mot de passe sur <strong>Artisan Connect</strong>.
                     Cliquez sur le bouton ci-dessous pour créer un nouveau mot de passe :
                   </p>
                   <table role="presentation" style="margin: 30px auto;">
@@ -138,7 +138,7 @@ export function getResetPasswordEmailHtml(resetUrl: string): string {
               <tr>
                 <td style="padding: 24px 40px; background-color: #fafafa; text-align: center; border-top: 1px solid #eeeeee;">
                   <p style="margin: 0; font-size: 12px; color: #999999;">
-                    © 2025 Artisan Connecté — La 1ère plateforme d'artisans en Afrique<br>
+                    © 2025 Artisan Connect — La 1ère plateforme d'artisans en Afrique<br>
                     Cet email a été envoyé automatiquement, merci de ne pas y répondre.
                   </p>
                 </td>

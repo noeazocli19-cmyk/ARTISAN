@@ -355,7 +355,7 @@ const testimonials = [
   {
     name: "Ousmane Ba",
     role: "Propriétaire à Dakar",
-    text: "Artisan Connecté m'a permis de trouver un plombier exceptionnel en moins de 30 minutes. Le service était rapide, professionnel et le prix très raisonnable. Je recommande vivement !",
+    text: "Artisan Connect m'a permis de trouver un plombier exceptionnel en moins de 30 minutes. Le service était rapide, professionnel et le prix très raisonnable. Je recommande vivement !",
     rating: 5,
     avatar: "OB",
     avatarColor: "bg-amber-500",
@@ -363,7 +363,7 @@ const testimonials = [
   {
     name: "Aminata Koné",
     role: "Gérante d'hôtel à Abidjan",
-    text: "Nous utilisons Artisan Connecté pour tous nos besoins en maintenance. La qualité des artisans est constante et le support est toujours disponible. Un partenaire de confiance.",
+    text: "Nous utilisons Artisan Connect pour tous nos besoins en maintenance. La qualité des artisans est constante et le support est toujours disponible. Un partenaire de confiance.",
     rating: 5,
     avatar: "AK",
     avatarColor: "bg-emerald-500",
@@ -371,7 +371,7 @@ const testimonials = [
   {
     name: "Jean-Pierre Aka",
     role: "Architecte à Lomé",
-    text: "En tant qu'architecte, j'ai besoin d'artisans fiables pour mes projets. Artisan Connecté m'offre un vivier de professionnels vérifiés avec des avis authentiques. Indispensable !",
+    text: "En tant qu'architecte, j'ai besoin d'artisans fiables pour mes projets. Artisan Connect m'offre un vivier de professionnels vérifiés avec des avis authentiques. Indispensable !",
     rating: 5,
     avatar: "JA",
     avatarColor: "bg-orange-500",
@@ -379,7 +379,7 @@ const testimonials = [
   {
     name: "Mariam Doumbia",
     role: "Restauratrice à Bamako",
-    text: "Mon restaurant avait un problème électrique urgent un dimanche soir. Grâce à Artisan Connecté, un électricien est arrivé en 45 minutes. Service au top, je suis cliente pour la vie !",
+    text: "Mon restaurant avait un problème électrique urgent un dimanche soir. Grâce à Artisan Connect, un électricien est arrivé en 45 minutes. Service au top, je suis cliente pour la vie !",
     rating: 4,
     avatar: "MD",
     avatarColor: "bg-teal-500",
@@ -441,8 +441,8 @@ const trustFeatures = [
 
 const faqItems = [
   {
-    question: "Comment fonctionne Artisan Connecté ?",
-    answer: "Artisan Connecté est une plateforme qui met en relation les clients avec des artisans qualifiés et vérifiés à travers l'Afrique. Il vous suffit de décrire votre besoin, de recevoir des propositions d'artisans, et de choisir celui qui vous convient le mieux. Le processus est simple, rapide et sécurisé.",
+    question: "Comment fonctionne Artisan Connect ?",
+    answer: "Artisan Connect est une plateforme qui met en relation les clients avec des artisans qualifiés et vérifiés à travers l'Afrique. Il vous suffit de décrire votre besoin, de recevoir des propositions d'artisans, et de choisir celui qui vous convient le mieux. Le processus est simple, rapide et sécurisé.",
   },
   {
     question: "Comment les artisans sont-ils vérifiés ?",
@@ -457,12 +457,12 @@ const faqItems = [
     answer: "Votre satisfaction est notre priorité. Si le travail ne correspond pas à la description initiale, vous pouvez signaler un litige dans les 48 heures. Notre équipe de médiation examinera votre dossier et vous pourrez bénéficier d'un remboursement partiel ou total selon le cas.",
   },
   {
-    question: "Dans quels pays Artisan Connecté est-il disponible ?",
-    answer: "Artisan Connecté est actuellement disponible dans 15 pays africains : Sénégal, Côte d'Ivoire, Ghana, Togo, Mali, Guinée, Bénin, Burkina Faso, Cameroun, Gabon, Congo, RDC, Niger, Mauritanie et Cap-Vert. Nous étendons régulièrement notre couverture.",
+    question: "Dans quels pays Artisan Connect est-il disponible ?",
+    answer: "Artisan Connect est actuellement disponible dans 15 pays africains : Sénégal, Côte d'Ivoire, Ghana, Togo, Mali, Guinée, Bénin, Burkina Faso, Cameroun, Gabon, Congo, RDC, Niger, Mauritanie et Cap-Vert. Nous étendons régulièrement notre couverture.",
   },
   {
     question: "Comment devenir artisan sur la plateforme ?",
-    answer: "Pour rejoindre Artisan Connecté, créez un compte artisan, soumettez vos documents de vérification (identité, certifications, références), complétez votre profil avec vos compétences et tarifs, puis passez l'entretien de validation. Une fois approuvé, vous pourrez recevoir des demandes de clients.",
+    answer: "Pour rejoindre Artisan Connect, créez un compte artisan, soumettez vos documents de vérification (identité, certifications, références), complétez votre profil avec vos compétences et tarifs, puis passez l'entretien de validation. Une fois approuvé, vous pourrez recevoir des demandes de clients.",
   },
 ]
 
@@ -874,7 +874,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">clients</span>{" "}disent
             </motion.h2>
             <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground text-lg max-w-2xl mx-auto">
-              Des milliers de clients satisfaits font confiance à Artisan Connecté chaque jour.
+              Des milliers de clients satisfaits font confiance à Artisan Connect chaque jour.
             </motion.p>
           </motion.div>
 
@@ -1072,7 +1072,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">fréquentes</span>
             </motion.h2>
             <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground text-lg">
-              Tout ce que vous devez savoir sur Artisan Connecté.
+              Tout ce que vous devez savoir sur Artisan Connect.
             </motion.p>
           </motion.div>
 
@@ -1133,7 +1133,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-600">
                   <Wrench className="h-5 w-5 text-white" />
                 </div>
-                <span className="text-lg font-bold text-white">Artisan Connecté</span>
+                <span className="text-lg font-bold text-white">Artisan Connect</span>
               </div>
               <p className="text-sm text-neutral-400 leading-relaxed mb-6">
                 La première plateforme africaine qui connecte les clients avec des artisans qualifiés et vérifiés.
@@ -1176,7 +1176,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
           </div>
 
           <div className="mt-12 pt-8 border-t border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-neutral-500">&copy; 2025 Artisan Connecté. Tous droits réservés.</p>
+            <p className="text-sm text-neutral-500">&copy; 2025 Artisan Connect. Tous droits réservés.</p>
             <div className="flex items-center gap-4 text-sm text-neutral-500">
               <a href="#" className="hover:text-amber-400 transition-colors">Conditions</a>
               <a href="#" className="hover:text-amber-400 transition-colors">Confidentialité</a>
@@ -1289,7 +1289,7 @@ export default function Home() {
               <Wrench className="h-7 w-7 text-white" />
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
-              Artisan Connecté
+              Artisan Connect
             </span>
           </div>
           <motion.div

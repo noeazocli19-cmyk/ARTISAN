@@ -328,7 +328,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
     setShowConfetti(true)
     setTimeout(() => setShowConfetti(false), 3000)
 
-    const shareText = `Rejoignez Artisan Connecté avec mon code de parrainage : ${stats.code}. Trouvez les meilleurs artisans en Afrique !`
+    const shareText = `Rejoignez Artisan Connect avec mon code de parrainage : ${stats.code}. Trouvez les meilleurs artisans en Afrique !`
     const shareUrl = `https://artisan-connecte.com/ref/${stats.code}`
 
     switch (method) {
@@ -343,7 +343,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
         break
       }
       case 'email': {
-        const subject = encodeURIComponent('Rejoignez Artisan Connecté !')
+        const subject = encodeURIComponent('Rejoignez Artisan Connect !')
         const body = encodeURIComponent(shareText + '\n\n' + shareUrl)
         window.open(`mailto:?subject=${subject}&body=${body}`, '_blank')
         break
@@ -772,7 +772,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                   ?
                 </h2>
                 <p className="text-muted-foreground text-base max-w-2xl mx-auto">
-                  Gagnez des crédits en invitant vos amis à rejoindre Artisan Connecté. C&apos;est simple, rapide et gratifiant !
+                  Gagnez des crédits en invitant vos amis à rejoindre Artisan Connect. C&apos;est simple, rapide et gratifiant !
                 </p>
               </motion.div>
 
@@ -793,7 +793,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                     step: 2,
                     emoji: '👥',
                     title: 'Ils s\'inscrivent',
-                    description: 'Vos amis créent un compte sur Artisan Connecté en utilisant votre code de parrainage.',
+                    description: 'Vos amis créent un compte sur Artisan Connect en utilisant votre code de parrainage.',
                     icon: UserPlus,
                     gradient: 'from-orange-400 to-orange-600',
                     bg: 'from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/30',

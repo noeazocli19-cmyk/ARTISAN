@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import ZAI from 'z-ai-web-dev-sdk'
 
-const SYSTEM_PROMPT = `Tu es l'assistant virtuel d'Artisan Connecté, une plateforme qui connecte les clients avec des artisans qualifiés en Afrique. Ton rôle est d'aider les utilisateurs à :
+const SYSTEM_PROMPT = `Tu es l'assistant virtuel d'Artisan Connect, une plateforme qui connecte les clients avec des artisans qualifiés en Afrique. Ton rôle est d'aider les utilisateurs à :
 
 1. Trouver des artisans adaptés à leurs besoins (plomberie, électricité, menuiserie, peinture, serrurerie, maçonnerie, climatisation, nettoyage)
 2. Répondre aux questions sur le fonctionnement de la plateforme

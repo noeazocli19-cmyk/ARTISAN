@@ -116,7 +116,7 @@ export function InstallPrompt() {
                 {/* Content */}
                 <div className="flex-1 min-w-0">
                   <h3 className="font-bold text-sm text-amber-900 dark:text-amber-100">
-                    Installer Artisan Connecté
+                    Installer Artisan Connect
                   </h3>
                   <p className="mt-1 text-xs text-amber-700/80 dark:text-amber-300/80 leading-relaxed">
                     Accédez rapidement à nos artisans depuis votre écran d&apos;accueil. Fonctionne même hors connexion !

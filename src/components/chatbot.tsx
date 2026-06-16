@@ -12,7 +12,7 @@ interface ChatMessage {
   content: string
 }
 
-const WELCOME_MESSAGE = 'Bonjour ! 👋 Je suis l\'assistant Artisan Connecté. Comment puis-je vous aider à trouver l\'artisan idéal ?'
+const WELCOME_MESSAGE = 'Bonjour ! 👋 Je suis l\'assistant Artisan Connect. Comment puis-je vous aider à trouver l\'artisan idéal ?'
 
 export function Chatbot() {
   const [isOpen, setIsOpen] = useState(false)
@@ -128,7 +128,7 @@ export function Chatbot() {
                   <Wrench className="h-5 w-5 text-white" />
                 </div>
                 <div>
-                  <p className="font-semibold text-sm">Assistant Artisan Connecté</p>
+                  <p className="font-semibold text-sm">Assistant Artisan Connect</p>
                   <p className="text-xs text-white/80">En ligne</p>
                 </div>
               </div>

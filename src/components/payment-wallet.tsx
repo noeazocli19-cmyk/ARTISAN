@@ -401,7 +401,7 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
           createdAt: p.createdAt,
           type: p.recipientId ? 'payment' as const : 'receipt' as const,
           description: p.description || `Paiement via ${METHOD_BADGE_MAP[p.method]?.label || p.method}`,
-          recipientName: p.recipientName || 'Artisan Connecté',
+          recipientName: p.recipientName || 'Artisan Connect',
         }))
         setTransactions(apiTransactions)
         if (data.summary) {
@@ -1247,7 +1247,7 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
               Déposer de l&apos;argent
             </DialogTitle>
             <DialogDescription>
-              Ajoutez des fonds à votre portefeuille Artisan Connecté
+              Ajoutez des fonds à votre portefeuille Artisan Connect
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">

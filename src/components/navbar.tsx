@@ -102,7 +102,7 @@ export function Navbar({ onOpenAuth, onSearch }: NavbarProps) {
             <Wrench className="h-5 w-5 text-white" />
           </div>
           <span className="text-lg font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
-            Artisan Connecté
+            Artisan Connect
           </span>
         </button>
 

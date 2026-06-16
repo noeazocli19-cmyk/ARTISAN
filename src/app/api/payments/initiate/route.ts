@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
         transactionId: reference,
         amount,
         currency: 'XOF', // FCFA = XOF in ISO 4217
-        description: description || `Paiement Artisan Connecté - ${reference}`,
+        description: description || `Paiement Artisan Connect - ${reference}`,
         customerName: payload.email.split('@')[0],
         customerEmail: payload.email,
         customerPhoneNumber: phoneNumber,

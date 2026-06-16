@@ -238,7 +238,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
                 <Wrench className="h-5 w-5 text-white" />
               </div>
-              <DialogTitle className="text-white text-xl">Artisan Connecté</DialogTitle>
+              <DialogTitle className="text-white text-xl">Artisan Connect</DialogTitle>
             </div>
             <p className="text-white/80 text-sm">Connectez-vous ou créez votre compte</p>
           </DialogHeader>

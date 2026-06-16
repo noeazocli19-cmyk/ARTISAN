@@ -476,7 +476,7 @@ function ComparisonCards({ inView }: { inView: boolean }) {
         <CardHeader>
           <CardTitle className="text-xl font-bold flex items-center gap-2">
             <Shield className="h-5 w-5 text-amber-500" />
-            Pourquoi choisir Artisan Connecté
+            Pourquoi choisir Artisan Connect
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -551,7 +551,7 @@ export function AnimatedStats() {
             Nos chiffres parlent
           </Badge>
           <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700 bg-clip-text text-transparent">
-            Artisan Connecté en chiffres
+            Artisan Connect en chiffres
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-base sm:text-lg">
             Une plateforme en croissance exponentielle qui transforme la manière dont les artisans et les clients se rencontrent en Afrique de l&apos;Ouest.
