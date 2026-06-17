@@ -281,7 +281,6 @@ function getRelativeTime(iso: string): string {
 }
 
 function validatePhone(phone: string): boolean {
-  // Format: +2XX XXX XXX XXX or local format
   const cleaned = phone.replace(/\s/g, '')
   return /^\+?2\d{2}\d{3}\d{3}\d{3}$/.test(cleaned) || /^\d{8,12}$/.test(cleaned)
 }
@@ -355,7 +354,7 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
   const [transactionsLoading, setTransactionsLoading] = useState(true)
 
   // Send payment state
-  const [paymentStep, setPaymentStep] = useState(0) // 0=method, 1=details, 2=confirm
+  const [paymentStep, setPaymentStep] = useState(0)
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | null>(null)
   const [payAmount, setPayAmount] = useState(initialAmount?.toString() || '')
   const [payPhone, setPayPhone] = useState('')
@@ -374,13 +373,40 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
   // Deposit dialog
   const [depositOpen, setDepositOpen] = useState(false)
   const [depositAmount, setDepositAmount] = useState('')
+  const [depositMethod, setDepositMethod] = useState<PaymentMethod>('orange_money')
+  const [depositProcessing, setDepositProcessing] = useState(false)
 
   // Withdraw dialog
   const [withdrawOpen, setWithdrawOpen] = useState(false)
   const [withdrawAmount, setWithdrawAmount] = useState('')
+  const [withdrawMethod, setWithdrawMethod] = useState<PaymentMethod>('orange_money')
+  const [withdrawProcessing, setWithdrawProcessing] = useState(false)
 
-  // ---- Derived ----
-  // Fetch transactions from API
+  // Kkiapay widget script loaded?
+  const [kkiapayLoaded, setKkiapayLoaded] = useState(false)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    if ((window as unknown as { kkWidgetLoaded?: boolean }).kkWidgetLoaded) {
+      setKkiapayLoaded(true)
+      return
+    }
+    const existing = document.querySelector('script[src="https://cdn.kkiapay.me/kkiapay.js"]')
+    if (existing) {
+      setKkiapayLoaded(true)
+      return
+    }
+    const script = document.createElement('script')
+    script.src = 'https://cdn.kkiapay.me/kkiapay.js'
+    script.async = true
+    script.onload = () => {
+      ;(window as unknown as { kkWidgetLoaded?: boolean }).kkWidgetLoaded = true
+      setKkiapayLoaded(true)
+    }
+    document.head.appendChild(script)
+  }, [])
+
+  // ---- Fetch transactions from API ----
   const fetchTransactions = useCallback(async () => {
     setTransactionsLoading(true)
     try {
@@ -424,16 +450,10 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
 
   const filteredTransactions = useMemo(() => {
     let filtered = [...transactions]
-
-    // Type filter
     if (historyFilter === 'payments') filtered = filtered.filter(t => t.type === 'payment')
     else if (historyFilter === 'receipts') filtered = filtered.filter(t => t.type === 'receipt')
     else if (historyFilter === 'refunds') filtered = filtered.filter(t => t.type === 'refund')
-
-    // Method filter
     if (historyMethod !== 'all') filtered = filtered.filter(t => t.method === historyMethod)
-
-    // Search
     if (historySearch.trim()) {
       const q = historySearch.toLowerCase()
       filtered = filtered.filter(t =>
@@ -442,8 +462,6 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
         t.reference.toLowerCase().includes(q)
       )
     }
-
-    // Date range
     if (historyDateFrom) {
       const from = new Date(historyDateFrom)
       filtered = filtered.filter(t => new Date(t.createdAt) >= from)
@@ -453,9 +471,8 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
       to.setHours(23, 59, 59)
       filtered = filtered.filter(t => new Date(t.createdAt) <= to)
     }
-
     return filtered
-  }, [historyFilter, historyMethod, historySearch, historyDateFrom, historyDateTo])
+  }, [transactions, historyFilter, historyMethod, historySearch, historyDateFrom, historyDateTo])
 
   // ---- Handlers ----
   const handleSelectMethod = useCallback((method: PaymentMethod) => {
@@ -465,7 +482,6 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
 
   const handlePaySubmit = useCallback(async () => {
     if (!payAmount || !selectedMethod) return
-    // Phone required for Mobile Money
     const momoMethods = ['orange_money', 'mtn_money', 'wave', 'moov_money']
     if (momoMethods.includes(selectedMethod) && !payPhone) return
 
@@ -493,19 +509,15 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
         throw new Error(data.error || 'Erreur de paiement')
       }
 
-      // If CinetPay returns a payment URL, redirect the user
       if (data.paymentUrl) {
         window.open(data.paymentUrl, '_blank')
       }
 
-      // Payment initiated successfully
       setIsProcessing(false)
       setPaymentSuccess(true)
-      // Refresh transactions
       fetchTransactions()
     } catch (err) {
       setIsProcessing(false)
-      // Show error in payment step
       alert(err instanceof Error ? err.message : 'Erreur de paiement')
     }
   }, [payAmount, payPhone, selectedMethod, payReference, recipientId, fetchTransactions])
@@ -521,8 +533,109 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
     setPaymentSuccess(false)
   }, [initialAmount])
 
+  // ---- Deposit handler (uses Kkiapay widget) ----
+  const handleDeposit = useCallback(async () => {
+    const amt = Number(depositAmount)
+    if (!amt || amt <= 0) return
+
+    setDepositProcessing(true)
+    try {
+      const token = (useAppStore.getState() as { token: string | null }).token
+      const res = await fetch('/api/payments/initiate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          amount: amt,
+          method: depositMethod,
+          type: 'deposit',
+          phoneNumber: undefined,
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Erreur dépôt')
+
+      if (data.provider === 'kkiapay' && kkiapayLoaded) {
+        const w = window as unknown as {
+          openKkiapayWidget: (cfg: Record<string, unknown>) => void
+          addSuccessListener?: (cb: (d: { transactionId: string }) => void) => void
+          addFailedListener?: (cb: (d: unknown) => void) => void
+        }
+        if (typeof w.openKkiapayWidget === 'function') {
+          w.openKkiapayWidget({
+            amount: data.kkiapay.amount,
+            key: data.kkiapay.publicKey,
+            sandbox: data.kkiapay.sandbox,
+            callback: data.kkiapay.callback,
+            data: { reference: data.reference },
+          })
+          w.addSuccessListener?.(({ transactionId }) => {
+            fetch(`/api/payments/verify?reference=${data.reference}&transactionId=${transactionId}&redirect=false`, {
+              headers: { 'Authorization': `Bearer ${token}` },
+            }).then(() => {
+              fetchTransactions()
+              setDepositOpen(false)
+              setDepositAmount('')
+            })
+          })
+          w.addFailedListener?.(() => {
+            setDepositProcessing(false)
+          })
+          setDepositProcessing(false)
+          return
+        }
+      }
+
+      setTimeout(() => {
+        fetchTransactions()
+        setDepositOpen(false)
+        setDepositAmount('')
+        setDepositProcessing(false)
+      }, 1500)
+    } catch (err) {
+      setDepositProcessing(false)
+      alert(err instanceof Error ? err.message : 'Erreur lors du dépôt')
+    }
+  }, [depositAmount, depositMethod, kkiapayLoaded, fetchTransactions])
+
+  // ---- Withdraw handler ----
+  const handleWithdraw = useCallback(async () => {
+    const amt = Number(withdrawAmount)
+    if (!amt || amt <= 0 || amt > balance) return
+
+    setWithdrawProcessing(true)
+    try {
+      const token = (useAppStore.getState() as { token: string | null }).token
+      const res = await fetch('/api/payments/withdraw', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          amount: amt,
+          method: withdrawMethod,
+          phoneNumber: user?.phone || '0000000000',
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Erreur retrait')
+
+      setTimeout(() => {
+        fetchTransactions()
+        setWithdrawOpen(false)
+        setWithdrawAmount('')
+        setWithdrawProcessing(false)
+      }, 1500)
+    } catch (err) {
+      setWithdrawProcessing(false)
+      alert(err instanceof Error ? err.message : 'Erreur lors du retrait')
+    }
+  }, [withdrawAmount, withdrawMethod, balance, user, fetchTransactions])
+
   const handleExportCSV = useCallback(() => {
-    // Export real transactions to CSV
     const csv = [
       'Référence,Description,Montant,Méthode,Statut,Date',
       ...filteredTransactions.map(t =>
@@ -536,14 +649,12 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
     link.download = 'transactions_artisan_connecte.csv'
     link.click()
     URL.revokeObjectURL(url)
-  }, [])
+  }, [filteredTransactions])
 
   const phoneValid = selectedMethod && ['orange_money', 'mtn_money', 'wave', 'moov_money'].includes(selectedMethod) ? validatePhone(payPhone) : true
   const canProceed = Number(payAmount) > 0 && (phoneValid || !selectedMethod || !['orange_money', 'mtn_money', 'wave', 'moov_money'].includes(selectedMethod)) && (['orange_money', 'mtn_money', 'wave', 'moov_money'].includes(selectedMethod || '') ? payPhone.length > 0 : true)
 
-  // Quick amounts
-  const quickAmounts = [5000, 10000, 15000, 25000, 50000]
-
+  const quickAmounts = [5000, 10000, 15000, 25000, 50000] 
   return (
     <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-6">
@@ -692,7 +803,6 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
           <TabsContent value="send">
             <AnimatePresence mode="wait">
               {paymentSuccess ? (
-                // Success Screen
                 <motion.div
                   key="success"
                   initial={{ opacity: 0, scale: 0.9 }}
@@ -750,7 +860,6 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
                   </motion.div>
                 </motion.div>
               ) : isProcessing ? (
-                // Processing Screen
                 <motion.div
                   key="processing"
                   initial={{ opacity: 0 }}
@@ -776,7 +885,6 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
                   </div>
                 </motion.div>
               ) : (
-                // Step-by-step Payment Flow
                 <motion.div key="flow" initial="hidden" animate="visible" variants={staggerContainer}>
                   {/* Step indicator */}
                   <motion.div variants={fadeInUp} className="mb-6">
@@ -845,7 +953,6 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
                         transition={{ duration: 0.3 }}
                         className="space-y-5"
                       >
-                        {/* Selected method badge */}
                         <div className="flex items-center gap-3 p-3 rounded-xl bg-muted/50">
                           <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${PAYMENT_METHODS.find(m => m.id === selectedMethod)?.bgColor}`}>
                             <span className="text-lg">{PAYMENT_METHODS.find(m => m.id === selectedMethod)?.icon}</span>
@@ -859,7 +966,6 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
                           </Button>
                         </div>
 
-                        {/* Amount */}
                         <div className="space-y-2">
                           <Label htmlFor="pay-amount">Montant</Label>
                           <div className="relative">
@@ -874,7 +980,6 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
                             />
                             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground">FCFA</span>
                           </div>
-                          {/* Quick amounts */}
                           <div className="flex flex-wrap gap-2">
                             {quickAmounts.map((amt) => (
                               <Button
@@ -890,7 +995,6 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
                           </div>
                         </div>
 
-                        {/* Phone number (for mobile money) */}
                         {['orange_money', 'mtn_money', 'wave', 'moov_money'].includes(selectedMethod) && (
                           <div className="space-y-2">
                             <Label htmlFor="pay-phone">Numéro de téléphone</Label>
@@ -911,7 +1015,6 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
                           </div>
                         )}
 
-                        {/* Reference */}
                         <div className="space-y-2">
                           <Label htmlFor="pay-ref">Référence (optionnel)</Label>
                           <div className="relative">
@@ -926,7 +1029,6 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
                           </div>
                         </div>
 
-                        {/* Note */}
                         <div className="space-y-2">
                           <Label htmlFor="pay-note">Note (optionnel)</Label>
                           <Input
@@ -938,7 +1040,6 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
                           />
                         </div>
 
-                        {/* Actions */}
                         <div className="flex gap-3 pt-2">
                           <Button variant="outline" className="flex-1" onClick={() => setPaymentStep(0)}>
                             Retour
@@ -1057,7 +1158,6 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
               )}
             </AnimatePresence>
           </TabsContent>
-
           {/* ===================== HISTORY TAB ===================== */}
           <TabsContent value="history">
             <motion.div initial="hidden" animate="visible" variants={staggerContainer} className="space-y-4">
@@ -1278,22 +1378,52 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
                 ))}
               </div>
             </div>
-            <div className="rounded-xl bg-emerald-50 dark:bg-emerald-950/30 p-3">
-              <p className="text-xs text-emerald-700 dark:text-emerald-300">
-                Le dépôt sera crédité sur votre portefeuille dans les minutes qui suivent.
-              </p>
+            <div className="space-y-2">
+              <Label>Méthode de dépôt</Label>
+              <Select value={depositMethod} onValueChange={(v) => setDepositMethod(v as PaymentMethod)}>
+                <SelectTrigger className="h-10">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {PAYMENT_METHODS.filter(m => ['orange_money', 'mtn_money', 'wave', 'moov_money', 'card'].includes(m.id)).map((m) => (
+                    <SelectItem key={m.id} value={m.id}>
+                      {m.icon} {m.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
+            {Number(depositAmount) > 0 && (
+              <div className="rounded-xl bg-muted/50 p-3 text-xs space-y-1">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Montant déposé</span>
+                  <span className="font-medium">{Number(depositAmount).toLocaleString('fr-FR')} FCFA</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Commission (2%)</span>
+                  <span className="font-medium">{Math.max(100, Math.min(5000, Math.round(Number(depositAmount) * 0.02))).toLocaleString('fr-FR')} FCFA</span>
+                </div>
+                <div className="flex justify-between border-t pt-1 mt-1">
+                  <span className="font-medium">Total à payer</span>
+                  <span className="font-bold text-emerald-600 dark:text-emerald-400">{(Number(depositAmount) + Math.max(100, Math.min(5000, Math.round(Number(depositAmount) * 0.02)))).toLocaleString('fr-FR')} FCFA</span>
+                </div>
+              </div>
+            )}
           </div>
           <div className="flex gap-3">
-            <Button variant="outline" className="flex-1" onClick={() => setDepositOpen(false)}>
+            <Button variant="outline" className="flex-1" onClick={() => setDepositOpen(false)} disabled={depositProcessing}>
               Annuler
             </Button>
             <Button
               className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0"
-              disabled={!depositAmount || Number(depositAmount) <= 0}
-              onClick={() => setDepositOpen(false)}
+              disabled={!depositAmount || Number(depositAmount) <= 0 || depositProcessing}
+              onClick={handleDeposit}
             >
-              Confirmer le dépôt
+              {depositProcessing ? (
+                <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Traitement...</>
+              ) : (
+                'Confirmer le dépôt'
+              )}
             </Button>
           </div>
         </DialogContent>
@@ -1354,7 +1484,7 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
             </div>
             <div className="space-y-2">
               <Label>Méthode de retrait</Label>
-              <Select defaultValue="orange_money">
+              <Select value={withdrawMethod} onValueChange={(v) => setWithdrawMethod(v as PaymentMethod)}>
                 <SelectTrigger className="h-10">
                   <SelectValue />
                 </SelectTrigger>
@@ -1369,15 +1499,19 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
             </div>
           </div>
           <div className="flex gap-3">
-            <Button variant="outline" className="flex-1" onClick={() => setWithdrawOpen(false)}>
+            <Button variant="outline" className="flex-1" onClick={() => setWithdrawOpen(false)} disabled={withdrawProcessing}>
               Annuler
             </Button>
             <Button
               className="flex-1 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white border-0"
-              disabled={!withdrawAmount || Number(withdrawAmount) <= 0 || Number(withdrawAmount) > balance}
-              onClick={() => setWithdrawOpen(false)}
+              disabled={!withdrawAmount || Number(withdrawAmount) <= 0 || Number(withdrawAmount) > balance || withdrawProcessing}
+              onClick={handleWithdraw}
             >
-              Confirmer le retrait
+              {withdrawProcessing ? (
+                <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Traitement...</>
+              ) : (
+                'Confirmer le retrait'
+              )}
             </Button>
           </div>
         </DialogContent>

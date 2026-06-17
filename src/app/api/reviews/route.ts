@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { verifyToken } from '@/lib/auth'
 
 export async function GET(request: NextRequest) {
   try {
@@ -38,14 +39,28 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  // Auth: extract user from JWT instead of trusting body.authorId
+  const authHeader = request.headers.get('authorization')
+  const token = authHeader?.replace('Bearer ', '')
+  if (!token) {
+    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+  }
+  const payload = verifyToken(token)
+  if (!payload) {
+    return NextResponse.json({ error: 'Token invalide' }, { status: 401 })
+  }
+
   try {
     const body = await request.json()
-    const { rating, comment, authorId, artisanId, missionId } = body
+    const { rating, comment, artisanId, missionId } = body
+
+    // Use authenticated user's ID as the review author
+    const authorId = payload.userId
 
     // Validation
-    if (!rating || !comment || !authorId || !artisanId || !missionId) {
+    if (!rating || !comment || !artisanId || !missionId) {
       return NextResponse.json(
-        { error: 'Note, commentaire, authorId, artisanId et missionId sont requis' },
+        { error: 'Note, commentaire, artisanId et missionId sont requis' },
         { status: 400 }
       )
     }

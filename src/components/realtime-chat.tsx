@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { io } from 'socket.io-client'
+import { io, type Socket } from 'socket.io-client'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
+import { useAppStore } from '@/lib/store'
 import {
   ArrowLeft,
   Send,
@@ -48,6 +49,30 @@ interface ChatRoom {
   lastMessageTime: number
   unreadCount: number
 }
+
+// Default demo rooms (the server doesn't manage room lists yet — these let users test the chat)
+const DEFAULT_ROOMS: ChatRoom[] = [
+  {
+    id: 'room-general',
+    name: 'Salon général',
+    participants: ['user-1', 'user-2'],
+    artisanName: 'Communauté Artisan Connect',
+    artisanId: 'community',
+    lastMessage: 'Bienvenue dans le chat !',
+    lastMessageTime: Date.now(),
+    unreadCount: 0,
+  },
+  {
+    id: 'room-support',
+    name: 'Support',
+    participants: ['user-1', 'support'],
+    artisanName: 'Équipe Support',
+    artisanId: 'support',
+    lastMessage: 'Comment pouvons-nous vous aider ?',
+    lastMessageTime: Date.now() - 3600000,
+    unreadCount: 0,
+  },
+]
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helpers
@@ -112,8 +137,6 @@ const QUICK_EMOJIS = [
   '💡', '📞', '💼', '⭐', '🤝', '❤️', '🎉', '🔥',
 ]
 
-const CURRENT_USER_ID = 'user-1'
-
 // ─────────────────────────────────────────────────────────────────────────────
 // Component
 // ─────────────────────────────────────────────────────────────────────────────
@@ -124,9 +147,14 @@ interface RealtimeChatProps {
 }
 
 export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
+  // ── Real user from store ───────────────────────────────────────────────
+  const { user } = useAppStore()
+  const CURRENT_USER_ID = user?.id || 'guest-' + Math.random().toString(36).slice(2, 8)
+  const CURRENT_USER_NAME = user?.name || 'Invité'
+
   // ── State ────────────────────────────────────────────────────────────────
   const [isConnected, setIsConnected] = useState(false)
-  const [rooms, setRooms] = useState<ChatRoom[]>([])
+  const [rooms, setRooms] = useState<ChatRoom[]>(DEFAULT_ROOMS)
   const [activeRoomId, setActiveRoomId] = useState<string | null>(null)
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [messageInput, setMessageInput] = useState('')
@@ -165,34 +193,32 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
 
     socketInstance.on('connect', () => {
       setIsConnected(true)
-      socketInstance.emit('authenticate', { userId: CURRENT_USER_ID })
     })
 
     socketInstance.on('disconnect', () => {
       setIsConnected(false)
     })
 
-    socketInstance.on('rooms', (data: ChatRoom[]) => {
-      setRooms(data)
-    })
-
-    socketInstance.on('room-messages', (data: { roomId: string; messages: ChatMessage[] }) => {
-      if (data.roomId === activeRoomIdRef.current) {
-        setMessages(data.messages)
-      }
-    })
-
-    socketInstance.on('new-message', (message: ChatMessage) => {
+    // Server emits `receive_message` (snake_case) when a message is broadcast
+    socketInstance.on('receive_message', (message: { id: string; roomId: string; message: string; senderId: string; senderName: string; senderAvatar?: string; timestamp: number }) => {
       if (message.roomId === activeRoomIdRef.current) {
-        setMessages((prev) => [...prev, message])
+        setMessages((prev) => [...prev, {
+          id: message.id,
+          content: message.message,
+          senderId: message.senderId,
+          senderName: message.senderName,
+          roomId: message.roomId,
+          timestamp: message.timestamp,
+          read: false,
+        }])
       }
     })
 
-    socketInstance.on('user-typing', (data: { roomId: string; userId: string; userName: string }) => {
-      if (data.roomId === activeRoomIdRef.current && data.userId !== CURRENT_USER_ID) {
+    socketInstance.on('user_typing', (data: { roomId: string; userId?: string; userName?: string }) => {
+      if (data.roomId === activeRoomIdRef.current && data.userId && data.userId !== CURRENT_USER_ID) {
         setTypingUsers((prev) => {
           const next = new Map(prev)
-          next.set(data.userId, data.userName)
+          next.set(data.userId!, data.userName || 'Utilisateur')
           return next
         })
         const existing = typingTimeoutRef.current.get(data.userId)
@@ -210,38 +236,28 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
       }
     })
 
-    socketInstance.on('user-stop-typing', (data: { roomId: string; userId: string }) => {
+    socketInstance.on('user_stop_typing', (data: { roomId: string; userId?: string }) => {
       if (data.roomId === activeRoomIdRef.current) {
         setTypingUsers((prev) => {
           const next = new Map(prev)
-          next.delete(data.userId)
+          next.delete(data.userId || '')
           return next
         })
       }
     })
 
-    socketInstance.on('messages-read', (data: { roomId: string; readBy: string }) => {
-      if (data.roomId === activeRoomIdRef.current) {
-        setMessages((prev) =>
-          prev.map((m) => (m.senderId === CURRENT_USER_ID ? { ...m, read: true } : m))
-        )
+    socketInstance.on('user_joined', (data: { roomId: string; userId?: string; userName?: string }) => {
+      if (data.userId && data.userId !== CURRENT_USER_ID) {
+        setOnlineUsers((prev) => {
+          const next = new Set(prev)
+          next.add(data.userId!)
+          return next
+        })
       }
     })
 
-    socketInstance.on('user-online', (data: { userId: string }) => {
-      setOnlineUsers((prev) => {
-        const next = new Set(prev)
-        next.add(data.userId)
-        return next
-      })
-    })
-
-    socketInstance.on('user-offline', (data: { userId: string }) => {
-      setOnlineUsers((prev) => {
-        const next = new Set(prev)
-        next.delete(data.userId)
-        return next
-      })
+    socketInstance.on('user_left', (data: { roomId: string; socketId: string }) => {
+      // Could update online status here
     })
 
     return () => {
@@ -253,9 +269,9 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
   // Re-join active room when socket reconnects
   useEffect(() => {
     if (socketRef.current && isConnected && activeRoomId) {
-      socketRef.current.emit('join-room', { roomId: activeRoomId })
+      socketRef.current.emit('join_room', { roomId: activeRoomId, userId: CURRENT_USER_ID, userName: CURRENT_USER_NAME })
     }
-  }, [isConnected, activeRoomId])
+  }, [isConnected, activeRoomId, CURRENT_USER_ID, CURRENT_USER_NAME])
 
   // ── Auto-scroll ──────────────────────────────────────────────────────────
   useEffect(() => {
@@ -268,16 +284,16 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
       const sock = socketRef.current
       if (sock) {
         if (activeRoomId) {
-          sock.emit('leave-room', { roomId: activeRoomId })
+          sock.emit('leave_room', { roomId: activeRoomId })
         }
-        sock.emit('join-room', { roomId })
+        sock.emit('join_room', { roomId, userId: CURRENT_USER_ID, userName: CURRENT_USER_NAME })
         setActiveRoomId(roomId)
         setMessages([])
         setTypingUsers(new Map())
         setMobileShowChat(true)
       }
     },
-    [activeRoomId]
+    [activeRoomId, CURRENT_USER_ID, CURRENT_USER_NAME]
   )
 
   // ── Send Message ─────────────────────────────────────────────────────────
@@ -285,23 +301,37 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
     const sock = socketRef.current
     if (!sock || !activeRoomId || !messageInput.trim()) return
 
-    sock.emit('send-message', {
-      roomId: activeRoomId,
-      content: messageInput.trim(),
+    const msgContent = messageInput.trim()
+    const msgId = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`
+
+    // Optimistic: add message to local list immediately
+    setMessages((prev) => [...prev, {
+      id: msgId,
+      content: msgContent,
       senderId: CURRENT_USER_ID,
-      senderName: 'Vous',
+      senderName: CURRENT_USER_NAME,
+      roomId: activeRoomId,
+      timestamp: Date.now(),
+      read: false,
+    }])
+
+    // Send to server (snake_case event, `message` field)
+    sock.emit('send_message', {
+      roomId: activeRoomId,
+      message: msgContent,
+      senderId: CURRENT_USER_ID,
+      senderName: CURRENT_USER_NAME,
     })
 
     setMessageInput('')
     setShowEmojiPicker(false)
 
-    sock.emit('stop-typing', {
+    sock.emit('stop_typing', {
       roomId: activeRoomId,
-      userId: CURRENT_USER_ID,
     })
 
     inputRef.current?.focus()
-  }, [activeRoomId, messageInput])
+  }, [activeRoomId, messageInput, CURRENT_USER_ID, CURRENT_USER_NAME])
 
   // ── Typing Indicator ─────────────────────────────────────────────────────
   const handleInputChange = useCallback(
@@ -314,17 +344,16 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
           sock.emit('typing', {
             roomId: activeRoomId,
             userId: CURRENT_USER_ID,
-            userName: 'Vous',
+            userName: CURRENT_USER_NAME,
           })
         } else {
-          sock.emit('stop-typing', {
+          sock.emit('stop_typing', {
             roomId: activeRoomId,
-            userId: CURRENT_USER_ID,
           })
         }
       }
     },
-    [activeRoomId]
+    [activeRoomId, CURRENT_USER_ID, CURRENT_USER_NAME]
   )
 
   // ── Back to rooms list (mobile) ──────────────────────────────────────────
@@ -332,7 +361,7 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
     setMobileShowChat(false)
     const sock = socketRef.current
     if (sock && activeRoomId) {
-      sock.emit('leave-room', { roomId: activeRoomId })
+      sock.emit('leave_room', { roomId: activeRoomId })
     }
     setActiveRoomId(null)
     setMessages([])
@@ -357,7 +386,6 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
 
   // ── Unread total ─────────────────────────────────────────────────────────
   const totalUnread = rooms.reduce((sum, r) => sum + r.unreadCount, 0)
-
   // ─────────────────────────────────────────────────────────────────────────
   // Render
   // ─────────────────────────────────────────────────────────────────────────

@@ -1,4 +1,6 @@
 // Artisan Connect - Database Schema
+// Provider: PostgreSQL (for Supabase production)
+// For local testing, you can switch provider to "sqlite" and remove directUrl
 
 generator client {
   provider = "prisma-client-js"
@@ -9,6 +11,7 @@ datasource db {
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
+
 model User {
   id             String    @id @default(cuid())
   email          String    @unique
@@ -30,6 +33,7 @@ model User {
   sentMessages   Message[] @relation("SentMessages")
   reviewsGiven   Review[]  @relation("ReviewAuthor")
   notifications  Notification[]
+  payments       Payment[]
 
   @@index([role])
   @@index([location])
@@ -161,26 +165,37 @@ model PasswordResetToken {
 }
 
 model Payment {
-  id              String   @id @default(cuid())
-  userId          String
-  amount          Int      // in FCFA
-  currency        String   @default("FCFA")
-  method          String   // orange_money, mtn_money, wave, moov_money, card, cash
-  status          String   @default("pending") // pending, processing, completed, failed, refunded
-  phoneNumber     String?
-  cardLast4       String?
-  reference       String   @unique
-  description     String?
-  recipientId     String?
-  recipientName   String?
-  cinetPayTransId String?
-  metadata        String?  // JSON string for additional data
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id                  String   @id @default(cuid())
+  userId              String
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  amount              Int      // total amount charged (incl. commission for deposits)
+  netAmount           Int      @default(0) // net amount (excluding commission)
+  commission          Int      @default(0) // platform commission in FCFA
+  currency            String   @default("FCFA")
+  type                String   @default("payment") // payment, deposit, withdrawal, transfer, refund
+  method              String   // orange_money, mtn_money, wave, moov_money, card, cash
+  status              String   @default("pending") // pending, processing, completed, failed, refunded
+  phoneNumber         String?
+  cardLast4           String?
+  reference           String   @unique
+  description         String?
+  recipientId         String?
+  recipientName       String?
+  missionId           String?
+
+  // Provider transaction IDs
+  cinetPayTransId     String?
+  kkiapayTransactionId String?
+
+  metadata            String?  // JSON string for additional data
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 
   @@index([userId])
   @@index([status])
   @@index([method])
+  @@index([type])
   @@index([reference])
   @@index([createdAt])
 }

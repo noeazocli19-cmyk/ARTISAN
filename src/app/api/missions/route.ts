@@ -3,6 +3,7 @@ import { db } from '@/lib/db'
 import { Prisma } from '@prisma/client'
 import { rateLimit } from '@/lib/rate-limit'
 import { cached, TTL, invalidateCachePrefix } from '@/lib/cache'
+import { verifyToken } from '@/lib/auth'
 
 export async function POST(request: NextRequest) {
   // Rate limiting for creating missions: 20 per 60 seconds
@@ -14,14 +15,28 @@ export async function POST(request: NextRequest) {
     )
   }
 
+  // Auth: extract user from JWT instead of trusting body.clientId
+  const authHeader = request.headers.get('authorization')
+  const token = authHeader?.replace('Bearer ', '')
+  if (!token) {
+    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+  }
+  const payload = verifyToken(token)
+  if (!payload) {
+    return NextResponse.json({ error: 'Token invalide' }, { status: 401 })
+  }
+
   try {
     const body = await request.json()
-    const { title, description, category, budget, location, clientId } = body
+    const { title, description, category, budget, location } = body
+
+    // Use authenticated user's ID as the mission client
+    const clientId = payload.userId
 
     // Validation
-    if (!title || !description || !category || !clientId) {
+    if (!title || !description || !category) {
       return NextResponse.json(
-        { error: 'Titre, description, catégorie et clientId sont requis' },
+        { error: 'Titre, description et catégorie sont requis' },
         { status: 400 }
       )
     }
