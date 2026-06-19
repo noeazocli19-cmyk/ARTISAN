@@ -1,79 +1,114 @@
 import { NextRequest, NextResponse } from 'next/server'
-import crypto from 'crypto'
 import { db } from '@/lib/db'
-import { sendEmail, getResetPasswordEmailHtml } from '@/lib/email'
-import { rateLimitByPreset } from '@/lib/rate-limit'
+import nodemailer from 'nodemailer'
 
+export const dynamic = 'force-dynamic'
+
+/**
+ * POST /api/auth/forgot-password
+ * Body: { email: string }
+ *
+ * Génère un code à 6 chiffres, l'envoie par email via Gmail,
+ * et stocke le code en base de données (table PasswordResetToken).
+ */
 export async function POST(request: NextRequest) {
-  // Rate limiting: 3 requests per 60 seconds
-  const limiter = rateLimitByPreset(request, 'auth')
-  if (!limiter.success) {
-    return NextResponse.json(
-      { error: 'Trop de tentatives. Veuillez réessayer dans quelques minutes.' },
-      { status: 429, headers: limiter.headers }
-    )
-  }
-
   try {
-    const body = await request.json()
-    const { email } = body
+    const { email } = await request.json()
 
     if (!email) {
       return NextResponse.json(
-        { error: 'L\'adresse email est requise' },
+        { error: 'Email requis' },
         { status: 400 }
       )
     }
 
-    // Find user by email
+    // Vérifier que l'utilisateur existe
     const user = await db.user.findUnique({ where: { email } })
-
-    // Always return success to prevent email enumeration
     if (!user) {
-      return NextResponse.json({
-        message: 'Si un compte existe avec cette adresse email, vous recevrez un lien de réinitialisation.',
-      })
+      // Pour des raisons de sécurité, on ne dit pas que l'email n'existe pas
+      // (pour éviter que quelqu'un ne devine les emails enregistrés)
+      return NextResponse.json(
+        { message: 'Si cet email existe, un code a été envoyé.' },
+        { status: 200 }
+      )
     }
 
-    // Generate a secure reset token
-    const token = crypto.randomBytes(32).toString('hex')
-    const expiresAt = new Date(Date.now() + 60 * 60 * 1000) // 1 hour
+    // Générer un code à 6 chiffres
+    const code = Math.floor(100000 + Math.random() * 900000).toString()
 
-    // Invalidate any existing tokens for this email
+    // Le code expire dans 15 minutes
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000)
+
+    // Invalider les anciens codes pour cet email
     await db.passwordResetToken.updateMany({
       where: { email, used: false },
       data: { used: true },
     })
 
-    // Create new reset token
+    // Stocker le nouveau code en base
     await db.passwordResetToken.create({
-      data: { token, email, expiresAt },
+      data: {
+        token: code,
+        email,
+        expiresAt,
+      },
     })
 
-    // Build reset URL
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : 'http://localhost:3000'
-    const resetUrl = `${baseUrl}/?reset_token=${token}`
+    // Configurer le transporteur Gmail
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    })
 
-    // Send email
-    const emailResult = await sendEmail({
+    // Envoyer l'email avec le code
+    const mailOptions = {
+      from: `"Artisan Connect" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
       to: email,
-      subject: '🔧 Artisan Connect — Réinitialisation de votre mot de passe',
-      html: getResetPasswordEmailHtml(resetUrl),
-    })
+      subject: '🔐 Réinitialisation de votre mot de passe - Artisan Connect',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background: linear-gradient(135deg, #f59e0b, #ea580c); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+            <h1 style="color: white; margin: 0;">Artisan Connect</h1>
+            <p style="color: white; opacity: 0.9;">Réinitialisation de mot de passe</p>
+          </div>
+          <div style="background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; border: 1px solid #e5e7eb;">
+            <h2 style="color: #1f2937;">Bonjour ${user.name},</h2>
+            <p style="color: #4b5563; font-size: 16px;">Vous avez demandé à réinitialiser votre mot de passe. Voici votre code de vérification :</p>
+            <div style="text-align: center; margin: 30px 0;">
+              <div style="display: inline-block; background: #f59e0b; color: white; font-size: 36px; font-weight: bold; padding: 20px 40px; border-radius: 10px; letter-spacing: 10px;">
+                ${code}
+              </div>
+            </div>
+            <p style="color: #4b5563; font-size: 14px;">⏰ Ce code expire dans <strong>15 minutes</strong>.</p>
+            <p style="color: #4b5563; font-size: 14px;">Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.</p>
+            <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
+            <p style="color: #9ca3af; font-size: 12px; text-align: center;">
+              © 2025 Artisan Connect - La 1ère plateforme d'artisans en Afrique
+            </p>
+          </div>
+        </div>
+      `,
+    }
 
-    console.log(`📧 Password reset email sent to ${email}:`, emailResult.message)
+    await transporter.sendMail(mailOptions)
+
+    console.log(`✅ Email envoyé à ${email} avec le code ${code}`)
 
     return NextResponse.json({
-      message: 'Si un compte existe avec cette adresse email, vous recevrez un lien de réinitialisation.',
-      // In development, include the reset URL for testing
-      ...(process.env.NODE_ENV === 'development' && { devResetUrl: resetUrl }),
+      message: 'Si cet email existe, un code a été envoyé.',
+      // En développement seulement, on renvoie le code pour tester
+      ...(process.env.NODE_ENV === 'development' && { devCode: code }),
     })
   } catch (error) {
     console.error('Forgot password error:', error)
     return NextResponse.json(
-      { error: 'Erreur lors du traitement de votre demande' },
+      { error: 'Erreur lors de l\'envoi de l\'email' },
       { status: 500 }
     )
   }

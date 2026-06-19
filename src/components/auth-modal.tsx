@@ -90,6 +90,14 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
   const [resetSuccess, setResetSuccess] = useState(false)
   const [resetError, setResetError] = useState('')
 
+  // Email verification state
+  const [showVerifyEmail, setShowVerifyEmail] = useState(false)
+  const [verificationCode, setVerificationCode] = useState('')
+  const [verifyLoading, setVerifyLoading] = useState(false)
+  const [verifyError, setVerifyError] = useState('')
+  const [verifySuccess, setVerifySuccess] = useState(false)
+  const [pendingEmail, setPendingEmail] = useState('')
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoginError('')
@@ -117,19 +125,66 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
     }
 
     try {
-      await register({
-        name: regName,
-        email: regEmail,
-        password: regPassword,
-        role: regRole,
-        phone: regPhone || undefined,
-        location: regLocation || undefined,
-        country: regCountry || undefined,
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: regName,
+          email: regEmail,
+          password: regPassword,
+          role: regRole,
+          phone: regPhone || undefined,
+          location: regLocation || undefined,
+          country: regCountry || undefined,
+          avatar: regAvatarUrl || undefined,
+        }),
       })
-      onOpenChange(false)
-      resetRegisterFields()
+      const data = await res.json()
+      if (!res.ok) {
+        throw new Error(data.error || 'Erreur d\'inscription')
+      }
+      // Le compte est créé, on passe à l'étape de vérification
+      setPendingEmail(regEmail)
+      setShowVerifyEmail(true)
+      setVerifySuccess(false)
+      setVerificationCode('')
+      setVerifyError('')
     } catch (err) {
       setRegError(err instanceof Error ? err.message : 'Erreur d\'inscription')
+    }
+  }
+
+  const handleVerifyEmail = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setVerifyError('')
+    setVerifyLoading(true)
+    try {
+      const res = await fetch('/api/auth/verify-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: pendingEmail,
+          code: verificationCode,
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        throw new Error(data.error || 'Code invalide')
+      }
+      // Connexion automatique après vérification
+      if (data.token && data.user) {
+        login(data.token, data.user)
+      }
+      setVerifySuccess(true)
+      setTimeout(() => {
+        onOpenChange(false)
+        resetRegisterFields()
+        setShowVerifyEmail(false)
+      }, 2000)
+    } catch (err) {
+      setVerifyError(err instanceof Error ? err.message : 'Erreur de vérification')
+    } finally {
+      setVerifyLoading(false)
     }
   }
 
@@ -283,7 +338,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                     type="email"
                     placeholder="votre@email.com"
                     value={loginEmail}
-                    onChange={e => setLoginEmail(e.target.value)}
+                    onChange={(e) => setLoginEmail(e.target.value)}
                     className="pl-10"
                     required
                   />
@@ -297,9 +352,9 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                   <Input
                     id="login-password"
                     type={showLoginPassword ? 'text' : 'password'}
-                    placeholder="••••••••"
+                    placeholder="••••••"
                     value={loginPassword}
-                    onChange={e => setLoginPassword(e.target.value)}
+                    onChange={(e) => setLoginPassword(e.target.value)}
                     className="pl-10 pr-10"
                     required
                   />
@@ -313,20 +368,6 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                 </div>
               </div>
 
-              {/* Forgot password link */}
-              <div className="flex justify-end">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowForgotPassword(true)
-                    setForgotEmail(loginEmail)
-                  }}
-                  className="text-sm text-amber-600 dark:text-amber-400 hover:underline"
-                >
-                  Mot de passe oublié ?
-                </button>
-              </div>
-
               <Button
                 type="submit"
                 className="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 h-11"
@@ -337,6 +378,17 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                 ) : null}
                 Se connecter
               </Button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setShowForgotPassword(true)
+                  setForgotError('')
+                }}
+                className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Mot de passe oublié ?
+              </button>
             </form>
           </TabsContent>
 
@@ -637,7 +689,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                 </div>
                 <DialogTitle className="text-white text-xl">Mot de passe oublié</DialogTitle>
               </div>
-              <p className="text-white/80 text-sm">Recevez un lien de réinitialisation par email</p>
+              <p className="text-white/80 text-sm">Recevez un code de réinitialisation par email</p>
             </DialogHeader>
           </div>
 
@@ -654,7 +706,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                 <h3 className="text-lg font-semibold mb-2">Email envoyé !</h3>
                 <p className="text-sm text-muted-foreground mb-4">
                   Si un compte existe avec l&apos;adresse <strong>{forgotEmail}</strong>,
-                  vous recevrez un lien pour réinitialiser votre mot de passe.
+                  vous recevrez un code pour réinitialiser votre mot de passe.
                 </p>
                 <Button
                   onClick={() => {
@@ -703,7 +755,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                   {forgotLoading ? (
                     <Loader2 className="h-4 w-4 animate-spin mr-2" />
                   ) : null}
-                  Envoyer le lien
+                  Envoyer le code
                 </Button>
 
                 <button
@@ -838,6 +890,109 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                   ) : null}
                   Réinitialiser le mot de passe
                 </Button>
+              </form>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Email Verification Dialog */}
+      <Dialog open={showVerifyEmail} onOpenChange={(open) => {
+        setShowVerifyEmail(open)
+        if (!open) {
+          setVerifySuccess(false)
+          setVerifyError('')
+          setVerificationCode('')
+        }
+      }}>
+        <DialogContent className="sm:max-w-[440px] p-0 gap-0 overflow-hidden">
+          <div className="relative bg-gradient-to-r from-amber-500 to-orange-600 p-6 pb-8">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.1),transparent)]" />
+            <DialogHeader className="relative">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+                  <Mail className="h-5 w-5 text-white" />
+                </div>
+                <DialogTitle className="text-white text-xl">Vérifiez votre email</DialogTitle>
+              </div>
+              <p className="text-white/80 text-sm">Entrez le code reçu par email</p>
+            </DialogHeader>
+          </div>
+
+          <div className="p-6">
+            {verifySuccess ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="text-center py-4"
+              >
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-950/50 mx-auto mb-4">
+                  <svg className="h-8 w-8 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-semibold mb-2">Compte vérifié ! 🎉</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Votre compte est maintenant activé. Vous allez être connecté automatiquement.
+                </p>
+              </motion.div>
+            ) : (
+              <form onSubmit={handleVerifyEmail} className="space-y-4">
+                {verifyError && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-center gap-2 rounded-lg bg-red-50 dark:bg-red-950/30 p-3 text-sm text-red-600 dark:text-red-400"
+                  >
+                    <AlertCircle className="h-4 w-4 shrink-0" />
+                    {verifyError}
+                  </motion.div>
+                )}
+
+                <div className="text-center py-2">
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Un code de vérification a été envoyé à<br />
+                    <strong className="text-foreground">{pendingEmail}</strong>
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="verify-code">Code de vérification</Label>
+                  <Input
+                    id="verify-code"
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]{6}"
+                    maxLength={6}
+                    placeholder="000000"
+                    value={verificationCode}
+                    onChange={e => setVerificationCode(e.target.value.replace(/\D/g, ''))}
+                    className="text-center text-2xl font-bold tracking-[0.5em] h-14"
+                    required
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 h-11"
+                  disabled={verifyLoading || verificationCode.length !== 6}
+                >
+                  {verifyLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  ) : null}
+                  Vérifier mon compte
+                </Button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowVerifyEmail(false)
+                    setActiveTab('login')
+                  }}
+                  className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Retour à la connexion
+                </button>
               </form>
             )}
           </div>

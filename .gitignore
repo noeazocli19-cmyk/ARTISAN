@@ -4,4 +4,5 @@ node_modules/
 *.db
 db/*.db
 mini-services/
-Caddyfile
+Caddyfile 
+.z-ai-config

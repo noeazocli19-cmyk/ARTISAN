@@ -180,7 +180,7 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
 
   // ── Socket connection ────────────────────────────────────────────────────
   useEffect(() => {
-    const socketInstance = io('/?XTransformPort=3003', {
+    const socketInstance = io('http://localhost:3003', {
       transports: ['websocket', 'polling'],
       forceNew: true,
       reconnection: true,
