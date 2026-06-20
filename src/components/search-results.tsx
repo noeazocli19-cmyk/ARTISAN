@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -16,7 +16,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useAppStore } from '@/lib/store'
-import type { ArtisanProfile } from '@/lib/types'
 import {
   Search,
   MapPin,
@@ -65,10 +64,16 @@ export function SearchResults({ onViewArtisan }: SearchResultsProps) {
   const [sortBy, setSortBy] = useState('rating')
   const [showFilters, setShowFilters] = useState(false)
   const [displayedCount, setDisplayedCount] = useState(6)
+  const [hasInitialFetch, setHasInitialFetch] = useState(false)
 
+  // Fetch initial uniquement au montage du composant (une seule fois)
   useEffect(() => {
-    fetchArtisans(searchFilters)
-  }, [fetchArtisans, searchFilters])
+    if (!hasInitialFetch) {
+      fetchArtisans(searchFilters)
+      setHasInitialFetch(true)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -305,6 +310,19 @@ export function SearchResults({ onViewArtisan }: SearchResultsProps) {
                   const badgeStyle = BADGE_STYLES[artisan.badge] || BADGE_STYLES['Nouveau']
                   const avatarColor = AVATAR_COLORS[idx % AVATAR_COLORS.length]
 
+                  // Parse specialties (peut être un string JSON ou un tableau)
+                  let specialtiesDisplay = ''
+                  if (Array.isArray(artisan.specialties)) {
+                    specialtiesDisplay = artisan.specialties.join(', ')
+                  } else if (typeof artisan.specialties === 'string') {
+                    try {
+                      const parsed = JSON.parse(artisan.specialties)
+                      specialtiesDisplay = Array.isArray(parsed) ? parsed.join(', ') : artisan.specialties
+                    } catch {
+                      specialtiesDisplay = artisan.specialties
+                    }
+                  }
+
                   return (
                     <motion.div key={artisan.id} variants={fadeInUp} initial="hidden" animate="visible" transition={{ delay: idx * 0.05 }}>
                       <Card className="group hover:border-amber-300 dark:hover:border-amber-700 transition-all hover:shadow-lg overflow-hidden h-full">
@@ -321,7 +339,7 @@ export function SearchResults({ onViewArtisan }: SearchResultsProps) {
                                 </Badge>
                               </div>
                               <p className="text-sm text-muted-foreground mt-0.5 truncate">
-                                {Array.isArray(artisan.specialties) ? artisan.specialties.join(', ') : typeof artisan.specialties === 'string' ? (() => { try { return JSON.parse(artisan.specialties).join(', '); } catch { return artisan.specialties; } })() : ''}
+                                {specialtiesDisplay}
                               </p>
                               {location && (
                                 <div className="flex items-center gap-1 mt-1 text-sm text-muted-foreground">

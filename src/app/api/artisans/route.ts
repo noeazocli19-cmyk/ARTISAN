@@ -31,21 +31,21 @@ export async function GET(request: NextRequest) {
       // Build where clause
       const where: Prisma.ArtisanWhereInput = {}
 
-      if (category) {
-        where.specialties = { contains: category }
+          if (category) {
+        where.specialties = { contains: category, mode: 'insensitive' }
       }
 
       if (location) {
         where.user = {
-          location: { contains: location },
+          location: { contains: location, mode: 'insensitive' },
         }
       }
 
       if (search) {
         where.OR = [
-          { user: { name: { contains: search } } },
-          { specialties: { contains: search } },
-          { skills: { contains: search } },
+          { user: { name: { contains: search, mode: 'insensitive' } } },
+          { specialties: { contains: search, mode: 'insensitive' } },
+          { skills: { contains: search, mode: 'insensitive' } },
         ]
       }
 

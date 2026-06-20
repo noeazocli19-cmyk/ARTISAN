@@ -38,14 +38,14 @@ export async function GET(request: NextRequest) {
         missions: [],
       }
 
-      // Search artisans
+            // Search artisans
       if (type === 'all' || type === 'artisans') {
         data.artisans = await db.artisan.findMany({
           where: {
             OR: [
-              { user: { name: { contains: searchTerm } } },
-              { specialties: { contains: searchTerm } },
-              { skills: { contains: searchTerm } },
+              { user: { name: { contains: searchTerm, mode: 'insensitive' } } },
+              { specialties: { contains: searchTerm, mode: 'insensitive' } },
+              { skills: { contains: searchTerm, mode: 'insensitive' } },
             ],
           },
           include: {
