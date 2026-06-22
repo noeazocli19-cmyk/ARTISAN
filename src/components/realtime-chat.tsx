@@ -25,10 +25,6 @@ import {
   Users,
 } from 'lucide-react'
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Types
-// ─────────────────────────────────────────────────────────────────────────────
-
 interface ChatMessage {
   id: string
   content: string
@@ -50,7 +46,6 @@ interface ChatRoom {
   unreadCount: number
 }
 
-// Default demo rooms (the server doesn't manage room lists yet — these let users test the chat)
 const DEFAULT_ROOMS: ChatRoom[] = [
   {
     id: 'room-general',
@@ -73,10 +68,6 @@ const DEFAULT_ROOMS: ChatRoom[] = [
     unreadCount: 0,
   },
 ]
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Helpers
-// ─────────────────────────────────────────────────────────────────────────────
 
 function formatRelativeTime(timestamp: number): string {
   const now = Date.now()
@@ -113,7 +104,6 @@ function getInitials(name: string): string {
     .slice(0, 2)
 }
 
-// Artisan avatar colors
 const AVATAR_COLORS = [
   'bg-amber-500',
   'bg-emerald-500',
@@ -131,15 +121,10 @@ function getAvatarColor(id: string): string {
   return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length]
 }
 
-// Simplified emoji set
 const QUICK_EMOJIS = [
   '👍', '😊', '🙏', '✅', '⏰', '💪', '🏠', '🔧',
   '💡', '📞', '💼', '⭐', '🤝', '❤️', '🎉', '🔥',
 ]
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Component
-// ─────────────────────────────────────────────────────────────────────────────
 
 interface RealtimeChatProps {
   onBack: () => void
@@ -147,12 +132,10 @@ interface RealtimeChatProps {
 }
 
 export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
-  // ── Real user from store ───────────────────────────────────────────────
   const { user } = useAppStore()
   const CURRENT_USER_ID = user?.id || 'guest-' + Math.random().toString(36).slice(2, 8)
   const CURRENT_USER_NAME = user?.name || 'Invité'
 
-  // ── State ────────────────────────────────────────────────────────────────
   const [isConnected, setIsConnected] = useState(false)
   const [rooms, setRooms] = useState<ChatRoom[]>(DEFAULT_ROOMS)
   const [activeRoomId, setActiveRoomId] = useState<string | null>(null)
@@ -170,12 +153,10 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
   const typingTimeoutRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map())
   const inputRef = useRef<HTMLInputElement>(null)
 
-  // Keep ref in sync with state
   useEffect(() => {
     activeRoomIdRef.current = activeRoomId
   }, [activeRoomId])
 
-  // ── Active room ──────────────────────────────────────────────────────────
   const activeRoom = rooms.find((r) => r.id === activeRoomId) || null
 
   // ── Socket connection ────────────────────────────────────────────────────
@@ -199,9 +180,8 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
       setIsConnected(false)
     })
 
-    // Server emits `receive_message` (snake_case) when a message is broadcast
     socketInstance.on('receive_message', (message: { id: string; roomId: string; message: string; senderId: string; senderName: string; senderAvatar?: string; timestamp: number }) => {
-      if (message.roomId === activeRoomIdRef.current) {
+      if (message.roomId === activeRoomIdRef.current && message.senderId !== CURRENT_USER_ID) {
         setMessages((prev) => [...prev, {
           id: message.id,
           content: message.message,
@@ -256,29 +236,22 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
       }
     })
 
-    socketInstance.on('user_left', (data: { roomId: string; socketId: string }) => {
-      // Could update online status here
-    })
-
     return () => {
       socketInstance.disconnect()
       socketRef.current = null
     }
   }, [])
 
-  // Re-join active room when socket reconnects
   useEffect(() => {
     if (socketRef.current && isConnected && activeRoomId) {
       socketRef.current.emit('join_room', { roomId: activeRoomId, userId: CURRENT_USER_ID, userName: CURRENT_USER_NAME })
     }
   }, [isConnected, activeRoomId, CURRENT_USER_ID, CURRENT_USER_NAME])
 
-  // ── Auto-scroll ──────────────────────────────────────────────────────────
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, typingUsers])
 
-  // ── Join Room ────────────────────────────────────────────────────────────
   const handleJoinRoom = useCallback(
     (roomId: string) => {
       const sock = socketRef.current
@@ -287,19 +260,17 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
           sock.emit('leave_room', { roomId: activeRoomId })
         }
         sock.emit('join_room', { roomId, userId: CURRENT_USER_ID, userName: CURRENT_USER_NAME })
-        setActiveRoomId(roomId)
-        setMessages([])
-        setTypingUsers(new Map())
-        setMobileShowChat(true)
       }
+      setActiveRoomId(roomId)
+      setMessages([])
+      setTypingUsers(new Map())
+      setMobileShowChat(true)
     },
     [activeRoomId, CURRENT_USER_ID, CURRENT_USER_NAME]
   )
 
-  // ── Send Message ─────────────────────────────────────────────────────────
   const handleSendMessage = useCallback(() => {
-    const sock = socketRef.current
-    if (!sock || !activeRoomId || !messageInput.trim()) return
+    if (!activeRoomId || !messageInput.trim()) return
 
     const msgContent = messageInput.trim()
     const msgId = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`
@@ -315,31 +286,32 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
       read: false,
     }])
 
-    // Send to server (snake_case event, `message` field)
-    sock.emit('send_message', {
-      roomId: activeRoomId,
-      message: msgContent,
-      senderId: CURRENT_USER_ID,
-      senderName: CURRENT_USER_NAME,
-    })
+    // Send to server (if connected)
+    const sock = socketRef.current
+    if (sock && isConnected) {
+      sock.emit('send_message', {
+        roomId: activeRoomId,
+        message: msgContent,
+        senderId: CURRENT_USER_ID,
+        senderName: CURRENT_USER_NAME,
+      })
+
+      sock.emit('stop_typing', {
+        roomId: activeRoomId,
+      })
+    }
 
     setMessageInput('')
     setShowEmojiPicker(false)
-
-    sock.emit('stop_typing', {
-      roomId: activeRoomId,
-    })
-
     inputRef.current?.focus()
-  }, [activeRoomId, messageInput, CURRENT_USER_ID, CURRENT_USER_NAME])
+  }, [activeRoomId, messageInput, CURRENT_USER_ID, CURRENT_USER_NAME, isConnected])
 
-  // ── Typing Indicator ─────────────────────────────────────────────────────
   const handleInputChange = useCallback(
     (value: string) => {
       setMessageInput(value)
 
       const sock = socketRef.current
-      if (sock && activeRoomId) {
+      if (sock && isConnected && activeRoomId) {
         if (value.trim()) {
           sock.emit('typing', {
             roomId: activeRoomId,
@@ -353,10 +325,9 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
         }
       }
     },
-    [activeRoomId, CURRENT_USER_ID, CURRENT_USER_NAME]
+    [activeRoomId, CURRENT_USER_ID, CURRENT_USER_NAME, isConnected]
   )
 
-  // ── Back to rooms list (mobile) ──────────────────────────────────────────
   const handleBackToRooms = useCallback(() => {
     setMobileShowChat(false)
     const sock = socketRef.current
@@ -367,7 +338,6 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
     setMessages([])
   }, [activeRoomId])
 
-  // ── Filter rooms ─────────────────────────────────────────────────────────
   const filteredRooms = rooms.filter(
     (r) =>
       r.artisanName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -375,7 +345,6 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
       r.lastMessage.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  // ── Typing indicator text ────────────────────────────────────────────────
   const typingNames = Array.from(typingUsers.values())
   const typingText =
     typingNames.length === 1
@@ -384,11 +353,7 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
         ? `${typingNames.join(', ')} tapent...`
         : ''
 
-  // ── Unread total ─────────────────────────────────────────────────────────
   const totalUnread = rooms.reduce((sum, r) => sum + r.unreadCount, 0)
-  // ─────────────────────────────────────────────────────────────────────────
-  // Render
-  // ─────────────────────────────────────────────────────────────────────────
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
@@ -418,9 +383,9 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
               En ligne
             </Badge>
           ) : (
-            <Badge variant="outline" className="border-red-300 dark:border-red-700 text-red-600 dark:text-red-400 gap-1">
+            <Badge variant="outline" className="border-amber-300 dark:border-amber-700 text-amber-600 dark:text-amber-400 gap-1">
               <WifiOff className="h-3 w-3" />
-              Hors ligne
+              Connexion...
             </Badge>
           )}
           {totalUnread > 0 && (
@@ -434,13 +399,12 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
       {/* Chat Container */}
       <Card className="overflow-hidden border-border/50 shadow-lg" style={{ height: 'calc(100vh - 220px)', minHeight: '500px' }}>
         <div className="flex h-full">
-          {/* ──────── Room List (Left Panel) ──────── */}
+          {/* Room List */}
           <div
             className={`w-full md:w-80 lg:w-96 flex-shrink-0 border-r border-border/50 flex flex-col ${
               mobileShowChat ? 'hidden md:flex' : 'flex'
             }`}
           >
-            {/* Search */}
             <div className="p-3 border-b border-border/50">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -453,7 +417,6 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
               </div>
             </div>
 
-            {/* Rooms */}
             <ScrollArea className="flex-1">
               <div className="py-1">
                 {filteredRooms.length === 0 ? (
@@ -509,7 +472,7 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
             </ScrollArea>
           </div>
 
-          {/* ──────── Chat Area (Right Panel) ──────── */}
+          {/* Chat Area */}
           <div
             className={`flex-1 flex flex-col ${
               mobileShowChat ? 'flex' : 'hidden md:flex'
@@ -601,7 +564,6 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
                       )
                     })}
 
-                    {/* Typing indicator */}
                     {typingText && (
                       <div className="flex justify-start">
                         <div className="bg-muted dark:bg-neutral-800 rounded-2xl rounded-bl-md px-4 py-3 shadow-sm">
@@ -621,7 +583,6 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
                   </div>
                 </ScrollArea>
 
-                {/* Emoji Picker */}
                 {showEmojiPicker && (
                   <div className="px-4 py-2 border-t border-border/50 bg-muted/30">
                     <div className="flex flex-wrap gap-1">
@@ -641,7 +602,7 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
                   </div>
                 )}
 
-                {/* Message Input */}
+                {/* Message Input - TOUJOURS ACTIF */}
                 <Separator />
                 <div className="px-3 py-2 flex items-center gap-2">
                   <Button
@@ -664,20 +625,18 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
                         handleSendMessage()
                       }
                     }}
-                    disabled={!isConnected}
                   />
                   <Button
                     size="icon"
                     className="shrink-0 h-10 w-10 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 rounded-full shadow-md"
                     onClick={handleSendMessage}
-                    disabled={!isConnected || !messageInput.trim()}
+                    disabled={!messageInput.trim()}
                   >
                     <Send className="h-4 w-4" />
                   </Button>
                 </div>
               </>
             ) : (
-              /* Empty state */
               <div className="flex-1 flex items-center justify-center">
                 <div className="text-center px-6">
                   <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-950/50 mb-4">
@@ -695,4 +654,4 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
       </Card>
     </div>
   )
-}
+} 
