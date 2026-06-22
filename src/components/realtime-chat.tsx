@@ -161,7 +161,7 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
 
   // ── Socket connection ────────────────────────────────────────────────────
   useEffect(() => {
-    const socketInstance = io('http://localhost:3003', {
+       const socketInstance = io('https://artisan-qbi8.onrender.com', {
       transports: ['websocket', 'polling'],
       forceNew: true,
       reconnection: true,
