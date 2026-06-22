@@ -21,7 +21,7 @@ import {
 import { useAppStore } from '@/lib/store'
 import type { UserRole } from '@/lib/types'
 import { PhotoUploader } from '@/components/photo-uploader'
-import { Loader2, AlertCircle, Wrench, User } from 'lucide-react'
+import { Loader2, AlertCircle, Wrench, User, Eye, EyeOff } from 'lucide-react'
 
 const COUNTRIES = [
   'Sénégal', 'Côte d\'Ivoire', 'Ghana', 'Togo', 'Mali',
@@ -41,6 +41,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
   const [loginEmail, setLoginEmail] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
   const [loginError, setLoginError] = useState('')
+  const [showLoginPassword, setShowLoginPassword] = useState(false)
 
   const [regName, setRegName] = useState('')
   const [regEmail, setRegEmail] = useState('')
@@ -52,6 +53,8 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
   const [regCountry, setRegCountry] = useState('')
   const [regAvatarUrl, setRegAvatarUrl] = useState<string | null>(null)
   const [regError, setRegError] = useState('')
+  const [showRegPassword, setShowRegPassword] = useState(false)
+  const [showRegConfirmPassword, setShowRegConfirmPassword] = useState(false)
 
   const [activeTab, setActiveTab] = useState(defaultTab)
 
@@ -118,8 +121,6 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
         throw new Error(data.error || 'Erreur d\'inscription')
       }
 
-      // CONNEXION AUTOMATIQUE : On utilise directement le token retourné par l'API
-      // Sans rappeler login() pour éviter les conflits
       useAppStore.setState({
         user: data.user,
         token: data.token,
@@ -127,10 +128,8 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
         isLoading: false,
       })
 
-      // Fermer la modale
       onOpenChange(false)
 
-      // Reset des champs
       setRegName('')
       setRegEmail('')
       setRegPassword('')
@@ -250,7 +249,12 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="login-password">Mot de passe</Label>
-                  <Input id="login-password" type="password" placeholder="••••••" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} required />
+                  <div className="relative">
+                    <Input id="login-password" type={showLoginPassword ? 'text' : 'password'} placeholder="••••••" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} className="pr-10" required />
+                    <button type="button" onClick={() => setShowLoginPassword(!showLoginPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors">
+                      {showLoginPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
                 </div>
                 <Button type="submit" className="w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0 h-11" disabled={isLoading}>
                   {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
@@ -297,11 +301,21 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-2">
                     <Label htmlFor="reg-password">Mot de passe</Label>
-                    <Input id="reg-password" type="password" placeholder="••••••" value={regPassword} onChange={e => setRegPassword(e.target.value)} required />
+                    <div className="relative">
+                      <Input id="reg-password" type={showRegPassword ? 'text' : 'password'} placeholder="••••••" value={regPassword} onChange={e => setRegPassword(e.target.value)} className="pr-10" required />
+                      <button type="button" onClick={() => setShowRegPassword(!showRegPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors">
+                        {showRegPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="reg-confirm">Confirmer</Label>
-                    <Input id="reg-confirm" type="password" placeholder="••••••" value={regConfirmPassword} onChange={e => setRegConfirmPassword(e.target.value)} required />
+                    <div className="relative">
+                      <Input id="reg-confirm" type={showRegConfirmPassword ? 'text' : 'password'} placeholder="••••••" value={regConfirmPassword} onChange={e => setRegConfirmPassword(e.target.value)} className="pr-10" required />
+                      <button type="button" onClick={() => setShowRegConfirmPassword(!showRegConfirmPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors">
+                        {showRegConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
                   </div>
                 </div>
                 <div className="space-y-2">
