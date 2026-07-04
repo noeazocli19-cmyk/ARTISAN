@@ -1,0 +1,41 @@
+﻿import { betterAuth } from "better-auth"
+import { prismaAdapter } from "better-auth/adapters/prisma"
+import { nextCookies } from "better-auth/next-js"
+import { db } from "@/lib/db"
+import { Resend } from "resend"
+
+const resend = new Resend(process.env.RESEND_API_KEY)
+
+export const auth = betterAuth({
+  baseURL: process.env.BETTER_AUTH_URL,
+  secret: process.env.BETTER_AUTH_SECRET,
+
+  database: prismaAdapter(db, {
+    provider: "postgresql",
+  }),
+
+  emailAndPassword: {
+    enabled: true,
+    sendResetPassword: async ({ user, url }) => {
+      await resend.emails.send({
+        from: "Artisan Connect <onboarding@resend.dev>",
+        to: user.email,
+        subject: "Réinitialisation de votre mot de passe",
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #f59e0b;">Artisan Connect</h2>
+            <p>Bonjour ${user.name},</p>
+            <p>Vous avez demandé à réinitialiser votre mot de passe.</p>
+            <a href="${url}" style="background: linear-gradient(to right, #f59e0b, #ea580c); color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; display: inline-block; margin: 16px 0;">
+              Réinitialiser mon mot de passe
+            </a>
+            <p style="color: #6b7280; font-size: 14px;">Ce lien expire dans 1 heure.</p>
+          </div>
+        `,
+      })
+    },
+    resetPasswordTokenExpiresIn: 3600,
+  },
+
+  plugins: [nextCookies()],
+})

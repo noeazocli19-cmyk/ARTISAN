@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useAppStore } from '@/lib/store'
+
 import type { UserRole } from '@/lib/types'
 import { PhotoUploader } from '@/components/photo-uploader'
 import { Loader2, AlertCircle, Wrench, User, Eye, EyeOff } from 'lucide-react'
@@ -36,7 +37,7 @@ interface AuthModalProps {
 }
 
 export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModalProps) {
-  const { login, isLoading } = useAppStore()
+  const { login, register, isLoading } = useAppStore()
 
   const [loginEmail, setLoginEmail] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
@@ -102,34 +103,16 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
     }
 
     try {
-      const res = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: regName,
-          email: regEmail,
-          password: regPassword,
-          role: regRole,
-          phone: regPhone || undefined,
-          location: regLocation || undefined,
-          country: regCountry || undefined,
-          avatar: regAvatarUrl || undefined,
-        }),
+        await register({
+        name: regName,
+        email: regEmail,
+        password: regPassword,
+        role: regRole,
+        phone: regPhone || undefined,
+        location: regLocation || undefined,
+        country: regCountry || undefined,
       })
-      const data = await res.json()
-      if (!res.ok) {
-        throw new Error(data.error || 'Erreur d\'inscription')
-      }
-
-      useAppStore.setState({
-        user: data.user,
-        token: data.token,
-        isAuthenticated: true,
-        isLoading: false,
-      })
-
       onOpenChange(false)
-
       setRegName('')
       setRegEmail('')
       setRegPassword('')

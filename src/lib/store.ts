@@ -4,6 +4,7 @@
 
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { authClient } from "@/lib/auth-client";
 
 import type {
   User,
@@ -15,74 +16,43 @@ import type {
   ApiResponse,
 } from "./types";
 
-// ---------------------------------------------------------------------------
-// Store shape
-// ---------------------------------------------------------------------------
-
 interface AppStoreState {
-  // Auth
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-
-  // View
   currentView: AppView;
   selectedArtisanId: string | null;
-
-  // Search
   searchQuery: string;
   searchResults: ArtisanProfile[];
   searchFilters: SearchFilters;
-
-  // Notifications
   notifications: Notification[];
-
-  // Favorites
   favoriteIds: string[];
 }
 
 interface AppStoreActions {
-  // Auth
   login: (email: string, password: string) => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
   logout: () => void;
   initializeAuth: () => void;
-
-  // View
   setView: (view: AppView) => void;
-
-  // Artisan
   setSelectedArtisan: (id: string | null) => void;
-
-  // Search
   search: (query: string, filters?: SearchFilters) => Promise<void>;
   fetchArtisans: (filters?: SearchFilters) => Promise<void>;
-
-  // Notifications
   addNotification: (notification: Notification) => void;
   markNotificationRead: (id: string) => void;
   markAllNotificationsRead: () => void;
   clearNotifications: () => void;
-
-  // Profile
   updateAvatar: (avatarUrl: string) => Promise<void>;
   updateProfile: (data: Partial<User>) => Promise<void>;
-
-  // Favorites
   toggleFavorite: (artisanId: string) => void;
   isFavorite: (artisanId: string) => boolean;
 }
 
 export type AppStore = AppStoreState & AppStoreActions;
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
 const AUTH_STORAGE_KEY = "artisan-connecte-auth";
 
-/** Small wrapper around fetch that attaches the Bearer token and parses JSON. */
 async function apiRequest<T>(
   path: string,
   options: RequestInit = {},
@@ -117,110 +87,99 @@ async function apiRequest<T>(
   }
 }
 
-// ---------------------------------------------------------------------------
-// Store
-// ---------------------------------------------------------------------------
-
 export const useAppStore = create<AppStore>()(
   persist(
     (set, get) => ({
-      // ── Auth state ───────────────────────────────────────────────────────
       user: null,
       token: null,
       isAuthenticated: false,
       isLoading: false,
-
-      // ── View state ───────────────────────────────────────────────────────
       currentView: "landing",
       selectedArtisanId: null,
-
-      // ── Search state ─────────────────────────────────────────────────────
       searchQuery: "",
       searchResults: [],
       searchFilters: {},
-
-      // ── Notifications ────────────────────────────────────────────────────
       notifications: [],
-
-      // ── Favorites ────────────────────────────────────────────────────────
       favoriteIds: [],
-
-      // ═════════════════════════════════════════════════════════════════════
-      // Actions
-      // ═════════════════════════════════════════════════════════════════════
-
-      // ── Auth ─────────────────────────────────────────────────────────────
 
       login: async (email: string, password: string) => {
         set({ isLoading: true });
-
-        const res = await apiRequest<{ user: User; token: string }>(
-          "/api/auth/login",
-          {
-            method: "POST",
-            body: JSON.stringify({ email, password }),
+        try {
+          const result = await authClient.signIn.email({
+            email,
+            password,
+            callbackURL: "/dashboard",
+          });
+          if (result.error) {
+            set({ isLoading: false });
+            throw new Error(result.error.message ?? "Login failed");
           }
-        );
-
-        if (!res.success) {
+          const session = await authClient.getSession();
+          const user = session?.data?.user as unknown as User;
+          if (user) {
+            set({
+              user,
+              token: null,
+              isAuthenticated: true,
+              isLoading: false,
+              currentView: "dashboard",
+            });
+          }
+        } catch (error) {
           set({ isLoading: false });
-          throw new Error(res.error ?? "Login failed");
+          throw error;
         }
-
-        const user = (res as any).user as User;
-        const token = (res as any).token as string;
-
-        // Persist token in localStorage for cross-tab / reload survival
-        if (typeof window !== "undefined") {
-          localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ user, token }));
-        }
-
-        set({
-          user,
-          token,
-          isAuthenticated: true,
-          isLoading: false,
-          currentView: "dashboard",
-        });
       },
 
       register: async (data: RegisterData) => {
         set({ isLoading: true });
-
-        const res = await apiRequest<{ user: User; token: string }>(
-          "/api/auth/register",
-          {
-            method: "POST",
-            body: JSON.stringify(data),
+        try {
+          const result = await authClient.signUp.email({
+            email: data.email,
+            password: data.password,
+            name: data.name,
+          });
+          if (result.error) {
+            set({ isLoading: false });
+            throw new Error(result.error.message ?? "Registration failed");
           }
-        );
-
-        if (!res.success) {
+          const newUserId = result.data?.user?.id;
+          if (newUserId) {
+            try {
+              await fetch("/api/user/profile", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  userId: newUserId,
+                  phone: data.phone ?? null,
+                  location: data.location ?? null,
+                  country: data.country ?? null,
+                }),
+              });
+            } catch {
+              // On ignore l'erreur, l'inscription continue
+            }
+          }
+          const session = await authClient.getSession();
+          const user = session?.data?.user as unknown as User;
+          set({
+            user,
+            token: null,
+            isAuthenticated: true,
+            isLoading: false,
+            currentView: "onboarding",
+          });
+        } catch (error) {
           set({ isLoading: false });
-          throw new Error(res.error ?? "Registration failed");
+          throw error;
         }
-
-        const user = (res as any).user as User;
-        const token = (res as any).token as string;
-
-        if (typeof window !== "undefined") {
-          localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ user, token }));
-        }
-
-        set({
-          user,
-          token,
-          isAuthenticated: true,
-          isLoading: false,
-          currentView: "onboarding",
-        });
       },
 
       logout: () => {
+        authClient.signOut();
         if (typeof window !== "undefined") {
           localStorage.removeItem(AUTH_STORAGE_KEY);
         }
-
         set({
           user: null,
           token: null,
@@ -236,186 +195,99 @@ export const useAppStore = create<AppStore>()(
       },
 
       initializeAuth: () => {
-        if (typeof window === "undefined") return;
-
-        try {
-          const raw = localStorage.getItem(AUTH_STORAGE_KEY);
-          if (!raw) return;
-
-          const { user, token } = JSON.parse(raw) as {
-            user: User;
-            token: string;
-          };
-
-          if (user && token) {
+        authClient.getSession().then((session) => {
+          if (session?.data?.user) {
             set({
-              user,
-              token,
+              user: session.data.user as unknown as User,
+              token: null,
               isAuthenticated: true,
             });
           }
-        } catch {
-          // Corrupted entry — clean up
-          localStorage.removeItem(AUTH_STORAGE_KEY);
-        }
+        });
       },
-
-      // ── View ─────────────────────────────────────────────────────────────
 
       setView: (view: AppView) => {
         set({ currentView: view });
       },
 
-      // ── Artisan ──────────────────────────────────────────────────────────
-
       setSelectedArtisan: (id: string | null) => {
         set({ selectedArtisanId: id });
       },
 
-      // ── Search ───────────────────────────────────────────────────────────
-
       search: async (query: string, filters?: SearchFilters) => {
         set({ isLoading: true, searchQuery: query });
-
-        const mergedFilters: SearchFilters = {
-          ...get().searchFilters,
-          ...filters,
-        };
-
+        const mergedFilters: SearchFilters = { ...get().searchFilters, ...filters };
         set({ searchFilters: mergedFilters });
-
         const params = new URLSearchParams({ q: query });
         if (mergedFilters.category) params.set("category", mergedFilters.category);
         if (mergedFilters.location) params.set("location", mergedFilters.location);
-        if (mergedFilters.priceMin !== undefined)
-          params.set("priceMin", String(mergedFilters.priceMin));
-        if (mergedFilters.priceMax !== undefined)
-          params.set("priceMax", String(mergedFilters.priceMax));
-        if (mergedFilters.rating !== undefined)
-          params.set("rating", String(mergedFilters.rating));
-
-        const res = await apiRequest<ArtisanProfile[]>(
-          `/api/search?${params.toString()}`,
-          {},
-          get().token
-        );
-
+        if (mergedFilters.priceMin !== undefined) params.set("priceMin", String(mergedFilters.priceMin));
+        if (mergedFilters.priceMax !== undefined) params.set("priceMax", String(mergedFilters.priceMax));
+        if (mergedFilters.rating !== undefined) params.set("rating", String(mergedFilters.rating));
+        const res = await apiRequest<ArtisanProfile[]>(`/api/search?${params.toString()}`, {}, null);
         const artisans = (res as any).artisans ?? (res as any).data ?? [];
-        set({
-          searchResults: res.success ? artisans : [],
-          isLoading: false,
-          currentView: "search",
-        });
+        set({ searchResults: res.success ? artisans : [], isLoading: false, currentView: "search" });
       },
 
       fetchArtisans: async (filters?: SearchFilters) => {
         set({ isLoading: true });
-
-        const mergedFilters: SearchFilters = {
-          ...get().searchFilters,
-          ...filters,
-        };
-
+        const mergedFilters: SearchFilters = { ...get().searchFilters, ...filters };
         const params = new URLSearchParams();
         if (mergedFilters.category) params.set("category", mergedFilters.category);
         if (mergedFilters.location) params.set("location", mergedFilters.location);
-        if (mergedFilters.priceMin !== undefined)
-          params.set("priceMin", String(mergedFilters.priceMin));
-        if (mergedFilters.priceMax !== undefined)
-          params.set("priceMax", String(mergedFilters.priceMax));
-        if (mergedFilters.rating !== undefined)
-          params.set("rating", String(mergedFilters.rating));
-
+        if (mergedFilters.priceMin !== undefined) params.set("priceMin", String(mergedFilters.priceMin));
+        if (mergedFilters.priceMax !== undefined) params.set("priceMax", String(mergedFilters.priceMax));
+        if (mergedFilters.rating !== undefined) params.set("rating", String(mergedFilters.rating));
         const qs = params.toString();
         const url = qs ? `/api/artisans?${qs}` : "/api/artisans";
-
-        const res = await apiRequest<ArtisanProfile[]>(
-          url,
-          {},
-          get().token
-        );
-
+        const res = await apiRequest<ArtisanProfile[]>(url, {}, null);
         const artisans = (res as any).artisans ?? (res as any).data ?? [];
-        set({
-          searchResults: res.success ? artisans : [],
-          searchFilters: mergedFilters,
-          isLoading: false,
-        });
+        set({ searchResults: res.success ? artisans : [], searchFilters: mergedFilters, isLoading: false });
       },
 
-      // ── Notifications ────────────────────────────────────────────────────
-
       addNotification: (notification: Notification) => {
-        set((state) => ({
-          notifications: [notification, ...state.notifications],
-        }));
+        set((state) => ({ notifications: [notification, ...state.notifications] }));
       },
 
       markNotificationRead: (id: string) => {
         set((state) => ({
-          notifications: state.notifications.map((n) =>
-            n.id === id ? { ...n, isRead: true } : n
-          ),
+          notifications: state.notifications.map((n) => n.id === id ? { ...n, isRead: true } : n),
         }));
       },
 
       markAllNotificationsRead: () => {
-        set((state) => ({
-          notifications: state.notifications.map((n) => ({ ...n, isRead: true })),
-        }));
+        set((state) => ({ notifications: state.notifications.map((n) => ({ ...n, isRead: true })) }));
       },
 
       clearNotifications: () => {
         set({ notifications: [] });
       },
 
-      // ── Profile ──────────────────────────────────────────────────────────
-
       updateAvatar: async (avatarUrl: string) => {
-        const { user, token } = get();
+        const { user } = get();
         if (!user) return;
-
         const res = await apiRequest<{ user: User }>(
           "/api/user/profile",
-          {
-            method: "PATCH",
-            body: JSON.stringify({ userId: user.id, avatar: avatarUrl }),
-          },
-          token
+          { method: "PATCH", body: JSON.stringify({ userId: user.id, avatar: avatarUrl }) },
+          null
         );
-
         if (res.success) {
-          const updatedUser = { ...user, avatar: avatarUrl } as User;
-          if (typeof window !== "undefined") {
-            localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ user: updatedUser, token }));
-          }
-          set({ user: updatedUser });
+          set({ user: { ...user, avatar: avatarUrl } as User });
         }
       },
 
       updateProfile: async (data: Partial<User>) => {
-        const { user, token } = get();
+        const { user } = get();
         if (!user) return;
-
         const res = await apiRequest<{ user: User }>(
           "/api/user/profile",
-          {
-            method: "PATCH",
-            body: JSON.stringify({ userId: user.id, ...data }),
-          },
-          token
+          { method: "PATCH", body: JSON.stringify({ userId: user.id, ...data }) },
+          null
         );
-
         if (res.success) {
-          const updatedUser = { ...user, ...data } as User;
-          if (typeof window !== "undefined") {
-            localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ user: updatedUser, token }));
-          }
-          set({ user: updatedUser });
+          set({ user: { ...user, ...data } as User });
         }
       },
-
-      // ── Favorites ──────────────────────────────────────────────────────────
 
       toggleFavorite: (artisanId: string) => {
         set((state) => {
@@ -434,7 +306,6 @@ export const useAppStore = create<AppStore>()(
     }),
     {
       name: "artisan-connecte-store",
-      // Only persist auth-related fields and favorites; transient UI state resets on reload
       partialize: (state) => ({
         user: state.user,
         token: state.token,
