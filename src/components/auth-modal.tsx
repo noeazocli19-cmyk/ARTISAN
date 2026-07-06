@@ -19,7 +19,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useAppStore } from '@/lib/store'
-
 import type { UserRole } from '@/lib/types'
 import { PhotoUploader } from '@/components/photo-uploader'
 import { Loader2, AlertCircle, Wrench, User, Eye, EyeOff } from 'lucide-react'

@@ -108,7 +108,6 @@ export const useAppStore = create<AppStore>()(
           const result = await authClient.signIn.email({
             email,
             password,
-            callbackURL: "/dashboard",
           });
           if (result.error) {
             set({ isLoading: false });
@@ -122,7 +121,7 @@ export const useAppStore = create<AppStore>()(
               token: null,
               isAuthenticated: true,
               isLoading: false,
-              currentView: "dashboard",
+              currentView: "home",
             });
           }
         } catch (error) {
