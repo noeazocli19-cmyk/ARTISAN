@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import bcrypt from 'bcryptjs'
+import { auth } from '@/lib/better-auth'
+import { hashPassword } from 'better-auth/crypto'
 
 export const dynamic = 'force-dynamic'
 
@@ -9,6 +10,7 @@ export const dynamic = 'force-dynamic'
  * Body: { email: string, code: string, newPassword: string }
  *
  * Vérifie le code et met à jour le mot de passe.
+ * Uses Better Auth's password hashing for compatibility.
  */
 export async function POST(request: NextRequest) {
   try {
@@ -47,8 +49,9 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Hasher le nouveau mot de passe
-    const hashedPassword = await bcrypt.hash(newPassword, 12)
+    // Hasher le nouveau mot de passe avec Better Auth's password hashing
+    // This ensures compatibility with Better Auth's password verification
+    const hashedPassword = await hashPassword(newPassword)
 
     // Mettre à jour le mot de passe
     await db.user.update({
@@ -61,6 +64,12 @@ export async function POST(request: NextRequest) {
       where: { id: resetToken.id },
       data: { used: true },
     })
+
+    // Invalider toutes les sessions existantes pour cet utilisateur (security best practice)
+    const user = await db.user.findUnique({ where: { email } })
+    if (user) {
+      await db.session.deleteMany({ where: { userId: user.id } })
+    }
 
     console.log(`✅ Mot de passe réinitialisé pour ${email}`)
 

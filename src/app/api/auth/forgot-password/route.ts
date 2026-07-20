@@ -4,7 +4,12 @@ import { Resend } from 'resend'
 
 export const dynamic = 'force-dynamic'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Email sender address - configurable via environment
+// Use your verified domain from Resend Dashboard
+const EMAIL_FROM = process.env.EMAIL_FROM || 'onboarding@resend.dev'
+
+// Resend client - only initialized if API key is available
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 
 export async function POST(request: NextRequest) {
   try {
@@ -37,9 +42,19 @@ export async function POST(request: NextRequest) {
       data: { token: code, email, expiresAt },
     })
 
-    // Envoyer l'email via Resend
+    // Envoyer l'email via Resend (si configuré)
+    if (!resend) {
+      console.warn("⚠️ RESEND_API_KEY not set - password reset email not sent")
+      console.warn(`📧 Reset code for ${email}: ${code}`)
+      // Return success anyway for development (code is logged above)
+      return NextResponse.json({
+        message: 'Si cet email existe, un code a été envoyé.',
+        ...(process.env.NODE_ENV === 'development' && { devCode: code }),
+      })
+    }
+
     await resend.emails.send({
-      from: 'Artisan Connect <onboarding@resend.dev>',
+      from: `Artisan Connect <${EMAIL_FROM}>`,
       to: email,
       subject: 'Votre code de réinitialisation',
       html: `
