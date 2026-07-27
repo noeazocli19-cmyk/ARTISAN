@@ -126,14 +126,30 @@ export function ArtisanDashboard() {
   }, [fetchArtisanData])
 
   const handleSaveProfile = async () => {
-    if (!artisanProfile) return
+    if (!user?.id) return
     setSaving(true)
     try {
-      // In a real app, this would PUT to /api/artisans/[id]
-      // For now, just simulate
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      setSaving(false)
-    } catch {
+      const res = await fetch('/api/artisans/profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          specialties: specialties,
+          skills: specialties,
+          hourlyRate: parseInt(hourlyRate) || 5000,
+          experience: parseInt(experience) || 0,
+          isAvailable: isAvailable,
+          bio: bio,
+        }),
+      })
+      const data = await res.json()
+      if (data.success && data.artisan) {
+        setArtisanProfile(data.artisan)
+        if (data.artisan.user?.bio) setBio(data.artisan.user.bio)
+      }
+    } catch (error) {
+      console.error('Error saving artisan profile:', error)
+    } finally {
       setSaving(false)
     }
   }

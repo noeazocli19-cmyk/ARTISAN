@@ -53,6 +53,8 @@ import {
   Heart,
   Handshake,
 } from 'lucide-react'
+import { useAppStore } from '@/lib/store' 
+   
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -966,6 +968,8 @@ function StepComplete({
 
 export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
   const [currentStep, setCurrentStep] = useState(1)
+  const [saving, setSaving] = useState(false)
+  const { user } = useAppStore()
   const [data, setData] = useState<OnboardingData>({
     fullName: '',
     phone: '',
@@ -984,7 +988,53 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
     locationSharing: true,
   })
 
-  const containerRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null) 
+  
+  const handleComplete = useCallback(async () => {
+    if (!user?.id) {
+      onComplete()
+      return
+    }
+    setSaving(true)
+    try {
+      await fetch('/api/user/profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          role: data.role || 'client',
+          name: data.fullName || user.name,
+          phone: data.phone || undefined,
+          location: data.location || undefined,
+          bio: data.bio || undefined,
+        }),
+      })
+      if (data.role === 'artisan') {
+        let expYears = 0
+        if (data.experience === '1-5') expYears = 3
+        else if (data.experience === '5-10') expYears = 7
+        else if (data.experience === '10+') expYears = 12
+        await fetch('/api/artisans/profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: user.id,
+            specialties: data.skills,
+            skills: data.skills,
+            hourlyRate: data.hourlyRate,
+            experience: expYears,
+            isAvailable: true,
+            certifications: data.hasCertifications ? ['certifié'] : [],
+          }),
+        })
+      }
+    } catch (error) {
+      console.error('Error saving onboarding data:', error)
+    } finally {
+      setSaving(false)
+      onComplete()
+    }
+  }, [user, data, onComplete])
 
   // Determine the actual step number (skip step 4 for clients)
   const getEffectiveStep = () => {
@@ -1109,7 +1159,7 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
             {currentStep === 3 && <StepRole key="step3" data={data} setData={setData} />}
             {currentStep === 4 && data.role === 'artisan' && <StepSkills key="step4" data={data} setData={setData} />}
             {currentStep === 5 && <StepPreferences key="step5" data={data} setData={setData} />}
-            {currentStep === 6 && <StepComplete key="step6" data={data} onComplete={onComplete} />}
+            {currentStep === 6 && <StepComplete key="step6" data={data} onComplete={handleComplete} />}
           </AnimatePresence>
         </div>
 

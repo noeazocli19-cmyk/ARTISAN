@@ -4,13 +4,12 @@ import { db } from '@/lib/db'
 export async function PATCH(request: NextRequest) {
   try {
     const body = await request.json()
-    const { userId, avatar, name, phone, location, country, bio } = body
+    const { userId, avatar, name, phone, location, country, bio, role } = body
 
     if (!userId) {
       return NextResponse.json({ error: 'ID utilisateur requis' }, { status: 400 })
     }
 
-    // Build update object with only provided fields
     const updateData: Record<string, string> = {
       updatedAt: new Date().toISOString(),
     }
@@ -20,6 +19,7 @@ export async function PATCH(request: NextRequest) {
     if (location !== undefined) updateData.location = location
     if (country !== undefined) updateData.country = country
     if (bio !== undefined) updateData.bio = bio
+    if (role !== undefined) updateData.role = role
 
     const updatedUser = await db.user.update({
       where: { id: userId },

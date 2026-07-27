@@ -148,21 +148,43 @@ export const useAppStore = create<AppStore>()(
               await fetch("/api/user/profile", {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
+                 body: JSON.stringify({
                   userId: newUserId,
                   phone: data.phone ?? null,
                   location: data.location ?? null,
                   country: data.country ?? null,
+                  role: (data as any).role ?? null,
                 }),
               });
             } catch {
               // On ignore l'erreur, l'inscription continue
             }
+
+            // Créer automatiquement le profil artisan si le rôle est "artisan"
+            if (data.role === "artisan") {
+              try {
+                await fetch("/api/artisans", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    userId: newUserId,
+                    specialties: JSON.stringify([]),
+                    skills: JSON.stringify([]),
+                    hourlyRate: 0,
+                    experience: 0,
+                    portfolio: JSON.stringify([]),
+                    certifications: JSON.stringify([]),
+                  }),
+                });
+              } catch {
+                // On ignore l'erreur, l'inscription continue
+              }
+            }
           }
           const session = await authClient.getSession();
           const user = session?.data?.user as unknown as User;
           set({
-            user,
+            user: user ? { ...user, role: data.role } as User : null,
             token: null,
             isAuthenticated: true,
             isLoading: false,
