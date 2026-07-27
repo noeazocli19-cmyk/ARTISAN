@@ -25,6 +25,7 @@ import {
   Award,
   Loader2,
   Briefcase,
+  Globe,
 } from 'lucide-react'
 
 const STATUS_MAP: Record<string, { label: string; color: string }> = {
@@ -78,6 +79,8 @@ export function ArtisanDashboard() {
   const [experience, setExperience] = useState('')
   const [isAvailable, setIsAvailable] = useState(true)
   const [bio, setBio] = useState('')
+  const [location, setLocation] = useState('')
+  const [country, setCountry] = useState('')
 
   const fetchArtisanData = useCallback(async () => {
     if (!user) return
@@ -100,6 +103,10 @@ export function ArtisanDashboard() {
         setIsAvailable(myProfile.isAvailable)
         if (myProfile.user?.bio) setBio(myProfile.user.bio)
       }
+
+      // Load location and country from user data
+      if (user?.location) setLocation(user.location)
+      if (user?.country) setCountry(user.country)
 
       // Fetch available missions
       const missionRes = await fetch('/api/missions?status=ouverte')
@@ -129,6 +136,7 @@ export function ArtisanDashboard() {
     if (!user?.id) return
     setSaving(true)
     try {
+      // Update artisan profile
       const res = await fetch('/api/artisans/profile', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -143,6 +151,19 @@ export function ArtisanDashboard() {
         }),
       })
       const data = await res.json()
+
+      // Also update user location and country
+      await fetch('/api/user/profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          location: location,
+          country: country,
+          bio: bio,
+        }),
+      })
+
       if (data.success && data.artisan) {
         setArtisanProfile(data.artisan)
         if (data.artisan.user?.bio) setBio(data.artisan.user.bio)
@@ -412,6 +433,34 @@ export function ArtisanDashboard() {
                   <p className="font-semibold">{artisanProfile?.badge || 'Nouveau'}</p>
                   <p className="text-sm text-muted-foreground">Votre badge actuel</p>
                 </div>
+              </div>
+
+              {/* Quartier / Ville */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium flex items-center gap-2">
+                  <MapPin className="h-3.5 w-3.5 text-amber-500" />
+                  Quartier / Ville
+                </Label>
+                <Input
+                  placeholder="Ex: Agla, Médina, Plateau..."
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="h-11 border-border/50 focus:border-amber-400 focus:ring-amber-400/20 transition-colors"
+                />
+              </div>
+
+              {/* Pays */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium flex items-center gap-2">
+                  <Globe className="h-3.5 w-3.5 text-amber-500" />
+                  Pays
+                </Label>
+                <Input
+                  placeholder="Ex: Sénégal, Côte d'Ivoire, Cameroun..."
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  className="h-11 border-border/50 focus:border-amber-400 focus:ring-amber-400/20 transition-colors"
+                />
               </div>
 
               {/* Specialties */}

@@ -53,8 +53,7 @@ import {
   Heart,
   Handshake,
 } from 'lucide-react'
-import { useAppStore } from '@/lib/store' 
-   
+import { useAppStore } from '@/lib/store'
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -988,8 +987,9 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
     locationSharing: true,
   })
 
-  const containerRef = useRef<HTMLDivElement>(null) 
-  
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  // Save onboarding data to the database before completing
   const handleComplete = useCallback(async () => {
     if (!user?.id) {
       onComplete()
@@ -997,6 +997,7 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
     }
     setSaving(true)
     try {
+      // 1. Update user profile (role, name, phone, location, bio)
       await fetch('/api/user/profile', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -1009,11 +1010,14 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
           bio: data.bio || undefined,
         }),
       })
+
+      // 2. If artisan, create the Artisan profile record
       if (data.role === 'artisan') {
         let expYears = 0
         if (data.experience === '1-5') expYears = 3
         else if (data.experience === '5-10') expYears = 7
         else if (data.experience === '10+') expYears = 12
+
         await fetch('/api/artisans/profile', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -1106,15 +1110,22 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
                 Artisan Connect
               </span>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-muted-foreground hover:text-foreground text-xs"
-              onClick={handleSkip}
-            >
-              <SkipForward className="h-3.5 w-3.5 mr-1" />
-              Passer
-            </Button>
+            <div className="flex items-center gap-2">
+              {saving && (
+                <span className="text-xs text-amber-600 dark:text-amber-400 animate-pulse">
+                  Sauvegarde...
+                </span>
+              )}
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-muted-foreground hover:text-foreground text-xs"
+                onClick={handleSkip}
+              >
+                <SkipForward className="h-3.5 w-3.5 mr-1" />
+                Passer
+              </Button>
+            </div>
           </div>
 
           {/* Progress bar */}

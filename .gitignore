@@ -5,4 +5,4 @@ node_modules/
 db/*.db
 mini-services/
 Caddyfile 
-.z-ai-config
+.z-ai-config 
