@@ -1,39 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { auth } from '@/lib/auth';
+import { db } from '@/lib/db';
+import { auth } from '@/lib/better-auth';
 
-// GET — Récupérer les notifications
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
+    const session = await auth.api.getSession({ headers: request.headers });
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
 
-    const notifications = await prisma.notification.findMany({
+    const notifications = await db.notification.findMany({
       where: { userId: session.user.id },
       orderBy: { createdAt: 'desc' },
       take: 50,
     });
 
-    const unreadCount = await prisma.notification.count({
+    const unreadCount = await db.notification.count({
       where: { userId: session.user.id, isRead: false },
     });
 
     return NextResponse.json({ notifications, unreadCount });
   } catch (error) {
     console.error('Erreur notifications:', error);
-    return NextResponse.json(
-      { error: 'Erreur lors de la récupération des notifications' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Erreur lors de la récupération des notifications' }, { status: 500 });
   }
 }
 
-// PATCH — Marquer comme lu
 export async function PATCH(request: NextRequest) {
   try {
-    const session = await auth();
+    const session = await auth.api.getSession({ headers: request.headers });
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
@@ -42,7 +37,7 @@ export async function PATCH(request: NextRequest) {
     const { notificationId, markAll } = body;
 
     if (markAll) {
-      await prisma.notification.updateMany({
+      await db.notification.updateMany({
         where: { userId: session.user.id, isRead: false },
         data: { isRead: true },
       });
@@ -50,23 +45,13 @@ export async function PATCH(request: NextRequest) {
     }
 
     if (!notificationId) {
-      return NextResponse.json(
-        { error: 'notificationId requis' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'notificationId requis' }, { status: 400 });
     }
 
-    await prisma.notification.update({
-      where: { id: notificationId },
-      data: { isRead: true },
-    });
-
+    await db.notification.update({ where: { id: notificationId }, data: { isRead: true } });
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Erreur notification:', error);
-    return NextResponse.json(
-      { error: 'Erreur lors de la mise à jour' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Erreur lors de la mise à jour' }, { status: 500 });
   }
 }
