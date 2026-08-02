@@ -1,115 +1,145 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
-import { rateLimit } from '@/lib/rate-limit'
-import { cached, TTL } from '@/lib/cache'
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
+
+// ─── Haversine formula (distance in km) ─────────────────────────────────
+function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371 // Earth radius in km
+  const dLat = ((lat2 - lat1) * Math.PI) / 180
+  const dLon = ((lon2 - lon1) * Math.PI) / 180
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+    Math.cos((lat2 * Math.PI) / 180) *
+    Math.sin(dLon / 2) *
+    Math.sin(dLon / 2)
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+  return R * c
+}
 
 export async function GET(request: NextRequest) {
-  // Rate limiting: 60 requests per 60 seconds for search
-  const limiter = rateLimit(request, { limit: 60, window: 60 })
-  if (!limiter.success) {
-    return NextResponse.json(
-      { error: 'Trop de recherches. Veuillez réessayer dans quelques secondes.' },
-      { status: 429, headers: limiter.headers }
-    )
-  }
-
   try {
     const { searchParams } = new URL(request.url)
-    const q = searchParams.get('q')
-    const type = searchParams.get('type') || 'all'
+    const q = searchParams.get('q') || ''
+    const category = searchParams.get('category') || ''
+    const location = searchParams.get('location') || ''
+    const country = searchParams.get('country') || ''
+    const clientLat = searchParams.get('lat') ? parseFloat(searchParams.get('lat')!) : null
+    const clientLng = searchParams.get('lng') ? parseFloat(searchParams.get('lng')!) : null
+    const radiusKm = searchParams.get('radius') ? parseFloat(searchParams.get('radius')!) : null
 
-    if (!q || q.trim().length === 0) {
-      return NextResponse.json(
-        { error: 'Le paramètre de recherche "q" est requis' },
-        { status: 400 }
+    const whereClause: any = {
+      isAvailable: true,
+    }
+
+    const userConditions: any[] = []
+
+    if (q) {
+      userConditions.push({
+        OR: [
+          { name: { contains: q, mode: 'insensitive' } },
+          { bio: { contains: q, mode: 'insensitive' } },
+          { location: { contains: q, mode: 'insensitive' } },
+        ],
+      })
+    }
+
+    if (location) {
+      userConditions.push({
+        location: { contains: location, mode: 'insensitive' },
+      })
+    }
+
+    if (country) {
+      userConditions.push({
+        country: { contains: country, mode: 'insensitive' },
+      })
+    }
+
+    if (userConditions.length > 0) {
+      whereClause.user5 = { AND: userConditions }
+    }
+
+    if (category) {
+      whereClause.OR = [
+        { specialties: { contains: category, mode: 'insensitive' } },
+        { skills: { contains: category, mode: 'insensitive' } },
+      ]
+    }
+
+    const artisans = await prisma.artisan.findMany({
+      where: whereClause,
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatar: true,
+            bio: true,
+            location: true,
+            country: true,
+            phone: true,
+            latitude: true,
+            longitude: true,
+          },
+        },
+      },
+      orderBy: [{ rating: 'desc' }, { missionCount: 'desc' }],
+      take: 100,
+    })
+
+    // ─── Calculate distance and sort by proximity ────────────────────────
+    let results = artisans.map((artisan) => {
+      let distanceKm: number | null = null
+
+      if (
+        clientLat !== null &&
+        clientLng !== null &&
+        artisan.user?.latitude !== null &&
+        artisan.user?.longitude !== null
+      ) {
+        distanceKm = haversineDistance(
+          clientLat,
+          clientLng,
+          artisan.user!.latitude!,
+          artisan.user!.longitude!
+        )
+      }
+
+      return { ...artisan, distanceKm }
+    })
+
+    // Filter by radius if specified
+    if (radiusKm !== null && clientLat !== null && clientLng !== null) {
+      results = results.filter(
+        (r) => r.distanceKm !== null && r.distanceKm <= radiusKm
       )
     }
 
-    const searchTerm = q.trim()
+    // Sort by distance if client location provided, otherwise by rating
+    if (clientLat !== null && clientLng !== null) {
+      results.sort((a, b) => {
+        if (a.distanceKm === null && b.distanceKm === null) return 0
+        if (a.distanceKm === null) return 1
+        if (b.distanceKm === null) return -1
+        return a.distanceKm - b.distanceKm
+      })
+    }
 
-    // Cache search results for 10 seconds
-    const cacheKey = `search:${searchTerm}:${type}`
-    const results = await cached(cacheKey, async () => {
-      const data: {
-        artisans: unknown[]
-        missions: unknown[]
-      } = {
-        artisans: [],
-        missions: [],
-      }
-
-            // Search artisans
-      if (type === 'all' || type === 'artisans') {
-        data.artisans = await db.artisan.findMany({
-          where: {
-            OR: [
-              { user: { name: { contains: searchTerm, mode: 'insensitive' } } },
-              { specialties: { contains: searchTerm, mode: 'insensitive' } },
-              { skills: { contains: searchTerm, mode: 'insensitive' } },
-            ],
-          },
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                avatar: true,
-                location: true,
-                country: true,
-              },
-            },
-          },
-          take: 20,
-        })
-      }
-
-      // Search missions
-      if (type === 'all' || type === 'missions') {
-        data.missions = await db.mission.findMany({
-          where: {
-            OR: [
-              { title: { contains: searchTerm } },
-              { description: { contains: searchTerm } },
-            ],
-          },
-          include: {
-            client: {
-              select: {
-                id: true,
-                name: true,
-                avatar: true,
-              },
-            },
-            artisan: {
-              include: {
-                user: {
-                  select: {
-                    id: true,
-                    name: true,
-                    avatar: true,
-                  },
-                },
-              },
-            },
-          },
-          take: 20,
-        })
-      }
-
-      return data
-    }, TTL.SEARCH)
-
-    return NextResponse.json(results, {
-      headers: {
-        ...limiter.headers,
-        'Cache-Control': 'public, s-maxage=10, stale-while-revalidate=30',
-      },
+    return NextResponse.json({
+      success: true,
+      artisans: results,
+      count: results.length,
     })
   } catch (error) {
     console.error('Search error:', error)
     return NextResponse.json(
-      { error: 'Erreur lors de la recherche' },
+      { error: 'Search failed', details: String(error) },
       { status: 500 }
     )
+  } finally {
+    await prisma.$disconnect()
   }
 }

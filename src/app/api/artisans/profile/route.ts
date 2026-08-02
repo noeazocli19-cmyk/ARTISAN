@@ -1,99 +1,200 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
+import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { auth } from '@/lib/auth';
 
-export async function POST(request: NextRequest) {
+// Helper : géocodage via OpenStreetMap Nominatim
+async function geocodeAddress(address: string) {
   try {
-    const body = await request.json()
-    const { userId, specialties, skills, hourlyRate, experience, isAvailable, certifications, bio } = body
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1&addressdetails=1`;
 
-    if (!userId) {
-      return NextResponse.json({ error: 'ID utilisateur requis' }, { status: 400 })
-    }
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'ArtisanApp/1.0',
+      },
+    });
 
-    const user = await db.user.findUnique({ where: { id: userId } })
-    if (!user) {
-      return NextResponse.json({ error: 'Utilisateur non trouvé' }, { status: 404 })
-    }
+    if (!response.ok) return null;
 
-    const artisanData: Record<string, unknown> = {}
-    if (specialties !== undefined) artisanData.specialties = JSON.stringify(specialties)
-    if (skills !== undefined) artisanData.skills = JSON.stringify(skills)
-    if (hourlyRate !== undefined) artisanData.hourlyRate = hourlyRate
-    if (experience !== undefined) artisanData.experience = experience
-    if (isAvailable !== undefined) artisanData.isAvailable = isAvailable
-    if (certifications !== undefined) artisanData.certifications = JSON.stringify(certifications)
+    const data = await response.json();
+    if (!data || data.length === 0) return null;
 
-    if (bio !== undefined) {
-      await db.user.update({ where: { id: userId }, data: { bio } })
-    }
-
-    const existingArtisan = await db.artisan.findUnique({ where: { userId } })
-
-    let artisan
-    if (existingArtisan) {
-      artisan = await db.artisan.update({
-        where: { userId },
-        data: artisanData,
-        include: { user: { select: { id: true, name: true, avatar: true, location: true, country: true, email: true, phone: true, bio: true, isVerified: true } } },
-      })
-    } else {
-      artisan = await db.artisan.create({
-        data: {
-          userId,
-          specialties: artisanData.specialties as string || JSON.stringify([]),
-          skills: artisanData.skills as string || JSON.stringify([]),
-          hourlyRate: (artisanData.hourlyRate as number) || 5000,
-          experience: (artisanData.experience as number) || 0,
-          isAvailable: (artisanData.isAvailable as boolean) ?? true,
-          certifications: artisanData.certifications as string || JSON.stringify([]),
-          portfolio: JSON.stringify([]),
-        },
-        include: { user: { select: { id: true, name: true, avatar: true, location: true, country: true, email: true, phone: true, bio: true, isVerified: true } } },
-      })
-    }
-
-    return NextResponse.json({ success: true, artisan })
+    return {
+      latitude: parseFloat(data[0].lat),
+      longitude: parseFloat(data[0].lon),
+      formattedAddress: data[0].display_name,
+    };
   } catch (error) {
-    console.error('Artisan profile create/update error:', error)
-    return NextResponse.json({ error: 'Erreur lors de la création du profil artisan' }, { status: 500 })
+    console.error('Erreur géocodage:', error);
+    return null;
   }
 }
 
+// POST — Créer un profil artisan
+export async function POST(request: NextRequest) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+    }
+
+    const body = await request.json();
+    const {
+      profession,
+      experience,
+      location,
+      country,
+      address,
+      bio,
+      phone,
+      skills,
+      portfolio,
+    } = body;
+
+    // Vérifier si un profil existe déjà
+    const existing = await prisma.artisan.findUnique({
+      where: { userId: session.user.id },
+    });
+
+    if (existing) {
+      return NextResponse.json(
+        { error: 'Profil déjà existant, utilisez PATCH pour mettre à jour' },
+        { status: 409 }
+      );
+    }
+
+    // Géocodage automatique si adresse fournie
+    let latitude = null;
+    let longitude = null;
+    let formattedAddress = address;
+
+    if (address && address.trim().length >= 3) {
+      const geo = await geocodeAddress(address);
+      if (geo) {
+        latitude = geo.latitude;
+        longitude = geo.longitude;
+        formattedAddress = geo.formattedAddress;
+      }
+    }
+
+    // Créer le profil artisan
+    const artisan = await prisma.artisan.create({
+      data: {
+        userId: session.user.id,
+        profession,
+        experience: experience ? parseInt(experience) : null,
+        location,
+        country,
+        address: formattedAddress,
+        latitude,
+        longitude,
+        phone,
+        bio,
+        skills: skills || [],
+        portfolio: portfolio || [],
+      },
+    });
+
+    // Mettre à jour aussi l'utilisateur
+    await prisma.user.update({
+      where: { id: session.user.id },
+      data: {
+        bio: bio || null,
+        location: location || null,
+        country: country || null,
+      },
+    });
+
+    return NextResponse.json({ success: true, artisan }, { status: 201 });
+  } catch (error) {
+    console.error('Erreur création profil:', error);
+    return NextResponse.json(
+      { error: 'Erreur lors de la création du profil' },
+      { status: 500 }
+    );
+  }
+}
+
+// PATCH — Mettre à jour le profil artisan
 export async function PATCH(request: NextRequest) {
   try {
-    const body = await request.json()
-    const { userId, specialties, skills, hourlyRate, experience, isAvailable, certifications, bio } = body
-
-    if (!userId) {
-      return NextResponse.json({ error: 'ID utilisateur requis' }, { status: 400 })
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
 
-    const existingArtisan = await db.artisan.findUnique({ where: { userId } })
-    if (!existingArtisan) {
-      return NextResponse.json({ error: 'Profil artisan non trouvé' }, { status: 404 })
+    const body = await request.json();
+    const {
+      profession,
+      experience,
+      location,
+      country,
+      address,
+      bio,
+      phone,
+      skills,
+      portfolio,
+    } = body;
+
+    // Vérifier que le profil existe
+    const existing = await prisma.artisan.findUnique({
+      where: { userId: session.user.id },
+    });
+
+    if (!existing) {
+      return NextResponse.json(
+        { error: 'Profil non trouvé, utilisez POST pour créer' },
+        { status: 404 }
+      );
     }
 
-    const updateData: Record<string, unknown> = {}
-    if (specialties !== undefined) updateData.specialties = typeof specialties === 'string' ? specialties : JSON.stringify(specialties)
-    if (skills !== undefined) updateData.skills = typeof skills === 'string' ? skills : JSON.stringify(skills)
-    if (hourlyRate !== undefined) updateData.hourlyRate = hourlyRate
-    if (experience !== undefined) updateData.experience = experience
-    if (isAvailable !== undefined) updateData.isAvailable = isAvailable
-    if (certifications !== undefined) updateData.certifications = typeof certifications === 'string' ? certifications : JSON.stringify(certifications)
+    // Re-géocodage si l'adresse a changé
+    let latitude = existing.latitude;
+    let longitude = existing.longitude;
+    let formattedAddress = existing.address;
 
-    if (bio !== undefined) {
-      await db.user.update({ where: { id: userId }, data: { bio } })
+    if (address && address !== existing.address && address.trim().length >= 3) {
+      const geo = await geocodeAddress(address);
+      if (geo) {
+        latitude = geo.latitude;
+        longitude = geo.longitude;
+        formattedAddress = geo.formattedAddress;
+      }
     }
 
-    const artisan = await db.artisan.update({
-      where: { userId },
-      data: updateData,
-      include: { user: { select: { id: true, name: true, avatar: true, location: true, country: true, email: true, phone: true, bio: true, isVerified: true } } },
-    })
+    // Mettre à jour le profil
+    const artisan = await prisma.artisan.update({
+      where: { userId: session.user.id },
+      data: {
+        profession: profession || existing.profession,
+        experience: experience ? parseInt(experience) : existing.experience,
+        location: location || existing.location,
+        country: country || existing.country,
+        address: formattedAddress,
+        latitude,
+        longitude,
+        phone: phone || existing.phone,
+        bio: bio !== undefined ? bio : existing.bio,
+        skills: skills || existing.skills,
+        portfolio: portfolio || existing.portfolio,
+      },
+    });
 
-    return NextResponse.json({ success: true, artisan })
+    // Mettre à jour aussi l'utilisateur
+    await prisma.user.update({
+      where: { id: session.user.id },
+      data: {
+        bio: bio !== undefined ? bio : undefined,
+        location: location || undefined,
+        country: country || undefined,
+      },
+    });
+
+    return NextResponse.json({ success: true, artisan });
   } catch (error) {
-    console.error('Artisan profile update error:', error)
-    return NextResponse.json({ error: 'Erreur lors de la mise à jour du profil artisan' }, { status: 500 })
+    console.error('Erreur mise à jour profil:', error);
+    return NextResponse.json(
+      { error: 'Erreur lors de la mise à jour du profil' },
+      { status: 500 }
+    );
   }
 }

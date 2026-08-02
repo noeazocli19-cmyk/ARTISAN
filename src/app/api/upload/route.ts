@@ -1,63 +1,68 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { writeFile, mkdir } from 'fs/promises'
-import { join } from 'path'
-import { db } from '@/lib/db'
 
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
     const file = formData.get('file') as File | null
     const type = formData.get('type') as string || 'avatars'
-    const userId = formData.get('userId') as string | null
 
     if (!file) {
-      return NextResponse.json({ error: 'Aucun fichier reçu' }, { status: 400 })
+      return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
 
-    // Validate file
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
-    if (!allowedTypes.includes(file.type)) {
-      return NextResponse.json({ error: 'Format non supporté' }, { status: 400 })
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      return NextResponse.json({ error: 'Fichier trop volumineux (max 5 Mo)' }, { status: 400 })
-    }
-
-    // Generate unique filename
-    const ext = file.name.split('.').pop() || 'jpg'
-    const timestamp = Date.now()
-    const filename = userId 
-      ? `${userId}-${timestamp}.${ext}`
-      : `${timestamp}.${ext}`
-
-    // Ensure upload directory exists
-    const uploadDir = join(process.cwd(), 'public', 'uploads', type)
-    await mkdir(uploadDir, { recursive: true })
-
-    // Save file to public/uploads/avatars/ or public/uploads/portfolio/
-    const filepath = join(uploadDir, filename)
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
-    await writeFile(filepath, buffer)
+    const base64Data = buffer.toString('base64')
+    const dataUri = `data:${file.type};base64,${base64Data}`
 
-    // Return the URL path
-    const url = `/uploads/${type}/${filename}`
+    const cloudName = process.env.CLOUDINARY_CLOUD_NAME
+    const apiKey = process.env.CLOUDINARY_API_KEY
+    const apiSecret = process.env.CLOUDINARY_API_SECRET
 
-    // Update user avatar in database if userId provided
-    if (userId && type === 'avatars') {
-      await db.user.update({
-        where: { id: userId },
-        data: { avatar: url },
-      })
+    if (!cloudName || !apiKey || !apiSecret) {
+      return NextResponse.json(
+        { error: 'Cloudinary not configured. Add CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET to .env and Vercel settings.' },
+        { status: 500 }
+      )
     }
 
-    return NextResponse.json({ success: true, url })
+    const uploadFolder = type === 'avatars' ? 'artisan_avatars' : 'artisan_missions'
+    const timestamp = Math.round(new Date().getTime() / 1000)
+
+    const crypto = await import('crypto')
+    const paramsToSign = `folder=${uploadFolder}&timestamp=${timestamp}`
+    const signature = crypto.createHash('sha1').update(paramsToSign + apiSecret).digest('hex')
+
+    const cloudinaryFormData = new FormData()
+    cloudinaryFormData.append('file', dataUri)
+    cloudinaryFormData.append('folder', uploadFolder)
+    cloudinaryFormData.append('timestamp', String(timestamp))
+    cloudinaryFormData.append('api_key', apiKey)
+    cloudinaryFormData.append('signature', signature)
+    cloudinaryFormData.append('overwrite', 'true')
+
+    const cloudinaryRes = await fetch(
+      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+      { method: 'POST', body: cloudinaryFormData }
+    )
+
+    if (!cloudinaryRes.ok) {
+      const errorData = await cloudinaryRes.json()
+      console.error('Cloudinary error:', errorData)
+      return NextResponse.json({ error: 'Upload failed', details: errorData }, { status: 500 })
+    }
+
+    const cloudinaryData = await cloudinaryRes.json()
+
+    return NextResponse.json({
+      success: true,
+      url: cloudinaryData.secure_url,
+      publicId: cloudinaryData.public_id,
+      width: cloudinaryData.width,
+      height: cloudinaryData.height,
+    })
   } catch (error) {
     console.error('Upload error:', error)
-    return NextResponse.json(
-      { error: 'Erreur lors du téléchargement' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Upload failed' }, { status: 500 })
   }
 }

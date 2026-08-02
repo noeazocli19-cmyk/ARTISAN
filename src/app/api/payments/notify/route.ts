@@ -1,165 +1,123 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
-import { verifyKkiapayWebhookSignature, isKkiapayConfigured } from '@/lib/payments'
+import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { auth } from '@/lib/auth';
 
-export const dynamic = 'force-dynamic'
-
-/**
- * POST /api/payments/notify
- *
- * Webhook endpoint for payment provider notifications.
- *
- * SUPPORTED PROVIDERS:
- * 1. Kkiapay — verifies HMAC-SHA256 signature with x-kkiapay-signature header
- * 2. CinetPay — legacy (no signature verification; relies on transaction_id lookup)
- *
- * SECURITY:
- * - Kkiapay webhooks are verified via HMAC signature
- * - CinetPay webhooks should be verified by calling /payment/check (TODO)
- */
+// POST — Créer un paiement
 export async function POST(request: NextRequest) {
   try {
-    // Get raw body for signature verification
-    const rawBody = await request.text()
-    const body = JSON.parse(rawBody)
-
-    // ---- Detect provider by payload shape ----
-    // Kkiapay sends: { transactionId, status, amount, ... }
-    // CinetPay sends: { transaction_id, status, payment_method, metadata, ... }
-    const isKkiapayPayload = 'transactionId' in body && !('transaction_id' in body)
-    const isCinetPayPayload = 'transaction_id' in body
-
-    // ============================================================
-    // KKIAPAY WEBHOOK
-    // ============================================================
-    if (isKkiapayPayload) {
-      const signature = request.headers.get('x-kkiapay-signature') || ''
-
-      // Verify signature if Kkiapay is configured
-      if (isKkiapayConfigured() && signature) {
-        if (!verifyKkiapayWebhookSignature(rawBody, signature)) {
-          console.error('Kkiapay webhook signature verification failed')
-          return NextResponse.json({ error: 'Signature invalide' }, { status: 401 })
-        }
-      }
-
-      const { transactionId, status, amount, paymentMethod } = body
-
-      if (!transactionId) {
-        return NextResponse.json({ error: 'transactionId manquant' }, { status: 400 })
-      }
-
-      // Find the payment by kkiapayTransactionId OR by reference (fallback)
-      let payment = await db.payment.findFirst({
-        where: { kkiapayTransactionId: transactionId },
-      })
-
-      if (!payment) {
-        // Try by reference (in case webhook arrives before verify endpoint updates the ID)
-        payment = await db.payment.findUnique({
-          where: { reference: transactionId },
-        })
-      }
-
-      if (!payment) {
-        return NextResponse.json({ error: 'Paiement non trouvé' }, { status: 404 })
-      }
-
-      const statusMap: Record<string, string> = {
-        SUCCESS: 'completed',
-        FAILED: 'failed',
-        REFUNDED: 'refunded',
-        PENDING: 'pending',
-      }
-
-      const newStatus = statusMap[String(status || '').toUpperCase()] || 'pending'
-
-      let metadata: Record<string, unknown> = {}
-      try {
-        metadata = JSON.parse(payment.metadata || '{}')
-      } catch {
-        metadata = {}
-      }
-
-      await db.payment.update({
-        where: { id: payment.id },
-        data: {
-          status: newStatus,
-          kkiapayTransactionId: transactionId,
-          metadata: JSON.stringify({
-            ...metadata,
-            kkiapayNotification: body,
-            notifiedAt: new Date().toISOString(),
-            paymentMethod,
-            amount,
-          }),
-        },
-      })
-
-      return NextResponse.json({ received: true, status: newStatus })
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
 
-    // ============================================================
-    // CINETPAY WEBHOOK (legacy)
-    // ============================================================
-    if (isCinetPayPayload) {
-      // SECURITY WARNING: CinetPay webhooks are not signed.
-      // For production, you should call verifyCinetPayPayment(transaction_id) here
-      // to confirm the status before trusting the webhook payload.
-      const { transaction_id, status, payment_method } = body
+    const body = await request.json();
+    const { amount, currency, method, artisanId, missionId } = body;
 
-      if (!transaction_id) {
-        return NextResponse.json({ error: 'Transaction ID manquant' }, { status: 400 })
-      }
-
-      const payment = await db.payment.findUnique({
-        where: { reference: transaction_id },
-      })
-
-      if (!payment) {
-        return NextResponse.json({ error: 'Paiement non trouvé' }, { status: 404 })
-      }
-
-      const statusMap: Record<string, string> = {
-        ACCEPTED: 'completed',
-        REFUSED: 'failed',
-        CANCELLED: 'failed',
-        PENDING: 'pending',
-        WAITING: 'processing',
-      }
-
-      const newStatus = statusMap[status] || 'pending'
-
-      let metadata: Record<string, unknown> = {}
-      try {
-        metadata = JSON.parse(payment.metadata || '{}')
-      } catch {
-        metadata = {}
-      }
-
-      await db.payment.update({
-        where: { id: payment.id },
-        data: {
-          status: newStatus,
-          metadata: JSON.stringify({
-            ...metadata,
-            cinetPayNotification: body,
-            notifiedAt: new Date().toISOString(),
-            paymentMethod: payment_method,
-          }),
-        },
-      })
-
-      return NextResponse.json({ received: true, status: newStatus })
+    if (!amount || !artisanId) {
+      return NextResponse.json(
+        { error: 'Montant et artisanId sont requis' },
+        { status: 400 }
+      );
     }
 
-    // Unknown payload shape
-    return NextResponse.json(
-      { error: 'Format de webhook non reconnu' },
-      { status: 400 }
-    )
+    const payment = await prisma.payment.create({
+      data: {
+        amount,
+        currency: currency || 'XAF',
+        method: method || null,
+        status: 'en_attente',
+        clientId: session.user.id,
+        artisanId,
+        missionId: missionId || null,
+      },
+    });
+
+    return NextResponse.json({ payment }, { status: 201 });
   } catch (error) {
-    console.error('Payment notification error:', error)
-    return NextResponse.json({ error: 'Erreur de traitement' }, { status: 500 })
+    console.error('Erreur création paiement:', error);
+    return NextResponse.json(
+      { error: 'Erreur lors de la création du paiement' },
+      { status: 500 }
+    );
+  }
+}
+
+// GET — Récupérer les paiements
+export async function GET(request: NextRequest) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const status = searchParams.get('status');
+
+    const where: any = {
+      clientId: session.user.id,
+    };
+    if (status) where.status = status;
+
+    const payments = await prisma.payment.findMany({
+      where,
+      include: {
+        artisan: {
+          include: {
+            user: {
+              select: { id: true, name: true, image: true },
+            },
+          },
+        },
+        mission: {
+          select: { id: true, title: true },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return NextResponse.json({ payments });
+  } catch (error) {
+    console.error('Erreur récupération paiements:', error);
+    return NextResponse.json(
+      { error: 'Erreur lors de la récupération des paiements' },
+      { status: 500 }
+    );
+  }
+}
+
+// PATCH — Mettre à jour un paiement
+export async function PATCH(request: NextRequest) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+    }
+
+    const body = await request.json();
+    const { paymentId, status, reference } = body;
+
+    if (!paymentId || !status) {
+      return NextResponse.json(
+        { error: 'paymentId et status sont requis' },
+        { status: 400 }
+      );
+    }
+
+    const payment = await prisma.payment.update({
+      where: { id: paymentId },
+      data: {
+        status,
+        reference: reference || undefined,
+        paidAt: status === 'payé' ? new Date() : undefined,
+      },
+    });
+
+    return NextResponse.json({ payment });
+  } catch (error) {
+    console.error('Erreur mise à jour paiement:', error);
+    return NextResponse.json(
+      { error: 'Erreur lors de la mise à jour du paiement' },
+      { status: 500 }
+    );
   }
 }

@@ -1,0 +1,102 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { auth } from '@/lib/auth';
+
+// GET — Récupérer les messages
+export async function GET(request: NextRequest) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const missionId = searchParams.get('missionId');
+    const receiverId = searchParams.get('receiverId');
+
+    const where: any = {
+      OR: [
+        { senderId: session.user.id },
+        { receiverId: session.user.id },
+      ],
+    };
+
+    if (missionId) where.missionId = missionId;
+    if (receiverId) {
+      where.OR = [
+        { senderId: session.user.id, receiverId },
+        { senderId: receiverId, receiverId: session.user.id },
+      ];
+    }
+
+    const messages = await prisma.message.findMany({
+      where,
+      include: {
+        sender: { select: { id: true, name: true, image: true } },
+        receiver: { select: { id: true, name: true, image: true } },
+      },
+      orderBy: { createdAt: 'asc' },
+      take: 100,
+    });
+
+    return NextResponse.json({ messages });
+  } catch (error) {
+    console.error('Erreur messages:', error);
+    return NextResponse.json(
+      { error: 'Erreur lors de la récupération des messages' },
+      { status: 500 }
+    );
+  }
+}
+
+// POST — Envoyer un message
+export async function POST(request: NextRequest) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+    }
+
+    const body = await request.json();
+    const { content, receiverId, missionId } = body;
+
+    if (!content || !receiverId) {
+      return NextResponse.json(
+        { error: 'Contenu et receiverId sont requis' },
+        { status: 400 }
+      );
+    }
+
+    const message = await prisma.message.create({
+      data: {
+        content,
+        senderId: session.user.id,
+        receiverId,
+        missionId: missionId || null,
+      },
+      include: {
+        sender: { select: { id: true, name: true, image: true } },
+        receiver: { select: { id: true, name: true, image: true } },
+      },
+    });
+
+    // Créer une notification pour le destinataire
+    await prisma.notification.create({
+      data: {
+        userId: receiverId,
+        title: 'Nouveau message',
+        message: `${session.user.name} vous a envoyé un message`,
+        type: 'message',
+        link: missionId ? `/missions/${missionId}` : null,
+      },
+    });
+
+    return NextResponse.json({ message }, { status: 201 });
+  } catch (error) {
+    console.error('Erreur envoi message:', error);
+    return NextResponse.json(
+      { error: "Erreur lors de l'envoi du message" },
+      { status: 500 }
+    );
+  }
+}

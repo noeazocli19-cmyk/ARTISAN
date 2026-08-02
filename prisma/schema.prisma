@@ -1,7 +1,3 @@
-// Artisan Connect - Database Schema
-// Provider: PostgreSQL (for Supabase production)
-// For local testing, you can switch provider to "sqlite" and remove directUrl
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -12,202 +8,47 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+// ============================================
+// AUTHENTIFICATION (better-auth)
+// ============================================
+
 model User {
-  id            String   @id @default(cuid())
-  email         String   @unique
-  name          String
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
   password      String?
   phone         String?
-  role          String   @default("client") // client, artisan, admin
+  role          String    @default("client")
   avatar        String?
   location      String?
   country       String?
   bio           String?
-  isVerified    Boolean  @default(false)
-  emailVerified Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  isVerified    Boolean   @default(false)
+  emailVerified Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  image         String?
 
-  artisanProfile Artisan?
-  clientMissions Mission[]      @relation("ClientMissions")
-  sentMessages   Message[]      @relation("SentMessages")
-  reviewsGiven   Review[]       @relation("ReviewAuthor")
-  notifications  Notification[]
-  payments       Payment[]
+  // Relations
+  artisan       Artisan?
+  missions      Mission[]
+  accounts      Account[]
+  sessions      Session[]
+  reviews       Review[]
+  sentMessages  Message[]  @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
+  notifications Notification[]
+  payments      Payment[]
+  favorites     Favorite[]
 
-  image    String?
-  sessions Session[]
-  accounts Account[]
-
-  @@index([role])
   @@index([location])
-  @@index([isVerified])
-  @@index([createdAt])
-}
-
-model Artisan {
-  id             String    @id @default(cuid())
-  userId         String    @unique
-  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  specialties    String // JSON string of specialties array
-  skills         String // JSON string of skills array
-  hourlyRate     Int // in FCFA
-  experience     Int // years
-  badge          String    @default("Nouveau") // Nouveau, Vérifié, Top, Élite
-  rating         Float     @default(0)
-  reviewCount    Int       @default(0)
-  missionCount   Int       @default(0)
-  isAvailable    Boolean   @default(true)
-  portfolio      String // JSON string of portfolio items
-  certifications String // JSON string
-  latitude       Float?
-  longitude      Float?
-  completedAt    DateTime?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-
-  missions Mission[]
-  reviews  Review[]
-
-  @@index([rating])
-  @@index([badge])
-  @@index([isAvailable])
-  @@index([specialties])
-  @@index([createdAt])
-}
-
-model Category {
-  id           String   @id @default(cuid())
-  name         String   @unique
-  slug         String   @unique
-  icon         String
-  description  String?
-  artisanCount Int      @default(0)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-}
-
-model Mission {
-  id          String    @id @default(cuid())
-  title       String
-  description String
-  category    String
-  status      String    @default("ouverte") // ouverte, assignée, en_cours, terminée, annulée
-  budget      Int? // in FCFA
-  location    String?
-  clientId    String
-  artisanId   String?
-  client      User      @relation("ClientMissions", fields: [clientId], references: [id])
-  artisan     Artisan?  @relation(fields: [artisanId], references: [id])
-  messages    Message[]
-  review      Review?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  @@index([status])
-  @@index([category])
-  @@index([clientId])
-  @@index([artisanId])
-  @@index([createdAt])
-}
-
-model Review {
-  id        String   @id @default(cuid())
-  rating    Int // 1-5
-  comment   String
-  authorId  String
-  artisanId String
-  missionId String   @unique
-  author    User     @relation("ReviewAuthor", fields: [authorId], references: [id])
-  artisan   Artisan  @relation(fields: [artisanId], references: [id])
-  mission   Mission  @relation(fields: [missionId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Message {
-  id        String   @id @default(cuid())
-  content   String
-  senderId  String
-  missionId String
-  isRead    Boolean  @default(false)
-  sender    User     @relation("SentMessages", fields: [senderId], references: [id])
-  mission   Mission  @relation(fields: [missionId], references: [id])
-  createdAt DateTime @default(now())
-
-  @@index([missionId])
-  @@index([senderId])
-  @@index([createdAt])
-}
-
-model Notification {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  title     String
-  message   String
-  type      String   @default("info") // info, success, warning, mission, message
-  isRead    Boolean  @default(false)
-  createdAt DateTime @default(now())
-
-  @@index([userId])
-  @@index([isRead])
-  @@index([createdAt])
-}
-
-model PasswordResetToken {
-  id        String   @id @default(cuid())
-  token     String   @unique
-  email     String
-  expiresAt DateTime
-  used      Boolean  @default(false)
-  createdAt DateTime @default(now())
-
-  @@index([token])
-  @@index([email])
-  @@index([expiresAt])
-}
-
-model Payment {
-  id     String @id @default(cuid())
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  amount        Int // total amount charged (incl. commission for deposits)
-  netAmount     Int     @default(0) // net amount (excluding commission)
-  commission    Int     @default(0) // platform commission in FCFA
-  currency      String  @default("FCFA")
-  type          String  @default("payment") // payment, deposit, withdrawal, transfer, refund
-  method        String // orange_money, mtn_money, wave, moov_money, card, cash
-  status        String  @default("pending") // pending, processing, completed, failed, refunded
-  phoneNumber   String?
-  cardLast4     String?
-  reference     String  @unique
-  description   String?
-  recipientId   String?
-  recipientName String?
-  missionId     String?
-
-  // Provider transaction IDs
-  cinetPayTransId      String?
-  kkiapayTransactionId String?
-
-  metadata  String? // JSON string for additional data
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([userId])
-  @@index([status])
-  @@index([method])
-  @@index([type])
-  @@index([reference])
-  @@index([createdAt])
+  @@index([role])
 }
 
 model Session {
   id        String   @id
   expiresAt DateTime
-  token     String
+  token     String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   ipAddress String?
@@ -215,17 +56,15 @@ model Session {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([token])
   @@index([userId])
   @@map("session")
 }
 
 model Account {
-  id                    String    @id
+  id                    String    @id @default(cuid())
   accountId             String
   providerId            String
   userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken           String?
   refreshToken          String?
   idToken               String?
@@ -235,6 +74,7 @@ model Account {
   password              String?
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@map("account")
@@ -247,7 +87,219 @@ model Verification {
   expiresAt  DateTime
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
 
-  @@index([identifier])
-  @@map("verification")
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  email     String   @default("")
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  userId    String   @default("")
+
+  @@index([userId])
+}
+
+// ============================================
+// ARTISAN
+// ============================================
+
+model Artisan {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  profession     String?
+  specialties    String   @default("[]")
+  skills         String   @default("[]")
+  hourlyRate     Int      @default(0)
+  experience     Int      @default(0)
+  badge          String   @default("Nouveau")
+  rating         Float    @default(0)
+  reviewCount    Int      @default(0)
+  missionCount   Int      @default(0)
+  isAvailable    Boolean  @default(true)
+  portfolio      String   @default("[]")
+  certifications String   @default("[]")
+  latitude       Float?
+  longitude      Float?
+  address        String?
+  country        String?
+  location       String?
+  phone          String?
+  bio            String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reviews        Review[]
+  missions       Mission[]
+  favorites      Favorite[] 
+   payments       Payment[]  
+
+  @@index([latitude])
+  @@index([longitude])
+  @@index([isAvailable])
+}
+
+// ============================================
+// CATÉGORIES DE MÉTIERS
+// ============================================
+
+model Category {
+  id           String   @id @default(cuid())
+  name         String   @unique
+  slug         String   @default("")
+  icon         String?
+  description  String?
+  artisanCount Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// ============================================
+// MISSIONS (demandes client → artisan)
+// ============================================
+
+model Mission {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  category    String?
+  status      String   @default("ouverte")
+  budget      Int      @default(0)
+  location    String?
+  latitude    Float?
+  longitude   Float?
+  clientId    String
+  artisanId   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  client      User     @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  artisan     Artisan? @relation(fields: [artisanId], references: [id])
+  reviews     Review[]
+  payments    Payment[]
+  messages    Message[]
+
+  @@index([status])
+  @@index([clientId])
+  @@index([artisanId])
+}
+
+// ============================================
+// AVIS / REVIEWS (client note l'artisan)
+// ============================================
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int      // 1 à 5 étoiles
+  comment   String?
+  clientId  String
+  artisanId String
+  missionId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  client    User     @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  artisan   Artisan  @relation(fields: [artisanId], references: [id], onDelete: Cascade)
+  mission   Mission? @relation(fields: [missionId], references: [id], onDelete: SetNull)
+
+  @@index([artisanId])
+  @@index([clientId])
+}
+
+// ============================================
+// MESSAGES / CHAT (entre client et artisan)
+// ============================================
+
+model Message {
+  id         String   @id @default(cuid())
+  content    String
+  senderId   String
+  receiverId String
+  missionId  String?
+  isRead     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  // Relations
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+  mission    Mission? @relation(fields: [missionId], references: [id], onDelete: SetNull)
+
+  @@index([senderId])
+  @@index([receiverId])
+  @@index([missionId])
+}
+
+// ============================================
+// NOTIFICATIONS
+// ============================================
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  type      String   @default("info") // info, success, warning, mission, payment
+  isRead    Boolean  @default(false)
+  link      String?  // lien vers la mission, le paiement, etc.
+  createdAt DateTime @default(now())
+
+  // Relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isRead])
+}
+
+// ============================================
+// PAIEMENTS
+// ============================================
+
+model Payment {
+  id            String   @id @default(cuid())
+  amount        Int      // montant en FCFA ou devise
+  currency      String   @default("XAF")
+  status        String   @default("en_attente") // en_attente, payé, échoué, remboursé
+  method        String?  // Mobile Money, Orange Money, carte, etc.
+  reference     String?  // référence de transaction
+  clientId      String
+  artisanId     String?
+  missionId     String?
+  paidAt        DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  client        User     @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  artisan       Artisan? @relation(fields: [artisanId], references: [id])
+  mission       Mission? @relation(fields: [missionId], references: [id], onDelete: SetNull)
+
+  @@index([clientId])
+  @@index([artisanId])
+  @@index([missionId])
+  @@index([status])
+}
+
+// ============================================
+// FAVORIS (client sauvegarde un artisan)
+// ============================================
+
+model Favorite {
+  id        String   @id @default(cuid())
+  clientId  String
+  artisanId String
+  createdAt DateTime @default(now())
+
+  // Relations
+  client    User     @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  artisan   Artisan  @relation(fields: [artisanId], references: [id], onDelete: Cascade)
+
+  @@unique([clientId, artisanId]) // un client ne peut pas favoriser 2 fois le même artisan
+  @@index([clientId])
+  @@index([artisanId])
 }
