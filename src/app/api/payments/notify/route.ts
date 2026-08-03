@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { auth } from '@/lib/auth';
+import { db } from '@/lib/db';
+import { auth } from '@/lib/better-auth';
 
 // POST — Créer un paiement
 export async function POST(request: NextRequest) {
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const payment = await prisma.payment.create({
+    const payment = await db.payment.create({
       data: {
         amount,
         currency: currency || 'XAF',
@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
     };
     if (status) where.status = status;
 
-    const payments = await prisma.payment.findMany({
+    const payments = await db.payment.findMany({
       where,
       include: {
         artisan: {
@@ -103,7 +103,7 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    const payment = await prisma.payment.update({
+    const payment = await db.payment.update({
       where: { id: paymentId },
       data: {
         status,

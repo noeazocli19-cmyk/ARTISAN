@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { verifyToken } from '@/lib/auth'
+import { auth } from '@/lib/better-auth'
+import { headers } from 'next/headers'
 
 export const dynamic = 'force-dynamic'
 

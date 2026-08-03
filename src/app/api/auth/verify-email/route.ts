@@ -1,17 +1,18 @@
+﻿
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { generateToken } from '@/lib/auth'
+import { auth } from '@/lib/better-auth'
+import { headers } from 'next/headers'
 
 export const dynamic = 'force-dynamic'
 
-/**
- * POST /api/auth/verify-email
- * Body: { email, code }
- *
- * Vérifie le code et active le compte utilisateur.
- */
 export async function POST(request: NextRequest) {
   try {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (!session?.user) {
+      return NextResponse.json({ error: 'Non autorise' }, { status: 401 })
+    }
+
     const { email, code } = await request.json()
 
     if (!email || !code) {
@@ -21,7 +22,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Trouver le code en base
     const resetToken = await db.passwordResetToken.findFirst({
       where: {
         email,
@@ -34,12 +34,11 @@ export async function POST(request: NextRequest) {
 
     if (!resetToken) {
       return NextResponse.json(
-        { error: 'Code invalide ou expiré' },
+        { error: 'Code invalide ou expire' },
         { status: 400 }
       )
     }
 
-    // Activer le compte utilisateur
     const user = await db.user.update({
       where: { email },
       data: { emailVerified: true },
@@ -58,30 +57,21 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    // Marquer le code comme utilisé
     await db.passwordResetToken.update({
       where: { id: resetToken.id },
       data: { used: true },
     })
 
-    // Générer le token JWT
-    const token = generateToken({
-      userId: user.id,
-      email: user.email,
-      role: user.role,
-    })
-
-    console.log(`✅ Compte vérifié pour ${email}`)
+    console.log('Compte verifie pour ' + email)
 
     return NextResponse.json({
-      message: 'Compte vérifié avec succès !',
+      message: 'Compte verifie avec succes !',
       user,
-      token,
     })
   } catch (error) {
     console.error('Verify email error:', error)
     return NextResponse.json(
-      { error: 'Erreur lors de la vérification' },
+      { error: 'Erreur lors de la verification' },
       { status: 500 }
     )
   }

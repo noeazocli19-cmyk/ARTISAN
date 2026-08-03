@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { verifyToken } from '@/lib/auth'
+import { auth } from '@/lib/better-auth'
+import { headers } from 'next/headers'
 import { generateTransactionId, getActiveProvider } from '@/lib/payments'
 
 export const dynamic = 'force-dynamic'
