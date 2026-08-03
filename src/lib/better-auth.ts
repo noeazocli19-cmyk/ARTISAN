@@ -49,5 +49,13 @@ export const auth = betterAuth({
     resetPasswordTokenExpiresIn: 3600,
   },
 
+  trustedOrigins: [
+    "http://localhost:3000",
+    process.env.BETTER_AUTH_URL,
+    process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : null,
+  ].filter(Boolean) as string[],
+
   plugins: [nextCookies()],
 })
