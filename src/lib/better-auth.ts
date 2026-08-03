@@ -4,13 +4,7 @@ import { nextCookies } from "better-auth/next-js"
 import { db } from "@/lib/db"
 import { Resend } from "resend"
 
-// Email sender address - configurable via environment
-// Use your verified domain from Resend Dashboard
-// Example: "noreply@artisan-connecte.com"
 const EMAIL_FROM = process.env.EMAIL_FROM || "onboarding@resend.dev"
-
-// Resend client - only initialized if API key is available
-// In development without API key, password reset emails won't be sent
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 
 export const auth = betterAuth({
@@ -49,13 +43,16 @@ export const auth = betterAuth({
     resetPasswordTokenExpiresIn: 3600,
   },
 
-  trustedOrigins: [
-    "http://localhost:3000",
-    process.env.BETTER_AUTH_URL,
-    process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : null,
-  ].filter(Boolean) as string[],
+  trustedOrigins: (origin) => {
+    const allowed = [
+      "localhost",
+      ".vercel.app",
+    ]
+    if (allowed.some((domain) => origin.includes(domain))) return true
+    if (origin === process.env.BETTER_AUTH_URL) return true
+    console.log("❌ Origin blocked:", origin)
+    return false
+  },
 
   plugins: [nextCookies()],
 })
