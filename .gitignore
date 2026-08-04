@@ -6,3 +6,5 @@ db/*.db
 mini-services/
 Caddyfile 
 .z-ai-config 
+.vercel
+.env*

@@ -43,16 +43,10 @@ export const auth = betterAuth({
     resetPasswordTokenExpiresIn: 3600,
   },
 
-  trustedOrigins: (origin) => {
-    const allowed = [
-      "localhost",
-      ".vercel.app",
-    ]
-    if (allowed.some((domain) => origin.includes(domain))) return true
-    if (origin === process.env.BETTER_AUTH_URL) return true
-    console.log("❌ Origin blocked:", origin)
-    return false
-  },
+  trustedOrigins: [
+    "http://localhost:3000",
+    "https://artisan-nine-sigma.vercel.app",
+  ],
 
   plugins: [nextCookies()],
 })
