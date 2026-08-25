@@ -1063,7 +1063,7 @@ export function GamificationSystem({ onBack }: GamificationSystemProps) {
           <TabsContent value="leaderboard" className="mt-6 space-y-4">
             {/* Top 3 podium */}
             <div className="grid grid-cols-3 gap-3 sm:gap-4">
-              {[realLeaderboard[1], realLeaderboard[0], realLeaderboard[2]].map((entry, i) => {
+              {[realLeaderboard[1], realLeaderboard[0], realLeaderboard[2]].filter(Boolean).map((entry, i) => {
                 const isFirst = entry.rank === 1
                 return (
                   <motion.div
@@ -1177,5 +1177,6 @@ export function GamificationSystem({ onBack }: GamificationSystemProps) {
     </div>
   )
 }
+
 
 

@@ -1,11 +1,12 @@
-"use client"
+﻿"use client"
+import { Suspense } from "react"
 
 import { useState, useEffect, useRef } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { authClient } from "@/lib/auth-client"
 import { MessageCircle, Send, Loader2, MessagesSquare, ArrowLeft } from "lucide-react"
 
-export default function MessagesPage() {
+function MessagesPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { data: session } = authClient.useSession()
@@ -147,7 +148,7 @@ export default function MessagesPage() {
                 {missionIdFromUrl && (
                   <p className="text-xs text-amber-600 dark:text-amber-400 flex items-center gap-1">
                     <MessageCircle className="w-3 h-3" />
-                    Mission liée
+                    Mission liÃ©e
                   </p>
                 )}
               </div>
@@ -183,7 +184,7 @@ export default function MessagesPage() {
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend()}
-                  placeholder="Écrire un message..."
+                  placeholder="Ã‰crire un message..."
                   className="flex-1 px-4 py-3 rounded-full border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all"
                 />
                 <button
@@ -199,7 +200,7 @@ export default function MessagesPage() {
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500">
             <MessagesSquare className="w-16 h-16 mb-3 text-gray-300 dark:text-gray-600" />
-            <p className="text-lg">Sélectionnez une conversation</p>
+            <p className="text-lg">SÃ©lectionnez une conversation</p>
             <p className="text-sm">Ou contactez un artisan depuis une mission</p>
           </div>
         )}
@@ -207,3 +208,12 @@ export default function MessagesPage() {
     </div>
   )
 }
+
+export default function MessagesPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Chargement...</div>}>
+      <MessagesPageContent />
+    </Suspense>
+  )
+}
+
