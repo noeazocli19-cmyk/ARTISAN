@@ -1,22 +1,41 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
-import { auth } from '@/lib/better-auth';
+﻿import { NextRequest, NextResponse } from "next/server";
+import { db } from "@/lib/db";
+import { auth } from "@/lib/better-auth";
 
-async function geocodeAddress(address: string, country?: string, city?: string) {
+function safeStringify(value: any): string {
+  if (Array.isArray(value)) return JSON.stringify(value);
+  if (typeof value === "string") return value;
+  if (value === null || value === undefined) return "[]";
+  return JSON.stringify(value);
+}
+
+function safeParse(value: any): any[] {
+  if (Array.isArray(value)) return value;
+  if (typeof value === "string") {
+    try { const parsed = JSON.parse(value); return Array.isArray(parsed) ? parsed : []; }
+    catch { return []; }
+  }
+  return [];
+}
+
+// Convertit une adresse texte en coordonnées GPS via le service de géocodage interne.
+// Ne bloque jamais la sauvegarde du profil si le géocodage échoue.
+async function geocodeAddress(address: string, origin: string): Promise<{ latitude: number; longitude: number } | null> {
+  if (!address || address.trim().length < 3) return null;
   try {
-    const fullAddress = [address, city, country].filter(Boolean).join(', ');
-    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fullAddress)}&limit=1&addressdetails=1`;
-    const response = await fetch(url, { headers: { 'User-Agent': 'ArtisanConnect/1.0' } });
-    if (!response.ok) return null;
-    const data = await response.json();
-    if (!data || data.length === 0) return null;
-    return {
-      latitude: parseFloat(data[0].lat),
-      longitude: parseFloat(data[0].lon),
-      formattedAddress: data[0].display_name,
-    };
+    const res = await fetch(`${origin}/api/geocode`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ address }),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data?.success) {
+      return { latitude: data.latitude, longitude: data.longitude };
+    }
+    return null;
   } catch (error) {
-    console.error('Erreur géocodage:', error);
+    console.error("Erreur géocodage (non bloquant):", error);
     return null;
   }
 }
@@ -25,17 +44,25 @@ export async function GET(request: NextRequest) {
   try {
     const session = await auth.api.getSession({ headers: request.headers });
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+      return NextResponse.json({ error: "Non autorise" }, { status: 401 });
     }
     const artisan = await db.artisan.findUnique({
       where: { userId: session.user.id },
-      include: { user: { select: { id: true, name: true, email: true, image: true, phone: true } } },
     });
-    if (!artisan) return NextResponse.json({ artisan: null });
-    return NextResponse.json({ artisan });
-  } catch (error) {
-    console.error('Erreur récupération profil:', error);
-    return NextResponse.json({ error: 'Erreur lors de la récupération du profil' }, { status: 500 });
+    if (!artisan) {
+      return NextResponse.json({ artisan: null }, { status: 200 });
+    }
+    const parsedArtisan = {
+      ...artisan,
+      skills: safeParse(artisan.skills),
+      specialties: safeParse(artisan.specialties),
+      certifications: safeParse(artisan.certifications),
+      portfolio: safeParse(artisan.portfolio),
+    };
+    return NextResponse.json({ artisan: parsedArtisan }, { status: 200 });
+  } catch (error: any) {
+    console.error("GET profile error:", error);
+    return NextResponse.json({ error: error.message || "Erreur serveur" }, { status: 500 });
   }
 }
 
@@ -43,43 +70,76 @@ export async function POST(request: NextRequest) {
   try {
     const session = await auth.api.getSession({ headers: request.headers });
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+      return NextResponse.json({ error: "Non autorise" }, { status: 401 });
     }
     const body = await request.json();
-    const { profession, experience, location, country, address, bio, phone, skills, specialties, hourlyRate, portfolio } = body;
+    const userId = session.user.id;
 
-    const existing = await db.artisan.findUnique({ where: { userId: session.user.id } });
-    if (existing) {
-      return NextResponse.json({ error: 'Profil déjà existant, utilisez PATCH' }, { status: 409 });
+    // Géocodage optionnel : si une adresse est fournie et qu'elle n'est pas déjà
+    // au format "lat, lng" (cas du bouton GPS), on la convertit en coordonnées.
+    let latitude: number | undefined;
+    let longitude: number | undefined;
+    if (body.address) {
+      const gpsMatch = body.address.match(/^(-?\d+\.\d+),\s*(-?\d+\.\d+)$/);
+      if (gpsMatch) {
+        latitude = parseFloat(gpsMatch[1]);
+        longitude = parseFloat(gpsMatch[2]);
+      } else {
+        const origin = request.nextUrl.origin;
+        const geo = await geocodeAddress(body.address, origin);
+        if (geo) {
+          latitude = geo.latitude;
+          longitude = geo.longitude;
+        }
+      }
     }
 
-    let latitude = null;
-    let longitude = null;
-    let formattedAddress = address;
-    if (address && address.trim().length >= 3) {
-      const geo = await geocodeAddress(address, country, location);
-      if (geo) { latitude = geo.latitude; longitude = geo.longitude; formattedAddress = geo.formattedAddress; }
-    }
-
-    const artisan = await db.artisan.create({
-      data: {
-        userId: session.user.id, profession,
-        experience: experience ? parseInt(experience) : 0,
-        location, country, address: formattedAddress, latitude, longitude,
-        phone, bio, skills: skills || '[]', specialties: specialties || '[]',
-        hourlyRate: hourlyRate || 0, portfolio: portfolio || '[]',
+    const artisan = await db.artisan.upsert({
+      where: { userId },
+      update: {
+        phone: body.phone || undefined,
+        profession: body.profession || undefined,
+        specialties: safeStringify(body.specialties || []),
+        portfolio: safeStringify(body.portfolio || []),
+        skills: safeStringify(body.skills || []),
+        certifications: safeStringify(body.certifications || []),
+        experience: body.experience !== undefined ? Number(body.experience) : undefined,
+        location: body.location || undefined,
+        country: body.country || undefined,
+        address: body.address || undefined,
+        bio: body.bio || undefined,
+        ...(latitude !== undefined ? { latitude } : {}),
+        ...(longitude !== undefined ? { longitude } : {}),
+      },
+      create: {
+        userId,
+        phone: body.phone || "",
+        profession: body.profession || "",
+        specialties: safeStringify(body.specialties || []),
+        portfolio: safeStringify(body.portfolio || []),
+        skills: safeStringify(body.skills || []),
+        certifications: safeStringify(body.certifications || []),
+        experience: body.experience ? Number(body.experience) : 0,
+        location: body.location || "",
+        country: body.country || "",
+        address: body.address || "",
+        bio: body.bio || "",
+        latitude,
+        longitude,
       },
     });
 
-    await db.user.update({
-      where: { id: session.user.id },
-      data: { bio: bio || null, location: location || null, country: country || null, phone: phone || null },
-    });
-
-    return NextResponse.json({ success: true, artisan }, { status: 201 });
-  } catch (error) {
-    console.error('Erreur création profil:', error);
-    return NextResponse.json({ error: 'Erreur lors de la création du profil' }, { status: 500 });
+    const parsedArtisan = {
+      ...artisan,
+      skills: safeParse(artisan.skills),
+      specialties: safeParse(artisan.specialties),
+      certifications: safeParse(artisan.certifications),
+      portfolio: safeParse(artisan.portfolio),
+    };
+    return NextResponse.json({ artisan: parsedArtisan }, { status: 201 });
+  } catch (error: any) {
+    console.error("POST profile error:", error);
+    return NextResponse.json({ error: error.message || "Erreur serveur" }, { status: 500 });
   }
 }
 
@@ -87,52 +147,71 @@ export async function PATCH(request: NextRequest) {
   try {
     const session = await auth.api.getSession({ headers: request.headers });
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+      return NextResponse.json({ error: "Non autorise" }, { status: 401 });
     }
     const body = await request.json();
-    const { profession, experience, location, country, address, bio, phone, skills, specialties, hourlyRate, portfolio } = body;
+    const userId = session.user.id;
+    const updateData: any = {};
+    if (body.phone !== undefined) updateData.phone = body.phone;
+    if (body.profession !== undefined) updateData.profession = body.profession;
+    if (body.specialties !== undefined) updateData.specialties = safeStringify(body.specialties);
+    if (body.portfolio !== undefined) updateData.portfolio = safeStringify(body.portfolio);
+    if (body.skills !== undefined) updateData.skills = safeStringify(body.skills);
+    if (body.certifications !== undefined) updateData.certifications = safeStringify(body.certifications);
+    if (body.experience !== undefined) updateData.experience = Number(body.experience);
+    if (body.location !== undefined) updateData.location = body.location;
+    if (body.country !== undefined) updateData.country = body.country;
+    if (body.bio !== undefined) updateData.bio = body.bio;
 
-    const existing = await db.artisan.findUnique({ where: { userId: session.user.id } });
-    if (!existing) {
-      return NextResponse.json({ error: 'Profil non trouvé, utilisez POST' }, { status: 404 });
+    if (body.address !== undefined) {
+      updateData.address = body.address;
+      const gpsMatch = body.address?.match(/^(-?\d+\.\d+),\s*(-?\d+\.\d+)$/);
+      if (gpsMatch) {
+        updateData.latitude = parseFloat(gpsMatch[1]);
+        updateData.longitude = parseFloat(gpsMatch[2]);
+      } else if (body.address) {
+        const origin = request.nextUrl.origin;
+        const geo = await geocodeAddress(body.address, origin);
+        if (geo) {
+          updateData.latitude = geo.latitude;
+          updateData.longitude = geo.longitude;
+        }
+      }
     }
 
-    let latitude = existing.latitude;
-    let longitude = existing.longitude;
-    let formattedAddress = existing.address;
-
-    const newAddress = address || existing.address;
-    const newCity = location || existing.location;
-    const newCountry = country || existing.country;
-
-    const addressChanged = (address && address !== existing.address) || (location && location !== existing.location) || (country && country !== existing.country);
-    if (addressChanged && newAddress && newAddress.trim().length >= 3) {
-      const geo = await geocodeAddress(newAddress, newCountry || undefined, newCity || undefined);
-      if (geo) { latitude = geo.latitude; longitude = geo.longitude; formattedAddress = geo.formattedAddress; }
-    }
-
-    const artisan = await db.artisan.update({
-      where: { userId: session.user.id },
-      data: {
-        profession: profession || existing.profession,
-        experience: experience ? parseInt(experience) : existing.experience,
-        location: newCity, country: newCountry, address: formattedAddress,
-        latitude, longitude, phone: phone || existing.phone,
-        bio: bio !== undefined ? bio : existing.bio,
-        skills: skills || existing.skills, specialties: specialties || existing.specialties,
-        hourlyRate: hourlyRate ? parseInt(hourlyRate) : existing.hourlyRate,
-        portfolio: portfolio || existing.portfolio,
+    // Si l'artisan n'a pas encore de profil, PATCH échouerait (P2025) : on
+    // bascule alors sur une création (upsert) plutôt que de planter en 500.
+    const artisan = await db.artisan.upsert({
+      where: { userId },
+      update: updateData,
+      create: {
+        userId,
+        phone: body.phone || "",
+        profession: body.profession || "",
+        specialties: safeStringify(body.specialties || []),
+        portfolio: safeStringify(body.portfolio || []),
+        skills: safeStringify(body.skills || []),
+        certifications: safeStringify(body.certifications || []),
+        experience: body.experience ? Number(body.experience) : 0,
+        location: body.location || "",
+        country: body.country || "",
+        address: body.address || "",
+        bio: body.bio || "",
+        latitude: updateData.latitude,
+        longitude: updateData.longitude,
       },
     });
-
-    await db.user.update({
-      where: { id: session.user.id },
-      data: { bio: bio !== undefined ? bio : undefined, location: newCity || undefined, country: newCountry || undefined, phone: phone || undefined },
-    });
-
-    return NextResponse.json({ success: true, artisan });
-  } catch (error) {
-    console.error('Erreur mise à jour profil:', error);
-    return NextResponse.json({ error: 'Erreur lors de la mise à jour du profil' }, { status: 500 });
+    const parsedArtisan = {
+      ...artisan,
+      skills: safeParse(artisan.skills),
+      specialties: safeParse(artisan.specialties),
+      certifications: safeParse(artisan.certifications),
+      portfolio: safeParse(artisan.portfolio),
+    };
+    return NextResponse.json({ artisan: parsedArtisan }, { status: 200 });
+  } catch (error: any) {
+    console.error("PATCH profile error:", error);
+    return NextResponse.json({ error: error.message || "Erreur serveur" }, { status: 500 });
   }
 }
+

@@ -15,29 +15,29 @@ export const auth = betterAuth({
     provider: "postgresql",
   }),
 
+  user: {
+    additionalFields: {
+      role: {
+        type: "string",
+        defaultValue: "client",
+        input: true,
+      },
+    },
+  },
+
   emailAndPassword: {
     enabled: true,
     sendResetPassword: async ({ user, url }) => {
       if (!resend) {
-        console.warn("⚠️ RESEND_API_KEY not set - password reset email not sent")
-        console.warn(`📧 Reset URL for ${user.email}: ${url}`)
+        console.warn("RESEND_API_KEY not set - password reset email not sent")
+        console.warn("Reset URL for " + user.email + ": " + url)
         return
       }
       await resend.emails.send({
-        from: `Artisan Connect <${EMAIL_FROM}>`,
+        from: "Artisan Connect <" + EMAIL_FROM + ">",
         to: user.email,
-        subject: "Réinitialisation de votre mot de passe",
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #f59e0b;">Artisan Connect</h2>
-            <p>Bonjour ${user.name},</p>
-            <p>Vous avez demandé à réinitialiser votre mot de passe.</p>
-            <a href="${url}" style="background: linear-gradient(to right, #f59e0b, #ea580c); color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; display: inline-block; margin: 16px 0;">
-              Réinitialiser mon mot de passe
-            </a>
-            <p style="color: #6b7280; font-size: 14px;">Ce lien expire dans 1 heure.</p>
-          </div>
-        `,
+        subject: "Reinitialisation de votre mot de passe",
+        html: "<div style='font-family:Arial,sans-serif;max-width:600px;margin:0 auto;'><h2 style='color:#f59e0b;'>Artisan Connect</h2><p>Bonjour " + user.name + ",</p><p>Vous avez demande a reinitialiser votre mot de passe.</p><a href='" + url + "' style='background:linear-gradient(to right,#f59e0b,#ea580c);color:white;padding:12px 24px;border-radius:8px;text-decoration:none;display:inline-block;margin:16px 0;'>Reinitialiser mon mot de passe</a><p style='color:#6b7280;font-size:14px;'>Ce lien expire dans 1 heure.</p></div>",
       })
     },
     resetPasswordTokenExpiresIn: 3600,

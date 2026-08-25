@@ -1,11 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { PrismaClient } from '@prisma/client'
+﻿import { NextRequest, NextResponse } from 'next/server'
+import { db } from '@/lib/db'
 
-const prisma = new PrismaClient()
-
-// ─── Haversine formula (distance in km) ─────────────────────────────────
 function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
-  const R = 6371 // Earth radius in km
+  const R = 6371
   const dLat = ((lat2 - lat1) * Math.PI) / 180
   const dLon = ((lon2 - lon1) * Math.PI) / 180
   const a =
@@ -33,42 +30,51 @@ export async function GET(request: NextRequest) {
       isAvailable: true,
     }
 
-    const userConditions: any[] = []
+    const andConditions: any[] = []
 
     if (q) {
-      userConditions.push({
+      andConditions.push({
         OR: [
-          { name: { contains: q, mode: 'insensitive' } },
+          { profession: { contains: q, mode: 'insensitive' } },
+          { specialties: { contains: q, mode: 'insensitive' } },
+          { skills: { contains: q, mode: 'insensitive' } },
           { bio: { contains: q, mode: 'insensitive' } },
           { location: { contains: q, mode: 'insensitive' } },
+          { user: { name: { contains: q, mode: 'insensitive' } } },
+        ],
+      })
+    }
+
+    if (category) {
+      andConditions.push({
+        OR: [
+          { profession: { contains: category, mode: 'insensitive' } },
+          { specialties: { contains: category, mode: 'insensitive' } },
+          { skills: { contains: category, mode: 'insensitive' } },
         ],
       })
     }
 
     if (location) {
-      userConditions.push({
-        location: { contains: location, mode: 'insensitive' },
-      })
+      const locationParts = location.split(/[,\s]+/).filter((p: string) => p.length > 1)
+      const locationOr = locationParts.flatMap((part: string) => [
+        { location: { contains: part, mode: 'insensitive' } },
+        { address: { contains: part, mode: 'insensitive' } },
+      ])
+      if (locationOr.length > 0) {
+        andConditions.push({ OR: locationOr })
+      }
     }
 
     if (country) {
-      userConditions.push({
-        country: { contains: country, mode: 'insensitive' },
-      })
+      andConditions.push({ country: { contains: country, mode: 'insensitive' } })
     }
 
-    if (userConditions.length > 0) {
-      whereClause.user5 = { AND: userConditions }
+    if (andConditions.length > 0) {
+      whereClause.AND = andConditions
     }
 
-    if (category) {
-      whereClause.OR = [
-        { specialties: { contains: category, mode: 'insensitive' } },
-        { skills: { contains: category, mode: 'insensitive' } },
-      ]
-    }
-
-    const artisans = await prisma.artisan.findMany({
+    const artisans = await db.artisan.findMany({
       where: whereClause,
       include: {
         user: {
@@ -76,13 +82,8 @@ export async function GET(request: NextRequest) {
             id: true,
             name: true,
             email: true,
-            avatar: true,
-            bio: true,
-            location: true,
-            country: true,
+            image: true,
             phone: true,
-            latitude: true,
-            longitude: true,
           },
         },
       },
@@ -90,35 +91,25 @@ export async function GET(request: NextRequest) {
       take: 100,
     })
 
-    // ─── Calculate distance and sort by proximity ────────────────────────
     let results = artisans.map((artisan) => {
       let distanceKm: number | null = null
 
       if (
         clientLat !== null &&
         clientLng !== null &&
-        artisan.user?.latitude !== null &&
-        artisan.user?.longitude !== null
+        artisan.latitude !== null &&
+        artisan.longitude !== null
       ) {
-        distanceKm = haversineDistance(
-          clientLat,
-          clientLng,
-          artisan.user!.latitude!,
-          artisan.user!.longitude!
-        )
+        distanceKm = haversineDistance(clientLat, clientLng, artisan.latitude, artisan.longitude)
       }
 
       return { ...artisan, distanceKm }
     })
 
-    // Filter by radius if specified
     if (radiusKm !== null && clientLat !== null && clientLng !== null) {
-      results = results.filter(
-        (r) => r.distanceKm !== null && r.distanceKm <= radiusKm
-      )
+      results = results.filter((r) => r.distanceKm !== null && r.distanceKm <= radiusKm)
     }
 
-    // Sort by distance if client location provided, otherwise by rating
     if (clientLat !== null && clientLng !== null) {
       results.sort((a, b) => {
         if (a.distanceKm === null && b.distanceKm === null) return 0
@@ -139,7 +130,6 @@ export async function GET(request: NextRequest) {
       { error: 'Search failed', details: String(error) },
       { status: 500 }
     )
-  } finally {
-    await prisma.$disconnect()
   }
 }
+

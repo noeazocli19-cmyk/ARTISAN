@@ -1,6 +1,7 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 import { MapPin, Search, Crosshair, SlidersHorizontal } from 'lucide-react';
 
 interface ArtisanResult {
@@ -27,7 +28,7 @@ const RADIUS_OPTIONS = [
   { label: '25 km', value: '25' },
   { label: '50 km', value: '50' },
   { label: '100 km', value: '100' },
-  { label: 'Illimité', value: '0' },
+  { label: 'IllimitÃ©', value: '0' },
 ];
 
 export default function SearchPage() {
@@ -41,10 +42,10 @@ export default function SearchPage() {
   const [userLng, setUserLng] = useState<number | null>(null);
   const [showFilters, setShowFilters] = useState(false);
 
-  // Géolocalisation navigateur
+  // GÃ©olocalisation navigateur
   const geolocateMe = () => {
     if (!navigator.geolocation) {
-      alert('Géolocalisation non supportée par votre navigateur');
+      alert('GÃ©olocalisation non supportÃ©e par votre navigateur');
       return;
     }
     navigator.geolocation.getCurrentPosition(
@@ -53,7 +54,7 @@ export default function SearchPage() {
         setUserLng(pos.coords.longitude);
       },
       () => {
-        alert('Impossible de récupérer votre position');
+        alert('Impossible de rÃ©cupÃ©rer votre position');
       }
     );
   };
@@ -94,7 +95,7 @@ export default function SearchPage() {
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       <h1 className="text-2xl font-bold">
-        Trouver un artisan près de chez vous
+        Trouver un artisan prÃ¨s de chez vous
       </h1>
 
       {/* Barre de recherche */}
@@ -105,7 +106,7 @@ export default function SearchPage() {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Rechercher un métier... (ex: Plombier)"
+            placeholder="Rechercher un mÃ©tier... (ex: Plombier)"
             className="w-full pl-10 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary"
           />
         </div>
@@ -161,17 +162,17 @@ export default function SearchPage() {
         </div>
       )}
 
-      {/* Indicateur géolocalisation */}
+      {/* Indicateur gÃ©olocalisation */}
       {userLat !== null && (
         <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 flex items-center gap-2">
           <Crosshair className="h-4 w-4 text-blue-600" />
           <span className="text-sm text-blue-700">
-            Géolocalisation active — résultats triés par proximité
+            GÃ©olocalisation active â€” rÃ©sultats triÃ©s par proximitÃ©
           </span>
         </div>
       )}
 
-      {/* Résultats */}
+      {/* RÃ©sultats */}
       {loading ? (
         <div className="flex justify-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -179,13 +180,13 @@ export default function SearchPage() {
       ) : results.length === 0 ? (
         <div className="text-center py-12 text-gray-500">
           <MapPin className="h-12 w-12 mx-auto mb-3 opacity-30" />
-          <p>Aucun artisan trouvé</p>
-          <p className="text-sm">Essayez de modifier vos critères de recherche</p>
+          <p>Aucun artisan trouvÃ©</p>
+          <p className="text-sm">Essayez de modifier vos critÃ¨res de recherche</p>
         </div>
       ) : (
         <div className="space-y-3">
           <p className="text-sm text-gray-500">
-            {results.length} artisan{results.length > 1 ? 's' : ''} trouvé{results.length > 1 ? 's' : ''}
+            {results.length} artisan{results.length > 1 ? 's' : ''} trouvÃ©{results.length > 1 ? 's' : ''}
           </p>
           {results.map((artisan) => (
             <div
@@ -202,7 +203,7 @@ export default function SearchPage() {
                   </p>
                   {artisan.experience && (
                     <p className="text-sm text-gray-500">
-                      {artisan.experience} an{artisan.experience > 1 ? 's' : ''} d'expérience
+                      {artisan.experience} an{artisan.experience > 1 ? 's' : ''} d'expÃ©rience
                     </p>
                   )}
                 </div>
@@ -229,7 +230,7 @@ export default function SearchPage() {
                   </span>
                 )}
                 {artisan.phone && (
-                  <span>📞 {artisan.phone}</span>
+                  <span>ðŸ“ž {artisan.phone}</span>
                 )}
               </div>
 
@@ -245,6 +246,13 @@ export default function SearchPage() {
                   ))}
                 </div>
               )}
+              <Link
+                href={`/artisan/${artisan.id}`}
+                className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-orange-600 hover:text-orange-700"
+              >
+                Voir le profil
+                <span aria-hidden>&rarr;</span>
+              </Link>
             </div>
           ))}
         </div>

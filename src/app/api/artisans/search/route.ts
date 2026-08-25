@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 
 function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
@@ -34,30 +34,46 @@ export async function GET(request: NextRequest) {
     const maxRadius = parseFloat(radius);
 
     const where: any = { isAvailable: true };
+    const andConditions: any[] = [];
 
     if (profession) {
-      where.profession = { contains: profession, mode: 'insensitive' };
+      andConditions.push({ profession: { contains: profession, mode: 'insensitive' } });
     } else if (category) {
-      where.profession = { contains: category, mode: 'insensitive' };
+      andConditions.push({ profession: { contains: category, mode: 'insensitive' } });
     }
 
     if (q && !profession && !category) {
-      where.OR = [
-        { profession: { contains: q, mode: 'insensitive' } },
-        { bio: { contains: q, mode: 'insensitive' } },
-        { specialties: { contains: q, mode: 'insensitive' } },
-        { skills: { contains: q, mode: 'insensitive' } },
-      ];
+      andConditions.push({
+        OR: [
+          { profession: { contains: q, mode: 'insensitive' } },
+          { bio: { contains: q, mode: 'insensitive' } },
+          { specialties: { contains: q, mode: 'insensitive' } },
+          { skills: { contains: q, mode: 'insensitive' } },
+          { location: { contains: q, mode: 'insensitive' } },
+          { address: { contains: q, mode: 'insensitive' } },
+          { user: { name: { contains: q, mode: 'insensitive' } } },
+        ],
+      });
     }
 
     if (location) {
-      where.OR = [
-        { location: { contains: location, mode: 'insensitive' } },
-        { address: { contains: location, mode: 'insensitive' } },
-      ];
+      const locationParts = location.split(/[,\s]+/).filter((p: string) => p.length > 1);
+      const locationOr = locationParts.flatMap((part: string) => [
+        { location: { contains: part, mode: 'insensitive' } },
+        { address: { contains: part, mode: 'insensitive' } },
+      ]);
+      if (locationOr.length > 0) {
+        andConditions.push({ OR: locationOr });
+      }
     }
 
-    if (country) where.country = { contains: country, mode: 'insensitive' };
+    if (country) {
+      andConditions.push({ country: { contains: country, mode: 'insensitive' } });
+    }
+
+    if (andConditions.length > 0) {
+      where.AND = andConditions;
+    }
 
     const artisans = await db.artisan.findMany({
       where,
@@ -87,9 +103,21 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    return NextResponse.json({ success: true, count: results.length, artisans: results });
+    // On convertit les champs stockes en JSON texte (skills, specialties)
+    // en vrais tableaux, sinon le frontend plante en essayant de les .map()
+    const parsedResults = results.map((r: any) => {
+      let skills = r.skills;
+      let specialties = r.specialties;
+      try { skills = typeof skills === 'string' ? JSON.parse(skills) : (skills || []); } catch { skills = []; }
+      try { specialties = typeof specialties === 'string' ? JSON.parse(specialties) : (specialties || []); } catch { specialties = []; }
+      return { ...r, skills: Array.isArray(skills) ? skills : [], specialties: Array.isArray(specialties) ? specialties : [] };
+    });
+
+    return NextResponse.json({ success: true, count: parsedResults.length, artisans: parsedResults });
   } catch (error) {
     console.error('Erreur recherche artisans:', error);
     return NextResponse.json({ error: 'Erreur lors de la recherche' }, { status: 500 });
   }
 }
+
+

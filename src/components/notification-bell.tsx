@@ -1,6 +1,6 @@
-'use client';
+﻿'use client';
 
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Bell,
@@ -68,7 +68,7 @@ const DEMO_NOTIFICATIONS: Omit<Notification, 'userId'>[] = [
   {
     id: 'demo-mission-1',
     title: 'Nouvelle mission',
-    message: 'Un client recherche un plombier à Dakar',
+    message: 'Un client recherche un plombier Ã  Dakar',
     type: 'mission',
     isRead: false,
     createdAt: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
@@ -76,7 +76,7 @@ const DEMO_NOTIFICATIONS: Omit<Notification, 'userId'>[] = [
   {
     id: 'demo-review-1',
     title: 'Nouvel avis',
-    message: 'Vous avez reçu un avis 5 étoiles !',
+    message: 'Vous avez reÃ§u un avis 5 Ã©toiles !',
     type: 'review',
     isRead: false,
     createdAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
@@ -84,7 +84,7 @@ const DEMO_NOTIFICATIONS: Omit<Notification, 'userId'>[] = [
   {
     id: 'demo-message-1',
     title: 'Nouveau message',
-    message: 'Amadou Diallo vous a envoyé un message',
+    message: 'Amadou Diallo vous a envoyÃ© un message',
     type: 'message',
     isRead: true,
     createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
@@ -169,7 +169,7 @@ function EmptyState() {
         <BellOff className="size-6 text-muted-foreground" />
       </div>
       <p className="text-sm font-medium text-muted-foreground">Aucune notification</p>
-      <p className="text-xs text-muted-foreground/70">Vous êtes à jour !</p>
+      <p className="text-xs text-muted-foreground/70">Vous Ãªtes Ã  jour !</p>
     </motion.div>
   );
 }
@@ -179,28 +179,60 @@ function EmptyState() {
 // ---------------------------------------------------------------------------
 
 export function NotificationBell() {
-  const notifications = useAppStore((s) => s.notifications);
-  const addNotification = useAppStore((s) => s.addNotification);
-  const markNotificationRead = useAppStore((s) => s.markNotificationRead);
-  const markAllNotificationsRead = useAppStore((s) => s.markAllNotificationsRead);
-  const clearNotifications = useAppStore((s) => s.clearNotifications);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
 
-  const unreadCount = useMemo(
-    () => notifications.filter((n) => !n.isRead).length,
-    [notifications]
-  );
-
-  // Seed demo notifications on first mount if none exist
-  useEffect(() => {
-    if (notifications.length === 0) {
-      DEMO_NOTIFICATIONS.forEach((demo) => {
-        addNotification({
-          ...demo,
-          userId: 'demo-user',
-        });
-      });
+  const loadNotifications = async () => {
+    try {
+      const res = await fetch('/api/notifications');
+      if (res.ok) {
+        const data = await res.json();
+        setNotifications(data.notifications || []);
+        setUnreadCount(data.unreadCount || 0);
+      }
+    } catch (error) {
+      console.error('Erreur chargement notifications:', error);
     }
+  };
+
+  useEffect(() => {
+    loadNotifications();
+    const interval = setInterval(loadNotifications, 30000);
+    return () => clearInterval(interval);
   }, []);
+
+  const markNotificationRead = async (id: string) => {
+    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, isRead: true } : n)));
+    setUnreadCount((prev) => Math.max(0, prev - 1));
+    try {
+      await fetch('/api/notifications', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ notificationId: id }),
+      });
+    } catch (error) {
+      console.error('Erreur marquage notification:', error);
+    }
+  };
+
+  const markAllNotificationsRead = async () => {
+    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+    setUnreadCount(0);
+    try {
+      await fetch('/api/notifications', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ markAll: true }),
+      });
+    } catch (error) {
+      console.error('Erreur marquage notifications:', error);
+    }
+  };
+
+  const clearNotifications = () => {
+    setNotifications([]);
+    setUnreadCount(0);
+  };
 
   return (
     <Popover>
@@ -209,7 +241,7 @@ export function NotificationBell() {
           variant="ghost"
           size="icon"
           className="relative size-9 rounded-full hover:bg-amber-100 dark:hover:bg-amber-900/30"
-          aria-label={`Notifications${unreadCount > 0 ? ` – ${unreadCount} non lue${unreadCount > 1 ? 's' : ''}` : ''}`}
+          aria-label={`Notifications${unreadCount > 0 ? ` â€“ ${unreadCount} non lue${unreadCount > 1 ? 's' : ''}` : ''}`}
         >
           <Bell className="size-5 text-foreground" />
 
@@ -311,3 +343,4 @@ export function NotificationBell() {
     </Popover>
   );
 }
+

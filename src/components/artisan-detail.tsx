@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
@@ -34,9 +34,9 @@ import {
 } from 'lucide-react'
 
 const BADGE_STYLES: Record<string, { color: string; icon: typeof Award }> = {
-  'Élite': { color: 'bg-amber-500 text-white', icon: Award },
+  'Ã‰lite': { color: 'bg-amber-500 text-white', icon: Award },
   'Top': { color: 'bg-emerald-500 text-white', icon: Star },
-  'Vérifié': { color: 'bg-teal-500 text-white', icon: Shield },
+  'VÃ©rifiÃ©': { color: 'bg-teal-500 text-white', icon: Shield },
   'Nouveau': { color: 'bg-neutral-500 text-white', icon: Briefcase },
 }
 
@@ -118,11 +118,30 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
   const handleSendMessage = async () => {
     if (!messageText.trim()) return
     setSending(true)
-    // Simulate sending
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    setSending(false)
-    setContactOpen(false)
-    setMessageText('')
+    try {
+      const receiverId = artisan?.user?.id
+      if (!receiverId) {
+        alert("Impossible d'identifier le destinataire")
+        setSending(false)
+        return
+      }
+      const res = await fetch('/api/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: messageText, receiverId }),
+      })
+      if (res.ok) {
+        setContactOpen(false)
+        setMessageText('')
+      } else {
+        const data = await res.json()
+        alert(data.error || "Erreur lors de l'envoi du message")
+      }
+    } catch (error) {
+      alert("Erreur reseau lors de l'envoi du message")
+    } finally {
+      setSending(false)
+    }
   }
 
   const handleSendDevis = async () => {
@@ -166,7 +185,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
   if (!artisan) {
     return (
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8 text-center">
-        <p className="text-muted-foreground">Artisan non trouvé</p>
+        <p className="text-muted-foreground">Artisan non trouvÃ©</p>
         <Button variant="outline" className="mt-4" onClick={onBack}>Retour</Button>
       </div>
     )
@@ -192,7 +211,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
       {/* Back button */}
       <Button variant="ghost" className="mb-6 -ml-4" onClick={onBack}>
         <ChevronLeft className="h-4 w-4 mr-1" />
-        Retour aux résultats
+        Retour aux rÃ©sultats
       </Button>
 
       {/* Header */}
@@ -276,7 +295,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
             <motion.div variants={fadeInUp} initial="hidden" animate="visible" transition={{ delay: 0.1 }}>
               <Card className="border-border/50">
                 <CardHeader>
-                  <CardTitle className="text-lg">À propos</CardTitle>
+                  <CardTitle className="text-lg">Ã€ propos</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground leading-relaxed">{bio}</p>
@@ -290,12 +309,12 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
             <motion.div variants={fadeInUp} initial="hidden" animate="visible" transition={{ delay: 0.15 }}>
               <Card className="border-border/50">
                 <CardHeader>
-                  <CardTitle className="text-lg">Compétences & Spécialités</CardTitle>
+                  <CardTitle className="text-lg">CompÃ©tences & SpÃ©cialitÃ©s</CardTitle>
                 </CardHeader>
                 <CardContent>
                   {specialties.length > 0 && (
                     <div className="mb-4">
-                      <p className="text-sm font-medium mb-2">Spécialités</p>
+                      <p className="text-sm font-medium mb-2">SpÃ©cialitÃ©s</p>
                       <div className="flex flex-wrap gap-2">
                         {specialties.map((spec) => (
                           <Badge key={spec} className="bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300 border-0">
@@ -307,7 +326,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
                   )}
                   {skills.length > 0 && (
                     <div>
-                      <p className="text-sm font-medium mb-2">Compétences</p>
+                      <p className="text-sm font-medium mb-2">CompÃ©tences</p>
                       <div className="flex flex-wrap gap-2">
                         {skills.map((skill) => (
                           <Badge key={skill} variant="outline">
@@ -406,11 +425,11 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
                     <Clock className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm">{artisan.experience} ans d&apos;expérience</span>
+                    <span className="text-sm">{artisan.experience} ans d&apos;expÃ©rience</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <Briefcase className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm">{artisan.missionCount} missions réalisées</span>
+                    <span className="text-sm">{artisan.missionCount} missions rÃ©alisÃ©es</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <CheckCircle2 className="h-4 w-4 text-emerald-500" />
@@ -468,8 +487,8 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
                   <div className="flex items-center gap-3">
                     <Shield className="h-8 w-8 text-emerald-500" />
                     <div>
-                      <p className="font-medium text-sm">Identité vérifiée</p>
-                      <p className="text-xs text-muted-foreground">Pièce d&apos;identité validée</p>
+                      <p className="font-medium text-sm">IdentitÃ© vÃ©rifiÃ©e</p>
+                      <p className="text-xs text-muted-foreground">PiÃ¨ce d&apos;identitÃ© validÃ©e</p>
                     </div>
                   </div>
                 </CardContent>
@@ -492,7 +511,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
             <div className="space-y-2">
               <Label>Votre message</Label>
               <Textarea
-                placeholder="Décrivez votre besoin..."
+                placeholder="DÃ©crivez votre besoin..."
                 value={messageText}
                 onChange={e => setMessageText(e.target.value)}
                 rows={4}
@@ -516,21 +535,21 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <FileText className="h-5 w-5 text-amber-500" />
-              Demander un devis à {name}
+              Demander un devis Ã  {name}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 mt-4">
             <div className="space-y-2">
               <Label>Description du projet</Label>
               <Textarea
-                placeholder="Décrivez votre projet en détail..."
+                placeholder="DÃ©crivez votre projet en dÃ©tail..."
                 value={devisText}
                 onChange={e => setDevisText(e.target.value)}
                 rows={4}
               />
             </div>
             <div className="space-y-2">
-              <Label>Budget estimé (FCFA)</Label>
+              <Label>Budget estimÃ© (FCFA)</Label>
               <Input
                 type="number"
                 placeholder="Ex: 50 000"

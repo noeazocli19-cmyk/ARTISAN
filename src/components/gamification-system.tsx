@@ -1,6 +1,6 @@
-'use client'
+﻿'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -53,7 +53,7 @@ interface GamificationSystemProps {
 
 const mockUserLevel: UserLevel = {
   level: 12,
-  title: 'Artisan Confirmé',
+  title: 'Artisan ConfirmÃ©',
   xp: 3450,
   xpToNext: 5000,
   totalXp: 18450,
@@ -62,9 +62,9 @@ const mockUserLevel: UserLevel = {
 const mockBadges: BadgeType[] = [
   {
     id: 'b1',
-    name: 'Première Mission',
-    description: 'Complétez votre première mission avec succès',
-    icon: '🎯',
+    name: 'PremiÃ¨re Mission',
+    description: 'ComplÃ©tez votre premiÃ¨re mission avec succÃ¨s',
+    icon: 'ðŸŽ¯',
     category: 'achievement',
     earned: true,
     earnedAt: '2024-11-15',
@@ -75,7 +75,7 @@ const mockBadges: BadgeType[] = [
     id: 'b2',
     name: '5 Avis Positifs',
     description: 'Recevez 5 avis positifs de clients satisfaits',
-    icon: '⭐',
+    icon: 'â­',
     category: 'social',
     earned: true,
     earnedAt: '2024-12-03',
@@ -85,8 +85,8 @@ const mockBadges: BadgeType[] = [
   {
     id: 'b3',
     name: 'Master Plombier',
-    description: 'Complétez 20 missions de plomberie',
-    icon: '🔧',
+    description: 'ComplÃ©tez 20 missions de plomberie',
+    icon: 'ðŸ”§',
     category: 'skill',
     earned: true,
     earnedAt: '2025-01-10',
@@ -95,9 +95,9 @@ const mockBadges: BadgeType[] = [
   },
   {
     id: 'b4',
-    name: '30 Jours Consécutifs',
+    name: '30 Jours ConsÃ©cutifs',
     description: 'Connectez-vous 30 jours de suite',
-    icon: '🔥',
+    icon: 'ðŸ”¥',
     category: 'loyalty',
     earned: true,
     earnedAt: '2025-02-01',
@@ -107,8 +107,8 @@ const mockBadges: BadgeType[] = [
   {
     id: 'b5',
     name: 'Urgence Minuit',
-    description: 'Acceptez une mission d\'urgence après minuit',
-    icon: '🌙',
+    description: 'Acceptez une mission d\'urgence aprÃ¨s minuit',
+    icon: 'ðŸŒ™',
     category: 'special',
     earned: true,
     earnedAt: '2025-01-22',
@@ -117,9 +117,9 @@ const mockBadges: BadgeType[] = [
   },
   {
     id: 'b6',
-    name: '10 Missions Réussies',
-    description: 'Complétez 10 missions sans réclamation',
-    icon: '🏆',
+    name: '10 Missions RÃ©ussies',
+    description: 'ComplÃ©tez 10 missions sans rÃ©clamation',
+    icon: 'ðŸ†',
     category: 'achievement',
     earned: true,
     earnedAt: '2025-01-05',
@@ -130,7 +130,7 @@ const mockBadges: BadgeType[] = [
     id: 'b7',
     name: 'Ambassadeur',
     description: 'Parrainez 5 nouveaux artisans sur la plateforme',
-    icon: '🤝',
+    icon: 'ðŸ¤',
     category: 'social',
     earned: true,
     earnedAt: '2025-02-14',
@@ -139,9 +139,9 @@ const mockBadges: BadgeType[] = [
   },
   {
     id: 'b8',
-    name: 'Électricien Expert',
-    description: 'Obtenez la certification Électricité niveau expert',
-    icon: '⚡',
+    name: 'Ã‰lectricien Expert',
+    description: 'Obtenez la certification Ã‰lectricitÃ© niveau expert',
+    icon: 'âš¡',
     category: 'skill',
     earned: true,
     earnedAt: '2025-02-20',
@@ -151,8 +151,8 @@ const mockBadges: BadgeType[] = [
   {
     id: 'b9',
     name: '100 Missions',
-    description: 'Complétez 100 missions au total',
-    icon: '💎',
+    description: 'ComplÃ©tez 100 missions au total',
+    icon: 'ðŸ’Ž',
     category: 'achievement',
     earned: false,
     progress: 67,
@@ -160,9 +160,9 @@ const mockBadges: BadgeType[] = [
   },
   {
     id: 'b10',
-    name: '20 Avis 5 Étoiles',
+    name: '20 Avis 5 Ã‰toiles',
     description: 'Recevez 20 avis avec la note maximale',
-    icon: '🌟',
+    icon: 'ðŸŒŸ',
     category: 'social',
     earned: false,
     progress: 14,
@@ -170,9 +170,9 @@ const mockBadges: BadgeType[] = [
   },
   {
     id: 'b11',
-    name: 'Menuisier Légendaire',
-    description: 'Complétez 50 missions de menuiserie',
-    icon: '🪚',
+    name: 'Menuisier LÃ©gendaire',
+    description: 'ComplÃ©tez 50 missions de menuiserie',
+    icon: 'ðŸªš',
     category: 'skill',
     earned: false,
     progress: 28,
@@ -180,9 +180,9 @@ const mockBadges: BadgeType[] = [
   },
   {
     id: 'b12',
-    name: '100 Jours Consécutifs',
+    name: '100 Jours ConsÃ©cutifs',
     description: 'Connectez-vous 100 jours de suite',
-    icon: '💪',
+    icon: 'ðŸ’ª',
     category: 'loyalty',
     earned: false,
     progress: 42,
@@ -192,7 +192,7 @@ const mockBadges: BadgeType[] = [
     id: 'b13',
     name: 'Sauveur du Week-end',
     description: 'Acceptez 3 missions urgentes le week-end',
-    icon: '🦸',
+    icon: 'ðŸ¦¸',
     category: 'special',
     earned: false,
     progress: 1,
@@ -201,8 +201,8 @@ const mockBadges: BadgeType[] = [
   {
     id: 'b14',
     name: 'Polyvalent',
-    description: 'Obtenez des certifications dans 4 catégories différentes',
-    icon: '🎨',
+    description: 'Obtenez des certifications dans 4 catÃ©gories diffÃ©rentes',
+    icon: 'ðŸŽ¨',
     category: 'skill',
     earned: false,
     progress: 2,
@@ -210,9 +210,9 @@ const mockBadges: BadgeType[] = [
   },
   {
     id: 'b15',
-    name: 'Fidélité Annuelle',
+    name: 'FidÃ©litÃ© Annuelle',
     description: 'Restez actif sur la plateforme pendant 1 an',
-    icon: '📅',
+    icon: 'ðŸ“…',
     category: 'loyalty',
     earned: false,
     progress: 8,
@@ -220,27 +220,27 @@ const mockBadges: BadgeType[] = [
   },
 ]
 
-const mockLeaderboard = [
+const realLeaderboard = [
   { rank: 1, name: 'Amadou Diallo', level: 18, points: 12450, avatar: 'AD', color: 'bg-amber-500' },
   { rank: 2, name: 'Fatou Ndiaye', level: 17, points: 11200, avatar: 'FN', color: 'bg-emerald-500' },
   { rank: 3, name: 'Kofi Mensah', level: 16, points: 10800, avatar: 'KM', color: 'bg-orange-500' },
-  { rank: 4, name: 'Aïcha Bello', level: 15, points: 9650, avatar: 'AB', color: 'bg-teal-500' },
-  { rank: 5, name: 'Moussa Traoré', level: 14, points: 8900, avatar: 'MT', color: 'bg-cyan-500' },
+  { rank: 4, name: 'AÃ¯cha Bello', level: 15, points: 9650, avatar: 'AB', color: 'bg-teal-500' },
+  { rank: 5, name: 'Moussa TraorÃ©', level: 14, points: 8900, avatar: 'MT', color: 'bg-cyan-500' },
   { rank: 6, name: 'Mariama Sow', level: 13, points: 8200, avatar: 'MS', color: 'bg-violet-500' },
   { rank: 7, name: 'Ibrahim Diarra', level: 13, points: 7800, avatar: 'ID', color: 'bg-rose-500' },
-  { rank: 8, name: 'Aminata Koné', level: 12, points: 7200, avatar: 'AK', color: 'bg-indigo-500' },
+  { rank: 8, name: 'Aminata KonÃ©', level: 12, points: 7200, avatar: 'AK', color: 'bg-indigo-500' },
   { rank: 9, name: 'Ousmane Ba', level: 12, points: 6900, avatar: 'OB', color: 'bg-pink-500' },
   { rank: 10, name: 'Jean-Pierre Aka', level: 11, points: 6500, avatar: 'JA', color: 'bg-sky-500' },
   { rank: 11, name: 'Mariam Doumbia', level: 11, points: 6200, avatar: 'MD', color: 'bg-lime-500' },
   { rank: 12, name: 'Abdoulaye Camara', level: 10, points: 5800, avatar: 'AC', color: 'bg-fuchsia-500' },
   { rank: 13, name: 'Kadiatou Sylla', level: 10, points: 5400, avatar: 'KS', color: 'bg-amber-600' },
   { rank: 14, name: 'Boubacar Diop', level: 9, points: 5100, avatar: 'BD', color: 'bg-emerald-600' },
-  { rank: 15, name: 'Awa Touré', level: 9, points: 4800, avatar: 'AT', color: 'bg-orange-600' },
+  { rank: 15, name: 'Awa TourÃ©', level: 9, points: 4800, avatar: 'AT', color: 'bg-orange-600' },
   { rank: 16, name: 'Seydou Keita', level: 8, points: 4500, avatar: 'SK', color: 'bg-teal-600' },
-  { rank: 17, name: 'Fatoumata Diabaté', level: 8, points: 4200, avatar: 'FD', color: 'bg-cyan-600' },
+  { rank: 17, name: 'Fatoumata DiabatÃ©', level: 8, points: 4200, avatar: 'FD', color: 'bg-cyan-600' },
   { rank: 18, name: 'Modibo Coulibaly', level: 7, points: 3900, avatar: 'MC', color: 'bg-violet-600' },
   { rank: 19, name: 'Djenaba Bah', level: 7, points: 3600, avatar: 'DB', color: 'bg-rose-600' },
-  { rank: 20, name: 'Youssouf Sangaré', level: 6, points: 3300, avatar: 'YS', color: 'bg-pink-600' },
+  { rank: 20, name: 'Youssouf SangarÃ©', level: 6, points: 3300, avatar: 'YS', color: 'bg-pink-600' },
 ]
 
 interface Challenge {
@@ -259,9 +259,9 @@ const mockActiveChallenges: Challenge[] = [
   {
     id: 'c1',
     title: 'Marathon du Mois',
-    description: 'Complétez 15 missions ce mois-ci pour gagner un bonus XP exceptionnel',
+    description: 'ComplÃ©tez 15 missions ce mois-ci pour gagner un bonus XP exceptionnel',
     rewardXp: 500,
-    rewardBadge: '🏃',
+    rewardBadge: 'ðŸƒ',
     progress: 9,
     maxProgress: 15,
     deadline: '2025-03-31',
@@ -270,9 +270,9 @@ const mockActiveChallenges: Challenge[] = [
   {
     id: 'c2',
     title: 'Avis en Or',
-    description: 'Obtenez 5 avis 5 étoiles consécutifs pour débloquer ce défi',
+    description: 'Obtenez 5 avis 5 Ã©toiles consÃ©cutifs pour dÃ©bloquer ce dÃ©fi',
     rewardXp: 300,
-    rewardBadge: '✨',
+    rewardBadge: 'âœ¨',
     progress: 3,
     maxProgress: 5,
     deadline: '2025-03-15',
@@ -280,10 +280,10 @@ const mockActiveChallenges: Challenge[] = [
   },
   {
     id: 'c3',
-    title: 'Rapidité Extrême',
-    description: 'Acceptez 3 missions en moins de 10 minutes après publication',
+    title: 'RapiditÃ© ExtrÃªme',
+    description: 'Acceptez 3 missions en moins de 10 minutes aprÃ¨s publication',
     rewardXp: 200,
-    rewardBadge: '⚡',
+    rewardBadge: 'âš¡',
     progress: 1,
     maxProgress: 3,
     deadline: '2025-03-20',
@@ -292,9 +292,9 @@ const mockActiveChallenges: Challenge[] = [
   {
     id: 'c4',
     title: 'Explorateur',
-    description: 'Travaillez dans 5 quartiers différents ce mois-ci',
+    description: 'Travaillez dans 5 quartiers diffÃ©rents ce mois-ci',
     rewardXp: 250,
-    rewardBadge: '🗺️',
+    rewardBadge: 'ðŸ—ºï¸',
     progress: 3,
     maxProgress: 5,
     deadline: '2025-03-31',
@@ -306,9 +306,9 @@ const mockCompletedChallenges: Challenge[] = [
   {
     id: 'cc1',
     title: 'Premiers Pas',
-    description: 'Complétez vos 3 premières missions sur la plateforme',
+    description: 'ComplÃ©tez vos 3 premiÃ¨res missions sur la plateforme',
     rewardXp: 150,
-    rewardBadge: '👣',
+    rewardBadge: 'ðŸ‘£',
     progress: 3,
     maxProgress: 3,
     deadline: '2025-02-28',
@@ -317,9 +317,9 @@ const mockCompletedChallenges: Challenge[] = [
   {
     id: 'cc2',
     title: 'Semaine Parfaite',
-    description: 'Obtenez uniquement des avis 5 étoiles pendant une semaine',
+    description: 'Obtenez uniquement des avis 5 Ã©toiles pendant une semaine',
     rewardXp: 400,
-    rewardBadge: '👑',
+    rewardBadge: 'ðŸ‘‘',
     progress: 7,
     maxProgress: 7,
     deadline: '2025-02-14',
@@ -328,9 +328,9 @@ const mockCompletedChallenges: Challenge[] = [
   {
     id: 'cc3',
     title: 'Nouvel An Artisan',
-    description: 'Complétez une mission entre le 1er et le 7 janvier',
+    description: 'ComplÃ©tez une mission entre le 1er et le 7 janvier',
     rewardXp: 100,
-    rewardBadge: '🎆',
+    rewardBadge: 'ðŸŽ†',
     progress: 1,
     maxProgress: 1,
     deadline: '2025-01-07',
@@ -343,11 +343,11 @@ const mockCompletedChallenges: Challenge[] = [
 // ---------------------------------------------------------------------------
 
 const categoryLabels: Record<BadgeCategory, string> = {
-  achievement: 'Réalisation',
+  achievement: 'RÃ©alisation',
   social: 'Social',
-  skill: 'Compétence',
-  loyalty: 'Fidélité',
-  special: 'Spécial',
+  skill: 'CompÃ©tence',
+  loyalty: 'FidÃ©litÃ©',
+  special: 'SpÃ©cial',
 }
 
 const categoryColors: Record<BadgeCategory, string> = {
@@ -371,7 +371,7 @@ function formatDeadline(dateStr: string): string {
   const now = new Date()
   const diffMs = date.getTime() - now.getTime()
   const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24))
-  if (diffDays <= 0) return 'Expiré'
+  if (diffDays <= 0) return 'ExpirÃ©'
   if (diffDays === 1) return '1 jour restant'
   return `${diffDays} jours restants`
 }
@@ -450,7 +450,7 @@ function ProfileHeader({ profile }: { profile: GamificationProfile }) {
           {[
             { icon: Trophy, label: 'Points', value: profile.points.toLocaleString() },
             { icon: Award, label: 'Badges', value: `${profile.badges.filter(b => b.earned).length}/${profile.badges.length}` },
-            { icon: Flame, label: 'Série', value: `${profile.streak} jours` },
+            { icon: Flame, label: 'SÃ©rie', value: `${profile.streak} jours` },
             { icon: Medal, label: 'Rang', value: `#${profile.rank}` },
           ].map((stat) => (
             <motion.div
@@ -589,9 +589,9 @@ function BadgeDetailDialog({
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="sr-only">Détails du badge</DialogTitle>
+          <DialogTitle className="sr-only">DÃ©tails du badge</DialogTitle>
           <DialogDescription className="sr-only">
-            Informations détaillées sur le badge {badge.name}
+            Informations dÃ©taillÃ©es sur le badge {badge.name}
           </DialogDescription>
         </DialogHeader>
 
@@ -664,7 +664,7 @@ function BadgeDetailDialog({
                 className="h-2.5 mb-2"
               />
               <p className="text-xs text-muted-foreground">
-                Continuez vos efforts pour débloquer ce badge !
+                Continuez vos efforts pour dÃ©bloquer ce badge !
               </p>
             </div>
           )}
@@ -683,7 +683,7 @@ function LeaderboardRow({
   isCurrentUser,
   index,
 }: {
-  entry: typeof mockLeaderboard[number]
+  entry: any
   isCurrentUser: boolean
   index: number
 }) {
@@ -696,7 +696,7 @@ function LeaderboardRow({
       ? 'bg-gradient-to-r from-orange-400 to-amber-600 text-amber-950'
       : 'bg-muted text-muted-foreground'
 
-  const rankIcons = ['', '🥇', '🥈', '🥉']
+  const rankIcons = ['', 'ðŸ¥‡', 'ðŸ¥ˆ', 'ðŸ¥‰']
 
   return (
     <motion.div
@@ -820,7 +820,7 @@ function ChallengeCard({
                 {challenge.completed ? (
                   <div className="flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400">
                     <CheckCircle2 className="h-3.5 w-3.5" />
-                    <span>Complété</span>
+                    <span>ComplÃ©tÃ©</span>
                   </div>
                 ) : (
                   <div className={`flex items-center gap-1 text-xs ${isExpired ? 'text-red-500' : 'text-muted-foreground'}`}>
@@ -868,7 +868,7 @@ function DailyStreakCalendar({ streak, streakMax }: { streak: number; streakMax:
       <CardHeader className="pb-3">
         <CardTitle className="text-base flex items-center gap-2">
           <Flame className="h-5 w-5 text-orange-500" />
-          Série de jours consécutifs
+          SÃ©rie de jours consÃ©cutifs
         </CardTitle>
       </CardHeader>
       <CardContent className="p-4 pt-0">
@@ -924,22 +924,38 @@ export function GamificationSystem({ onBack }: GamificationSystemProps) {
   const [selectedBadge, setSelectedBadge] = useState<BadgeType | null>(null)
   const [badgeDialogOpen, setBadgeDialogOpen] = useState(false)
 
-  // Build the gamification profile from mock data
+  const [realData, setRealData] = useState<any>(null)
+  const [realLeaderboard, setRealLeaderboard] = useState<any[]>([])
+  const [loadingGamification, setLoadingGamification] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/gamification')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data) {
+          setRealData(data.profile)
+          setRealLeaderboard(data.leaderboard || [])
+        }
+      })
+      .catch((e) => console.error('Erreur chargement gamification:', e))
+      .finally(() => setLoadingGamification(false))
+  }, [])
+
+  const realBadges: BadgeType[] = realData?.badges || []
+
   const profile: GamificationProfile = {
-    level: mockUserLevel,
-    points: 3450,
-    badges: mockBadges,
-    streak: 42,
-    streakMax: 67,
-    rank: 8,
+    level: realData?.level || { level: 1, title: 'Debutant', xp: 0, xpToNext: 200 },
+    points: realData?.points || 0,
+    badges: realBadges,
+    streak: 0,
+    streakMax: 0,
+    rank: realData?.rank || 0,
   }
-
   const filteredBadges = useMemo(() => {
-    if (badgeFilter === 'all') return mockBadges
-    return mockBadges.filter((b) => b.category === badgeFilter)
-  }, [badgeFilter])
-
-  const earnedCount = mockBadges.filter((b) => b.earned).length
+    if (badgeFilter === 'all') return realBadges
+    return realBadges.filter((b) => b.category === badgeFilter)
+  }, [badgeFilter, realBadges])
+  const earnedCount = realBadges.filter((b) => b.earned).length
 
   const handleBadgeClick = (badge: BadgeType) => {
     setSelectedBadge(badge)
@@ -964,7 +980,7 @@ export function GamificationSystem({ onBack }: GamificationSystemProps) {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-600">
               <Trophy className="h-4 w-4 text-white" />
             </div>
-            <h1 className="text-lg font-bold">Succès & Récompenses</h1>
+            <h1 className="text-lg font-bold">SuccÃ¨s & RÃ©compenses</h1>
           </div>
         </div>
       </div>
@@ -986,11 +1002,11 @@ export function GamificationSystem({ onBack }: GamificationSystemProps) {
             </TabsTrigger>
             <TabsTrigger value="challenges" className="flex items-center gap-1.5 py-2.5 text-xs sm:text-sm">
               <Target className="h-4 w-4" />
-              <span className="hidden sm:inline"> </span>Défis
+              <span className="hidden sm:inline"> </span>DÃ©fis
             </TabsTrigger>
           </TabsList>
 
-          {/* ─── Badges Tab ─── */}
+          {/* â”€â”€â”€ Badges Tab â”€â”€â”€ */}
           <TabsContent value="badges" className="mt-6 space-y-4">
             {/* Filter + counter */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -1038,16 +1054,16 @@ export function GamificationSystem({ onBack }: GamificationSystemProps) {
             {filteredBadges.length === 0 && (
               <div className="text-center py-12 text-muted-foreground">
                 <Award className="h-12 w-12 mx-auto mb-3 opacity-30" />
-                <p>Aucun badge dans cette catégorie</p>
+                <p>Aucun badge dans cette catÃ©gorie</p>
               </div>
             )}
           </TabsContent>
 
-          {/* ─── Leaderboard Tab ─── */}
+          {/* â”€â”€â”€ Leaderboard Tab â”€â”€â”€ */}
           <TabsContent value="leaderboard" className="mt-6 space-y-4">
             {/* Top 3 podium */}
             <div className="grid grid-cols-3 gap-3 sm:gap-4">
-              {[mockLeaderboard[1], mockLeaderboard[0], mockLeaderboard[2]].map((entry, i) => {
+              {[realLeaderboard[1], realLeaderboard[0], realLeaderboard[2]].map((entry, i) => {
                 const isFirst = entry.rank === 1
                 return (
                   <motion.div
@@ -1070,7 +1086,7 @@ export function GamificationSystem({ onBack }: GamificationSystemProps) {
                     >
                       <CardContent className={`p-3 sm:p-4 ${entry.rank === 1 ? 'bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-950/30 dark:to-amber-950/30' : ''}`}>
                         <div className="text-2xl mb-1">
-                          {entry.rank === 1 ? '🥇' : entry.rank === 2 ? '🥈' : '🥉'}
+                          {entry.rank === 1 ? 'ðŸ¥‡' : entry.rank === 2 ? 'ðŸ¥ˆ' : 'ðŸ¥‰'}
                         </div>
                         <div
                           className={`mx-auto flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full text-white font-bold text-sm ${entry.color}`}
@@ -1099,7 +1115,7 @@ export function GamificationSystem({ onBack }: GamificationSystemProps) {
               </CardHeader>
               <CardContent className="p-2 sm:p-3 max-h-[480px] overflow-y-auto">
                 <div className="space-y-1">
-                  {mockLeaderboard.map((entry, idx) => (
+                  {realLeaderboard.map((entry, idx) => (
                     <LeaderboardRow
                       key={entry.rank}
                       entry={entry}
@@ -1112,7 +1128,7 @@ export function GamificationSystem({ onBack }: GamificationSystemProps) {
             </Card>
           </TabsContent>
 
-          {/* ─── Challenges Tab ─── */}
+          {/* â”€â”€â”€ Challenges Tab â”€â”€â”€ */}
           <TabsContent value="challenges" className="mt-6 space-y-6">
             {/* Daily streak */}
             <DailyStreakCalendar streak={profile.streak} streakMax={profile.streakMax} />
@@ -1121,7 +1137,7 @@ export function GamificationSystem({ onBack }: GamificationSystemProps) {
             <div>
               <h3 className="text-base font-semibold flex items-center gap-2 mb-3">
                 <Target className="h-4 w-4 text-amber-500" />
-                Défis actifs
+                DÃ©fis actifs
                 <Badge variant="secondary" className="text-xs bg-amber-100 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300">
                   {mockActiveChallenges.length}
                 </Badge>
@@ -1137,7 +1153,7 @@ export function GamificationSystem({ onBack }: GamificationSystemProps) {
             <div>
               <h3 className="text-base font-semibold flex items-center gap-2 mb-3">
                 <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                Défis complétés
+                DÃ©fis complÃ©tÃ©s
                 <Badge variant="secondary" className="text-xs bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300">
                   {mockCompletedChallenges.length}
                 </Badge>
@@ -1161,3 +1177,5 @@ export function GamificationSystem({ onBack }: GamificationSystemProps) {
     </div>
   )
 }
+
+

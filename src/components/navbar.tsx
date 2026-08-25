@@ -263,13 +263,13 @@ export function Navbar({ onOpenAuth, onSearch }: NavbarProps) {
               <Button
                 variant="ghost"
                 className="hidden sm:inline-flex text-sm"
-                onClick={() => onOpenAuth('login')}
+                onClick={() => window.location.href='/login'}
               >
                 Se connecter
               </Button>
               <Button
                 className="hidden sm:inline-flex bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 text-sm"
-                onClick={() => onOpenAuth('register')}
+                onClick={() => window.location.href='/register'}
               >
                 S&apos;inscrire
               </Button>
@@ -400,13 +400,13 @@ export function Navbar({ onOpenAuth, onSearch }: NavbarProps) {
                   <Button
                     variant="ghost"
                     className="justify-start text-sm"
-                    onClick={() => { onOpenAuth('login'); setMobileMenuOpen(false) }}
+                    onClick={() => { window.location.href='/login'; setMobileMenuOpen(false) }}
                   >
                     Se connecter
                   </Button>
                   <Button
                     className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 text-sm"
-                    onClick={() => { onOpenAuth('register'); setMobileMenuOpen(false) }}
+                    onClick={() => { window.location.href='/register'; setMobileMenuOpen(false) }}
                   >
                     S&apos;inscrire
                   </Button>

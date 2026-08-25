@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 
 export async function GET(
@@ -7,7 +7,6 @@ export async function GET(
 ) {
   try {
     const { id } = await params
-
     const artisan = await db.artisan.findUnique({
       where: { id },
       include: {
@@ -27,7 +26,7 @@ export async function GET(
         },
         reviews: {
           include: {
-            author: {
+            client: {
               select: {
                 id: true,
                 name: true,
@@ -52,19 +51,17 @@ export async function GET(
         },
       },
     })
-
     if (!artisan) {
       return NextResponse.json(
         { error: 'Artisan non trouvé' },
         { status: 404 }
       )
     }
-
     return NextResponse.json({ artisan })
   } catch (error) {
     console.error('Get artisan error:', error)
     return NextResponse.json(
-      { error: 'Erreur lors de la récupération de l\'artisan' },
+      { error: "Erreur lors de la récupération de l'artisan" },
       { status: 500 }
     )
   }

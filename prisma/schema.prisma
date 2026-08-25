@@ -32,6 +32,7 @@ model User {
   // Relations
   artisan       Artisan?
   missions      Mission[]
+  bookings      Booking[]
   accounts      Account[]
   sessions      Session[]
   reviews       Review[]
@@ -135,6 +136,7 @@ model Artisan {
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   reviews        Review[]
   missions       Mission[]
+  bookings       Booking[]
   favorites      Favorite[] 
    payments       Payment[]  
 
@@ -144,7 +146,7 @@ model Artisan {
 }
 
 // ============================================
-// CATÉGORIES DE MÉTIERS
+// CATÃ‰GORIES DE MÃ‰TIERS
 // ============================================
 
 model Category {
@@ -159,7 +161,7 @@ model Category {
 }
 
 // ============================================
-// MISSIONS (demandes client → artisan)
+// MISSIONS (demandes client â†’ artisan)
 // ============================================
 
 model Mission {
@@ -195,7 +197,7 @@ model Mission {
 
 model Review {
   id        String   @id @default(cuid())
-  rating    Int      // 1 à 5 étoiles
+  rating    Int      // 1 Ã  5 Ã©toiles
   comment   String?
   clientId  String
   artisanId String
@@ -264,9 +266,9 @@ model Payment {
   id            String   @id @default(cuid())
   amount        Int      // montant en FCFA ou devise
   currency      String   @default("XAF")
-  status        String   @default("en_attente") // en_attente, payé, échoué, remboursé
+  status        String   @default("en_attente") // en_attente, payÃ©, Ã©chouÃ©, remboursÃ©
   method        String?  // Mobile Money, Orange Money, carte, etc.
-  reference     String?  // référence de transaction
+  reference     String?  // rÃ©fÃ©rence de transaction
   clientId      String
   artisanId     String?
   missionId     String?
@@ -299,7 +301,33 @@ model Favorite {
   client    User     @relation(fields: [clientId], references: [id], onDelete: Cascade)
   artisan   Artisan  @relation(fields: [artisanId], references: [id], onDelete: Cascade)
 
-  @@unique([clientId, artisanId]) // un client ne peut pas favoriser 2 fois le même artisan
+  @@unique([clientId, artisanId]) // un client ne peut pas favoriser 2 fois le mÃªme artisan
   @@index([clientId])
   @@index([artisanId])
 }
+
+// ============================================
+// RESERVATIONS (rendez-vous client <-> artisan)
+// ============================================
+
+model Booking {
+  id           String   @id @default(cuid())
+  clientId     String
+  artisanId    String
+  service      String
+  date         DateTime
+  status       String   @default("en_attente") // en_attente | confirmee | terminee | annulee
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  client       User     @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  artisan      Artisan  @relation(fields: [artisanId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
+  @@index([artisanId])
+  @@index([date])
+  @@index([status])
+}
+

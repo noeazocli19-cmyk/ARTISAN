@@ -1,6 +1,8 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import Link from 'next/link'
+import { ArrowLeftCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -45,10 +47,10 @@ import {
 
 const CATEGORY_OPTIONS = [
   { value: 'plomberie', label: 'Plomberie' },
-  { value: 'electrical', label: 'Électricité' },
+  { value: 'electrical', label: 'Ã‰lectricitÃ©' },
   { value: 'carpentry', label: 'Menuiserie' },
   { value: 'painting', label: 'Peinture' },
-  { value: 'masonry', label: 'Maçonnerie' },
+  { value: 'masonry', label: 'MaÃ§onnerie' },
   { value: 'welding', label: 'Soudure' },
   { value: 'tailoring', label: 'Couture' },
   { value: 'catering', label: 'Traiteur' },
@@ -58,10 +60,10 @@ const CATEGORY_OPTIONS = [
 
 const STATUS_MAP: Record<string, { label: string; color: string }> = {
   ouverte: { label: 'Ouverte', color: 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300' },
-  assignee: { label: 'Assignée', color: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300' },
+  assignee: { label: 'AssignÃ©e', color: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300' },
   en_cours: { label: 'En cours', color: 'bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300' },
-  terminee: { label: 'Terminée', color: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300' },
-  annulee: { label: 'Annulée', color: 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300' },
+  terminee: { label: 'TerminÃ©e', color: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300' },
+  annulee: { label: 'AnnulÃ©e', color: 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300' },
 }
 
 const fadeInUp = {
@@ -144,7 +146,7 @@ export function ClientDashboard() {
       })
       const data = await res.json()
       if (!res.ok) {
-        setMissionError(data.error || 'Erreur lors de la création')
+        setMissionError(data.error || 'Erreur lors de la crÃ©ation')
         return
       }
       setNewMissionOpen(false)
@@ -155,7 +157,7 @@ export function ClientDashboard() {
       setMLocation('')
       fetchMissions()
     } catch {
-      setMissionError('Erreur réseau')
+      setMissionError('Erreur rÃ©seau')
     } finally {
       setSubmitting(false)
     }
@@ -177,14 +179,23 @@ export function ClientDashboard() {
   const completedMissions = missions.filter(m => (m.status as string) === 'terminee' || m.status === 'completed')
   const uniqueArtisans = new Set(missions.filter(m => m.artisanId).map(m => m.artisanId)).size
 
-  const messageThreads = [
-    { id: '1', artisanName: 'Amadou Diallo', lastMessage: 'Je peux venir demain matin', time: 'Il y a 2h', unread: true },
-    { id: '2', artisanName: 'Fatou Ndiaye', lastMessage: 'Le devis est prêt', time: 'Il y a 5h', unread: false },
-    { id: '3', artisanName: 'Kofi Mensah', lastMessage: 'Merci pour votre confiance !', time: 'Hier', unread: false },
-  ]
+  const [conversations, setConversations] = useState<any[]>([])
+  const [conversationsLoading, setConversationsLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/messages/conversations')
+      .then((r) => (r.ok ? r.json() : { conversations: [] }))
+      .then((data) => setConversations(data.conversations || []))
+      .catch(() => {})
+      .finally(() => setConversationsLoading(false))
+  }, [])
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+      <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-orange-700 transition mb-4">
+        <ArrowLeftCircle className="h-4 w-4" />
+        Retour au site
+      </Link>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold">
@@ -203,7 +214,7 @@ export function ClientDashboard() {
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <Briefcase className="h-5 w-5 text-amber-500" />
-                Créer une mission
+                CrÃ©er une mission
               </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleCreateMission} className="space-y-4 mt-4">
@@ -215,15 +226,15 @@ export function ClientDashboard() {
               )}
               <div className="space-y-2">
                 <Label htmlFor="m-title">Titre</Label>
-                <Input id="m-title" placeholder="Réparation fuite robinet" value={mTitle} onChange={e => setMTitle(e.target.value)} required />
+                <Input id="m-title" placeholder="RÃ©paration fuite robinet" value={mTitle} onChange={e => setMTitle(e.target.value)} required />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="m-desc">Description</Label>
-                <Textarea id="m-desc" placeholder="Décrivez votre besoin en détail..." value={mDesc} onChange={e => setMDesc(e.target.value)} rows={4} required />
+                <Textarea id="m-desc" placeholder="DÃ©crivez votre besoin en dÃ©tail..." value={mDesc} onChange={e => setMDesc(e.target.value)} rows={4} required />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
-                  <Label>Catégorie</Label>
+                  <Label>CatÃ©gorie</Label>
                   <Select value={mCategory} onValueChange={setMCategory}>
                     <SelectTrigger><SelectValue placeholder="Choisir" /></SelectTrigger>
                     <SelectContent>
@@ -240,7 +251,7 @@ export function ClientDashboard() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="m-location">Localisation</Label>
-                <Input id="m-location" placeholder="Dakar, Sénégal" value={mLocation} onChange={e => setMLocation(e.target.value)} />
+                <Input id="m-location" placeholder="Dakar, SÃ©nÃ©gal" value={mLocation} onChange={e => setMLocation(e.target.value)} />
               </div>
               <Button type="submit" className="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0" disabled={submitting}>
                 {submitting && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
@@ -253,7 +264,7 @@ export function ClientDashboard() {
 
       <Tabs defaultValue="overview" className="space-y-6">
         <TabsList className="h-11 bg-muted/50 p-1">
-          <TabsTrigger value="overview" className="text-sm">Aperçu</TabsTrigger>
+          <TabsTrigger value="overview" className="text-sm">AperÃ§u</TabsTrigger>
           <TabsTrigger value="missions" className="text-sm">Mes Missions</TabsTrigger>
           <TabsTrigger value="messages" className="text-sm">Messages</TabsTrigger>
           <TabsTrigger value="favorites" className="text-sm flex items-center gap-1"><Heart className="h-3.5 w-3.5" />Favoris</TabsTrigger>
@@ -289,7 +300,7 @@ export function ClientDashboard() {
                     </div>
                     <div>
                       <p className="text-2xl font-bold">{completedMissions.length}</p>
-                      <p className="text-sm text-muted-foreground">Missions terminées</p>
+                      <p className="text-sm text-muted-foreground">Missions terminÃ©es</p>
                     </div>
                   </div>
                 </CardContent>
@@ -305,7 +316,7 @@ export function ClientDashboard() {
                     </div>
                     <div>
                       <p className="text-2xl font-bold">{uniqueArtisans}</p>
-                      <p className="text-sm text-muted-foreground">Artisans contactés</p>
+                      <p className="text-sm text-muted-foreground">Artisans contactÃ©s</p>
                     </div>
                   </div>
                 </CardContent>
@@ -316,7 +327,7 @@ export function ClientDashboard() {
           {/* Recent missions */}
           <Card className="border-border/50">
             <CardHeader>
-              <CardTitle className="text-lg">Missions récentes</CardTitle>
+              <CardTitle className="text-lg">Missions rÃ©centes</CardTitle>
             </CardHeader>
             <CardContent>
               {loadingMissions ? (
@@ -327,7 +338,7 @@ export function ClientDashboard() {
                 <div className="text-center py-8 text-muted-foreground">
                   <Briefcase className="h-12 w-12 mx-auto mb-3 opacity-30" />
                   <p>Aucune mission pour le moment</p>
-                  <p className="text-sm mt-1">Créez votre première mission pour trouver un artisan</p>
+                  <p className="text-sm mt-1">CrÃ©ez votre premiÃ¨re mission pour trouver un artisan</p>
                 </div>
               ) : (
                 <div className="space-y-3 max-h-96 overflow-y-auto">
@@ -374,10 +385,10 @@ export function ClientDashboard() {
             <Card className="border-dashed">
               <CardContent className="py-12 text-center text-muted-foreground">
                 <Briefcase className="h-12 w-12 mx-auto mb-3 opacity-30" />
-                <p>Aucune mission créée</p>
+                <p>Aucune mission crÃ©Ã©e</p>
                 <Button variant="outline" className="mt-4" onClick={() => setNewMissionOpen(true)}>
                   <Plus className="h-4 w-4 mr-2" />
-                  Créer une mission
+                  CrÃ©er une mission
                 </Button>
               </CardContent>
             </Card>
@@ -410,6 +421,24 @@ export function ClientDashboard() {
                             </span>
                           )}
                         </div>
+                        {mission.artisanId && (mission as any).artisan?.user && (
+                          <div className="mt-3 pt-3 border-t border-border/50 flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2 min-w-0">
+                              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-orange-600 text-white text-[10px] font-bold">
+                                {(mission as any).artisan.user.name?.charAt(0)?.toUpperCase() || 'A'}
+                              </div>
+                              <span className="text-xs font-medium truncate">
+                                {(mission as any).artisan.user.name}
+                              </span>
+                            </div>
+                            <Link
+                              href={`/messages?userId=${(mission as any).artisan.user.id}`}
+                              className="shrink-0 text-[11px] font-semibold px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-600 text-white hover:from-amber-600 hover:to-orange-700"
+                            >
+                              Envoyer un message
+                            </Link>
+                          </div>
+                        )}
                         {(mission.status === 'terminee' || mission.status === 'completed') && (
                           <Button
                             size="sm"
@@ -434,46 +463,55 @@ export function ClientDashboard() {
         <TabsContent value="messages" className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">Messages</h2>
-            <Button
-              size="sm"
-              className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0"
-              onClick={() => useAppStore.getState().setView('chat')}
-            >
-              <MessageSquare className="h-3.5 w-3.5 mr-1.5" />
-              Ouvrir le chat
-            </Button>
+            <Link href="/messages">
+              <Button
+                size="sm"
+                className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0"
+              >
+                <MessageSquare className="h-3.5 w-3.5 mr-1.5" />
+                Ouvrir le chat
+              </Button>
+            </Link>
           </div>
           <div className="space-y-3">
-            {messageThreads.map((thread) => (
-              <Card
-                key={thread.id}
-                className="border-border/50 hover:shadow-md transition-shadow cursor-pointer"
-                onClick={() => useAppStore.getState().setView('chat')}
-              >
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="relative shrink-0">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-orange-600 text-white text-xs font-bold">
-                        {thread.artisanName.split(' ').map(n => n[0]).join('')}
-                      </div>
-                      <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-500 border-2 border-white dark:border-neutral-900" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <span className="font-medium text-sm">{thread.artisanName}</span>
-                        <span className="text-xs text-muted-foreground">{thread.time}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <p className="text-sm text-muted-foreground truncate">{thread.lastMessage}</p>
-                        {thread.unread && (
-                          <div className="h-2 w-2 rounded-full bg-amber-500 shrink-0" />
-                        )}
-                      </div>
-                    </div>
-                  </div>
+            {conversationsLoading ? (
+              <p className="text-sm text-muted-foreground">Chargement...</p>
+            ) : conversations.length === 0 ? (
+              <Card className="border-dashed">
+                <CardContent className="py-10 text-center text-muted-foreground">
+                  <MessageSquare className="h-10 w-10 mx-auto mb-3 opacity-30" />
+                  <p>Aucune conversation pour le moment</p>
+                  <p className="text-sm mt-1">Contactez un artisan depuis sa fiche pour demarrer une discussion</p>
                 </CardContent>
               </Card>
-            ))}
+            ) : (
+              conversations.map((conv) => (
+                <Link key={conv.partnerId} href={`/messages?userId=${conv.partnerId}`}>
+                  <Card className="border-border/50 hover:shadow-md transition-shadow cursor-pointer">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-3">
+                        <div className="relative shrink-0">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-orange-600 text-white text-xs font-bold">
+                            {conv.partner?.name?.charAt(0)?.toUpperCase() || '?'}
+                          </div>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between">
+                            <span className="font-medium text-sm">{conv.partner?.name || 'Artisan'}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <p className="text-sm text-muted-foreground truncate">{conv.lastMessage?.content || ''}</p>
+                            {conv.unreadCount > 0 && (
+                              <div className="h-2 w-2 rounded-full bg-amber-500 shrink-0" />
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))
+            )}
           </div>
         </TabsContent>
 
@@ -488,7 +526,7 @@ export function ClientDashboard() {
               <CardContent className="py-12 text-center text-muted-foreground">
                 <Heart className="h-12 w-12 mx-auto mb-3 opacity-30" />
                 <p>Aucun artisan favori</p>
-                <p className="text-sm mt-1">Ajoutez des artisans à vos favoris en cliquant sur le cœur</p>
+                <p className="text-sm mt-1">Ajoutez des artisans Ã  vos favoris en cliquant sur le cÅ“ur</p>
               </CardContent>
             </Card>
           ) : (
@@ -510,7 +548,7 @@ export function ClientDashboard() {
               <CardContent className="py-12 text-center text-muted-foreground">
                 <Star className="h-12 w-12 mx-auto mb-3 opacity-30" />
                 <p>Aucun avis pour le moment</p>
-                <p className="text-sm mt-1">Les avis apparaîtront après la complétion de vos missions</p>
+                <p className="text-sm mt-1">Les avis apparaÃ®tront aprÃ¨s la complÃ©tion de vos missions</p>
               </CardContent>
             </Card>
           ) : (
@@ -576,7 +614,7 @@ export function ClientDashboard() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Téléphone</Label>
+                  <Label>TÃ©lÃ©phone</Label>
                   <Input value={user?.phone || ''} disabled className="bg-muted/50" />
                 </div>
                 <div className="space-y-2">
@@ -609,3 +647,4 @@ export function ClientDashboard() {
     </div>
   )
 }
+

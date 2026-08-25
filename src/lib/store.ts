@@ -1,5 +1,5 @@
-// =============================================================================
-// Artisan Connect — Global Application Store (Zustand v5 + persist)
+﻿// =============================================================================
+// Artisan Connect â€” Global Application Store (Zustand v5 + persist)
 // =============================================================================
 
 import { create } from "zustand";
@@ -160,7 +160,7 @@ export const useAppStore = create<AppStore>()(
               // On ignore l'erreur, l'inscription continue
             }
 
-            // Créer automatiquement le profil artisan si le rôle est "artisan"
+            // CrÃ©er automatiquement le profil artisan si le rÃ´le est "artisan"
             if (data.role === "artisan") {
               try {
                 await fetch("/api/artisans", {
@@ -188,7 +188,7 @@ export const useAppStore = create<AppStore>()(
             token: null,
             isAuthenticated: true,
             isLoading: false,
-            currentView: "onboarding",
+            currentView: "welcome",
           });
         } catch (error) {
           set({ isLoading: false });

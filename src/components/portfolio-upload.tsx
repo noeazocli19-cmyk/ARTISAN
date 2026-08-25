@@ -1,6 +1,6 @@
-'use client'
+﻿'use client'
 
-import { useState, useRef, useCallback } from "react"
+import { useState, useRef, useCallback, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -39,7 +39,7 @@ import {
   FolderOpen,
 } from "lucide-react"
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 interface PortfolioItem {
   id: string
@@ -59,26 +59,26 @@ interface UploadItem {
   category: string
 }
 
-// ─── Mock Data ───────────────────────────────────────────────────────────────
+// â”€â”€â”€ Mock Data â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const mockPortfolio: PortfolioItem[] = [
-  { id: "p1", artisanId: "1", title: "Réparation tuyauterie cuisine", description: "Remplacement complet de la tuyauterie dans une cuisine moderne", imageUrl: "https://picsum.photos/seed/plumb1/600/400", category: "Plomberie" },
+  { id: "p1", artisanId: "1", title: "RÃ©paration tuyauterie cuisine", description: "Remplacement complet de la tuyauterie dans une cuisine moderne", imageUrl: "https://picsum.photos/seed/plumb1/600/400", category: "Plomberie" },
   { id: "p2", artisanId: "1", title: "Installation robinetterie", description: "Pose de robinets mitigeurs dans une salle de bain", imageUrl: "https://picsum.photos/seed/plumb2/600/500", category: "Plomberie" },
-  { id: "p3", artisanId: "1", title: "Dépannage fuite urgente", description: "Intervention rapide sur fuite d'eau", imageUrl: "https://picsum.photos/seed/plumb3/600/450", category: "Plomberie" },
-  { id: "p4", artisanId: "2", title: "Installation tableau électrique", description: "Mise aux normes du tableau électrique", imageUrl: "https://picsum.photos/seed/elec1/600/400", category: "Électricité" },
-  { id: "p5", artisanId: "2", title: "Rénovation circuit complet", description: "Refonte totale de l'installation électrique", imageUrl: "https://picsum.photos/seed/elec2/600/550", category: "Électricité" },
-  { id: "p6", artisanId: "3", title: "Meuble sur mesure", description: "Création d'un meuble TV en bois massif", imageUrl: "https://picsum.photos/seed/wood1/600/400", category: "Menuiserie" },
-  { id: "p7", artisanId: "3", title: "Cuisine équipée", description: "Conception et installation d'une cuisine complète", imageUrl: "https://picsum.photos/seed/wood2/600/480", category: "Menuiserie" },
-  { id: "p8", artisanId: "4", title: "Décoration salon", description: "Peinture décorative avec effets texte", imageUrl: "https://picsum.photos/seed/paint1/600/400", category: "Peinture" },
-  { id: "p9", artisanId: "4", title: "Fresque murale", description: "Création d'une fresque africaine contemporaine", imageUrl: "https://picsum.photos/seed/paint2/600/500", category: "Peinture" },
+  { id: "p3", artisanId: "1", title: "DÃ©pannage fuite urgente", description: "Intervention rapide sur fuite d'eau", imageUrl: "https://picsum.photos/seed/plumb3/600/450", category: "Plomberie" },
+  { id: "p4", artisanId: "2", title: "Installation tableau Ã©lectrique", description: "Mise aux normes du tableau Ã©lectrique", imageUrl: "https://picsum.photos/seed/elec1/600/400", category: "Ã‰lectricitÃ©" },
+  { id: "p5", artisanId: "2", title: "RÃ©novation circuit complet", description: "Refonte totale de l'installation Ã©lectrique", imageUrl: "https://picsum.photos/seed/elec2/600/550", category: "Ã‰lectricitÃ©" },
+  { id: "p6", artisanId: "3", title: "Meuble sur mesure", description: "CrÃ©ation d'un meuble TV en bois massif", imageUrl: "https://picsum.photos/seed/wood1/600/400", category: "Menuiserie" },
+  { id: "p7", artisanId: "3", title: "Cuisine Ã©quipÃ©e", description: "Conception et installation d'une cuisine complÃ¨te", imageUrl: "https://picsum.photos/seed/wood2/600/480", category: "Menuiserie" },
+  { id: "p8", artisanId: "4", title: "DÃ©coration salon", description: "Peinture dÃ©corative avec effets texte", imageUrl: "https://picsum.photos/seed/paint1/600/400", category: "Peinture" },
+  { id: "p9", artisanId: "4", title: "Fresque murale", description: "CrÃ©ation d'une fresque africaine contemporaine", imageUrl: "https://picsum.photos/seed/paint2/600/500", category: "Peinture" },
   { id: "p10", artisanId: "1", title: "Installation chauffe-eau", description: "Pose d'un chauffe-eau solaire", imageUrl: "https://picsum.photos/seed/plumb4/600/420", category: "Plomberie" },
 ]
 
-const categories = ["Tous", "Plomberie", "Électricité", "Menuiserie", "Peinture", "Autre"]
+const categories = ["Tous", "Plomberie", "Ã‰lectricitÃ©", "Menuiserie", "Peinture", "Autre"]
 
 const categoryIcons: Record<string, typeof Droplets> = {
   "Plomberie": Droplets,
-  "Électricité": Zap,
+  "Ã‰lectricitÃ©": Zap,
   "Menuiserie": Hammer,
   "Peinture": Paintbrush,
   "Autre": MoreHorizontal,
@@ -86,13 +86,13 @@ const categoryIcons: Record<string, typeof Droplets> = {
 
 const categoryColors: Record<string, string> = {
   "Plomberie": "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300",
-  "Électricité": "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300",
+  "Ã‰lectricitÃ©": "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300",
   "Menuiserie": "bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300",
   "Peinture": "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300",
   "Autre": "bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300",
 }
 
-// ─── Animation variants ──────────────────────────────────────────────────────
+// â”€â”€â”€ Animation variants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const cardVariants = {
   hidden: { opacity: 0, y: 30, scale: 0.95 },
@@ -104,7 +104,7 @@ const staggerContainer = {
   visible: { transition: { staggerChildren: 0.08 } },
 }
 
-// ─── Component ───────────────────────────────────────────────────────────────
+// â”€â”€â”€ Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 interface PortfolioUploadProps {
   onBack: () => void
@@ -112,7 +112,23 @@ interface PortfolioUploadProps {
 
 export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
   // Gallery state
-  const [portfolio, setPortfolio] = useState<PortfolioItem[]>(mockPortfolio)
+  const [portfolio, setPortfolio] = useState<PortfolioItem[]>([])
+  const [realArtisanId, setRealArtisanId] = useState<string>("")
+  const [loadingPortfolio, setLoadingPortfolio] = useState(true)
+
+  useEffect(() => {
+    fetch("/api/artisans/profile")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data?.artisan) {
+          setRealArtisanId(data.artisan.id)
+          const existing = Array.isArray(data.artisan.portfolio) ? data.artisan.portfolio : []
+          setPortfolio(existing)
+        }
+      })
+      .catch((e) => console.error("Erreur chargement portfolio:", e))
+      .finally(() => setLoadingPortfolio(false))
+  }, [])
   const [activeCategory, setActiveCategory] = useState("Tous")
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
 
@@ -129,7 +145,7 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
     ? portfolio
     : portfolio.filter((item) => item.category === activeCategory)
 
-  // ─── Lightbox navigation ─────────────────────────────────────────────────
+  // â”€â”€â”€ Lightbox navigation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   const openLightbox = useCallback((index: number) => {
     setLightboxIndex(index)
@@ -149,7 +165,7 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
     }
   }, [lightboxIndex, filteredItems.length])
 
-  // ─── File handling ───────────────────────────────────────────────────────
+  // â”€â”€â”€ File handling â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   const processFiles = useCallback((files: FileList | File[]) => {
     const newItems: UploadItem[] = Array.from(files)
@@ -204,41 +220,57 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
     )
   }, [])
 
-  // ─── Upload simulation ───────────────────────────────────────────────────
+  // â”€â”€â”€ Upload simulation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-  const handlePublish = useCallback(() => {
+  const handlePublish = useCallback(async () => {
     if (uploadItems.length === 0) return
     setIsUploading(true)
     setUploadProgress(0)
     setUploadComplete(false)
 
-    const interval = setInterval(() => {
-      setUploadProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval)
-          return 100
+    try {
+      const uploadedItems: PortfolioItem[] = []
+      const total = uploadItems.length
+
+      for (let i = 0; i < uploadItems.length; i++) {
+        const item = uploadItems[i]
+        const formData = new FormData()
+        formData.append("file", item.file)
+        formData.append("type", "portfolio")
+
+        const res = await fetch("/api/upload", { method: "POST", body: formData })
+        const data = await res.json()
+
+        if (res.ok && data.success) {
+          uploadedItems.push({
+            id: `pf-${Date.now()}-${i}`,
+            artisanId: realArtisanId,
+            title: item.title || "Projet sans titre",
+            description: item.description || "Aucune description",
+            imageUrl: data.url,
+            category: item.category,
+          })
+        } else {
+          console.error("Echec upload image:", data.error)
         }
-        return prev + 2
+
+        setUploadProgress(Math.round(((i + 1) / total) * 100))
+      }
+
+      const mergedPortfolio = [...uploadedItems, ...portfolio]
+
+      const saveRes = await fetch("/api/artisans/profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ portfolio: mergedPortfolio }),
       })
-    }, 50)
 
-    setTimeout(() => {
-      clearInterval(interval)
-      setUploadProgress(100)
+      if (saveRes.ok) {
+        setPortfolio(mergedPortfolio)
+      } else {
+        console.error("Echec sauvegarde du portfolio")
+      }
 
-      // Add uploaded items to portfolio
-      const newItems: PortfolioItem[] = uploadItems.map((item, idx) => ({
-        id: `upload-${Date.now()}-${idx}`,
-        artisanId: "1",
-        title: item.title || "Projet sans titre",
-        description: item.description || "Aucune description",
-        imageUrl: item.preview,
-        category: item.category,
-      }))
-
-      setPortfolio((prev) => [...newItems, ...prev])
-
-      // Clean up previews
       uploadItems.forEach((item) => URL.revokeObjectURL(item.preview))
 
       setTimeout(() => {
@@ -250,10 +282,13 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
           setUploadComplete(false)
         }, 2000)
       }, 500)
-    }, 2600)
-  }, [uploadItems])
+    } catch (error) {
+      console.error("Erreur publication portfolio:", error)
+      setIsUploading(false)
+    }
+  }, [uploadItems, portfolio, realArtisanId])
 
-  // ─── Render ──────────────────────────────────────────────────────────────
+  // â”€â”€â”€ Render â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   const lightboxItem = lightboxIndex !== null ? filteredItems[lightboxIndex] : null
 
@@ -311,7 +346,7 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
             </TabsTrigger>
           </TabsList>
 
-          {/* ═══════════════ GALLERY VIEW ═══════════════ */}
+          {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• GALLERY VIEW â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           <TabsContent value="gallery">
             {/* Category Filters */}
             <div className="mb-8">
@@ -413,7 +448,7 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
                   <ImageIcon className="h-10 w-10 text-amber-500" />
                 </div>
                 <p className="text-muted-foreground text-lg">
-                  Aucun projet dans cette catégorie
+                  Aucun projet dans cette catÃ©gorie
                 </p>
                 <p className="text-muted-foreground text-sm mt-1">
                   Ajoutez votre premier projet en cliquant sur l&apos;onglet &quot;Ajouter&quot;
@@ -422,7 +457,7 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
             )}
           </TabsContent>
 
-          {/* ═══════════════ UPLOAD VIEW ═══════════════ */}
+          {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• UPLOAD VIEW â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           <TabsContent value="upload">
             <div className="space-y-6">
               {/* Drop Zone */}
@@ -468,7 +503,7 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
 
                     <div>
                       <p className="text-lg font-semibold">
-                        {isDragOver ? "Déposez vos images ici" : "Glissez-déposez vos images"}
+                        {isDragOver ? "DÃ©posez vos images ici" : "Glissez-dÃ©posez vos images"}
                       </p>
                       <p className="text-sm text-muted-foreground mt-1">
                         ou cliquez pour parcourir vos fichiers
@@ -505,10 +540,10 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
                               </div>
                               <div className="flex-1">
                                 <p className="font-semibold text-sm text-emerald-700 dark:text-emerald-400">
-                                  Publication réussie !
+                                  Publication rÃ©ussie !
                                 </p>
                                 <p className="text-xs text-muted-foreground">
-                                  Vos projets ont été ajoutés au portfolio
+                                  Vos projets ont Ã©tÃ© ajoutÃ©s au portfolio
                                 </p>
                               </div>
                             </>
@@ -543,7 +578,7 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
                   >
                     <div className="flex items-center justify-between">
                       <h3 className="font-semibold text-lg">
-                        Images sélectionnées
+                        Images sÃ©lectionnÃ©es
                         <span className="text-muted-foreground font-normal text-sm ml-2">
                           ({uploadItems.length})
                         </span>
@@ -621,7 +656,7 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
                                       onValueChange={(val) => updateUploadItem(item.id, "category", val)}
                                     >
                                       <SelectTrigger className="border-border/50 focus:ring-amber-500">
-                                        <SelectValue placeholder="Catégorie" />
+                                        <SelectValue placeholder="CatÃ©gorie" />
                                       </SelectTrigger>
                                       <SelectContent>
                                         {categories.filter((c) => c !== "Tous").map((cat) => (
@@ -663,7 +698,7 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
                   className="text-center py-8"
                 >
                   <p className="text-muted-foreground text-sm">
-                    Sélectionnez des images ci-dessus pour commencer à créer votre portfolio
+                    SÃ©lectionnez des images ci-dessus pour commencer Ã  crÃ©er votre portfolio
                   </p>
                 </motion.div>
               )}
@@ -672,7 +707,7 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
         </Tabs>
       </div>
 
-      {/* ═══════════════ LIGHTBOX DIALOG ═══════════════ */}
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• LIGHTBOX DIALOG â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <Dialog open={lightboxIndex !== null} onOpenChange={(open) => { if (!open) closeLightbox() }}>
         <DialogContent className="max-w-4xl w-[95vw] p-0 overflow-hidden bg-black border-0">
           <DialogTitle className="sr-only">
@@ -751,3 +786,5 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
     </div>
   )
 }
+
+

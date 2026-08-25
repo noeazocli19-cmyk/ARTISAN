@@ -1,5 +1,5 @@
-// =============================================================================
-// Artisan Connect — Shared TypeScript Interfaces
+﻿// =============================================================================
+// Artisan Connect â€” Shared TypeScript Interfaces
 // =============================================================================
 
 // ---------------------------------------------------------------------------
@@ -228,6 +228,7 @@ export interface SearchFilters {
 
 export type AppView =
   | "landing"
+  | "welcome"
   | "dashboard"
   | "search"
   | "artisan-detail"

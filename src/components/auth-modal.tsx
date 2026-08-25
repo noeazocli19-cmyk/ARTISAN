@@ -1,6 +1,7 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
 import {
   Dialog,
   DialogContent,
@@ -21,11 +22,11 @@ import {
 import { useAppStore } from '@/lib/store'
 import type { UserRole } from '@/lib/types'
 import { PhotoUploader } from '@/components/photo-uploader'
-import { Loader2, AlertCircle, Wrench, User, Eye, EyeOff } from 'lucide-react'
+import { Loader2, AlertCircle, Wrench, Briefcase, User, Sparkles, Eye, EyeOff } from 'lucide-react'
 
 const COUNTRIES = [
-  'Sénégal', 'Côte d\'Ivoire', 'Ghana', 'Togo', 'Mali',
-  'Guinée', 'Bénin', 'Burkina Faso', 'Cameroun', 'Gabon',
+  'SÃ©nÃ©gal', 'CÃ´te d\'Ivoire', 'Ghana', 'Togo', 'Mali',
+  'GuinÃ©e', 'BÃ©nin', 'Burkina Faso', 'Cameroun', 'Gabon',
   'Congo', 'RDC', 'Niger', 'Mauritanie', 'Cap-Vert',
 ]
 
@@ -97,7 +98,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
     }
 
     if (regPassword.length < 6) {
-      setRegError('Le mot de passe doit contenir au moins 6 caractères')
+      setRegError('Le mot de passe doit contenir au moins 6 caractÃ¨res')
       return
     }
 
@@ -154,7 +155,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
       return
     }
     if (newPassword.length < 6) {
-      setResetError('Le mot de passe doit contenir au moins 6 caractères')
+      setResetError('Le mot de passe doit contenir au moins 6 caractÃ¨res')
       return
     }
     setResetLoading(true)
@@ -166,11 +167,11 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
       })
       const data = await res.json()
       if (!res.ok) {
-        throw new Error(data.error || 'Erreur lors de la réinitialisation')
+        throw new Error(data.error || 'Erreur lors de la rÃ©initialisation')
       }
       setResetSuccess(true)
     } catch (err) {
-      setResetError(err instanceof Error ? err.message : 'Erreur lors de la réinitialisation')
+      setResetError(err instanceof Error ? err.message : 'Erreur lors de la rÃ©initialisation')
     } finally {
       setResetLoading(false)
     }
@@ -198,12 +199,39 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.1),transparent)]" />
             <DialogHeader className="relative">
               <div className="flex items-center gap-3 mb-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
-                  <Wrench className="h-5 w-5 text-white" />
+                <div className="relative h-10 w-10 shrink-0 overflow-visible">
+                  <div className="absolute inset-0 rounded-xl bg-white/20 backdrop-blur-sm" />
+                  {/* Silhouette qui marche en portant le sac */}
+                  <motion.div
+                    className="absolute bottom-1.5 left-1"
+                    initial={{ x: -26, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.55, ease: 'easeOut' }}
+                  >
+                    <User className="h-5 w-5 text-white" />
+                  </motion.div>
+                  {/* Le sac, qui se balance puis se depose */}
+                  <motion.div
+                    className="absolute bottom-1 left-5"
+                    initial={{ x: -26, y: -6, rotate: -25, opacity: 0 }}
+                    animate={{ x: 0, y: [-6, -6, 0], rotate: [-25, 12, 0], opacity: 1 }}
+                    transition={{ duration: 0.75, delay: 0.15, ease: 'easeOut' }}
+                  >
+                    <Briefcase className="h-4 w-4 text-amber-50" />
+                  </motion.div>
+                  {/* Etincelles quand le sac s'ouvre */}
+                  <motion.div
+                    className="absolute bottom-1.5 left-5"
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: [0, 1.3, 1], opacity: [0, 1, 0] }}
+                    transition={{ duration: 0.5, delay: 0.85 }}
+                  >
+                    <Sparkles className="h-4 w-4 text-yellow-200" />
+                  </motion.div>
                 </div>
                 <DialogTitle className="text-white text-xl">Artisan Connect</DialogTitle>
               </div>
-              <p className="text-white/80 text-sm">Connectez-vous ou créez votre compte</p>
+              <p className="text-white/80 text-sm">Connectez-vous ou crÃ©ez votre compte</p>
             </DialogHeader>
           </div>
 
@@ -232,7 +260,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                 <div className="space-y-2">
                   <Label htmlFor="login-password">Mot de passe</Label>
                   <div className="relative">
-                    <Input id="login-password" type={showLoginPassword ? 'text' : 'password'} placeholder="••••••" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} className="pr-10" required />
+                    <Input id="login-password" type={showLoginPassword ? 'text' : 'password'} placeholder="â€¢â€¢â€¢â€¢â€¢â€¢" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} className="pr-10" required />
                     <button type="button" onClick={() => setShowLoginPassword(!showLoginPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors">
                       {showLoginPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
@@ -243,7 +271,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                   Se connecter
                 </Button>
                 <button type="button" onClick={() => { onOpenChange(false); setTimeout(() => { setShowForgotPassword(true); setForgotError('') }, 300) }} className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  Mot de passe oublié ?
+                  Mot de passe oubliÃ© ?
                 </button>
               </form>
             </TabsContent>
@@ -260,7 +288,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                   <PhotoUploader currentAvatar={regAvatarUrl} userName={regName || undefined} size="lg" type="avatars" onUploadComplete={(url) => setRegAvatarUrl(url)} />
                 </div>
                 <div className="space-y-2">
-                  <Label>Vous êtes</Label>
+                  <Label>Vous Ãªtes</Label>
                   <div className="grid grid-cols-2 gap-3">
                     <button type="button" onClick={() => setRegRole('client')} className={`relative flex flex-col items-center gap-2 rounded-xl border-2 p-4 transition-all ${regRole === 'client' ? 'border-amber-500 bg-amber-50 dark:bg-amber-950/30' : 'border-border hover:border-amber-300'}`}>
                       <User className={`h-6 w-6 ${regRole === 'client' ? 'text-amber-600' : 'text-muted-foreground'}`} />
@@ -284,7 +312,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                   <div className="space-y-2">
                     <Label htmlFor="reg-password">Mot de passe</Label>
                     <div className="relative">
-                      <Input id="reg-password" type={showRegPassword ? 'text' : 'password'} placeholder="••••••" value={regPassword} onChange={e => setRegPassword(e.target.value)} className="pr-10" required />
+                      <Input id="reg-password" type={showRegPassword ? 'text' : 'password'} placeholder="â€¢â€¢â€¢â€¢â€¢â€¢" value={regPassword} onChange={e => setRegPassword(e.target.value)} className="pr-10" required />
                       <button type="button" onClick={() => setShowRegPassword(!showRegPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors">
                         {showRegPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </button>
@@ -293,7 +321,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                   <div className="space-y-2">
                     <Label htmlFor="reg-confirm">Confirmer</Label>
                     <div className="relative">
-                      <Input id="reg-confirm" type={showRegConfirmPassword ? 'text' : 'password'} placeholder="••••••" value={regConfirmPassword} onChange={e => setRegConfirmPassword(e.target.value)} className="pr-10" required />
+                      <Input id="reg-confirm" type={showRegConfirmPassword ? 'text' : 'password'} placeholder="â€¢â€¢â€¢â€¢â€¢â€¢" value={regConfirmPassword} onChange={e => setRegConfirmPassword(e.target.value)} className="pr-10" required />
                       <button type="button" onClick={() => setShowRegConfirmPassword(!showRegConfirmPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors">
                         {showRegConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </button>
@@ -301,7 +329,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="reg-phone">Téléphone (optionnel)</Label>
+                  <Label htmlFor="reg-phone">TÃ©lÃ©phone (optionnel)</Label>
                   <Input id="reg-phone" placeholder="+221 77 123 45 67" value={regPhone} onChange={e => setRegPhone(e.target.value)} />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
@@ -312,7 +340,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                   <div className="space-y-2">
                     <Label>Pays</Label>
                     <Select value={regCountry} onValueChange={setRegCountry}>
-                      <SelectTrigger><SelectValue placeholder="Sélectionner" /></SelectTrigger>
+                      <SelectTrigger><SelectValue placeholder="SÃ©lectionner" /></SelectTrigger>
                       <SelectContent>
                         {COUNTRIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
                       </SelectContent>
@@ -321,7 +349,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                 </div>
                 <Button type="submit" className="w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0 h-11" disabled={isLoading}>
                   {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                  Créer mon compte
+                  CrÃ©er mon compte
                 </Button>
               </form>
             </TabsContent>
@@ -329,21 +357,21 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
         </DialogContent>
       </Dialog>
 
-      {/* ====== DIALOGUE MOT DE PASSE OUBLIÉ ====== */}
+      {/* ====== DIALOGUE MOT DE PASSE OUBLIÃ‰ ====== */}
       <Dialog open={showForgotPassword} onOpenChange={(open) => { setShowForgotPassword(open); if (!open) { setForgotSuccess(false); setForgotError('') } }}>
         <DialogContent className="sm:max-w-[440px] p-0 gap-0 overflow-hidden">
           <div className="relative bg-gradient-to-r from-amber-500 to-orange-600 p-6 pb-8">
             <DialogHeader>
-              <DialogTitle className="text-white text-xl">Mot de passe oublié</DialogTitle>
+              <DialogTitle className="text-white text-xl">Mot de passe oubliÃ©</DialogTitle>
             </DialogHeader>
           </div>
           <div className="p-6">
             {forgotSuccess ? (
               <div className="text-center py-4">
-                <h3 className="text-lg font-semibold mb-2">Email envoyé !</h3>
-                <p className="text-sm text-muted-foreground mb-4">Si un compte existe avec l&apos;adresse <strong>{forgotEmail}</strong>, vous recevrez un code pour réinitialiser votre mot de passe.</p>
+                <h3 className="text-lg font-semibold mb-2">Email envoyÃ© !</h3>
+                <p className="text-sm text-muted-foreground mb-4">Si un compte existe avec l&apos;adresse <strong>{forgotEmail}</strong>, vous recevrez un code pour rÃ©initialiser votre mot de passe.</p>
                 <Button onClick={() => { setShowForgotPassword(false); setForgotSuccess(false); setShowResetPassword(true) }} className="bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0">
-                  J&apos;ai mon code, je réinitialise
+                  J&apos;ai mon code, je rÃ©initialise
                 </Button>
               </div>
             ) : (
@@ -363,7 +391,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
         </DialogContent>
       </Dialog>
 
-      {/* ====== DIALOGUE RÉINITIALISATION MOT DE PASSE ====== */}
+      {/* ====== DIALOGUE RÃ‰INITIALISATION MOT DE PASSE ====== */}
       <Dialog open={showResetPassword} onOpenChange={(open) => { setShowResetPassword(open); if (!open) { setResetSuccess(false); setResetError('') } }}>
         <DialogContent className="sm:max-w-[440px] p-0 gap-0 overflow-hidden">
           <div className="relative bg-gradient-to-r from-amber-500 to-orange-600 p-6 pb-8">
@@ -374,7 +402,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
           <div className="p-6">
             {resetSuccess ? (
               <div className="text-center py-4">
-                <h3 className="text-lg font-semibold mb-2">Mot de passe mis à jour !</h3>
+                <h3 className="text-lg font-semibold mb-2">Mot de passe mis Ã  jour !</h3>
                 <p className="text-sm text-muted-foreground mb-4">Vous pouvez maintenant vous connecter.</p>
                 <Button onClick={() => { setShowResetPassword(false); setResetSuccess(false); setActiveTab('login'); onOpenChange(true) }} className="bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0">
                   Se connecter
@@ -384,20 +412,20 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
               <form onSubmit={handleResetPassword} className="space-y-4">
                 {resetError && <div className="p-3 rounded-lg bg-red-50 dark:bg-red-950/30 text-sm text-red-600">{resetError}</div>}
                 <div className="space-y-2">
-                  <Label htmlFor="reset-code">Code reçu par email</Label>
+                  <Label htmlFor="reset-code">Code reÃ§u par email</Label>
                   <Input id="reset-code" placeholder="000000" value={resetToken} onChange={e => setResetToken(e.target.value)} required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="new-password">Nouveau mot de passe</Label>
-                  <Input id="new-password" type="password" placeholder="••••••••" value={newPassword} onChange={e => setNewPassword(e.target.value)} required />
+                  <Input id="new-password" type="password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" value={newPassword} onChange={e => setNewPassword(e.target.value)} required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="confirm-new-password">Confirmer</Label>
-                  <Input id="confirm-new-password" type="password" placeholder="••••••••" value={confirmNewPassword} onChange={e => setConfirmNewPassword(e.target.value)} required />
+                  <Input id="confirm-new-password" type="password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" value={confirmNewPassword} onChange={e => setConfirmNewPassword(e.target.value)} required />
                 </div>
                 <Button type="submit" className="w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0 h-11" disabled={resetLoading}>
                   {resetLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                  Réinitialiser
+                  RÃ©initialiser
                 </Button>
               </form>
             )}
@@ -407,3 +435,4 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
     </>
   )
 }
+

@@ -1,4 +1,7 @@
-'use client'
+﻿'use client'
+
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import { useState, useEffect, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
@@ -69,13 +72,17 @@ import {
   Bone,
   Baby,
   BookOpen,
+  CalendarDays,
+  Trophy,
+  ClipboardList,
+  Siren,
+  Gift,
+  Rocket,
 } from "lucide-react"
 
 // Import our new components
 import { Navbar } from "@/components/navbar"
 import { AuthModal } from "@/components/auth-modal"
-import { ClientDashboard } from "@/components/client-dashboard"
-import { ArtisanDashboard } from "@/components/artisan-dashboard"
 import { SearchResults } from "@/components/search-results"
 import { ArtisanDetail } from "@/components/artisan-detail"
 import { Chatbot } from "@/components/chatbot"
@@ -86,6 +93,7 @@ import { PortfolioUpload } from "@/components/portfolio-upload"
 import { OnboardingFlow } from "@/components/onboarding-flow"
 import { InstallPrompt } from "@/components/install-prompt"
 import { AdminDashboard } from "@/components/admin-dashboard"
+import { WelcomeScreen } from "@/components/welcome-screen"
 import { BookingCalendar } from "@/components/booking-calendar"
 import { PaymentWallet } from "@/components/payment-wallet"
 import { GamificationSystem } from "@/components/gamification-system"
@@ -95,13 +103,14 @@ import { ReferralProgram } from "@/components/referral-program"
 import { AnimatedStats } from "@/components/animated-stats"
 import { CallModal } from "@/components/call-modal"
 import { useAppStore } from "@/lib/store"
-import Image from "next/image"
+import Image from "next/image" 
+import dynamic from "next/dynamic" 
 
-/* ───────────── data ───────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ data â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 const quickCategories = [
   "Plomberie",
-  "Électricité",
+  "Ã‰lectricitÃ©",
   "Menuiserie",
   "Peinture",
   "Climatisation",
@@ -109,8 +118,8 @@ const quickCategories = [
   "Soudure",
   "Carrelage",
   "Couture",
-  "Pâtisserie",
-  "Mécanique",
+  "PÃ¢tisserie",
+  "MÃ©canique",
   "Coiffure",
 ]
 
@@ -123,20 +132,20 @@ const stats = [
 
 const categories = [
   { name: "Plomberie", icon: Droplets, count: "1 250 artisans", color: "bg-blue-100 text-blue-600 dark:bg-blue-950 dark:text-blue-400" },
-  { name: "Électricité", icon: Zap, count: "1 100 artisans", color: "bg-amber-100 text-amber-600 dark:bg-amber-950 dark:text-amber-400" },
+  { name: "Ã‰lectricitÃ©", icon: Zap, count: "1 100 artisans", color: "bg-amber-100 text-amber-600 dark:bg-amber-950 dark:text-amber-400" },
   { name: "Menuiserie", icon: Hammer, count: "980 artisans", color: "bg-orange-100 text-orange-600 dark:bg-orange-950 dark:text-orange-400" },
   { name: "Peinture", icon: Paintbrush, count: "870 artisans", color: "bg-emerald-100 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400" },
   { name: "Serrurerie", icon: KeyRound, count: "650 artisans", color: "bg-rose-100 text-rose-600 dark:bg-rose-950 dark:text-rose-400" },
-  { name: "Maçonnerie", icon: BrickWall, count: "920 artisans", color: "bg-teal-100 text-teal-600 dark:bg-teal-950 dark:text-teal-400" },
+  { name: "MaÃ§onnerie", icon: BrickWall, count: "920 artisans", color: "bg-teal-100 text-teal-600 dark:bg-teal-950 dark:text-teal-400" },
   { name: "Climatisation", icon: Wind, count: "780 artisans", color: "bg-cyan-100 text-cyan-600 dark:bg-cyan-950 dark:text-cyan-400" },
   { name: "Nettoyage", icon: Sparkles, count: "1 450 artisans", color: "bg-violet-100 text-violet-600 dark:bg-violet-950 dark:text-violet-400" },
   { name: "Soudure", icon: Flame, count: "540 artisans", color: "bg-red-100 text-red-600 dark:bg-red-950 dark:text-red-400" },
   { name: "Carrelage", icon: LayoutGrid, count: "670 artisans", color: "bg-sky-100 text-sky-600 dark:bg-sky-950 dark:text-sky-400" },
   { name: "Couture", icon: Scissors, count: "890 artisans", color: "bg-pink-100 text-pink-600 dark:bg-pink-950 dark:text-pink-400" },
   { name: "Couvreur", icon: HomeIcon, count: "430 artisans", color: "bg-stone-100 text-stone-600 dark:bg-stone-950 dark:text-stone-400" },
-  { name: "Plâtrerie", icon: Ruler, count: "510 artisans", color: "bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400" },
-  { name: "Pâtisserie", icon: ChefHat, count: "720 artisans", color: "bg-yellow-100 text-yellow-600 dark:bg-yellow-950 dark:text-yellow-400" },
-  { name: "Mécanique", icon: Car, count: "960 artisans", color: "bg-gray-100 text-gray-600 dark:bg-gray-900 dark:text-gray-400" },
+  { name: "PlÃ¢trerie", icon: Ruler, count: "510 artisans", color: "bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400" },
+  { name: "PÃ¢tisserie", icon: ChefHat, count: "720 artisans", color: "bg-yellow-100 text-yellow-600 dark:bg-yellow-950 dark:text-yellow-400" },
+  { name: "MÃ©canique", icon: Car, count: "960 artisans", color: "bg-gray-100 text-gray-600 dark:bg-gray-900 dark:text-gray-400" },
   { name: "Coiffure", icon: Scissors, count: "1 100 artisans", color: "bg-fuchsia-100 text-fuchsia-600 dark:bg-fuchsia-950 dark:text-fuchsia-400" },
   { name: "Paysagisme", icon: TreePine, count: "380 artisans", color: "bg-green-100 text-green-600 dark:bg-green-950 dark:text-green-400" },
   { name: "Vitrerie", icon: DoorOpen, count: "290 artisans", color: "bg-indigo-100 text-indigo-600 dark:bg-indigo-950 dark:text-indigo-400" },
@@ -147,11 +156,11 @@ const categories = [
 const artisans = [
   {
     name: "Amadou Diallo",
-    skill: "Plombier certifié",
-    location: "Dakar, Sénégal",
+    skill: "Plombier certifiÃ©",
+    location: "Dakar, SÃ©nÃ©gal",
     rating: 4.9,
     reviews: 127,
-    badge: "Élite",
+    badge: "Ã‰lite",
     badgeColor: "bg-amber-500 text-white",
     avatar: "AD",
     avatarColor: "bg-amber-500",
@@ -159,8 +168,8 @@ const artisans = [
   },
   {
     name: "Fatou Ndiaye",
-    skill: "Électricienne",
-    location: "Abidjan, Côte d'Ivoire",
+    skill: "Ã‰lectricienne",
+    location: "Abidjan, CÃ´te d'Ivoire",
     rating: 4.8,
     reviews: 98,
     badge: "Top",
@@ -175,19 +184,19 @@ const artisans = [
     location: "Accra, Ghana",
     rating: 4.9,
     reviews: 156,
-    badge: "Élite",
+    badge: "Ã‰lite",
     badgeColor: "bg-amber-500 text-white",
     avatar: "KM",
     avatarColor: "bg-orange-500",
     image: "/images/artisan-carpenter.png",
   },
   {
-    name: "Aïcha Bello",
-    skill: "Peintre décoratrice",
-    location: "Lomé, Togo",
+    name: "AÃ¯cha Bello",
+    skill: "Peintre dÃ©coratrice",
+    location: "LomÃ©, Togo",
     rating: 4.7,
     reviews: 73,
-    badge: "Vérifié",
+    badge: "VÃ©rifiÃ©",
     badgeColor: "bg-teal-500 text-white",
     avatar: "AB",
     avatarColor: "bg-teal-500",
@@ -208,10 +217,10 @@ const artisans = [
   {
     name: "Mariama Sow",
     skill: "Carreleuse experte",
-    location: "Conakry, Guinée",
+    location: "Conakry, GuinÃ©e",
     rating: 4.9,
     reviews: 201,
-    badge: "Élite",
+    badge: "Ã‰lite",
     badgeColor: "bg-amber-500 text-white",
     avatar: "MS",
     avatarColor: "bg-sky-500",
@@ -219,31 +228,31 @@ const artisans = [
   },
   {
     name: "Ousmane Camara",
-    skill: "Couvreur certifié",
-    location: "Dakar, Sénégal",
+    skill: "Couvreur certifiÃ©",
+    location: "Dakar, SÃ©nÃ©gal",
     rating: 4.7,
     reviews: 89,
-    badge: "Vérifié",
+    badge: "VÃ©rifiÃ©",
     badgeColor: "bg-teal-500 text-white",
     avatar: "OC",
     avatarColor: "bg-stone-500",
     image: "/images/artisan-roofer.png",
   },
   {
-    name: "Aminata Koné",
-    skill: "Couturière mode",
-    location: "Abidjan, Côte d'Ivoire",
+    name: "Aminata KonÃ©",
+    skill: "CouturiÃ¨re mode",
+    location: "Abidjan, CÃ´te d'Ivoire",
     rating: 4.9,
     reviews: 178,
-    badge: "Élite",
+    badge: "Ã‰lite",
     badgeColor: "bg-amber-500 text-white",
     avatar: "AK",
     avatarColor: "bg-pink-500",
     image: "/images/artisan-tailor.png",
   },
   {
-    name: "Moussa Traoré",
-    skill: "Mécanicien auto",
+    name: "Moussa TraorÃ©",
+    skill: "MÃ©canicien auto",
     location: "Bamako, Mali",
     rating: 4.8,
     reviews: 134,
@@ -259,7 +268,7 @@ const artisans = [
     location: "Bamako, Mali",
     rating: 4.9,
     reviews: 95,
-    badge: "Élite",
+    badge: "Ã‰lite",
     badgeColor: "bg-amber-500 text-white",
     avatar: "SK",
     avatarColor: "bg-zinc-600",
@@ -268,10 +277,10 @@ const artisans = [
   {
     name: "Fatoumata Diarra",
     skill: "Paysagiste",
-    location: "Conakry, Guinée",
+    location: "Conakry, GuinÃ©e",
     rating: 4.7,
     reviews: 67,
-    badge: "Vérifié",
+    badge: "VÃ©rifiÃ©",
     badgeColor: "bg-teal-500 text-white",
     avatar: "FD",
     avatarColor: "bg-green-500",
@@ -290,12 +299,12 @@ const artisans = [
     image: "/images/artisan-glassmaker.png",
   },
   {
-    name: "Adama Bâ",
-    skill: "Plâtrier qualifié",
-    location: "Dakar, Sénégal",
+    name: "Adama BÃ¢",
+    skill: "PlÃ¢trier qualifiÃ©",
+    location: "Dakar, SÃ©nÃ©gal",
     rating: 4.6,
     reviews: 58,
-    badge: "Vérifié",
+    badge: "VÃ©rifiÃ©",
     badgeColor: "bg-teal-500 text-white",
     avatar: "AB",
     avatarColor: "bg-neutral-500",
@@ -303,11 +312,11 @@ const artisans = [
   },
   {
     name: "Ramatoulaye Dia",
-    skill: "Pâtissière",
-    location: "Dakar, Sénégal",
+    skill: "PÃ¢tissiÃ¨re",
+    location: "Dakar, SÃ©nÃ©gal",
     rating: 4.9,
     reviews: 210,
-    badge: "Élite",
+    badge: "Ã‰lite",
     badgeColor: "bg-amber-500 text-white",
     avatar: "RD",
     avatarColor: "bg-yellow-500",
@@ -316,7 +325,7 @@ const artisans = [
   {
     name: "Awa Ndiaye",
     skill: "Coiffeuse professionnelle",
-    location: "Abidjan, Côte d'Ivoire",
+    location: "Abidjan, CÃ´te d'Ivoire",
     rating: 4.8,
     reviews: 165,
     badge: "Top",
@@ -330,22 +339,22 @@ const artisans = [
 const howItWorks = [
   {
     step: "01",
-    title: "Décrivez",
-    description: "Décrivez votre projet en quelques clics. Précisez le type de service, la localisation et vos préférences.",
+    title: "DÃ©crivez",
+    description: "DÃ©crivez votre projet en quelques clics. PrÃ©cisez le type de service, la localisation et vos prÃ©fÃ©rences.",
     icon: Search,
     color: "from-amber-500 to-orange-500",
   },
   {
     step: "02",
     title: "Recevez",
-    description: "Recevez des propositions d'artisans qualifiés et vérifiés près de chez vous dans les minutes qui suivent.",
+    description: "Recevez des propositions d'artisans qualifiÃ©s et vÃ©rifiÃ©s prÃ¨s de chez vous dans les minutes qui suivent.",
     icon: MessageSquare,
     color: "from-emerald-500 to-teal-500",
   },
   {
     step: "03",
     title: "Choisissez",
-    description: "Comparez les profils, avis et tarifs. Choisissez l'artisan idéal et réservez en toute confiance.",
+    description: "Comparez les profils, avis et tarifs. Choisissez l'artisan idÃ©al et rÃ©servez en toute confiance.",
     icon: CheckCircle2,
     color: "from-orange-500 to-amber-500",
   },
@@ -354,40 +363,40 @@ const howItWorks = [
 const testimonials = [
   {
     name: "Ousmane Ba",
-    role: "Propriétaire à Dakar",
-    text: "Artisan Connect m'a permis de trouver un plombier exceptionnel en moins de 30 minutes. Le service était rapide, professionnel et le prix très raisonnable. Je recommande vivement !",
+    role: "PropriÃ©taire Ã  Dakar",
+    text: "Artisan Connect m'a permis de trouver un plombier exceptionnel en moins de 30 minutes. Le service Ã©tait rapide, professionnel et le prix trÃ¨s raisonnable. Je recommande vivement !",
     rating: 5,
     avatar: "OB",
     avatarColor: "bg-amber-500",
   },
   {
-    name: "Aminata Koné",
-    role: "Gérante d'hôtel à Abidjan",
-    text: "Nous utilisons Artisan Connect pour tous nos besoins en maintenance. La qualité des artisans est constante et le support est toujours disponible. Un partenaire de confiance.",
+    name: "Aminata KonÃ©",
+    role: "GÃ©rante d'hÃ´tel Ã  Abidjan",
+    text: "Nous utilisons Artisan Connect pour tous nos besoins en maintenance. La qualitÃ© des artisans est constante et le support est toujours disponible. Un partenaire de confiance.",
     rating: 5,
     avatar: "AK",
     avatarColor: "bg-emerald-500",
   },
   {
     name: "Jean-Pierre Aka",
-    role: "Architecte à Lomé",
-    text: "En tant qu'architecte, j'ai besoin d'artisans fiables pour mes projets. Artisan Connect m'offre un vivier de professionnels vérifiés avec des avis authentiques. Indispensable !",
+    role: "Architecte Ã  LomÃ©",
+    text: "En tant qu'architecte, j'ai besoin d'artisans fiables pour mes projets. Artisan Connect m'offre un vivier de professionnels vÃ©rifiÃ©s avec des avis authentiques. Indispensable !",
     rating: 5,
     avatar: "JA",
     avatarColor: "bg-orange-500",
   },
   {
     name: "Mariam Doumbia",
-    role: "Restauratrice à Bamako",
-    text: "Mon restaurant avait un problème électrique urgent un dimanche soir. Grâce à Artisan Connect, un électricien est arrivé en 45 minutes. Service au top, je suis cliente pour la vie !",
+    role: "Restauratrice Ã  Bamako",
+    text: "Mon restaurant avait un problÃ¨me Ã©lectrique urgent un dimanche soir. GrÃ¢ce Ã  Artisan Connect, un Ã©lectricien est arrivÃ© en 45 minutes. Service au top, je suis cliente pour la vie !",
     rating: 4,
     avatar: "MD",
     avatarColor: "bg-teal-500",
   },
   {
     name: "Ibrahim Diarra",
-    role: "Entrepreneur à Conakry",
-    text: "La plateforme m'a permis de développer mon réseau d'artisans partenaires. La géolocalisation et les avis vérifiés me font gagner un temps précieux sur chaque chantier.",
+    role: "Entrepreneur Ã  Conakry",
+    text: "La plateforme m'a permis de dÃ©velopper mon rÃ©seau d'artisans partenaires. La gÃ©olocalisation et les avis vÃ©rifiÃ©s me font gagner un temps prÃ©cieux sur chaque chantier.",
     rating: 5,
     avatar: "ID",
     avatarColor: "bg-cyan-500",
@@ -397,43 +406,43 @@ const testimonials = [
 const trustFeatures = [
   {
     icon: Shield,
-    title: "Identité Vérifiée",
-    description: "Chaque artisan passe par un processus de vérification d'identité rigoureux avant de rejoindre la plateforme.",
+    title: "IdentitÃ© VÃ©rifiÃ©e",
+    description: "Chaque artisan passe par un processus de vÃ©rification d'identitÃ© rigoureux avant de rejoindre la plateforme.",
     color: "text-amber-500",
     bg: "bg-amber-50 dark:bg-amber-950/30",
   },
   {
     icon: MessageSquare,
     title: "Avis Authentiques",
-    description: "Seuls les clients ayant réellement utilisé un service peuvent laisser un avis. Transparence totale.",
+    description: "Seuls les clients ayant rÃ©ellement utilisÃ© un service peuvent laisser un avis. Transparence totale.",
     color: "text-emerald-500",
     bg: "bg-emerald-50 dark:bg-emerald-950/30",
   },
   {
     icon: CreditCard,
-    title: "Paiement Sécurisé",
-    description: "Vos transactions sont protégées par un système de paiement sécurisé avec retention jusqu'à validation du travail.",
+    title: "Paiement SÃ©curisÃ©",
+    description: "Vos transactions sont protÃ©gÃ©es par un systÃ¨me de paiement sÃ©curisÃ© avec retention jusqu'Ã  validation du travail.",
     color: "text-orange-500",
     bg: "bg-orange-50 dark:bg-orange-950/30",
   },
   {
     icon: Headphones,
     title: "Support 24/7",
-    description: "Notre équipe est disponible à tout moment pour vous accompagner et résoudre tout problème éventuel.",
+    description: "Notre Ã©quipe est disponible Ã  tout moment pour vous accompagner et rÃ©soudre tout problÃ¨me Ã©ventuel.",
     color: "text-teal-500",
     bg: "bg-teal-50 dark:bg-teal-950/30",
   },
   {
     icon: ThumbsUp,
     title: "Satisfaction Garantie",
-    description: "Si le travail ne correspond pas à la description, nous vous remboursons. Votre satisfaction est notre priorité.",
+    description: "Si le travail ne correspond pas Ã  la description, nous vous remboursons. Votre satisfaction est notre prioritÃ©.",
     color: "text-rose-500",
     bg: "bg-rose-50 dark:bg-rose-950/30",
   },
   {
     icon: Navigation,
-    title: "Géolocalisation",
-    description: "Trouvez les artisans les plus proches de vous grâce à notre système de géolocalisation en temps réel.",
+    title: "GÃ©olocalisation",
+    description: "Trouvez les artisans les plus proches de vous grÃ¢ce Ã  notre systÃ¨me de gÃ©olocalisation en temps rÃ©el.",
     color: "text-cyan-500",
     bg: "bg-cyan-50 dark:bg-cyan-950/30",
   },
@@ -442,40 +451,40 @@ const trustFeatures = [
 const faqItems = [
   {
     question: "Comment fonctionne Artisan Connect ?",
-    answer: "Artisan Connect est une plateforme qui met en relation les clients avec des artisans qualifiés et vérifiés à travers l'Afrique. Il vous suffit de décrire votre besoin, de recevoir des propositions d'artisans, et de choisir celui qui vous convient le mieux. Le processus est simple, rapide et sécurisé.",
+    answer: "Artisan Connect est une plateforme qui met en relation les clients avec des artisans qualifiÃ©s et vÃ©rifiÃ©s Ã  travers l'Afrique. Il vous suffit de dÃ©crire votre besoin, de recevoir des propositions d'artisans, et de choisir celui qui vous convient le mieux. Le processus est simple, rapide et sÃ©curisÃ©.",
   },
   {
-    question: "Comment les artisans sont-ils vérifiés ?",
-    answer: "Chaque artisan doit passer par un processus de vérification en plusieurs étapes : vérification d'identité avec pièce d'identité officielle, vérification des certifications et diplômes, contrôle des références professionnelles, et période probatoire avec suivi des premiers avis clients.",
+    question: "Comment les artisans sont-ils vÃ©rifiÃ©s ?",
+    answer: "Chaque artisan doit passer par un processus de vÃ©rification en plusieurs Ã©tapes : vÃ©rification d'identitÃ© avec piÃ¨ce d'identitÃ© officielle, vÃ©rification des certifications et diplÃ´mes, contrÃ´le des rÃ©fÃ©rences professionnelles, et pÃ©riode probatoire avec suivi des premiers avis clients.",
   },
   {
-    question: "Quels sont les moyens de paiement acceptés ?",
-    answer: "Nous acceptons plusieurs moyens de paiement : cartes bancaires (Visa, Mastercard), Mobile Money (Orange Money, MTN Money, Wave), virements bancaires, et paiement en espèces via nos points de service. Tous les paiements sont sécurisés.",
+    question: "Quels sont les moyens de paiement acceptÃ©s ?",
+    answer: "Nous acceptons plusieurs moyens de paiement : cartes bancaires (Visa, Mastercard), Mobile Money (Orange Money, MTN Money, Wave), virements bancaires, et paiement en espÃ¨ces via nos points de service. Tous les paiements sont sÃ©curisÃ©s.",
   },
   {
     question: "Que se passe-t-il si je ne suis pas satisfait du travail ?",
-    answer: "Votre satisfaction est notre priorité. Si le travail ne correspond pas à la description initiale, vous pouvez signaler un litige dans les 48 heures. Notre équipe de médiation examinera votre dossier et vous pourrez bénéficier d'un remboursement partiel ou total selon le cas.",
+    answer: "Votre satisfaction est notre prioritÃ©. Si le travail ne correspond pas Ã  la description initiale, vous pouvez signaler un litige dans les 48 heures. Notre Ã©quipe de mÃ©diation examinera votre dossier et vous pourrez bÃ©nÃ©ficier d'un remboursement partiel ou total selon le cas.",
   },
   {
     question: "Dans quels pays Artisan Connect est-il disponible ?",
-    answer: "Artisan Connect est actuellement disponible dans 15 pays africains : Sénégal, Côte d'Ivoire, Ghana, Togo, Mali, Guinée, Bénin, Burkina Faso, Cameroun, Gabon, Congo, RDC, Niger, Mauritanie et Cap-Vert. Nous étendons régulièrement notre couverture.",
+    answer: "Artisan Connect est actuellement disponible dans 15 pays africains : SÃ©nÃ©gal, CÃ´te d'Ivoire, Ghana, Togo, Mali, GuinÃ©e, BÃ©nin, Burkina Faso, Cameroun, Gabon, Congo, RDC, Niger, Mauritanie et Cap-Vert. Nous Ã©tendons rÃ©guliÃ¨rement notre couverture.",
   },
   {
     question: "Comment devenir artisan sur la plateforme ?",
-    answer: "Pour rejoindre Artisan Connect, créez un compte artisan, soumettez vos documents de vérification (identité, certifications, références), complétez votre profil avec vos compétences et tarifs, puis passez l'entretien de validation. Une fois approuvé, vous pourrez recevoir des demandes de clients.",
+    answer: "Pour rejoindre Artisan Connect, crÃ©ez un compte artisan, soumettez vos documents de vÃ©rification (identitÃ©, certifications, rÃ©fÃ©rences), complÃ©tez votre profil avec vos compÃ©tences et tarifs, puis passez l'entretien de validation. Une fois approuvÃ©, vous pourrez recevoir des demandes de clients.",
   },
 ]
 
 const footerLinks = {
   platform: [
-    { label: "Comment ça marche", href: "#comment-ca-marche" },
+    { label: "Comment Ã§a marche", href: "#comment-ca-marche" },
     { label: "Tarification", href: "#" },
     { label: "Devenir artisan", href: "#" },
     { label: "Centre d'aide", href: "#" },
   ],
   services: [
     { label: "Plomberie", href: "#" },
-    { label: "Électricité", href: "#" },
+    { label: "Ã‰lectricitÃ©", href: "#" },
     { label: "Menuiserie", href: "#" },
     { label: "Peinture", href: "#" },
     { label: "Climatisation", href: "#" },
@@ -483,27 +492,27 @@ const footerLinks = {
     { label: "Soudure", href: "#" },
     { label: "Carrelage", href: "#" },
     { label: "Couture", href: "#" },
-    { label: "Mécanique", href: "#" },
+    { label: "MÃ©canique", href: "#" },
     { label: "Coiffure", href: "#" },
-    { label: "Pâtisserie", href: "#" },
+    { label: "PÃ¢tisserie", href: "#" },
     { label: "Paysagisme", href: "#" },
     { label: "Photographie", href: "#" },
   ],
   company: [
-    { label: "À propos", href: "#" },
-    { label: "Carrières", href: "#" },
+    { label: "Ã€ propos", href: "#" },
+    { label: "CarriÃ¨res", href: "#" },
     { label: "Blog", href: "#" },
     { label: "Presse", href: "#" },
   ],
   legal: [
     { label: "Conditions d'utilisation", href: "#" },
-    { label: "Politique de confidentialité", href: "#" },
-    { label: "Mentions légales", href: "#" },
+    { label: "Politique de confidentialitÃ©", href: "#" },
+    { label: "Mentions lÃ©gales", href: "#" },
     { label: "Cookies", href: "#" },
   ],
 }
 
-/* ───────────── animation helpers ───────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ animation helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -520,7 +529,7 @@ const staggerContainer = {
   visible: { transition: { staggerChildren: 0.1 } },
 }
 
-/* ───────────── Landing Page ───────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Landing Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: 'login' | 'register') => void; onSearch: (query: string, location: string) => void; onViewMap: () => void }) {
   const [searchQuery, setSearchQuery] = useState("")
@@ -535,13 +544,8 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
 
   return (
     <>
-      {/* ────────── HERO ────────── */}
+      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ HERO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section className="relative pt-28 pb-10 sm:pt-36 sm:pb-16 overflow-hidden">
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute top-0 left-1/4 h-96 w-96 rounded-full bg-amber-200/30 dark:bg-amber-900/20 blur-3xl" />
-          <div className="absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-emerald-200/30 dark:bg-emerald-900/20 blur-3xl" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-full bg-orange-100/20 dark:bg-orange-900/10 blur-3xl" />
-        </div>
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
@@ -552,7 +556,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                   variant="secondary"
                   className="mb-6 px-4 py-1.5 text-sm border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300"
                 >
-                  🌍 La 1ère plateforme d&apos;artisans en Afrique
+                  La 1Ã¨re plateforme d&apos;artisans en Afrique
                 </Badge>
               </motion.div>
 
@@ -565,7 +569,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               </motion.h1>
 
               <motion.p variants={fadeInUp} className="mt-6 text-lg sm:text-xl text-muted-foreground">
-                Connectez-vous avec des artisans qualifiés et vérifiés à travers l&apos;Afrique.
+                Connectez-vous avec des artisans qualifiÃ©s et vÃ©rifiÃ©s Ã  travers l&apos;Afrique.
                 Service rapide, prix transparent, satisfaction garantie.
               </motion.p>
 
@@ -635,13 +639,13 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               className="relative hidden lg:block"
             >
               <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-                <Image
-                  src="/images/hero-family.png"
-                  alt="Famille africaine heureuse dans sa maison rénovée"
-                  width={1344}
-                  height={768}
+                <video
+                  src="/artisan-connect-v2.mp4"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
                   className="w-full h-auto object-cover"
-                  priority
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4">
@@ -654,8 +658,8 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                       ))}
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-semibold">+10 000 artisans vérifiés</p>
-                      <p className="text-xs text-muted-foreground">Prêts à intervenir chez vous</p>
+                      <p className="text-sm font-semibold">+10 000 artisans vÃ©rifiÃ©s</p>
+                      <p className="text-xs text-muted-foreground">PrÃªts Ã  intervenir chez vous</p>
                     </div>
                     <div className="flex items-center gap-1">
                       <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
@@ -670,7 +674,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                 animate={{ y: [0, -8, 0] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               >
-                <p className="text-xs font-semibold">🚀 Réponse en</p>
+                <p className="text-xs font-semibold flex items-center gap-1"><Rocket className="w-3 h-3" /> RÃ©ponse en</p>
                 <p className="text-lg font-extrabold">15 min</p>
               </motion.div>
             </motion.div>
@@ -691,19 +695,19 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
         </div>
       </section>
 
-      {/* ────────── ANIMATED STATS & CHARTS ────────── */}
+      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ ANIMATED STATS & CHARTS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <AnimatedStats />
 
-      {/* ────────── CATEGORIES ────────── */}
+      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ CATEGORIES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section id="categories" className="py-20 sm:py-28 bg-muted/30">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="text-center mb-14">
             <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold">
               Explorez nos{" "}
-              <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">catégories</span>
+              <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">catÃ©gories</span>
             </motion.h2>
             <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground text-lg max-w-2xl mx-auto">
-              Des milliers d&apos;artisans spécialisés dans tous les corps de métier, prêts à intervenir près de chez vous.
+              Des milliers d&apos;artisans spÃ©cialisÃ©s dans tous les corps de mÃ©tier, prÃªts Ã  intervenir prÃ¨s de chez vous.
             </motion.p>
           </motion.div>
 
@@ -725,7 +729,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
         </div>
       </section>
 
-      {/* ────────── POPULAR ARTISANS CAROUSEL ────────── */}
+      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ POPULAR ARTISANS CAROUSEL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section id="artisans" className="py-20 sm:py-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="text-center mb-14">
@@ -734,7 +738,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">en action</span>
             </motion.h2>
             <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground text-lg max-w-2xl mx-auto">
-              Découvrez nos artisans à travers l&apos;Afrique — tous les métiers, tous les talents.
+              DÃ©couvrez nos artisans Ã  travers l&apos;Afrique â€” tous les mÃ©tiers, tous les talents.
             </motion.p>
           </motion.div>
 
@@ -790,16 +794,16 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
         </div>
       </section>
 
-      {/* ────────── HOW IT WORKS ────────── */}
+      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ HOW IT WORKS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section id="comment-ca-marche" className="py-20 sm:py-28 bg-muted/30">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="text-center mb-14">
             <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold">
-              Comment ça{" "}
+              Comment Ã§a{" "}
               <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">marche</span>{" "}?
             </motion.h2>
             <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground text-lg max-w-2xl mx-auto">
-              Trois étapes simples pour trouver l&apos;artisan idéal et réaliser votre projet en toute sérénité.
+              Trois Ã©tapes simples pour trouver l&apos;artisan idÃ©al et rÃ©aliser votre projet en toute sÃ©rÃ©nitÃ©.
             </motion.p>
           </motion.div>
 
@@ -814,7 +818,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                     <div className={`mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${step.color} shadow-lg mb-6`}>
                       <step.icon className="h-8 w-8 text-white" />
                     </div>
-                    <div className="text-sm font-bold text-amber-600 dark:text-amber-400 mb-2">Étape {step.step}</div>
+                    <div className="text-sm font-bold text-amber-600 dark:text-amber-400 mb-2">Ã‰tape {step.step}</div>
                     <h3 className="text-xl font-bold mb-3">{step.title}</h3>
                     <p className="text-muted-foreground">{step.description}</p>
                   </CardContent>
@@ -825,35 +829,35 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
         </div>
       </section>
 
-      {/* ────────── PLATFORM FEATURES ────────── */}
+      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ PLATFORM FEATURES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section className="py-20 sm:py-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="text-center mb-14">
             <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold">
-              Des fonctionnalités{" "}
-              <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">complètes</span>
+              Des fonctionnalitÃ©s{" "}
+              <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">complÃ¨tes</span>
             </motion.h2>
             <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground text-lg max-w-2xl mx-auto">
-              Tout ce dont vous avez besoin pour trouver un artisan, réserver, payer et gérer vos projets.
+              Tout ce dont vous avez besoin pour trouver un artisan, rÃ©server, payer et gÃ©rer vos projets.
             </motion.p>
           </motion.div>
 
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
             {[
-              { emoji: "📅", title: "Réservation", desc: "Réservez un créneau en quelques clics", color: "from-amber-500 to-orange-500" },
-              { emoji: "💰", title: "Mobile Money", desc: "Orange Money, MTN, Wave — paiement africain", color: "from-emerald-500 to-teal-500" },
-              { emoji: "🏆", title: "Badges & Niveaux", desc: "Gagnez des points et débloquez des récompenses", color: "from-yellow-500 to-amber-500" },
-              { emoji: "📋", title: "Demande de devis", desc: "Comparez les devis de plusieurs artisans", color: "from-orange-500 to-red-500" },
-              { emoji: "🚨", title: "Service d'urgence", desc: "Un artisan chez vous en moins de 30 min", color: "from-red-500 to-rose-500" },
-              { emoji: "🎯", title: "Parrainage", desc: "Invitez vos amis et gagnez des crédits", color: "from-violet-500 to-purple-500" },
-              { emoji: "🗺️", title: "Géolocalisation", desc: "Trouvez les artisans proches de chez vous", color: "from-cyan-500 to-blue-500" },
-              { emoji: "💬", title: "Messagerie", desc: "Chat en temps réel avec les artisans", color: "from-teal-500 to-emerald-500" },
+              { icon: CalendarDays, title: "RÃ©servation", desc: "RÃ©servez un crÃ©neau en quelques clics", color: "from-amber-500 to-orange-500" },
+              { icon: CreditCard, title: "Mobile Money", desc: "Orange Money, MTN, Wave â€” paiement africain", color: "from-emerald-500 to-teal-500" },
+              { icon: Trophy, title: "Badges & Niveaux", desc: "Gagnez des points et dÃ©bloquez des rÃ©compenses", color: "from-yellow-500 to-amber-500" },
+              { icon: ClipboardList, title: "Demande de devis", desc: "Comparez les devis de plusieurs artisans", color: "from-orange-500 to-red-500" },
+              { icon: Siren, title: "Service d'urgence", desc: "Un artisan chez vous en moins de 30 min", color: "from-red-500 to-rose-500" },
+              { icon: Gift, title: "Parrainage", desc: "Invitez vos amis et gagnez des crÃ©dits", color: "from-violet-500 to-purple-500" },
+              { icon: MapPin, title: "GÃ©olocalisation", desc: "Trouvez les artisans proches de chez vous", color: "from-cyan-500 to-blue-500" },
+              { icon: MessageSquare, title: "Messagerie", desc: "Chat en temps rÃ©el avec les artisans", color: "from-teal-500 to-emerald-500" },
             ].map((feat) => (
               <motion.div key={feat.title} variants={fadeInUp}>
                 <Card className="group cursor-pointer border-border/50 hover:border-amber-300 dark:hover:border-amber-700 transition-all hover:shadow-lg hover:-translate-y-1 h-full">
                   <CardContent className="p-5 flex flex-col items-center text-center gap-3">
-                    <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${feat.color} shadow-md text-xl`}>
-                      {feat.emoji}
+                    <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${feat.color} shadow-md`}>
+                      <feat.icon className="h-6 w-6 text-white" />
                     </div>
                     <h3 className="font-semibold text-sm">{feat.title}</h3>
                     <p className="text-xs text-muted-foreground leading-relaxed">{feat.desc}</p>
@@ -865,7 +869,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
         </div>
       </section>
 
-      {/* ────────── TESTIMONIALS ────────── */}
+      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ TESTIMONIALS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section id="temoignages" className="py-20 sm:py-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="text-center mb-14">
@@ -874,7 +878,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">clients</span>{" "}disent
             </motion.h2>
             <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground text-lg max-w-2xl mx-auto">
-              Des milliers de clients satisfaits font confiance à Artisan Connect chaque jour.
+              Des milliers de clients satisfaits font confiance Ã  Artisan Connect chaque jour.
             </motion.p>
           </motion.div>
 
@@ -910,7 +914,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
         </div>
       </section>
 
-      {/* ────────── TRUST SECTION ────────── */}
+      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ TRUST SECTION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section className="py-20 sm:py-28 bg-muted/30">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="text-center mb-14">
@@ -919,7 +923,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">faire confiance</span>
             </motion.h2>
             <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground text-lg max-w-2xl mx-auto">
-              Votre sécurité et satisfaction sont au cœur de tout ce que nous faisons.
+              Votre sÃ©curitÃ© et satisfaction sont au cÅ“ur de tout ce que nous faisons.
             </motion.p>
           </motion.div>
 
@@ -941,16 +945,16 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
         </div>
       </section>
 
-      {/* ────────── SCALABILITY / INFRASTRUCTURE SECTION ────────── */}
+      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ SCALABILITY / INFRASTRUCTURE SECTION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section className="py-20 sm:py-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="text-center mb-14">
             <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold">
               Une plateforme{" "}
-              <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">ultra-résistante</span>
+              <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">ultra-rÃ©sistante</span>
             </motion.h2>
             <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground text-lg max-w-2xl mx-auto">
-              Conçue pour supporter des milliers d&apos;utilisateurs simultanés sans jamais faiblir.
+              ConÃ§ue pour supporter des milliers d&apos;utilisateurs simultanÃ©s sans jamais faiblir.
             </motion.p>
           </motion.div>
 
@@ -958,8 +962,8 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
             {[
               {
                 icon: Shield,
-                title: "5 000+ Utilisateurs Simultanés",
-                description: "Notre architecture supporte plus de 5 000 utilisateurs connectés en même temps, sans ralentissement ni interruption.",
+                title: "5 000+ Utilisateurs SimultanÃ©s",
+                description: "Notre architecture supporte plus de 5 000 utilisateurs connectÃ©s en mÃªme temps, sans ralentissement ni interruption.",
                 color: "text-emerald-500",
                 bg: "bg-emerald-50 dark:bg-emerald-950/30",
                 stat: "5 000+",
@@ -967,26 +971,26 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               },
               {
                 icon: Zap,
-                title: "Réponse en < 100ms",
-                description: "Grâce au cache serveur et aux index de base de données optimisés, chaque requête est traitée en moins de 100 millisecondes.",
+                title: "RÃ©ponse en < 100ms",
+                description: "GrÃ¢ce au cache serveur et aux index de base de donnÃ©es optimisÃ©s, chaque requÃªte est traitÃ©e en moins de 100 millisecondes.",
                 color: "text-amber-500",
                 bg: "bg-amber-50 dark:bg-amber-950/30",
                 stat: "< 100ms",
-                statLabel: "temps de réponse",
+                statLabel: "temps de rÃ©ponse",
               },
               {
                 icon: Globe,
-                title: "Disponibilité 99.9%",
-                description: "Infrastructure redondante avec surveillance automatique. La plateforme reste disponible même en cas de pic de trafic.",
+                title: "DisponibilitÃ© 99.9%",
+                description: "Infrastructure redondante avec surveillance automatique. La plateforme reste disponible mÃªme en cas de pic de trafic.",
                 color: "text-teal-500",
                 bg: "bg-teal-50 dark:bg-teal-950/30",
                 stat: "99.9%",
-                statLabel: "disponibilité",
+                statLabel: "disponibilitÃ©",
               },
               {
                 icon: CreditCard,
-                title: "Paiement Sécurisé",
-                description: "Transactions chiffrées de bout en bout avec Mobile Money, cartes bancaires et virements. Protection anti-fraude intégrée.",
+                title: "Paiement SÃ©curisÃ©",
+                description: "Transactions chiffrÃ©es de bout en bout avec Mobile Money, cartes bancaires et virements. Protection anti-fraude intÃ©grÃ©e.",
                 color: "text-orange-500",
                 bg: "bg-orange-50 dark:bg-orange-950/30",
                 stat: "256-bit",
@@ -994,8 +998,8 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               },
               {
                 icon: MessageSquare,
-                title: "Messagerie Temps Réel",
-                description: "Communication instantanée entre clients et artisans via WebSocket. Notifications push en moins de 2 secondes.",
+                title: "Messagerie Temps RÃ©el",
+                description: "Communication instantanÃ©e entre clients et artisans via WebSocket. Notifications push en moins de 2 secondes.",
                 color: "text-cyan-500",
                 bg: "bg-cyan-50 dark:bg-cyan-950/30",
                 stat: "< 2s",
@@ -1004,7 +1008,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               {
                 icon: Shield,
                 title: "Protection Anti-Surcharge",
-                description: "Système de rate limiting intelligent qui protège contre les attaques et assure un accès équitable pour tous les utilisateurs.",
+                description: "SystÃ¨me de rate limiting intelligent qui protÃ¨ge contre les attaques et assure un accÃ¨s Ã©quitable pour tous les utilisateurs.",
                 color: "text-rose-500",
                 bg: "bg-rose-50 dark:bg-rose-950/30",
                 stat: "Auto",
@@ -1060,16 +1064,16 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
         </div>
       </section>
 
-      {/* ────────── PRICING ────────── */}
+      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ PRICING â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <PricingSection />
 
-      {/* ────────── FAQ ────────── */}
+      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ FAQ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section id="faq" className="py-20 sm:py-28">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="text-center mb-14">
             <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold">
               Questions{" "}
-              <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">fréquentes</span>
+              <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">frÃ©quentes</span>
             </motion.h2>
             <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground text-lg">
               Tout ce que vous devez savoir sur Artisan Connect.
@@ -1089,14 +1093,14 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
         </div>
       </section>
 
-      {/* ────────── CTA ────────── */}
+      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ CTA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section className="py-20 sm:py-28 bg-gradient-to-r from-amber-500 to-orange-600 relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(255,255,255,0.1),transparent)] pointer-events-none" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.1),transparent)] pointer-events-none" />
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={staggerContainer}>
             <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
-              Prêt à trouver l&apos;artisan idéal ?
+              PrÃªt Ã  trouver l&apos;artisan idÃ©al ?
             </motion.h2>
             <motion.p variants={fadeInUp} className="mt-4 text-lg text-white/80 max-w-2xl mx-auto">
               Rejoignez des milliers de clients satisfaits et trouvez l&apos;artisan parfait pour votre projet.
@@ -1105,7 +1109,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               <Button
                 size="lg"
                 className="bg-white text-amber-600 hover:bg-white/90 h-12 px-8 font-semibold"
-                onClick={() => onOpenAuth('register')}
+                onClick={() => window.location.href='/register'}
               >
                 S&apos;inscrire gratuitement
                 <ArrowRight className="h-4 w-4 ml-2" />
@@ -1114,7 +1118,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                 size="lg"
                 variant="outline"
                 className="border-white/30 text-white hover:bg-white/10 h-12 px-8"
-                onClick={() => onOpenAuth('register')}
+                onClick={() => window.location.href='/register'}
               >
                 Devenir artisan
               </Button>
@@ -1123,7 +1127,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
         </div>
       </section>
 
-      {/* ────────── FOOTER ────────── */}
+      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ FOOTER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <footer className="mt-auto bg-neutral-950 text-neutral-300">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-8 lg:gap-12">
@@ -1136,7 +1140,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                 <span className="text-lg font-bold text-white">Artisan Connect</span>
               </div>
               <p className="text-sm text-neutral-400 leading-relaxed mb-6">
-                La première plateforme africaine qui connecte les clients avec des artisans qualifiés et vérifiés.
+                La premiÃ¨re plateforme africaine qui connecte les clients avec des artisans qualifiÃ©s et vÃ©rifiÃ©s.
               </p>
               <div className="flex gap-3">
                 {[Facebook, Twitter, Instagram, Linkedin].map((Icon, idx) => (
@@ -1166,7 +1170,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
             </div>
 
             <div>
-              <h4 className="font-semibold text-white mb-4 text-sm">Légal</h4>
+              <h4 className="font-semibold text-white mb-4 text-sm">LÃ©gal</h4>
               <ul className="space-y-2">
                 {footerLinks.legal.map((link) => (
                   <li key={link.label}><a href={link.href} className="text-sm text-neutral-400 hover:text-amber-400 transition-colors">{link.label}</a></li>
@@ -1176,10 +1180,10 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
           </div>
 
           <div className="mt-12 pt-8 border-t border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-neutral-500">&copy; 2025 Artisan Connect. Tous droits réservés.</p>
+            <p className="text-sm text-neutral-500">&copy; 2025 Artisan Connect. Tous droits rÃ©servÃ©s.</p>
             <div className="flex items-center gap-4 text-sm text-neutral-500">
               <a href="#" className="hover:text-amber-400 transition-colors">Conditions</a>
-              <a href="#" className="hover:text-amber-400 transition-colors">Confidentialité</a>
+              <a href="#" className="hover:text-amber-400 transition-colors">ConfidentialitÃ©</a>
               <a href="#" className="hover:text-amber-400 transition-colors">Cookies</a>
             </div>
           </div>
@@ -1189,9 +1193,10 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
   )
 }
 
-/* ───────────── Main Component ───────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Main Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 export default function Home() {
+  const router = useRouter()
   const [loading, setLoading] = useState(true)
 
   const { currentView, user, isAuthenticated, initializeAuth, search, setView, setSelectedArtisan, selectedArtisanId } = useAppStore()
@@ -1213,8 +1218,7 @@ export default function Home() {
   }, [initializeAuth])
 
   const handleOpenAuth = useCallback((tab?: 'login' | 'register') => {
-    setAuthModalTab(tab || 'login')
-    setAuthModalOpen(true)
+    if (tab === 'register') { window.location.href = '/register' } else { window.location.href = '/login' }
   }, [])
 
   const handleSearch = useCallback((query: string, location: string) => {
@@ -1273,7 +1277,7 @@ export default function Home() {
     setView('dashboard')
   }, [setView])
 
-  /* ───── Loading Screen ───── */
+  /* â”€â”€â”€â”€â”€ Loading Screen â”€â”€â”€â”€â”€ */
   if (loading) {
     return (
       <div className="fixed inset-0 z-[100] flex items-center justify-center bg-white dark:bg-neutral-950">
@@ -1313,12 +1317,12 @@ export default function Home() {
   return (
     <AnimatePresence>
       <div className="min-h-screen flex flex-col">
-        {/* ────────── NAVBAR ────────── */}
+        {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ NAVBAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         {currentView !== 'onboarding' && (
           <Navbar onOpenAuth={handleOpenAuth} onSearch={handleSearch} />
         )}
 
-        {/* ────────── MAIN CONTENT ────────── */}
+        {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ MAIN CONTENT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <main className={`flex-1 ${currentView !== 'onboarding' ? 'pt-16' : ''}`}>
           <AnimatePresence mode="wait">
             {currentView === 'landing' && (
@@ -1330,6 +1334,21 @@ export default function Home() {
               />
             )}
 
+            {currentView === 'welcome' && isAuthenticated && user && (
+              <motion.div
+                key="welcome"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <WelcomeScreen
+                  userName={user?.name?.split(' ')[0]}
+                  onContinue={() => router.push('/dashboard')}
+                />
+              </motion.div>
+            )}
+
             {currentView === 'dashboard' && isAuthenticated && user && (
               <motion.div
                 key="dashboard"
@@ -1338,7 +1357,7 @@ export default function Home() {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
               >
-                {user.role === 'artisan' ? <ArtisanDashboard /> : <ClientDashboard />}
+                <a href="/dashboard" className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold transition">Mon Tableau de Bord</a>
               </motion.div>
             )}
 
@@ -1497,17 +1516,16 @@ export default function Home() {
           </AnimatePresence>
         </main>
 
-        {/* ────────── AUTH MODAL ────────── */}
-        <AuthModal
-          open={authModalOpen}
+        {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ AUTH MODAL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+        <AuthModal open={false}
           onOpenChange={setAuthModalOpen}
           defaultTab={authModalTab}
         />
 
-        {/* ────────── CHATBOT ────────── */}
+        {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ CHATBOT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <Chatbot />
 
-        {/* ────────── CALL MODAL ────────── */}
+        {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ CALL MODAL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <CallModal
           isOpen={callModalOpen}
           onClose={() => setCallModalOpen(false)}
@@ -1516,9 +1534,10 @@ export default function Home() {
           artisanColor={callArtisan.color}
         />
 
-        {/* ────────── PWA INSTALL PROMPT ────────── */}
+        {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ PWA INSTALL PROMPT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <InstallPrompt />
       </div>
     </AnimatePresence>
   )
 }
+

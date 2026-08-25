@@ -1,6 +1,7 @@
-import type { Metadata, Viewport } from "next";
+﻿import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "next-themes";
+import { PageTransitionOverlay } from "@/components/page-transition-overlay";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { PwaRegister } from "@/components/pwa-register";
@@ -23,18 +24,18 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Artisan Connect — Trouvez l'artisan parfait pour chaque projet",
+  title: "Artisan Connect â€” Trouvez l'artisan parfait pour chaque projet",
   description:
-    "Plateforme premium connectant les clients avec les meilleurs artisans à travers l'Afrique. Plomberie, électricité, menuiserie, peinture et plus encore. Service vérifié, paiement sécurisé, satisfaction garantie.",
+    "Plateforme premium connectant les clients avec les meilleurs artisans Ã  travers l'Afrique. Plomberie, Ã©lectricitÃ©, menuiserie, peinture et plus encore. Service vÃ©rifiÃ©, paiement sÃ©curisÃ©, satisfaction garantie.",
   keywords: [
     "artisan",
     "Afrique",
     "plomberie",
-    "électricité",
+    "Ã©lectricitÃ©",
     "menuiserie",
     "peinture",
     "serrurerie",
-    "maçonnerie",
+    "maÃ§onnerie",
     "climatisation",
     "nettoyage",
     "services",
@@ -52,18 +53,18 @@ export const metadata: Metadata = {
     title: "Artisan Connect",
   },
   openGraph: {
-    title: "Artisan Connect — Trouvez l'artisan parfait pour chaque projet",
+    title: "Artisan Connect â€” Trouvez l'artisan parfait pour chaque projet",
     description:
-      "Plateforme premium connectant les clients avec les meilleurs artisans à travers l'Afrique.",
+      "Plateforme premium connectant les clients avec les meilleurs artisans Ã  travers l'Afrique.",
     siteName: "Artisan Connect",
     type: "website",
     locale: "fr_FR",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Artisan Connect — Trouvez l'artisan parfait pour chaque projet",
+    title: "Artisan Connect â€” Trouvez l'artisan parfait pour chaque projet",
     description:
-      "Plateforme premium connectant les clients avec les meilleurs artisans à travers l'Afrique.",
+      "Plateforme premium connectant les clients avec les meilleurs artisans Ã  travers l'Afrique.",
   },
 };
 
@@ -85,11 +86,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
+        <PageTransitionOverlay />
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
+                    disableTransitionOnChange
         >
           {children}
           <Toaster />
