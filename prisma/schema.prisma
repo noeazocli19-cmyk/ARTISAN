@@ -146,7 +146,7 @@ model Artisan {
 }
 
 // ============================================
-// CATÃ‰GORIES DE MÃ‰TIERS
+// CATÃƒâ€°GORIES DE MÃƒâ€°TIERS
 // ============================================
 
 model Category {
@@ -161,7 +161,7 @@ model Category {
 }
 
 // ============================================
-// MISSIONS (demandes client â†’ artisan)
+// MISSIONS (demandes client Ã¢â€ â€™ artisan)
 // ============================================
 
 model Mission {
@@ -197,7 +197,7 @@ model Mission {
 
 model Review {
   id        String   @id @default(cuid())
-  rating    Int      // 1 Ã  5 Ã©toiles
+  rating    Int      // 1 ÃƒÂ  5 ÃƒÂ©toiles
   comment   String?
   clientId  String
   artisanId String
@@ -266,9 +266,9 @@ model Payment {
   id            String   @id @default(cuid())
   amount        Int      // montant en FCFA ou devise
   currency      String   @default("XAF")
-  status        String   @default("en_attente") // en_attente, payÃ©, Ã©chouÃ©, remboursÃ©
+  status        String   @default("en_attente") // en_attente, payÃƒÂ©, ÃƒÂ©chouÃƒÂ©, remboursÃƒÂ©
   method        String?  // Mobile Money, Orange Money, carte, etc.
-  reference     String?  // rÃ©fÃ©rence de transaction
+  reference     String?  // rÃƒÂ©fÃƒÂ©rence de transaction
   clientId      String
   artisanId     String?
   missionId     String?
@@ -301,7 +301,7 @@ model Favorite {
   client    User     @relation(fields: [clientId], references: [id], onDelete: Cascade)
   artisan   Artisan  @relation(fields: [artisanId], references: [id], onDelete: Cascade)
 
-  @@unique([clientId, artisanId]) // un client ne peut pas favoriser 2 fois le mÃªme artisan
+  @@unique([clientId, artisanId]) // un client ne peut pas favoriser 2 fois le mÃƒÂªme artisan
   @@index([clientId])
   @@index([artisanId])
 }
@@ -313,8 +313,9 @@ model Favorite {
 model Booking {
   id           String   @id @default(cuid())
   clientId     String
-  artisanId    String
+  artisanId    String?
   service      String
+  category     String?
   date         DateTime
   status       String   @default("en_attente") // en_attente | confirmee | terminee | annulee
   notes        String?
@@ -323,11 +324,12 @@ model Booking {
 
   // Relations
   client       User     @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  artisan      Artisan  @relation(fields: [artisanId], references: [id], onDelete: Cascade)
+  artisan      Artisan? @relation(fields: [artisanId], references: [id], onDelete: Cascade)
 
   @@index([clientId])
   @@index([artisanId])
   @@index([date])
   @@index([status])
 }
+
 

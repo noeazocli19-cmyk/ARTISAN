@@ -13,15 +13,30 @@ export async function PATCH(
     }
     const { id } = await params;
     const body = await request.json();
-    const { status } = body;
+    const { status, claim } = body;
 
-    if (!status) {
-      return NextResponse.json({ error: 'status requis' }, { status: 400 });
+    const updateData: any = {};
+    if (status) updateData.status = status;
+
+    // "claim" = un artisan reclame une reservation encore ouverte
+    if (claim) {
+      const artisan = await db.artisan.findUnique({
+        where: { userId: session.user.id },
+      });
+      if (!artisan) {
+        return NextResponse.json({ error: 'Profil artisan non trouve' }, { status: 404 });
+      }
+      updateData.artisanId = artisan.id;
+      if (!updateData.status) updateData.status = 'confirmed';
+    }
+
+    if (Object.keys(updateData).length === 0) {
+      return NextResponse.json({ error: 'Aucune donnee a mettre a jour' }, { status: 400 });
     }
 
     const booking = await db.booking.update({
       where: { id },
-      data: { status },
+      data: updateData,
       include: {
         client: { select: { id: true, name: true, image: true, phone: true } },
         artisan: { include: { user: { select: { id: true, name: true, image: true } } } },
@@ -34,12 +49,12 @@ export async function PATCH(
         completed: 'terminee',
         cancelled: 'annulee',
       };
-      if (statusLabels[status]) {
+      if (statusLabels[updateData.status]) {
         await db.notification.create({
           data: {
             userId: booking.clientId,
             title: 'Mise a jour de votre reservation',
-            message: `Votre reservation "${booking.service}" est maintenant ${statusLabels[status]}`,
+            message: `Votre reservation "${booking.service}" est maintenant ${statusLabels[updateData.status]}`,
             type: 'mission',
             link: '/dashboard/client',
           },
@@ -55,4 +70,3 @@ export async function PATCH(
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
   }
 }
-

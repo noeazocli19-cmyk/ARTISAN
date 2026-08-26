@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import {
   MapPin, Phone, Briefcase, Clock, Star, CheckCircle, AlertCircle, Crosshair,
   ClipboardList, MessageSquare, TrendingUp, Settings, Wrench, Hand,
-  LayoutGrid, ArrowLeftCircle, Loader2, User as UserIcon, Search, Clock3,
+  LayoutGrid, ArrowLeftCircle, Loader2, User as UserIcon, Search, Clock3, CalendarCheck,
 } from 'lucide-react';
 
 interface ArtisanProfile {
@@ -60,12 +60,13 @@ const AFRICAN_COUNTRIES = [
   'Tunisie', 'Mauritanie', 'Cameroun',
 ];
 
-type TabId = 'apercu' | 'missions' | 'dispo' | 'messages' | 'avis' | 'profil';
+type TabId = 'apercu' | 'missions' | 'dispo' | 'reservations' | 'messages' | 'avis' | 'profil';
 
 const TABS: { id: TabId; label: string; icon: any }[] = [
   { id: 'apercu', label: 'Aperçu', icon: LayoutGrid },
   { id: 'missions', label: 'Mes Missions', icon: ClipboardList },
   { id: 'dispo', label: 'Missions dispo', icon: Search },
+  { id: 'reservations', label: 'Reservations', icon: CalendarCheck },
   { id: 'messages', label: 'Messages', icon: MessageSquare },
   { id: 'avis', label: 'Avis', icon: Star },
   { id: 'profil', label: 'Profil', icon: UserIcon },
@@ -90,6 +91,9 @@ export function ArtisanDashboard() {
   const [openMissions, setOpenMissions] = useState<Mission[]>([]);
   const [openMissionsLoading, setOpenMissionsLoading] = useState(true);
   const [acceptingId, setAcceptingId] = useState<string | null>(null);
+  const [bookings, setBookings] = useState<any[]>([]);
+  const [bookingsLoading, setBookingsLoading] = useState(true);
+  const [respondingId, setRespondingId] = useState<string | null>(null);
   const [missionsLoading, setMissionsLoading] = useState(true);
 
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -232,6 +236,56 @@ export function ArtisanDashboard() {
   useEffect(() => {
     loadOpenMissions();
   }, []);
+
+  useEffect(() => {
+    if (!artisanProfile?.id) return;
+    fetch(`/api/bookings?artisanId=${artisanProfile.id}`)
+      .then((r) => (r.ok ? r.json() : { bookings: [] }))
+      .then((data) => setBookings(data.bookings || []))
+      .catch((e) => console.error('Erreur chargement reservations:', e))
+      .finally(() => setBookingsLoading(false));
+  }, [artisanProfile?.id]);
+
+  const handleClaimBooking = async (bookingId: string) => {
+    setRespondingId(bookingId);
+    try {
+      const res = await fetch(`/api/bookings/${bookingId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ claim: true }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setBookings((prev) => prev.map((b) => (b.id === bookingId ? data.booking : b)));
+        toast.success('Reservation acceptee !');
+      } else {
+        toast.error('Cette reservation a peut-etre deja ete prise par un autre artisan');
+      }
+    } catch (error) {
+      toast.error('Erreur reseau');
+    } finally {
+      setRespondingId(null);
+    }
+  };
+
+  const handleRespondBooking = async (bookingId: string, status: 'confirmed' | 'cancelled') => {
+    setRespondingId(bookingId);
+    try {
+      const res = await fetch(`/api/bookings/${bookingId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      });
+      if (res.ok) {
+        setBookings((prev) => prev.map((b) => (b.id === bookingId ? { ...b, status } : b)));
+        toast.success(status === 'confirmed' ? 'Reservation confirmee' : 'Reservation refusee');
+      }
+    } catch (error) {
+      toast.error('Erreur reseau');
+    } finally {
+      setRespondingId(null);
+    }
+  };
 
   const handleAcceptMission = async (missionId: string) => {
     setAcceptingId(missionId);
@@ -616,6 +670,98 @@ export function ArtisanDashboard() {
         </div>
       )}
 
+      {activeTab === 'reservations' && (
+        <div className="bg-white border border-amber-100 rounded-2xl p-6 shadow-sm">
+          <h2 className="text-lg font-bold mb-1 flex items-center gap-2 text-gray-900">
+            <CalendarCheck className="h-5 w-5 text-orange-500" />
+            Mes reservations
+          </h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            Demandes de rendez-vous envoyees directement par des clients.
+          </p>
+          {bookingsLoading ? (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Chargement...
+            </div>
+          ) : bookings.length === 0 ? (
+            <div className="text-center py-10 text-muted-foreground">
+              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-amber-50">
+                <CalendarCheck className="h-6 w-6 text-amber-500" />
+              </div>
+              <p className="text-sm font-medium text-gray-700">Aucune reservation pour le moment.</p>
+            </div>
+          ) : (
+            <ul className="divide-y">
+              {bookings.map((b: any) => {
+                const d = new Date(b.date);
+                const statusStyles: Record<string, string> = {
+                  pending: 'bg-amber-100 text-amber-700',
+                  confirmed: 'bg-green-100 text-green-700',
+                  completed: 'bg-blue-100 text-blue-700',
+                  cancelled: 'bg-red-100 text-red-700',
+                };
+                const statusLabels: Record<string, string> = {
+                  pending: 'En attente',
+                  confirmed: 'Confirmee',
+                  completed: 'Terminee',
+                  cancelled: 'Annulee',
+                };
+                return (
+                  <li key={b.id} className="py-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <p className="font-medium text-gray-900">{b.service}</p>
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${statusStyles[b.status] || statusStyles.pending}`}>
+                            {statusLabels[b.status] || b.status}
+                          </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          {b.client?.name || 'Client'} · {d.toLocaleDateString('fr-FR')} a {d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                        {b.notes && (
+                          <p className="text-xs text-muted-foreground mt-1">{b.notes}</p>
+                        )}
+                      </div>
+                      {!b.artisanId && b.status === 'pending' && (
+                        <div className="flex gap-2 shrink-0">
+                          <button
+                            onClick={() => handleClaimBooking(b.id)}
+                            disabled={respondingId === b.id}
+                            className="text-xs font-semibold px-3 py-2 rounded-lg bg-gradient-to-r from-amber-500 to-orange-600 text-white hover:from-amber-600 hover:to-orange-700 disabled:opacity-50"
+                          >
+                            {respondingId === b.id ? 'En cours...' : 'Accepter'}
+                          </button>
+                        </div>
+                      )}
+                      {b.artisanId && b.status === 'pending' && (
+                        <div className="flex gap-2 shrink-0">
+                          <button
+                            onClick={() => handleRespondBooking(b.id, 'confirmed')}
+                            disabled={respondingId === b.id}
+                            className="text-xs font-semibold px-3 py-2 rounded-lg bg-gradient-to-r from-amber-500 to-orange-600 text-white hover:from-amber-600 hover:to-orange-700 disabled:opacity-50"
+                          >
+                            Confirmer
+                          </button>
+                          <button
+                            onClick={() => handleRespondBooking(b.id, 'cancelled')}
+                            disabled={respondingId === b.id}
+                            className="text-xs font-semibold px-3 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:opacity-50"
+                          >
+                            Refuser
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
+      )}
+
       {activeTab === 'messages' && (
         <div className="bg-white border border-amber-100 rounded-2xl p-6 shadow-sm">
           <div className="flex items-center justify-between mb-4">
@@ -913,6 +1059,10 @@ export function ArtisanDashboard() {
     </div>
   );
 }
+
+
+
+
 
 
 
