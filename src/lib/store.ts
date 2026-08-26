@@ -145,6 +145,19 @@ export const useAppStore = create<AppStore>()(
           const newUserId = result.data?.user?.id;
           if (newUserId) {
             try {
+            try {
+              const refCode = typeof window !== "undefined" ? sessionStorage.getItem("ac_referral_code") : null;
+              if (refCode) {
+                await fetch("/api/referral", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ code: refCode, newUserId }),
+                });
+                sessionStorage.removeItem("ac_referral_code");
+              }
+            } catch (refError) {
+              console.error("Erreur enregistrement parrainage (non bloquant):", refError);
+            }
               await fetch("/api/user/profile", {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },

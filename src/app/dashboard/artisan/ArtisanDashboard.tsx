@@ -297,7 +297,11 @@ export function ArtisanDashboard() {
       });
       if (res.ok) {
         toast.success('Mission acceptee !');
+        const acceptedMission = openMissions.find((m) => m.id === missionId);
         setOpenMissions((prev) => prev.filter((m) => m.id !== missionId));
+        if (acceptedMission) {
+          setMissions((prev) => [{ ...acceptedMission, status: 'assignee' }, ...prev]);
+        }
       } else {
         const data = await res.json();
         toast.error('Erreur', { description: data.error || "Impossible d'accepter cette mission" });
@@ -1059,6 +1063,7 @@ export function ArtisanDashboard() {
     </div>
   );
 }
+
 
 
 

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -38,13 +38,13 @@ import {
 import type { ReferralStats, ReferralInvite } from '@/lib/types'
 import { useAppStore } from '@/lib/store'
 
-// ─── Props ─────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Props â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 interface ReferralProgramProps {
   onBack: () => void
 }
 
-// ─── Mock Data ─────────────────────────────────────────────────────────────
+// â”€â”€â”€ Mock Data â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const MOCK_STATS: ReferralStats = {
   code: 'ARTISAN-7K9M',
@@ -58,7 +58,7 @@ const MOCK_STATS: ReferralStats = {
 const MOCK_INVITES: ReferralInvite[] = [
   {
     id: '1',
-    inviteeName: 'Aminata Koné',
+    inviteeName: 'Aminata KonÃ©',
     inviteeEmail: 'aminata.kone@email.com',
     status: 'completed',
     creditsEarned: 2500,
@@ -82,7 +82,7 @@ const MOCK_INVITES: ReferralInvite[] = [
   },
   {
     id: '4',
-    inviteeName: 'Moussa Traoré',
+    inviteeName: 'Moussa TraorÃ©',
     inviteeEmail: 'moussa.traore@email.com',
     status: 'completed',
     creditsEarned: 2500,
@@ -90,7 +90,7 @@ const MOCK_INVITES: ReferralInvite[] = [
   },
   {
     id: '5',
-    inviteeName: 'Aïcha Bello',
+    inviteeName: 'AÃ¯cha Bello',
     inviteeEmail: 'aicha.bello@email.com',
     status: 'registered',
     creditsEarned: 0,
@@ -126,8 +126,8 @@ const REWARD_TIERS = [
   {
     id: '1',
     credits: 2500,
-    title: 'Réduction sur prochaine mission',
-    description: 'Obtenez une réduction de 2 500 FCFA sur votre prochaine mission réservée sur la plateforme.',
+    title: 'RÃ©duction sur prochaine mission',
+    description: 'Obtenez une rÃ©duction de 2 500 FCFA sur votre prochaine mission rÃ©servÃ©e sur la plateforme.',
     icon: Sparkles,
     color: 'from-amber-400 to-amber-500',
     bgLight: 'bg-amber-50',
@@ -149,7 +149,7 @@ const REWARD_TIERS = [
     id: '3',
     credits: 10000,
     title: 'Badge "Ambassadeur" + 1 mois Pro',
-    description: 'Recevez le badge exclusif "Ambassadeur" et un mois gratuit de l\'abonnement Pro avec toutes les fonctionnalités avancées.',
+    description: 'Recevez le badge exclusif "Ambassadeur" et un mois gratuit de l\'abonnement Pro avec toutes les fonctionnalitÃ©s avancÃ©es.',
     icon: Award,
     color: 'from-amber-500 to-orange-600',
     bgLight: 'bg-amber-50',
@@ -160,7 +160,7 @@ const REWARD_TIERS = [
     id: '4',
     credits: 25000,
     title: 'Statut VIP + Support prioritaire',
-    description: 'Accédez au statut VIP avec support prioritaire 24/7, accès anticipé aux nouvelles fonctionnalités et avantages exclusifs.',
+    description: 'AccÃ©dez au statut VIP avec support prioritaire 24/7, accÃ¨s anticipÃ© aux nouvelles fonctionnalitÃ©s et avantages exclusifs.',
     icon: Crown,
     color: 'from-orange-500 to-red-500',
     bgLight: 'bg-orange-50',
@@ -169,7 +169,7 @@ const REWARD_TIERS = [
   },
 ]
 
-// ─── Confetti on Share ─────────────────────────────────────────────────────
+// â”€â”€â”€ Confetti on Share â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function ConfettiPiece({ delay, x, color, size }: { delay: number; x: number; color: string; size: number }) {
   return (
@@ -217,7 +217,7 @@ function ShareConfetti({ show }: { show: boolean }) {
   )
 }
 
-// ─── Animated Counter ──────────────────────────────────────────────────────
+// â”€â”€â”€ Animated Counter â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function AnimatedCounter({ value, duration = 1.5 }: { value: number; duration?: number }) {
   const [display, setDisplay] = useState(0)
@@ -250,7 +250,7 @@ function AnimatedCounter({ value, duration = 1.5 }: { value: number; duration?: 
   )
 }
 
-// ─── Status Badge ──────────────────────────────────────────────────────────
+// â”€â”€â”€ Status Badge â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function StatusBadge({ status }: { status: ReferralInvite['status'] }) {
   const config = {
@@ -265,7 +265,7 @@ function StatusBadge({ status }: { status: ReferralInvite['status'] }) {
       icon: CheckCircle2,
     },
     completed: {
-      label: 'Complété',
+      label: 'ComplÃ©tÃ©',
       className: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300 border-amber-200 dark:border-amber-800',
       icon: CheckCircle2,
     },
@@ -281,7 +281,7 @@ function StatusBadge({ status }: { status: ReferralInvite['status'] }) {
   )
 }
 
-// ─── Main Component ────────────────────────────────────────────────────────
+// â”€â”€â”€ Main Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export function ReferralProgram({ onBack }: ReferralProgramProps) {
   const { user } = useAppStore()
@@ -293,8 +293,25 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
   const [inviteEmail, setInviteEmail] = useState('')
   const [inviteSent, setInviteSent] = useState(false)
 
-  const stats = MOCK_STATS
-  const invites = MOCK_INVITES
+  const [realStats, setRealStats] = useState<ReferralStats | null>(null)
+  const [realInvites, setRealInvites] = useState<ReferralInvite[]>([])
+  const [loadingReferral, setLoadingReferral] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/referral')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data) {
+          setRealStats(data.stats)
+          setRealInvites(data.invites || [])
+        }
+      })
+      .catch((e) => console.error('Erreur chargement parrainage:', e))
+      .finally(() => setLoadingReferral(false))
+  }, [])
+
+  const stats = realStats || { code: '...', totalInvites: 0, successfulReferrals: 0, creditsEarned: 0, creditsUsed: 0, creditsAvailable: 0 }
+  const invites = realInvites
 
   const completedInvites = invites.filter((i) => i.status === 'completed').length
   const registeredInvites = invites.filter((i) => i.status === 'registered').length
@@ -368,7 +385,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
     setRedeemDialogOpen(true)
   }, [])
 
-  // ─── Animation variants ─────────────────────────────────────────────────
+  // â”€â”€â”€ Animation variants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   const fadeInUp = {
     hidden: { opacity: 0, y: 20 },
@@ -380,7 +397,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
     visible: { transition: { staggerChildren: 0.08 } },
   }
 
-  // ─── Render ─────────────────────────────────────────────────────────────
+  // â”€â”€â”€ Render â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-amber-50/20 to-orange-50/20 dark:from-neutral-950 dark:via-neutral-900 dark:to-amber-950/5">
@@ -406,7 +423,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                     Programme de parrainage
                   </h1>
                   <p className="text-[10px] text-muted-foreground hidden sm:block">
-                    Invitez vos amis et gagnez des crédits
+                    Invitez vos amis et gagnez des crÃ©dits
                   </p>
                 </div>
               </div>
@@ -415,7 +432,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
             {/* Quick stats in header */}
             <div className="hidden md:flex items-center gap-4">
               <div className="text-right">
-                <p className="text-xs text-muted-foreground">Crédits disponibles</p>
+                <p className="text-xs text-muted-foreground">CrÃ©dits disponibles</p>
                 <p className="font-bold text-sm text-amber-600 dark:text-amber-400">
                   {new Intl.NumberFormat('fr-FR').format(stats.creditsAvailable)} FCFA
                 </p>
@@ -446,7 +463,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
               className="text-xs sm:text-sm data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500 data-[state=active]:to-orange-600 data-[state=active]:text-white py-2"
             >
               <Sparkles className="h-3.5 w-3.5 mr-1 hidden sm:inline" />
-              Comment ça marche
+              Comment Ã§a marche
             </TabsTrigger>
             <TabsTrigger
               value="invites"
@@ -460,13 +477,13 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
               className="text-xs sm:text-sm data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500 data-[state=active]:to-orange-600 data-[state=active]:text-white py-2"
             >
               <Award className="h-3.5 w-3.5 mr-1 hidden sm:inline" />
-              Récompenses
+              RÃ©compenses
             </TabsTrigger>
           </TabsList>
 
-          {/* ═══════════════════════════════════════════════════════════════
+          {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
               TAB 1: REFERRAL DASHBOARD
-              ═══════════════════════════════════════════════════════════════ */}
+              â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           <TabsContent value="dashboard" className="mt-0">
             <motion.div
               initial="hidden"
@@ -525,7 +542,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                                 className="flex items-center gap-2"
                               >
                                 <Check className="h-4 w-4" />
-                                Code copié !
+                                Code copiÃ© !
                               </motion.div>
                             ) : (
                               <motion.div
@@ -579,7 +596,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
               <motion.div variants={staggerContainer} className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                 {[
                   {
-                    label: 'Invitations envoyées',
+                    label: 'Invitations envoyÃ©es',
                     value: stats.totalInvites,
                     icon: Send,
                     color: 'text-blue-600 dark:text-blue-400',
@@ -595,7 +612,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                     format: false,
                   },
                   {
-                    label: 'Missions complétées',
+                    label: 'Missions complÃ©tÃ©es',
                     value: missionsCompleted,
                     icon: CheckCircle2,
                     color: 'text-amber-600 dark:text-amber-400',
@@ -603,7 +620,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                     format: false,
                   },
                   {
-                    label: 'Crédits gagnés',
+                    label: 'CrÃ©dits gagnÃ©s',
                     value: stats.creditsEarned,
                     icon: Star,
                     color: 'text-orange-600 dark:text-orange-400',
@@ -642,7 +659,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                           <Trophy className="h-6 w-6 text-white" />
                         </div>
                         <div>
-                          <p className="text-sm text-muted-foreground">Crédits disponibles</p>
+                          <p className="text-sm text-muted-foreground">CrÃ©dits disponibles</p>
                           <p className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
                             <AnimatedCounter value={stats.creditsAvailable} /> FCFA
                           </p>
@@ -653,11 +670,11 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
 
                       <div className="space-y-2 text-sm text-muted-foreground mb-4">
                         <div className="flex justify-between">
-                          <span>Crédits gagnés</span>
+                          <span>CrÃ©dits gagnÃ©s</span>
                           <span className="font-medium text-foreground">{new Intl.NumberFormat('fr-FR').format(stats.creditsEarned)} FCFA</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>Crédits utilisés</span>
+                          <span>CrÃ©dits utilisÃ©s</span>
                           <span className="font-medium text-foreground">{new Intl.NumberFormat('fr-FR').format(stats.creditsUsed)} FCFA</span>
                         </div>
                       </div>
@@ -667,7 +684,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                         onClick={() => setActiveTab('rewards')}
                       >
                         <Sparkles className="h-4 w-4 mr-2" />
-                        Utiliser mes crédits
+                        Utiliser mes crÃ©dits
                       </Button>
                     </CardContent>
                   </Card>
@@ -699,7 +716,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                           className="h-3 bg-amber-100 dark:bg-amber-950/50 [&>[data-slot=progress-indicator]]:bg-gradient-to-r [&>[data-slot=progress-indicator]]:from-amber-500 [&>[data-slot=progress-indicator]]:to-orange-500 [&>[data-slot=progress-indicator]]:rounded-full"
                         />
                         <p className="text-sm text-muted-foreground">
-                          <span className="font-semibold text-amber-600 dark:text-amber-400">{remainingToMilestone} parrainage{remainingToMilestone > 1 ? 's' : ''}</span> de plus pour débloquer{' '}
+                          <span className="font-semibold text-amber-600 dark:text-amber-400">{remainingToMilestone} parrainage{remainingToMilestone > 1 ? 's' : ''}</span> de plus pour dÃ©bloquer{' '}
                           <span className="font-semibold">10 000 FCFA</span>
                         </p>
                       </div>
@@ -753,9 +770,9 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
             </motion.div>
           </TabsContent>
 
-          {/* ═══════════════════════════════════════════════════════════════
+          {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
               TAB 2: HOW IT WORKS
-              ═══════════════════════════════════════════════════════════════ */}
+              â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           <TabsContent value="how-it-works" className="mt-0">
             <motion.div
               initial="hidden"
@@ -765,14 +782,14 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
             >
               <motion.div variants={fadeInUp} className="text-center space-y-3">
                 <h2 className="text-2xl sm:text-3xl font-bold">
-                  Comment ça{' '}
+                  Comment Ã§a{' '}
                   <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">
                     marche
                   </span>{' '}
                   ?
                 </h2>
                 <p className="text-muted-foreground text-base max-w-2xl mx-auto">
-                  Gagnez des crédits en invitant vos amis à rejoindre Artisan Connect. C&apos;est simple, rapide et gratifiant !
+                  Gagnez des crÃ©dits en invitant vos amis Ã  rejoindre Artisan Connect. C&apos;est simple, rapide et gratifiant !
                 </p>
               </motion.div>
 
@@ -781,9 +798,9 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                 {[
                   {
                     step: 1,
-                    emoji: '📤',
+                    emoji: 'ðŸ“¤',
                     title: 'Partagez votre code',
-                    description: 'Envoyez votre code unique à vos amis via WhatsApp, SMS, email ou en copiant le lien.',
+                    description: 'Envoyez votre code unique Ã  vos amis via WhatsApp, SMS, email ou en copiant le lien.',
                     icon: Share2,
                     gradient: 'from-amber-400 to-amber-600',
                     bg: 'from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30',
@@ -791,9 +808,9 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                   },
                   {
                     step: 2,
-                    emoji: '👥',
+                    emoji: 'ðŸ‘¥',
                     title: 'Ils s\'inscrivent',
-                    description: 'Vos amis créent un compte sur Artisan Connect en utilisant votre code de parrainage.',
+                    description: 'Vos amis crÃ©ent un compte sur Artisan Connect en utilisant votre code de parrainage.',
                     icon: UserPlus,
                     gradient: 'from-orange-400 to-orange-600',
                     bg: 'from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/30',
@@ -801,9 +818,9 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                   },
                   {
                     step: 3,
-                    emoji: '🎁',
-                    title: 'Gagnez des crédits',
-                    description: 'Recevez 2 500 FCFA pour chaque ami qui complète une mission sur la plateforme.',
+                    emoji: 'ðŸŽ',
+                    title: 'Gagnez des crÃ©dits',
+                    description: 'Recevez 2 500 FCFA pour chaque ami qui complÃ¨te une mission sur la plateforme.',
                     icon: Gift,
                     gradient: 'from-amber-500 to-orange-600',
                     bg: 'from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30',
@@ -824,7 +841,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                         {/* Step number */}
                         <div className="absolute top-3 right-3">
                           <Badge className="bg-white/60 dark:bg-neutral-900/60 text-amber-600 dark:text-amber-400 border-0 text-xs font-bold backdrop-blur-sm">
-                            Étape {stepData.step}
+                            Ã‰tape {stepData.step}
                           </Badge>
                         </div>
 
@@ -861,8 +878,8 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                       <div className="flex-1">
                         <h3 className="font-bold text-lg mb-1">Bonus de bienvenue !</h3>
                         <p className="text-muted-foreground text-sm">
-                          Pour chaque ami qui s&apos;inscrit avec votre code et complète sa première mission, vous recevez{' '}
-                          <span className="font-bold text-amber-600 dark:text-amber-400">2 500 FCFA</span> de crédits.
+                          Pour chaque ami qui s&apos;inscrit avec votre code et complÃ¨te sa premiÃ¨re mission, vous recevez{' '}
+                          <span className="font-bold text-amber-600 dark:text-amber-400">2 500 FCFA</span> de crÃ©dits.
                           Il n&apos;y a pas de limite ! Plus vous parrainez, plus vous gagnez.
                         </p>
                       </div>
@@ -880,9 +897,9 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
             </motion.div>
           </TabsContent>
 
-          {/* ═══════════════════════════════════════════════════════════════
+          {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
               TAB 3: MY INVITES
-              ═══════════════════════════════════════════════════════════════ */}
+              â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           <TabsContent value="invites" className="mt-0">
             <motion.div
               initial="hidden"
@@ -905,7 +922,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                 <div className="flex gap-2">
                   <Badge variant="outline" className="px-3 py-1 border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30">
                     <CheckCircle2 className="h-3 w-3 mr-1 text-amber-500" />
-                    {completedInvites} complété{completedInvites > 1 ? 's' : ''}
+                    {completedInvites} complÃ©tÃ©{completedInvites > 1 ? 's' : ''}
                   </Badge>
                   <Badge variant="outline" className="px-3 py-1 border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30">
                     <UserPlus className="h-3 w-3 mr-1 text-emerald-500" />
@@ -925,7 +942,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                     <div className="col-span-3">Nom</div>
                     <div className="col-span-3">Email</div>
                     <div className="col-span-2">Statut</div>
-                    <div className="col-span-2 text-right">Crédits</div>
+                    <div className="col-span-2 text-right">CrÃ©dits</div>
                     <div className="col-span-2 text-right">Date</div>
                   </div>
 
@@ -951,7 +968,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                                   +{new Intl.NumberFormat('fr-FR').format(invite.creditsEarned)} FCFA
                                 </span>
                               ) : (
-                                <span className="text-muted-foreground text-sm">—</span>
+                                <span className="text-muted-foreground text-sm">â€”</span>
                               )}
                             </div>
                             <div className="col-span-2 text-right text-sm text-muted-foreground">
@@ -1009,7 +1026,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                       </motion.div>
                       <h3 className="text-lg font-bold mb-2">Aucune invitation pour le moment</h3>
                       <p className="text-muted-foreground text-sm mb-6 max-w-sm mx-auto">
-                        Commencez à partager votre code de parrainage avec vos amis pour gagner des crédits !
+                        Commencez Ã  partager votre code de parrainage avec vos amis pour gagner des crÃ©dits !
                       </p>
                       <Button
                         className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 font-semibold"
@@ -1025,9 +1042,9 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
             </motion.div>
           </TabsContent>
 
-          {/* ═══════════════════════════════════════════════════════════════
+          {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
               TAB 4: REWARDS
-              ═══════════════════════════════════════════════════════════════ */}
+              â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           <TabsContent value="rewards" className="mt-0">
             <motion.div
               initial="hidden"
@@ -1041,12 +1058,12 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                     <h2 className="text-xl sm:text-2xl font-bold">
                       {' '}
                       <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">
-                        Récompenses
+                        RÃ©compenses
                       </span>{' '}
                       disponibles
                     </h2>
                     <p className="text-muted-foreground text-sm mt-1">
-                      Échangez vos crédits contre des récompenses exclusives
+                      Ã‰changez vos crÃ©dits contre des rÃ©compenses exclusives
                     </p>
                   </div>
                   <Badge className="bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0 px-3 py-1 text-sm">
@@ -1089,7 +1106,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
 
                           <div className="flex items-center justify-between">
                             <div>
-                              <p className="text-xs text-muted-foreground">Coût</p>
+                              <p className="text-xs text-muted-foreground">CoÃ»t</p>
                               <p className="text-lg font-extrabold text-amber-600 dark:text-amber-400">
                                 {new Intl.NumberFormat('fr-FR').format(reward.credits)} FCFA
                               </p>
@@ -1101,7 +1118,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                                 onClick={() => handleRedeemReward(reward)}
                               >
                                 <Sparkles className="h-4 w-4 mr-1.5" />
-                                Échanger
+                                Ã‰changer
                               </Button>
                             ) : (
                               <div className="text-right">
@@ -1133,18 +1150,18 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
         </Tabs>
       </div>
 
-      {/* ═══════════════════════════════════════════════════════════════
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           REDEEM DIALOG
-          ═══════════════════════════════════════════════════════════════ */}
+          â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <Dialog open={redeemDialogOpen} onOpenChange={setRedeemDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Gift className="h-5 w-5 text-amber-500" />
-              Confirmer l&apos;échange
+              Confirmer l&apos;Ã©change
             </DialogTitle>
             <DialogDescription>
-              Vous allez échanger vos crédits contre cette récompense.
+              Vous allez Ã©changer vos crÃ©dits contre cette rÃ©compense.
             </DialogDescription>
           </DialogHeader>
 
@@ -1162,16 +1179,16 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
 
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Coût</span>
+                  <span className="text-muted-foreground">CoÃ»t</span>
                   <span className="font-semibold">{new Intl.NumberFormat('fr-FR').format(selectedReward.credits)} FCFA</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Vos crédits</span>
+                  <span className="text-muted-foreground">Vos crÃ©dits</span>
                   <span className="font-semibold text-amber-600 dark:text-amber-400">{new Intl.NumberFormat('fr-FR').format(stats.creditsAvailable)} FCFA</span>
                 </div>
                 <Separator />
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Solde après échange</span>
+                  <span className="text-muted-foreground">Solde aprÃ¨s Ã©change</span>
                   <span className="font-semibold">{new Intl.NumberFormat('fr-FR').format(stats.creditsAvailable - selectedReward.credits)} FCFA</span>
                 </div>
               </div>
@@ -1199,3 +1216,4 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
     </div>
   )
 }
+

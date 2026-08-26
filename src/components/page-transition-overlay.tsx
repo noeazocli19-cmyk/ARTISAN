@@ -10,6 +10,11 @@ export function PageTransitionOverlay() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const ref = params.get('ref');
+      if (ref) sessionStorage.setItem('ac_referral_code', ref);
+    } catch (e) {}
     const alreadyVisited = sessionStorage.getItem('ac_page_visited');
     if (!alreadyVisited) {
       sessionStorage.setItem('ac_page_visited', '1');
