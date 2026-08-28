@@ -23,12 +23,18 @@ export async function GET(request: NextRequest) {
       // OU les reservations encore ouvertes qui correspondent a son metier.
       const artisan = await db.artisan.findUnique({ where: { id: artisanId } });
       const profession = artisan?.profession || '';
+      // En francais, le metier ("Plombier") et le nom du service/categorie
+      // ("Plomberie") ont souvent des terminaisons differentes. On compare
+      // seulement la racine commune du mot (les 5 premieres lettres) pour
+      // que "Plombier" corresponde bien a "Plomberie", "Electricien" a
+      // "Electricite", etc.
+      const professionStem = profession.slice(0, 5);
       where = {
         OR: [
           { artisanId },
           {
             artisanId: null,
-            ...(profession ? { category: { contains: profession, mode: 'insensitive' } } : {}),
+            ...(professionStem ? { category: { contains: professionStem, mode: 'insensitive' } } : {}),
           },
         ],
       };
@@ -96,9 +102,20 @@ export async function POST(request: NextRequest) {
         });
       } else {
         const searchCategory = category || service;
-        const matchingArtisans = await db.artisan.findMany({
-          where: { profession: { contains: searchCategory, mode: 'insensitive' } },
-          select: { userId: true },
+        // Recherche flexible : on regarde si le metier de l'artisan et la
+        // categorie partagent une racine commune, dans les deux sens
+        // (gere "Plombier" <-> "Plomberie", "Electricien" <-> "Electricite", etc.)
+        const categoryStem = searchCategory.slice(0, 5);
+        const allArtisans = await db.artisan.findMany({
+          select: { userId: true, profession: true },
+        });
+        const matchingArtisans = allArtisans.filter((a) => {
+          if (!a.profession) return false;
+          const professionStem = a.profession.slice(0, 5).toLowerCase();
+          return (
+            a.profession.toLowerCase().includes(categoryStem.toLowerCase()) ||
+            searchCategory.toLowerCase().includes(professionStem)
+          );
         });
         if (matchingArtisans.length > 0) {
           await db.notification.createMany({
@@ -122,3 +139,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
   }
 }
+
+

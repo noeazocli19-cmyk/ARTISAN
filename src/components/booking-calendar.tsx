@@ -476,31 +476,29 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
     if (!selectedSlot || !selectedDate || !formState.service) return
     setIsSubmitting(true)
     try {
-      const artisan = selectedArtisan ?? MOCK_ARTISANS[Math.floor(Math.random() * MOCK_ARTISANS.length)]
-      if (!artisan) { setIsSubmitting(false); return }
+      const artisan = selectedArtisan ?? null
       const startH = new Date(selectedSlot.start).getHours()
       const startTime = `${String(startH).padStart(2, "0")}:00`
       const endTime = `${String(startH + 1).padStart(2, "0")}:00`
       const bookingDateTime = new Date(selectedDate)
       bookingDateTime.setHours(startH, 0, 0, 0)
-
       const res = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          artisanId: artisan.id,
+          artisanId: artisan?.id,
           service: formState.service,
+          category: formState.service,
           date: bookingDateTime.toISOString(),
           notes: formState.notes || undefined,
         }),
       })
       const data = await res.json()
-
       if (res.ok && data.booking) {
         const newBooking: Booking = {
           id: data.booking.id,
-          artisanId: artisan.id,
-          artisanName: artisan.name,
+          artisanId: artisan?.id ?? "",
+          artisanName: artisan?.name ?? "Artisan a determiner",
           clientId: user?.id ?? "client1",
           clientName: user?.name ?? "Utilisateur",
           service: formState.service,
@@ -508,9 +506,9 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
           startTime,
           endTime,
           status: "pending",
-          location: formState.location || artisan.specialty,
+          location: formState.location || artisan?.specialty || "",
           notes: formState.notes || undefined,
-          price: artisan.hourlyRate,
+          price: artisan?.hourlyRate ?? 0,
           createdAt: new Date().toISOString(),
         }
         setBookings((prev) => [newBooking, ...prev])
