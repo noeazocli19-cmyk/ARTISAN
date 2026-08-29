@@ -173,7 +173,7 @@ export const useAppStore = create<AppStore>()(
               // On ignore l'erreur, l'inscription continue
             }
 
-            // CrÃ©er automatiquement le profil artisan si le rÃ´le est "artisan"
+            // Créer automatiquement le profil artisan si le rôle est "artisan"
             if (data.role === "artisan") {
               try {
                 await fetch("/api/artisans", {

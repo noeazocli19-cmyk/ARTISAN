@@ -76,7 +76,7 @@ const DEMO_NOTIFICATIONS: Omit<Notification, 'userId'>[] = [
   {
     id: 'demo-review-1',
     title: 'Nouvel avis',
-    message: 'Vous avez reÃ§u un avis 5 Ã©toiles !',
+    message: 'Vous avez reçu un avis 5 étoiles !',
     type: 'review',
     isRead: false,
     createdAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
@@ -84,7 +84,7 @@ const DEMO_NOTIFICATIONS: Omit<Notification, 'userId'>[] = [
   {
     id: 'demo-message-1',
     title: 'Nouveau message',
-    message: 'Amadou Diallo vous a envoyÃ© un message',
+    message: 'Amadou Diallo vous a envoyé un message',
     type: 'message',
     isRead: true,
     createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
@@ -169,7 +169,7 @@ function EmptyState() {
         <BellOff className="size-6 text-muted-foreground" />
       </div>
       <p className="text-sm font-medium text-muted-foreground">Aucune notification</p>
-      <p className="text-xs text-muted-foreground/70">Vous Ãªtes Ã  jour !</p>
+      <p className="text-xs text-muted-foreground/70">Vous êtes Ã  jour !</p>
     </motion.div>
   );
 }

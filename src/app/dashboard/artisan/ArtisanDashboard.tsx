@@ -287,6 +287,24 @@ export function ArtisanDashboard() {
     }
   };
 
+  const handleCompleteMission = async (missionId: string) => {
+    try {
+      const res = await fetch(`/api/missions/${missionId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'terminée' }),
+      });
+      if (res.ok) {
+        setMissions((prev) => prev.map((m) => (m.id === missionId ? { ...m, status: 'terminée' } : m)));
+        toast.success('Mission marquee comme terminee ! Le client peut maintenant laisser un avis.');
+      } else {
+        toast.error('Erreur lors de la mise a jour');
+      }
+    } catch (error) {
+      toast.error('Erreur reseau');
+    }
+  };
+
   const handleAcceptMission = async (missionId: string) => {
     setAcceptingId(missionId);
     try {
@@ -589,15 +607,33 @@ export function ArtisanDashboard() {
                       {m.client?.name || 'Client'} · {m.budget} FCFA
                     </p>
                   </div>
-                  <span
-                    className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
-                      m.status === 'terminée'
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-amber-100 text-amber-700'
-                    }`}
-                  >
-                    {m.status}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
+                        m.status === 'terminée'
+                          ? 'bg-green-100 text-green-700'
+                          : 'bg-amber-100 text-amber-700'
+                      }`}
+                    >
+                      {m.status}
+                    </span>
+                    {(m as any).clientId && (
+                      <Link
+                        href={`/messages?userId=${(m as any).clientId}`}
+                        className="text-xs font-semibold px-2.5 py-1 rounded-full border border-amber-300 text-amber-700 hover:bg-amber-50"
+                      >
+                        Message
+                      </Link>
+                    )}
+                    {m.status !== 'terminée' && (
+                      <button
+                        onClick={() => handleCompleteMission(m.id)}
+                        className="text-xs font-semibold px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 text-white hover:from-amber-600 hover:to-orange-700"
+                      >
+                        Marquer terminee
+                      </button>
+                    )}
+                  </div>
                 </li>
               ))}
             </ul>
@@ -757,6 +793,12 @@ export function ArtisanDashboard() {
                           </button>
                         </div>
                       )}
+                      <Link
+                        href={`/messages?userId=${b.clientId}`}
+                        className="text-xs font-semibold px-3 py-2 rounded-lg border border-amber-300 text-amber-700 hover:bg-amber-50 shrink-0"
+                      >
+                        Message
+                      </Link>
                     </div>
                   </li>
                 );
@@ -1063,6 +1105,9 @@ export function ArtisanDashboard() {
     </div>
   );
 }
+
+
+
 
 
 

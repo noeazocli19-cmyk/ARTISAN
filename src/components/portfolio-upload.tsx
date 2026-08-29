@@ -62,23 +62,23 @@ interface UploadItem {
 // â”€â”€â”€ Mock Data â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const mockPortfolio: PortfolioItem[] = [
-  { id: "p1", artisanId: "1", title: "RÃ©paration tuyauterie cuisine", description: "Remplacement complet de la tuyauterie dans une cuisine moderne", imageUrl: "https://picsum.photos/seed/plumb1/600/400", category: "Plomberie" },
+  { id: "p1", artisanId: "1", title: "Réparation tuyauterie cuisine", description: "Remplacement complet de la tuyauterie dans une cuisine moderne", imageUrl: "https://picsum.photos/seed/plumb1/600/400", category: "Plomberie" },
   { id: "p2", artisanId: "1", title: "Installation robinetterie", description: "Pose de robinets mitigeurs dans une salle de bain", imageUrl: "https://picsum.photos/seed/plumb2/600/500", category: "Plomberie" },
-  { id: "p3", artisanId: "1", title: "DÃ©pannage fuite urgente", description: "Intervention rapide sur fuite d'eau", imageUrl: "https://picsum.photos/seed/plumb3/600/450", category: "Plomberie" },
-  { id: "p4", artisanId: "2", title: "Installation tableau Ã©lectrique", description: "Mise aux normes du tableau Ã©lectrique", imageUrl: "https://picsum.photos/seed/elec1/600/400", category: "Ã‰lectricitÃ©" },
-  { id: "p5", artisanId: "2", title: "RÃ©novation circuit complet", description: "Refonte totale de l'installation Ã©lectrique", imageUrl: "https://picsum.photos/seed/elec2/600/550", category: "Ã‰lectricitÃ©" },
-  { id: "p6", artisanId: "3", title: "Meuble sur mesure", description: "CrÃ©ation d'un meuble TV en bois massif", imageUrl: "https://picsum.photos/seed/wood1/600/400", category: "Menuiserie" },
-  { id: "p7", artisanId: "3", title: "Cuisine Ã©quipÃ©e", description: "Conception et installation d'une cuisine complÃ¨te", imageUrl: "https://picsum.photos/seed/wood2/600/480", category: "Menuiserie" },
-  { id: "p8", artisanId: "4", title: "DÃ©coration salon", description: "Peinture dÃ©corative avec effets texte", imageUrl: "https://picsum.photos/seed/paint1/600/400", category: "Peinture" },
-  { id: "p9", artisanId: "4", title: "Fresque murale", description: "CrÃ©ation d'une fresque africaine contemporaine", imageUrl: "https://picsum.photos/seed/paint2/600/500", category: "Peinture" },
+  { id: "p3", artisanId: "1", title: "Dépannage fuite urgente", description: "Intervention rapide sur fuite d'eau", imageUrl: "https://picsum.photos/seed/plumb3/600/450", category: "Plomberie" },
+  { id: "p4", artisanId: "2", title: "Installation tableau électrique", description: "Mise aux normes du tableau électrique", imageUrl: "https://picsum.photos/seed/elec1/600/400", category: "Électricité" },
+  { id: "p5", artisanId: "2", title: "Rénovation circuit complet", description: "Refonte totale de l'installation électrique", imageUrl: "https://picsum.photos/seed/elec2/600/550", category: "Électricité" },
+  { id: "p6", artisanId: "3", title: "Meuble sur mesure", description: "Création d'un meuble TV en bois massif", imageUrl: "https://picsum.photos/seed/wood1/600/400", category: "Menuiserie" },
+  { id: "p7", artisanId: "3", title: "Cuisine équipée", description: "Conception et installation d'une cuisine complète", imageUrl: "https://picsum.photos/seed/wood2/600/480", category: "Menuiserie" },
+  { id: "p8", artisanId: "4", title: "Décoration salon", description: "Peinture décorative avec effets texte", imageUrl: "https://picsum.photos/seed/paint1/600/400", category: "Peinture" },
+  { id: "p9", artisanId: "4", title: "Fresque murale", description: "Création d'une fresque africaine contemporaine", imageUrl: "https://picsum.photos/seed/paint2/600/500", category: "Peinture" },
   { id: "p10", artisanId: "1", title: "Installation chauffe-eau", description: "Pose d'un chauffe-eau solaire", imageUrl: "https://picsum.photos/seed/plumb4/600/420", category: "Plomberie" },
 ]
 
-const categories = ["Tous", "Plomberie", "Ã‰lectricitÃ©", "Menuiserie", "Peinture", "Autre"]
+const categories = ["Tous", "Plomberie", "Électricité", "Menuiserie", "Peinture", "Autre"]
 
 const categoryIcons: Record<string, typeof Droplets> = {
   "Plomberie": Droplets,
-  "Ã‰lectricitÃ©": Zap,
+  "Électricité": Zap,
   "Menuiserie": Hammer,
   "Peinture": Paintbrush,
   "Autre": MoreHorizontal,
@@ -86,7 +86,7 @@ const categoryIcons: Record<string, typeof Droplets> = {
 
 const categoryColors: Record<string, string> = {
   "Plomberie": "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300",
-  "Ã‰lectricitÃ©": "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300",
+  "Électricité": "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300",
   "Menuiserie": "bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300",
   "Peinture": "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300",
   "Autre": "bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300",
@@ -448,7 +448,7 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
                   <ImageIcon className="h-10 w-10 text-amber-500" />
                 </div>
                 <p className="text-muted-foreground text-lg">
-                  Aucun projet dans cette catÃ©gorie
+                  Aucun projet dans cette catégorie
                 </p>
                 <p className="text-muted-foreground text-sm mt-1">
                   Ajoutez votre premier projet en cliquant sur l&apos;onglet &quot;Ajouter&quot;
@@ -503,7 +503,7 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
 
                     <div>
                       <p className="text-lg font-semibold">
-                        {isDragOver ? "DÃ©posez vos images ici" : "Glissez-dÃ©posez vos images"}
+                        {isDragOver ? "Déposez vos images ici" : "Glissez-déposez vos images"}
                       </p>
                       <p className="text-sm text-muted-foreground mt-1">
                         ou cliquez pour parcourir vos fichiers
@@ -540,10 +540,10 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
                               </div>
                               <div className="flex-1">
                                 <p className="font-semibold text-sm text-emerald-700 dark:text-emerald-400">
-                                  Publication rÃ©ussie !
+                                  Publication réussie !
                                 </p>
                                 <p className="text-xs text-muted-foreground">
-                                  Vos projets ont Ã©tÃ© ajoutÃ©s au portfolio
+                                  Vos projets ont été ajoutés au portfolio
                                 </p>
                               </div>
                             </>
@@ -578,7 +578,7 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
                   >
                     <div className="flex items-center justify-between">
                       <h3 className="font-semibold text-lg">
-                        Images sÃ©lectionnÃ©es
+                        Images sélectionnées
                         <span className="text-muted-foreground font-normal text-sm ml-2">
                           ({uploadItems.length})
                         </span>
@@ -656,7 +656,7 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
                                       onValueChange={(val) => updateUploadItem(item.id, "category", val)}
                                     >
                                       <SelectTrigger className="border-border/50 focus:ring-amber-500">
-                                        <SelectValue placeholder="CatÃ©gorie" />
+                                        <SelectValue placeholder="Catégorie" />
                                       </SelectTrigger>
                                       <SelectContent>
                                         {categories.filter((c) => c !== "Tous").map((cat) => (
@@ -698,7 +698,7 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
                   className="text-center py-8"
                 >
                   <p className="text-muted-foreground text-sm">
-                    SÃ©lectionnez des images ci-dessus pour commencer Ã  crÃ©er votre portfolio
+                    Sélectionnez des images ci-dessus pour commencer Ã  créer votre portfolio
                   </p>
                 </motion.div>
               )}

@@ -26,16 +26,16 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "Artisan Connect â€” Trouvez l'artisan parfait pour chaque projet",
   description:
-    "Plateforme premium connectant les clients avec les meilleurs artisans Ã  travers l'Afrique. Plomberie, Ã©lectricitÃ©, menuiserie, peinture et plus encore. Service vÃ©rifiÃ©, paiement sÃ©curisÃ©, satisfaction garantie.",
+    "Plateforme premium connectant les clients avec les meilleurs artisans Ã  travers l'Afrique. Plomberie, électricité, menuiserie, peinture et plus encore. Service vérifié, paiement sécurisé, satisfaction garantie.",
   keywords: [
     "artisan",
     "Afrique",
     "plomberie",
-    "Ã©lectricitÃ©",
+    "électricité",
     "menuiserie",
     "peinture",
     "serrurerie",
-    "maÃ§onnerie",
+    "maçonnerie",
     "climatisation",
     "nettoyage",
     "services",

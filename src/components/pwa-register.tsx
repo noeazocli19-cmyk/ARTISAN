@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useRef, useCallback } from 'react'
 
@@ -68,6 +68,17 @@ export function usePWAInstall() {
 
 export function PwaRegister() {
   useEffect(() => {
+    // Le Service Worker n'est active qu'en production (Vercel), jamais en
+    // developpement local : il causait sans arret des erreurs de cache
+    // "stale chunk" pendant qu'on modifiait le code avec pnpm dev.
+    if (process.env.NODE_ENV !== 'production') {
+      if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
+          registrations.forEach((registration) => registration.unregister());
+        });
+      }
+      return;
+    }
     if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
       navigator.serviceWorker
         .register('/sw.js')
@@ -90,3 +101,4 @@ export function PwaRegister() {
 
   return null
 }
+

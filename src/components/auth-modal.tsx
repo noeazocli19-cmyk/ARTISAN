@@ -25,8 +25,8 @@ import { PhotoUploader } from '@/components/photo-uploader'
 import { Loader2, AlertCircle, Wrench, Briefcase, User, Sparkles, Eye, EyeOff } from 'lucide-react'
 
 const COUNTRIES = [
-  'SÃ©nÃ©gal', 'CÃ´te d\'Ivoire', 'Ghana', 'Togo', 'Mali',
-  'GuinÃ©e', 'BÃ©nin', 'Burkina Faso', 'Cameroun', 'Gabon',
+  'Sénégal', 'Côte d\'Ivoire', 'Ghana', 'Togo', 'Mali',
+  'Guinée', 'Bénin', 'Burkina Faso', 'Cameroun', 'Gabon',
   'Congo', 'RDC', 'Niger', 'Mauritanie', 'Cap-Vert',
 ]
 
@@ -98,7 +98,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
     }
 
     if (regPassword.length < 6) {
-      setRegError('Le mot de passe doit contenir au moins 6 caractÃ¨res')
+      setRegError('Le mot de passe doit contenir au moins 6 caractères')
       return
     }
 
@@ -155,7 +155,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
       return
     }
     if (newPassword.length < 6) {
-      setResetError('Le mot de passe doit contenir au moins 6 caractÃ¨res')
+      setResetError('Le mot de passe doit contenir au moins 6 caractères')
       return
     }
     setResetLoading(true)
@@ -167,11 +167,11 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
       })
       const data = await res.json()
       if (!res.ok) {
-        throw new Error(data.error || 'Erreur lors de la rÃ©initialisation')
+        throw new Error(data.error || 'Erreur lors de la réinitialisation')
       }
       setResetSuccess(true)
     } catch (err) {
-      setResetError(err instanceof Error ? err.message : 'Erreur lors de la rÃ©initialisation')
+      setResetError(err instanceof Error ? err.message : 'Erreur lors de la réinitialisation')
     } finally {
       setResetLoading(false)
     }
@@ -231,7 +231,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                 </div>
                 <DialogTitle className="text-white text-xl">Artisan Connect</DialogTitle>
               </div>
-              <p className="text-white/80 text-sm">Connectez-vous ou crÃ©ez votre compte</p>
+              <p className="text-white/80 text-sm">Connectez-vous ou créez votre compte</p>
             </DialogHeader>
           </div>
 
@@ -271,7 +271,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                   Se connecter
                 </Button>
                 <button type="button" onClick={() => { onOpenChange(false); setTimeout(() => { setShowForgotPassword(true); setForgotError('') }, 300) }} className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  Mot de passe oubliÃ© ?
+                  Mot de passe oublié ?
                 </button>
               </form>
             </TabsContent>
@@ -288,7 +288,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                   <PhotoUploader currentAvatar={regAvatarUrl} userName={regName || undefined} size="lg" type="avatars" onUploadComplete={(url) => setRegAvatarUrl(url)} />
                 </div>
                 <div className="space-y-2">
-                  <Label>Vous Ãªtes</Label>
+                  <Label>Vous êtes</Label>
                   <div className="grid grid-cols-2 gap-3">
                     <button type="button" onClick={() => setRegRole('client')} className={`relative flex flex-col items-center gap-2 rounded-xl border-2 p-4 transition-all ${regRole === 'client' ? 'border-amber-500 bg-amber-50 dark:bg-amber-950/30' : 'border-border hover:border-amber-300'}`}>
                       <User className={`h-6 w-6 ${regRole === 'client' ? 'text-amber-600' : 'text-muted-foreground'}`} />
@@ -329,7 +329,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="reg-phone">TÃ©lÃ©phone (optionnel)</Label>
+                  <Label htmlFor="reg-phone">Téléphone (optionnel)</Label>
                   <Input id="reg-phone" placeholder="+221 77 123 45 67" value={regPhone} onChange={e => setRegPhone(e.target.value)} />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
@@ -340,7 +340,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                   <div className="space-y-2">
                     <Label>Pays</Label>
                     <Select value={regCountry} onValueChange={setRegCountry}>
-                      <SelectTrigger><SelectValue placeholder="SÃ©lectionner" /></SelectTrigger>
+                      <SelectTrigger><SelectValue placeholder="Sélectionner" /></SelectTrigger>
                       <SelectContent>
                         {COUNTRIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
                       </SelectContent>
@@ -349,7 +349,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                 </div>
                 <Button type="submit" className="w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0 h-11" disabled={isLoading}>
                   {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                  CrÃ©er mon compte
+                  Créer mon compte
                 </Button>
               </form>
             </TabsContent>
@@ -357,21 +357,21 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
         </DialogContent>
       </Dialog>
 
-      {/* ====== DIALOGUE MOT DE PASSE OUBLIÃ‰ ====== */}
+      {/* ====== DIALOGUE MOT DE PASSE OUBLIÉ ====== */}
       <Dialog open={showForgotPassword} onOpenChange={(open) => { setShowForgotPassword(open); if (!open) { setForgotSuccess(false); setForgotError('') } }}>
         <DialogContent className="sm:max-w-[440px] p-0 gap-0 overflow-hidden">
           <div className="relative bg-gradient-to-r from-amber-500 to-orange-600 p-6 pb-8">
             <DialogHeader>
-              <DialogTitle className="text-white text-xl">Mot de passe oubliÃ©</DialogTitle>
+              <DialogTitle className="text-white text-xl">Mot de passe oublié</DialogTitle>
             </DialogHeader>
           </div>
           <div className="p-6">
             {forgotSuccess ? (
               <div className="text-center py-4">
-                <h3 className="text-lg font-semibold mb-2">Email envoyÃ© !</h3>
-                <p className="text-sm text-muted-foreground mb-4">Si un compte existe avec l&apos;adresse <strong>{forgotEmail}</strong>, vous recevrez un code pour rÃ©initialiser votre mot de passe.</p>
+                <h3 className="text-lg font-semibold mb-2">Email envoyé !</h3>
+                <p className="text-sm text-muted-foreground mb-4">Si un compte existe avec l&apos;adresse <strong>{forgotEmail}</strong>, vous recevrez un code pour réinitialiser votre mot de passe.</p>
                 <Button onClick={() => { setShowForgotPassword(false); setForgotSuccess(false); setShowResetPassword(true) }} className="bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0">
-                  J&apos;ai mon code, je rÃ©initialise
+                  J&apos;ai mon code, je réinitialise
                 </Button>
               </div>
             ) : (
@@ -391,7 +391,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
         </DialogContent>
       </Dialog>
 
-      {/* ====== DIALOGUE RÃ‰INITIALISATION MOT DE PASSE ====== */}
+      {/* ====== DIALOGUE RÉINITIALISATION MOT DE PASSE ====== */}
       <Dialog open={showResetPassword} onOpenChange={(open) => { setShowResetPassword(open); if (!open) { setResetSuccess(false); setResetError('') } }}>
         <DialogContent className="sm:max-w-[440px] p-0 gap-0 overflow-hidden">
           <div className="relative bg-gradient-to-r from-amber-500 to-orange-600 p-6 pb-8">
@@ -412,7 +412,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
               <form onSubmit={handleResetPassword} className="space-y-4">
                 {resetError && <div className="p-3 rounded-lg bg-red-50 dark:bg-red-950/30 text-sm text-red-600">{resetError}</div>}
                 <div className="space-y-2">
-                  <Label htmlFor="reset-code">Code reÃ§u par email</Label>
+                  <Label htmlFor="reset-code">Code reçu par email</Label>
                   <Input id="reset-code" placeholder="000000" value={resetToken} onChange={e => setResetToken(e.target.value)} required />
                 </div>
                 <div className="space-y-2">
@@ -425,7 +425,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                 </div>
                 <Button type="submit" className="w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0 h-11" disabled={resetLoading}>
                   {resetLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                  RÃ©initialiser
+                  Réinitialiser
                 </Button>
               </form>
             )}

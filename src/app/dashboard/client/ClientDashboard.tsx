@@ -47,10 +47,10 @@ import {
 
 const CATEGORY_OPTIONS = [
   { value: 'plomberie', label: 'Plomberie' },
-  { value: 'electrical', label: 'Ã‰lectricitÃ©' },
+  { value: 'electrical', label: 'Électricité' },
   { value: 'carpentry', label: 'Menuiserie' },
   { value: 'painting', label: 'Peinture' },
-  { value: 'masonry', label: 'MaÃ§onnerie' },
+  { value: 'masonry', label: 'Maçonnerie' },
   { value: 'welding', label: 'Soudure' },
   { value: 'tailoring', label: 'Couture' },
   { value: 'catering', label: 'Traiteur' },
@@ -60,10 +60,10 @@ const CATEGORY_OPTIONS = [
 
 const STATUS_MAP: Record<string, { label: string; color: string }> = {
   ouverte: { label: 'Ouverte', color: 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300' },
-  assignee: { label: 'AssignÃ©e', color: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300' },
+  assignee: { label: 'Assignée', color: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300' },
   en_cours: { label: 'En cours', color: 'bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300' },
-  terminee: { label: 'TerminÃ©e', color: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300' },
-  annulee: { label: 'AnnulÃ©e', color: 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300' },
+  terminee: { label: 'Terminée', color: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300' },
+  annulee: { label: 'Annulée', color: 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300' },
 }
 
 const fadeInUp = {
@@ -146,7 +146,7 @@ export function ClientDashboard() {
       })
       const data = await res.json()
       if (!res.ok) {
-        setMissionError(data.error || 'Erreur lors de la crÃ©ation')
+        setMissionError(data.error || 'Erreur lors de la création')
         return
       }
       setNewMissionOpen(false)
@@ -157,7 +157,7 @@ export function ClientDashboard() {
       setMLocation('')
       fetchMissions()
     } catch {
-      setMissionError('Erreur rÃ©seau')
+      setMissionError('Erreur réseau')
     } finally {
       setSubmitting(false)
     }
@@ -214,7 +214,7 @@ export function ClientDashboard() {
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <Briefcase className="h-5 w-5 text-amber-500" />
-                CrÃ©er une mission
+                Créer une mission
               </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleCreateMission} className="space-y-4 mt-4">
@@ -226,15 +226,15 @@ export function ClientDashboard() {
               )}
               <div className="space-y-2">
                 <Label htmlFor="m-title">Titre</Label>
-                <Input id="m-title" placeholder="RÃ©paration fuite robinet" value={mTitle} onChange={e => setMTitle(e.target.value)} required />
+                <Input id="m-title" placeholder="Réparation fuite robinet" value={mTitle} onChange={e => setMTitle(e.target.value)} required />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="m-desc">Description</Label>
-                <Textarea id="m-desc" placeholder="DÃ©crivez votre besoin en dÃ©tail..." value={mDesc} onChange={e => setMDesc(e.target.value)} rows={4} required />
+                <Textarea id="m-desc" placeholder="Décrivez votre besoin en détail..." value={mDesc} onChange={e => setMDesc(e.target.value)} rows={4} required />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
-                  <Label>CatÃ©gorie</Label>
+                  <Label>Catégorie</Label>
                   <Select value={mCategory} onValueChange={setMCategory}>
                     <SelectTrigger><SelectValue placeholder="Choisir" /></SelectTrigger>
                     <SelectContent>
@@ -251,7 +251,7 @@ export function ClientDashboard() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="m-location">Localisation</Label>
-                <Input id="m-location" placeholder="Dakar, SÃ©nÃ©gal" value={mLocation} onChange={e => setMLocation(e.target.value)} />
+                <Input id="m-location" placeholder="Dakar, Sénégal" value={mLocation} onChange={e => setMLocation(e.target.value)} />
               </div>
               <Button type="submit" className="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0" disabled={submitting}>
                 {submitting && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
@@ -264,7 +264,7 @@ export function ClientDashboard() {
 
       <Tabs defaultValue="overview" className="space-y-6">
         <TabsList className="h-11 bg-muted/50 p-1">
-          <TabsTrigger value="overview" className="text-sm">AperÃ§u</TabsTrigger>
+          <TabsTrigger value="overview" className="text-sm">Aperçu</TabsTrigger>
           <TabsTrigger value="missions" className="text-sm">Mes Missions</TabsTrigger>
           <TabsTrigger value="messages" className="text-sm">Messages</TabsTrigger>
           <TabsTrigger value="favorites" className="text-sm flex items-center gap-1"><Heart className="h-3.5 w-3.5" />Favoris</TabsTrigger>
@@ -300,7 +300,7 @@ export function ClientDashboard() {
                     </div>
                     <div>
                       <p className="text-2xl font-bold">{completedMissions.length}</p>
-                      <p className="text-sm text-muted-foreground">Missions terminÃ©es</p>
+                      <p className="text-sm text-muted-foreground">Missions terminées</p>
                     </div>
                   </div>
                 </CardContent>
@@ -316,7 +316,7 @@ export function ClientDashboard() {
                     </div>
                     <div>
                       <p className="text-2xl font-bold">{uniqueArtisans}</p>
-                      <p className="text-sm text-muted-foreground">Artisans contactÃ©s</p>
+                      <p className="text-sm text-muted-foreground">Artisans contactés</p>
                     </div>
                   </div>
                 </CardContent>
@@ -327,7 +327,7 @@ export function ClientDashboard() {
           {/* Recent missions */}
           <Card className="border-border/50">
             <CardHeader>
-              <CardTitle className="text-lg">Missions rÃ©centes</CardTitle>
+              <CardTitle className="text-lg">Missions récentes</CardTitle>
             </CardHeader>
             <CardContent>
               {loadingMissions ? (
@@ -338,7 +338,7 @@ export function ClientDashboard() {
                 <div className="text-center py-8 text-muted-foreground">
                   <Briefcase className="h-12 w-12 mx-auto mb-3 opacity-30" />
                   <p>Aucune mission pour le moment</p>
-                  <p className="text-sm mt-1">CrÃ©ez votre premiÃ¨re mission pour trouver un artisan</p>
+                  <p className="text-sm mt-1">Créez votre première mission pour trouver un artisan</p>
                 </div>
               ) : (
                 <div className="space-y-3 max-h-96 overflow-y-auto">
@@ -385,10 +385,10 @@ export function ClientDashboard() {
             <Card className="border-dashed">
               <CardContent className="py-12 text-center text-muted-foreground">
                 <Briefcase className="h-12 w-12 mx-auto mb-3 opacity-30" />
-                <p>Aucune mission crÃ©Ã©e</p>
+                <p>Aucune mission créée</p>
                 <Button variant="outline" className="mt-4" onClick={() => setNewMissionOpen(true)}>
                   <Plus className="h-4 w-4 mr-2" />
-                  CrÃ©er une mission
+                  Créer une mission
                 </Button>
               </CardContent>
             </Card>
@@ -548,7 +548,7 @@ export function ClientDashboard() {
               <CardContent className="py-12 text-center text-muted-foreground">
                 <Star className="h-12 w-12 mx-auto mb-3 opacity-30" />
                 <p>Aucun avis pour le moment</p>
-                <p className="text-sm mt-1">Les avis apparaÃ®tront aprÃ¨s la complÃ©tion de vos missions</p>
+                <p className="text-sm mt-1">Les avis apparaîtront après la complétion de vos missions</p>
               </CardContent>
             </Card>
           ) : (
@@ -614,7 +614,7 @@ export function ClientDashboard() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>TÃ©lÃ©phone</Label>
+                  <Label>Téléphone</Label>
                   <Input value={user?.phone || ''} disabled className="bg-muted/50" />
                 </div>
                 <div className="space-y-2">

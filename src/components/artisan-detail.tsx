@@ -34,9 +34,9 @@ import {
 } from 'lucide-react'
 
 const BADGE_STYLES: Record<string, { color: string; icon: typeof Award }> = {
-  'Ã‰lite': { color: 'bg-amber-500 text-white', icon: Award },
+  'Élite': { color: 'bg-amber-500 text-white', icon: Award },
   'Top': { color: 'bg-emerald-500 text-white', icon: Star },
-  'VÃ©rifiÃ©': { color: 'bg-teal-500 text-white', icon: Shield },
+  'Vérifié': { color: 'bg-teal-500 text-white', icon: Shield },
   'Nouveau': { color: 'bg-neutral-500 text-white', icon: Briefcase },
 }
 
@@ -185,7 +185,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
   if (!artisan) {
     return (
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8 text-center">
-        <p className="text-muted-foreground">Artisan non trouvÃ©</p>
+        <p className="text-muted-foreground">Artisan non trouvé</p>
         <Button variant="outline" className="mt-4" onClick={onBack}>Retour</Button>
       </div>
     )
@@ -211,7 +211,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
       {/* Back button */}
       <Button variant="ghost" className="mb-6 -ml-4" onClick={onBack}>
         <ChevronLeft className="h-4 w-4 mr-1" />
-        Retour aux rÃ©sultats
+        Retour aux résultats
       </Button>
 
       {/* Header */}
@@ -295,7 +295,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
             <motion.div variants={fadeInUp} initial="hidden" animate="visible" transition={{ delay: 0.1 }}>
               <Card className="border-border/50">
                 <CardHeader>
-                  <CardTitle className="text-lg">Ã€ propos</CardTitle>
+                  <CardTitle className="text-lg">À propos</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground leading-relaxed">{bio}</p>
@@ -309,12 +309,12 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
             <motion.div variants={fadeInUp} initial="hidden" animate="visible" transition={{ delay: 0.15 }}>
               <Card className="border-border/50">
                 <CardHeader>
-                  <CardTitle className="text-lg">CompÃ©tences & SpÃ©cialitÃ©s</CardTitle>
+                  <CardTitle className="text-lg">Compétences & Spécialités</CardTitle>
                 </CardHeader>
                 <CardContent>
                   {specialties.length > 0 && (
                     <div className="mb-4">
-                      <p className="text-sm font-medium mb-2">SpÃ©cialitÃ©s</p>
+                      <p className="text-sm font-medium mb-2">Spécialités</p>
                       <div className="flex flex-wrap gap-2">
                         {specialties.map((spec) => (
                           <Badge key={spec} className="bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300 border-0">
@@ -326,7 +326,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
                   )}
                   {skills.length > 0 && (
                     <div>
-                      <p className="text-sm font-medium mb-2">CompÃ©tences</p>
+                      <p className="text-sm font-medium mb-2">Compétences</p>
                       <div className="flex flex-wrap gap-2">
                         {skills.map((skill) => (
                           <Badge key={skill} variant="outline">
@@ -425,11 +425,11 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
                     <Clock className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm">{artisan.experience} ans d&apos;expÃ©rience</span>
+                    <span className="text-sm">{artisan.experience} ans d&apos;expérience</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <Briefcase className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm">{artisan.missionCount} missions rÃ©alisÃ©es</span>
+                    <span className="text-sm">{artisan.missionCount} missions réalisées</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <CheckCircle2 className="h-4 w-4 text-emerald-500" />
@@ -487,8 +487,8 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
                   <div className="flex items-center gap-3">
                     <Shield className="h-8 w-8 text-emerald-500" />
                     <div>
-                      <p className="font-medium text-sm">IdentitÃ© vÃ©rifiÃ©e</p>
-                      <p className="text-xs text-muted-foreground">PiÃ¨ce d&apos;identitÃ© validÃ©e</p>
+                      <p className="font-medium text-sm">Identité vérifiée</p>
+                      <p className="text-xs text-muted-foreground">Pièce d&apos;identité validée</p>
                     </div>
                   </div>
                 </CardContent>
@@ -511,7 +511,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
             <div className="space-y-2">
               <Label>Votre message</Label>
               <Textarea
-                placeholder="DÃ©crivez votre besoin..."
+                placeholder="Décrivez votre besoin..."
                 value={messageText}
                 onChange={e => setMessageText(e.target.value)}
                 rows={4}
@@ -542,14 +542,14 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
             <div className="space-y-2">
               <Label>Description du projet</Label>
               <Textarea
-                placeholder="DÃ©crivez votre projet en dÃ©tail..."
+                placeholder="Décrivez votre projet en détail..."
                 value={devisText}
                 onChange={e => setDevisText(e.target.value)}
                 rows={4}
               />
             </div>
             <div className="space-y-2">
-              <Label>Budget estimÃ© (FCFA)</Label>
+              <Label>Budget estimé (FCFA)</Label>
               <Input
                 type="number"
                 placeholder="Ex: 50 000"

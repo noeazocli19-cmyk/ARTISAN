@@ -60,8 +60,8 @@ interface BookingCalendarProps {
 
 const DAYS_FR = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']
 const MONTHS_FR = [
-  'Janvier', 'FÃ©vrier', 'Mars', 'Avril', 'Mai', 'Juin',
-  'Juillet', 'AoÃ»t', 'Septembre', 'Octobre', 'Novembre', 'DÃ©cembre',
+  'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+  'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre',
 ]
 
 function formatPrice(n: number) {
@@ -92,10 +92,10 @@ function isSameDay(a: Date, b: Date) {
 
 const statusConfig: Record<BookingStatus, { label: string; color: string; bg: string; icon: typeof CheckCircle2 }> = {
   pending: { label: 'En attente', color: 'text-yellow-700 dark:text-yellow-300', bg: 'bg-yellow-100 dark:bg-yellow-900/40 border-yellow-300 dark:border-yellow-700', icon: AlertCircle },
-  confirmed: { label: 'ConfirmÃ©', color: 'text-green-700 dark:text-green-300', bg: 'bg-green-100 dark:bg-green-900/40 border-green-300 dark:border-green-700', icon: CheckCircle2 },
+  confirmed: { label: 'Confirmé', color: 'text-green-700 dark:text-green-300', bg: 'bg-green-100 dark:bg-green-900/40 border-green-300 dark:border-green-700', icon: CheckCircle2 },
   in_progress: { label: 'En cours', color: 'text-blue-700 dark:text-blue-300', bg: 'bg-blue-100 dark:bg-blue-900/40 border-blue-300 dark:border-blue-700', icon: Clock },
-  completed: { label: 'TerminÃ©', color: 'text-gray-700 dark:text-gray-300', bg: 'bg-gray-100 dark:bg-gray-800/40 border-gray-300 dark:border-gray-600', icon: CheckCircle2 },
-  cancelled: { label: 'AnnulÃ©', color: 'text-red-700 dark:text-red-300', bg: 'bg-red-100 dark:bg-red-900/40 border-red-300 dark:border-red-700', icon: XCircle },
+  completed: { label: 'Terminé', color: 'text-gray-700 dark:text-gray-300', bg: 'bg-gray-100 dark:bg-gray-800/40 border-gray-300 dark:border-gray-600', icon: CheckCircle2 },
+  cancelled: { label: 'Annulé', color: 'text-red-700 dark:text-red-300', bg: 'bg-red-100 dark:bg-red-900/40 border-red-300 dark:border-red-700', icon: XCircle },
 }
 
 // =============================================================================
@@ -119,12 +119,12 @@ function generateMockBookings(): Booking[] {
       artisanName: 'Amadou Diallo',
       clientId: 'client1',
       clientName: 'Utilisateur',
-      service: 'RÃ©paration fuite robinet',
+      service: 'Réparation fuite robinet',
       date: new Date(y, m, now.getDate() + 1).toISOString(),
       startTime: '09:00',
       endTime: '10:00',
       status: 'confirmed',
-      location: 'Dakar, SÃ©nÃ©gal',
+      location: 'Dakar, Sénégal',
       notes: 'Fuite dans la cuisine, robinet principal',
       price: 8000,
       createdAt: new Date(y, m, now.getDate() - 2).toISOString(),
@@ -135,12 +135,12 @@ function generateMockBookings(): Booking[] {
       artisanName: 'Fatou Ndiaye',
       clientId: 'client1',
       clientName: 'Utilisateur',
-      service: 'Installation prise Ã©lectrique',
+      service: 'Installation prise électrique',
       date: new Date(y, m, now.getDate() + 3).toISOString(),
       startTime: '14:00',
       endTime: '15:30',
       status: 'pending',
-      location: 'Abidjan, CÃ´te d\'Ivoire',
+      location: 'Abidjan, Côte d\'Ivoire',
       notes: 'Ajout de 2 prises dans le salon',
       price: 11250,
       createdAt: new Date(y, m, now.getDate() - 1).toISOString(),
@@ -151,7 +151,7 @@ function generateMockBookings(): Booking[] {
       artisanName: 'Kofi Mensah',
       clientId: 'client1',
       clientName: 'Utilisateur',
-      service: 'RÃ©paration porte chambre',
+      service: 'Réparation porte chambre',
       date: new Date(y, m, now.getDate() - 3).toISOString(),
       startTime: '10:00',
       endTime: '12:00',
@@ -163,7 +163,7 @@ function generateMockBookings(): Booking[] {
     {
       id: 'b4',
       artisanId: 'a4',
-      artisanName: 'AÃ¯cha Bello',
+      artisanName: 'Aïcha Bello',
       clientId: 'client1',
       clientName: 'Utilisateur',
       service: 'Peinture salon',
@@ -171,14 +171,14 @@ function generateMockBookings(): Booking[] {
       startTime: '08:00',
       endTime: '16:00',
       status: 'completed',
-      location: 'LomÃ©, Togo',
+      location: 'Lomé, Togo',
       price: 52000,
       createdAt: new Date(y, m, now.getDate() - 10).toISOString(),
     },
     {
       id: 'b5',
       artisanId: 'a5',
-      artisanName: 'Moussa TraorÃ©',
+      artisanName: 'Moussa Traoré',
       clientId: 'client1',
       clientName: 'Utilisateur',
       service: 'Maintenance climatisation',
@@ -197,12 +197,12 @@ function generateMockBookings(): Booking[] {
       artisanName: 'Amadou Diallo',
       clientId: 'client1',
       clientName: 'Utilisateur',
-      service: 'DÃ©bouchage canalisation',
+      service: 'Débouchage canalisation',
       date: new Date(y, m, now.getDate() + 2).toISOString(),
       startTime: '16:00',
       endTime: '17:00',
       status: 'in_progress',
-      location: 'Dakar, SÃ©nÃ©gal',
+      location: 'Dakar, Sénégal',
       price: 8000,
       createdAt: new Date(y, m, now.getDate() - 1).toISOString(),
     },
@@ -217,7 +217,7 @@ function generateMockBookings(): Booking[] {
       startTime: '09:00',
       endTime: '13:00',
       status: 'cancelled',
-      location: 'Conakry, GuinÃ©e',
+      location: 'Conakry, Guinée',
       price: 20000,
       createdAt: new Date(y, m, now.getDate() - 12).toISOString(),
     },
@@ -227,13 +227,13 @@ function generateMockBookings(): Booking[] {
       artisanName: 'Fatou Ndiaye',
       clientId: 'client1',
       clientName: 'Utilisateur',
-      service: 'Diagnostic installation Ã©lectrique',
+      service: 'Diagnostic installation électrique',
       date: new Date(y, m, now.getDate() + 4).toISOString(),
       startTime: '10:00',
       endTime: '11:00',
       status: 'confirmed',
-      location: 'Abidjan, CÃ´te d\'Ivoire',
-      notes: 'VÃ©rification conformitÃ© installation',
+      location: 'Abidjan, Côte d\'Ivoire',
+      notes: 'Vérification conformité installation',
       price: 7500,
       createdAt: new Date(y, m, now.getDate() - 1).toISOString(),
     },
@@ -304,9 +304,9 @@ type BookingFilter = 'all' | 'pending' | 'confirmed' | 'completed' | 'cancelled'
 const filterLabels: { key: BookingFilter; label: string }[] = [
   { key: 'all', label: 'Tous' },
   { key: 'pending', label: 'En attente' },
-  { key: 'confirmed', label: 'ConfirmÃ©s' },
-  { key: 'completed', label: 'TerminÃ©s' },
-  { key: 'cancelled', label: 'AnnulÃ©s' },
+  { key: 'confirmed', label: 'Confirmés' },
+  { key: 'completed', label: 'Terminés' },
+  { key: 'cancelled', label: 'Annulés' },
 ]
 
 // =============================================================================
@@ -570,18 +570,18 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
         `${selectedArtisan.specialty} â€” Urgence`,
         `${selectedArtisan.specialty} â€” Diagnostic`,
         `${selectedArtisan.specialty} â€” Installation`,
-        `${selectedArtisan.specialty} â€” RÃ©paration`,
+        `${selectedArtisan.specialty} â€” Réparation`,
       ]
     }
     return [
       'Plomberie â€” Intervention standard',
       'Plomberie â€” Urgence',
-      'Ã‰lectricitÃ© â€” Intervention standard',
-      'Ã‰lectricitÃ© â€” Diagnostic',
-      'Menuiserie â€” RÃ©paration',
+      'Électricité â€” Intervention standard',
+      'Électricité â€” Diagnostic',
+      'Menuiserie â€” Réparation',
       'Menuiserie â€” Installation',
-      'Peinture â€” DÃ©coration intÃ©rieure',
-      'Peinture â€” Peinture extÃ©rieure',
+      'Peinture â€” Décoration intérieure',
+      'Peinture â€” Peinture extérieure',
       'Climatisation â€” Maintenance',
       'Climatisation â€” Installation',
       'Nettoyage â€” Standard',
@@ -604,7 +604,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
           <div className="flex-1 min-w-0">
             <h1 className="text-xl sm:text-2xl font-bold truncate">
               <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">
-                RÃ©servation
+                Réservation
               </span>{' '}
               & Calendrier
             </h1>
@@ -634,7 +634,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
             </TabsTrigger>
             <TabsTrigger value="bookings" className="gap-2">
               <Briefcase className="h-4 w-4" />
-              Mes RÃ©servations
+              Mes Réservations
               {bookings.filter((b) => b.status === 'pending').length > 0 && (
                 <Badge className="ml-1 h-5 w-5 p-0 flex items-center justify-center bg-amber-500 text-white text-[10px] border-0">
                   {bookings.filter((b) => b.status === 'pending').length}
@@ -752,7 +752,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                         </div>
                         <div className="flex items-center gap-1.5">
                           <div className="h-2.5 w-2.5 rounded-full bg-gradient-to-br from-amber-500 to-orange-600" />
-                          SÃ©lectionnÃ©
+                          Sélectionné
                         </div>
                       </div>
                     </CardContent>
@@ -775,7 +775,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                         <CardHeader className="pb-3">
                           <CardTitle className="text-base flex items-center gap-2">
                             <Clock className="h-4 w-4 text-amber-500" />
-                            CrÃ©neaux disponibles
+                            Créneaux disponibles
                           </CardTitle>
                           <p className="text-sm text-muted-foreground">
                             {formatDateFR(selectedDate)}
@@ -818,7 +818,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                                     </Badge>
                                   ) : (
                                     <Badge className="bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700 text-[10px]">
-                                      RÃ©servÃ©
+                                      Réservé
                                     </Badge>
                                   )}
                                 </div>
@@ -841,9 +841,9 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-100 dark:bg-amber-950/30">
                               <CalendarDays className="h-8 w-8 text-amber-500" />
                             </div>
-                            <h3 className="font-semibold text-base">SÃ©lectionnez un jour</h3>
+                            <h3 className="font-semibold text-base">Sélectionnez un jour</h3>
                             <p className="text-sm text-muted-foreground max-w-xs">
-                              Cliquez sur un jour du calendrier pour voir les crÃ©neaux horaires disponibles
+                              Cliquez sur un jour du calendrier pour voir les créneaux horaires disponibles
                             </p>
                           </div>
                         </CardContent>
@@ -884,7 +884,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                   <CardContent className="p-4">
                     <h4 className="font-semibold text-sm mb-3 flex items-center gap-2">
                       <Filter className="h-4 w-4 text-amber-500" />
-                      RÃ©sumÃ©
+                      Résumé
                     </h4>
                     <div className="grid grid-cols-2 gap-3">
                       <div className="rounded-lg bg-amber-50 dark:bg-amber-950/30 p-3 text-center">
@@ -897,7 +897,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                         <p className="text-xl font-bold text-green-600 dark:text-green-400">
                           {bookings.filter((b) => b.status === 'confirmed').length}
                         </p>
-                        <p className="text-[10px] text-muted-foreground mt-0.5">ConfirmÃ©s</p>
+                        <p className="text-[10px] text-muted-foreground mt-0.5">Confirmés</p>
                       </div>
                       <div className="rounded-lg bg-blue-50 dark:bg-blue-950/30 p-3 text-center">
                         <p className="text-xl font-bold text-blue-600 dark:text-blue-400">
@@ -909,7 +909,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                         <p className="text-xl font-bold text-gray-600 dark:text-gray-400">
                           {bookings.filter((b) => b.status === 'completed').length}
                         </p>
-                        <p className="text-[10px] text-muted-foreground mt-0.5">TerminÃ©s</p>
+                        <p className="text-[10px] text-muted-foreground mt-0.5">Terminés</p>
                       </div>
                     </div>
                   </CardContent>
@@ -970,9 +970,9 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100 dark:bg-gray-800">
                               <Briefcase className="h-8 w-8 text-gray-400" />
                             </div>
-                            <h3 className="font-semibold">Aucune rÃ©servation</h3>
+                            <h3 className="font-semibold">Aucune réservation</h3>
                             <p className="text-sm text-muted-foreground">
-                              Aucune rÃ©servation trouvÃ©e pour ce filtre
+                              Aucune réservation trouvée pour ce filtre
                             </p>
                           </div>
                         </CardContent>
@@ -1116,9 +1116,9 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                 >
                   <PartyPopper className="h-10 w-10 text-green-600 dark:text-green-400" />
                 </motion.div>
-                <h3 className="text-xl font-bold mb-2">RÃ©servation confirmÃ©e !</h3>
+                <h3 className="text-xl font-bold mb-2">Réservation confirmée !</h3>
                 <p className="text-muted-foreground text-sm">
-                  Votre demande a Ã©tÃ© envoyÃ©e avec succÃ¨s. Vous recevrez une confirmation sous peu.
+                  Votre demande a été envoyée avec succès. Vous recevrez une confirmation sous peu.
                 </p>
               </motion.div>
             ) : (
@@ -1131,10 +1131,10 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                 <DialogHeader>
                   <DialogTitle className="flex items-center gap-2">
                     <CalendarDays className="h-5 w-5 text-amber-500" />
-                    Nouvelle rÃ©servation
+                    Nouvelle réservation
                   </DialogTitle>
                   <DialogDescription>
-                    Remplissez les dÃ©tails pour confirmer votre rÃ©servation
+                    Remplissez les détails pour confirmer votre réservation
                   </DialogDescription>
                 </DialogHeader>
 
@@ -1176,7 +1176,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                     </Label>
                     <Select value={formState.service} onValueChange={(v) => setFormState((s) => ({ ...s, service: v }))}>
                       <SelectTrigger id="service">
-                        <SelectValue placeholder="SÃ©lectionnez un service" />
+                        <SelectValue placeholder="Sélectionnez un service" />
                       </SelectTrigger>
                       <SelectContent>
                         {serviceOptions.map((s) => (
@@ -1212,7 +1212,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                     </Label>
                     <Textarea
                       id="notes"
-                      placeholder="DÃ©crivez votre besoin en dÃ©tail..."
+                      placeholder="Décrivez votre besoin en détail..."
                       className="resize-none min-h-[80px]"
                       value={formState.notes}
                       onChange={(e) => setFormState((s) => ({ ...s, notes: e.target.value }))}
@@ -1245,7 +1245,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                     ) : (
                       <>
                         <CheckCircle2 className="h-4 w-4 mr-2" />
-                        Confirmer la rÃ©servation
+                        Confirmer la réservation
                       </>
                     )}
                   </Button>
