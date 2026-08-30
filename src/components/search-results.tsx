@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
@@ -28,14 +28,14 @@ import {
 } from 'lucide-react'
 
 const CATEGORY_FILTERS = [
-  'Plomberie', 'Électricité', 'Menuiserie', 'Peinture',
-  'Serrurerie', 'Maçonnerie', 'Climatisation', 'Nettoyage',
+  'Plomberie', 'Ã‰lectricitÃ©', 'Menuiserie', 'Peinture',
+  'Serrurerie', 'MaÃ§onnerie', 'Climatisation', 'Nettoyage',
 ]
 
 const BADGE_STYLES: Record<string, string> = {
-  'Élite': 'bg-amber-500 text-white',
+  'Ã‰lite': 'bg-amber-500 text-white',
   'Top': 'bg-emerald-500 text-white',
-  'Vérifié': 'bg-teal-500 text-white',
+  'VÃ©rifiÃ©': 'bg-teal-500 text-white',
   'Nouveau': 'bg-neutral-500 text-white',
 }
 
@@ -131,7 +131,7 @@ export function SearchResults({ onViewArtisan }: SearchResultsProps) {
       <div className="mb-8">
         <h1 className="text-2xl sm:text-3xl font-bold mb-4">
           {searchQuery ? (
-            <>Résultats pour &laquo; <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">{searchQuery}</span> &raquo;</>
+            <>RÃ©sultats pour &laquo; <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">{searchQuery}</span> &raquo;</>
           ) : (
             <>Trouvez votre <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">artisan</span></>
           )}
@@ -191,7 +191,7 @@ export function SearchResults({ onViewArtisan }: SearchResultsProps) {
 
             {/* Categories */}
             <div className="space-y-3">
-              <h4 className="text-sm font-medium">Catégories</h4>
+              <h4 className="text-sm font-medium">CatÃ©gories</h4>
               <div className="space-y-2">
                 {CATEGORY_FILTERS.map(cat => (
                   <label key={cat} className="flex items-center gap-2 cursor-pointer">
@@ -234,9 +234,9 @@ export function SearchResults({ onViewArtisan }: SearchResultsProps) {
                   <SelectValue placeholder="Toutes les notes" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="4">4+ étoiles</SelectItem>
-                  <SelectItem value="3">3+ étoiles</SelectItem>
-                  <SelectItem value="2">2+ étoiles</SelectItem>
+                  <SelectItem value="4">4+ Ã©toiles</SelectItem>
+                  <SelectItem value="3">3+ Ã©toiles</SelectItem>
+                  <SelectItem value="2">2+ Ã©toiles</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -252,7 +252,7 @@ export function SearchResults({ onViewArtisan }: SearchResultsProps) {
           {/* Sort & count */}
           <div className="flex items-center justify-between mb-4">
             <p className="text-sm text-muted-foreground">
-              {isLoading ? 'Recherche en cours...' : `${searchResults.length} artisan${searchResults.length !== 1 ? 's' : ''} trouvé${searchResults.length !== 1 ? 's' : ''}`}
+              {isLoading ? 'Recherche en cours...' : `${searchResults.length} artisan${searchResults.length !== 1 ? 's' : ''} trouvÃ©${searchResults.length !== 1 ? 's' : ''}`}
             </p>
             <Select value={sortBy} onValueChange={setSortBy}>
               <SelectTrigger className="w-40 h-9 text-sm">
@@ -260,8 +260,8 @@ export function SearchResults({ onViewArtisan }: SearchResultsProps) {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="rating">Par note</SelectItem>
-                <SelectItem value="price_low">Par prix ↑</SelectItem>
-                <SelectItem value="price_high">Par prix ↓</SelectItem>
+                <SelectItem value="price_low">Par prix â†‘</SelectItem>
+                <SelectItem value="price_high">Par prix â†“</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -293,8 +293,8 @@ export function SearchResults({ onViewArtisan }: SearchResultsProps) {
             <Card className="border-dashed">
               <CardContent className="py-16 text-center text-muted-foreground">
                 <Search className="h-16 w-16 mx-auto mb-4 opacity-20" />
-                <p className="text-lg font-medium">Aucun artisan trouvé</p>
-                <p className="text-sm mt-1">Essayez de modifier vos critères de recherche</p>
+                <p className="text-lg font-medium">Aucun artisan trouvÃ©</p>
+                <p className="text-sm mt-1">Essayez de modifier vos critÃ¨res de recherche</p>
                 <Button variant="outline" className="mt-4" onClick={clearFilters}>
                   Effacer les filtres
                 </Button>
@@ -310,7 +310,7 @@ export function SearchResults({ onViewArtisan }: SearchResultsProps) {
                   const badgeStyle = BADGE_STYLES[artisan.badge] || BADGE_STYLES['Nouveau']
                   const avatarColor = AVATAR_COLORS[idx % AVATAR_COLORS.length]
 
-                  // Parse specialties (peut être un string JSON ou un tableau)
+                  // Parse specialties (peut Ãªtre un string JSON ou un tableau)
                   let specialtiesDisplay = ''
                   if (Array.isArray(artisan.specialties)) {
                     specialtiesDisplay = artisan.specialties.join(', ')
@@ -328,8 +328,16 @@ export function SearchResults({ onViewArtisan }: SearchResultsProps) {
                       <Card className="group hover:border-amber-300 dark:hover:border-amber-700 transition-all hover:shadow-lg overflow-hidden h-full">
                         <CardContent className="p-6 flex flex-col h-full">
                           <div className="flex items-start gap-4">
-                            <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-white font-bold text-lg ${avatarColor}`}>
-                              {getInitials(name)}
+                            <div className="relative shrink-0">
+                              <div className={`flex h-14 w-14 items-center justify-center rounded-full text-white font-bold text-lg ${avatarColor}`}>
+                                {getInitials(name)}
+                              </div>
+                              {artisan.isOnline && (
+                                <span
+                                  className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full bg-green-500 border-2 border-white"
+                                  title="En ligne"
+                                />
+                              )}
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 flex-wrap">

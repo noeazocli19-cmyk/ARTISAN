@@ -33,6 +33,7 @@ model User {
   artisan       Artisan?
   missions      Mission[]
   bookings      Booking[]
+  lastActiveAt  DateTime? @default(now())
   referralCode  String?  @unique
   referralsMade Referral[] @relation("ReferralsMade")
   referredBy    Referral?  @relation("ReferralsReceived")
@@ -149,7 +150,7 @@ model Artisan {
 }
 
 // ============================================
-// CATÃƒÆ’Ã¢â‚¬Â°GORIES DE MÃƒÆ’Ã¢â‚¬Â°TIERS
+// CATÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â°GORIES DE MÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â°TIERS
 // ============================================
 
 model Category {
@@ -164,7 +165,7 @@ model Category {
 }
 
 // ============================================
-// MISSIONS (demandes client ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ artisan)
+// MISSIONS (demandes client ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ artisan)
 // ============================================
 
 model Mission {
@@ -200,7 +201,7 @@ model Mission {
 
 model Review {
   id        String   @id @default(cuid())
-  rating    Int      // 1 ÃƒÆ’Ã‚Â  5 ÃƒÆ’Ã‚Â©toiles
+  rating    Int      // 1 ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  5 ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©toiles
   comment   String?
   clientId  String
   artisanId String
@@ -269,9 +270,9 @@ model Payment {
   id            String   @id @default(cuid())
   amount        Int      // montant en FCFA ou devise
   currency      String   @default("XAF")
-  status        String   @default("en_attente") // en_attente, payÃƒÆ’Ã‚Â©, ÃƒÆ’Ã‚Â©chouÃƒÆ’Ã‚Â©, remboursÃƒÆ’Ã‚Â©
+  status        String   @default("en_attente") // en_attente, payÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©, ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©chouÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©, remboursÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©
   method        String?  // Mobile Money, Orange Money, carte, etc.
-  reference     String?  // rÃƒÆ’Ã‚Â©fÃƒÆ’Ã‚Â©rence de transaction
+  reference     String?  // rÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©fÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©rence de transaction
   clientId      String
   artisanId     String?
   missionId     String?
@@ -304,7 +305,7 @@ model Favorite {
   client    User     @relation(fields: [clientId], references: [id], onDelete: Cascade)
   artisan   Artisan  @relation(fields: [artisanId], references: [id], onDelete: Cascade)
 
-  @@unique([clientId, artisanId]) // un client ne peut pas favoriser 2 fois le mÃƒÆ’Ã‚Âªme artisan
+  @@unique([clientId, artisanId]) // un client ne peut pas favoriser 2 fois le mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âªme artisan
   @@index([clientId])
   @@index([artisanId])
 }
@@ -354,3 +355,4 @@ model Referral {
 
   @@index([referrerId])
 }
+

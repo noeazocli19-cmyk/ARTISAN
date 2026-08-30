@@ -77,17 +77,21 @@ export async function GET(request: NextRequest) {
 
     const artisans = await db.artisan.findMany({
       where,
-      include: { user: { select: { id: true, name: true, email: true, image: true, phone: true } } },
+      include: { user: { select: { id: true, name: true, email: true, image: true, phone: true, lastActiveAt: true } } },
     });
 
+    const ONLINE_THRESHOLD_MS = 5 * 60 * 1000;
     let results = artisans.map((artisan) => {
+      const isOnline = artisan.user?.lastActiveAt
+        ? (Date.now() - new Date(artisan.user.lastActiveAt).getTime()) < ONLINE_THRESHOLD_MS
+        : false;
       let distance = null;
       let distanceText = '';
       if (userLat !== null && userLng !== null && artisan.latitude !== null && artisan.longitude !== null) {
         distance = haversineDistance(userLat, userLng, artisan.latitude, artisan.longitude);
         distanceText = formatDistance(distance);
       }
-      return { ...artisan, distance, distanceText };
+      return { ...artisan, distance, distanceText, isOnline };
     });
 
     if (userLat !== null && userLng !== null && maxRadius > 0) {
@@ -119,5 +123,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Erreur lors de la recherche' }, { status: 500 });
   }
 }
+
 
 

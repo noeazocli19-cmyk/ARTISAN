@@ -2,6 +2,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { PageTransitionOverlay } from "@/components/page-transition-overlay";
+import { PresenceHeartbeat } from "@/components/presence-heartbeat";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { PwaRegister } from "@/components/pwa-register";
@@ -87,6 +88,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
         <PageTransitionOverlay />
+        <PresenceHeartbeat />
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
@@ -100,3 +102,4 @@ export default function RootLayout({
     </html>
   );
 }
+
