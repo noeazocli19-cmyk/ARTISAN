@@ -1,0 +1,682 @@
+diff --git a/src/app/dashboard/artisan/ArtisanDashboard.tsx b/src/app/dashboard/artisan/ArtisanDashboard.tsx
+index dc636f0..2969fa1 100644
+--- a/src/app/dashboard/artisan/ArtisanDashboard.tsx
++++ b/src/app/dashboard/artisan/ArtisanDashboard.tsx
+@@ -4,6 +4,11 @@ import { useState, useEffect } from 'react';
+ import Link from 'next/link';
+ import { authClient } from '@/lib/auth-client';
+ import { toast } from 'sonner';
++import { Card } from '@/components/ui/card';
++import { Badge } from '@/components/ui/badge';
++import { Progress } from '@/components/ui/progress';
++import { Skeleton } from '@/components/ui/skeleton';
++import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+ import {
+   MapPin, Phone, Briefcase, Clock, Star, CheckCircle, AlertCircle, Crosshair,
+   ClipboardList, MessageSquare, TrendingUp, Settings, Wrench, Hand,
+@@ -292,13 +297,14 @@ export function ArtisanDashboard() {
+       const res = await fetch(`/api/missions/${missionId}`, {
+         method: 'PATCH',
+         headers: { 'Content-Type': 'application/json' },
+-        body: JSON.stringify({ status: 'terminée' }),
++        body: JSON.stringify({ status: 'terminee_artisan' }),
+       });
+       if (res.ok) {
+-        setMissions((prev) => prev.map((m) => (m.id === missionId ? { ...m, status: 'terminée' } : m)));
+-        toast.success('Mission marquee comme terminee ! Le client peut maintenant laisser un avis.');
++        setMissions((prev) => prev.map((m) => (m.id === missionId ? { ...m, status: 'terminee_artisan' } : m)));
++        toast.success('Mission marquée comme terminée ! En attente de confirmation du client.');
+       } else {
+-        toast.error('Erreur lors de la mise a jour');
++        const data = await res.json().catch(() => ({}));
++        toast.error(data.error || 'Erreur lors de la mise a jour');
+       }
+     } catch (error) {
+       toast.error('Erreur reseau');
+@@ -378,8 +384,15 @@ export function ArtisanDashboard() {
+ 
+   if (loading) {
+     return (
+-      <div className="flex items-center justify-center min-h-[400px]">
+-        <div className="h-10 w-10 rounded-full border-4 border-amber-200 border-t-orange-600 animate-spin" />
++      <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
++        <Skeleton className="h-24 w-full rounded-2xl" />
++        <Skeleton className="h-10 w-full rounded-xl" />
++        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
++          {Array.from({ length: 4 }).map((_, i) => (
++            <Skeleton key={i} className="h-24 rounded-xl" />
++          ))}
++        </div>
++        <Skeleton className="h-56 w-full rounded-2xl" />
+       </div>
+     );
+   }
+@@ -387,7 +400,7 @@ export function ArtisanDashboard() {
+   const completion = profileCompletion();
+   const missing = missingFields();
+   const missionsOuvertes = missions.filter((m) => m.status === 'ouverte').length;
+-  const missionsTerminees = missions.filter((m) => m.status === 'terminée').length;
++  const missionsTerminees = missions.filter((m) => m.status === 'terminee').length;
+   const totalUnread = conversations.reduce((sum, c) => sum + (c.unreadCount || 0), 0);
+ 
+   return (
+@@ -406,15 +419,18 @@ export function ArtisanDashboard() {
+         <div className="absolute -right-6 -top-6 h-32 w-32 rounded-full bg-white/10" />
+         <div className="absolute -right-2 bottom-[-2rem] h-20 w-20 rounded-full bg-white/10" />
+         <div className="relative flex items-center gap-4">
+-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white/20 text-lg font-bold text-white ring-2 ring-white/40 backdrop-blur">
+-            {initialsOf(session?.user?.name)}
+-          </div>
+-          <div>
++          <Avatar className="h-14 w-14 shrink-0 ring-2 ring-white/40 backdrop-blur">
++            <AvatarImage src={session?.user?.image || undefined} alt={session?.user?.name || 'Artisan'} />
++            <AvatarFallback className="bg-white/20 text-lg font-bold text-white">
++              {initialsOf(session?.user?.name)}
++            </AvatarFallback>
++          </Avatar>
++          <div className="flex-1 min-w-0">
+             <h1 className="text-xl font-bold text-white sm:text-2xl flex items-center gap-2">
+               Bonjour {session?.user?.name?.split(' ')[0] || 'Artisan'}
+               <Hand className="h-5 w-5 sm:h-6 sm:w-6 text-white/90" />
+             </h1>
+-            <p className="text-sm text-amber-50/90 flex items-center gap-1.5">
++            <p className="text-sm text-amber-50/90 flex items-center gap-1.5 flex-wrap">
+               <Briefcase className="h-3.5 w-3.5" />
+               {artisanProfile?.profession || 'Métier non renseigné'}
+               {artisanProfile?.location && (
+@@ -426,6 +442,9 @@ export function ArtisanDashboard() {
+               )}
+             </p>
+           </div>
++          <Badge className="hidden sm:inline-flex shrink-0 bg-white/20 text-white border-white/30 hover:bg-white/25">
++            {artisanProfile?.rating ? `★ ${artisanProfile.rating.toFixed(1)}` : 'Nouveau'}
++          </Badge>
+         </div>
+       </div>
+ 
+@@ -466,12 +485,7 @@ export function ArtisanDashboard() {
+                   Profil complété à {completion}%
+                 </span>
+               </div>
+-              <div className="w-full bg-amber-200 rounded-full h-2 mb-2">
+-                <div
+-                  className="bg-gradient-to-r from-amber-500 to-orange-500 h-2 rounded-full transition-all"
+-                  style={{ width: `${completion}%` }}
+-                />
+-              </div>
++              <Progress value={completion} className="h-2 mb-2 [&>div]:bg-gradient-to-r [&>div]:from-amber-500 [&>div]:to-orange-500" />
+               <p className="text-sm text-amber-700 mb-3">
+                 Champs manquants : {missing.join(', ')}
+               </p>
+@@ -494,34 +508,46 @@ export function ArtisanDashboard() {
+           )}
+ 
+           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+-            <div className="bg-white border border-amber-100 rounded-xl p-4 shadow-sm">
++            <Card className="border-amber-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+               <div className="h-9 w-9 rounded-lg bg-amber-50 flex items-center justify-center mb-2">
+                 <ClipboardList className="h-4.5 w-4.5 text-amber-600" />
+               </div>
+-              <p className="text-2xl font-bold text-gray-900">{missionsLoading ? '–' : missionsOuvertes}</p>
++              {missionsLoading ? (
++                <Skeleton className="h-7 w-10 mb-1" />
++              ) : (
++                <p className="text-2xl font-bold text-gray-900">{missionsOuvertes}</p>
++              )}
+               <p className="text-xs text-muted-foreground">Missions ouvertes</p>
+-            </div>
+-            <div className="bg-white border border-amber-100 rounded-xl p-4 shadow-sm">
++            </Card>
++            <Card className="border-amber-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+               <div className="h-9 w-9 rounded-lg bg-green-50 flex items-center justify-center mb-2">
+                 <CheckCircle className="h-4.5 w-4.5 text-green-600" />
+               </div>
+-              <p className="text-2xl font-bold text-gray-900">{missionsLoading ? '–' : missionsTerminees}</p>
++              {missionsLoading ? (
++                <Skeleton className="h-7 w-10 mb-1" />
++              ) : (
++                <p className="text-2xl font-bold text-gray-900">{missionsTerminees}</p>
++              )}
+               <p className="text-xs text-muted-foreground">Missions terminées</p>
+-            </div>
+-            <div className="bg-white border border-amber-100 rounded-xl p-4 shadow-sm">
++            </Card>
++            <Card className="border-amber-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+               <div className="h-9 w-9 rounded-lg bg-orange-50 flex items-center justify-center mb-2">
+                 <Star className="h-4.5 w-4.5 text-orange-500" />
+               </div>
+               <p className="text-2xl font-bold text-gray-900">{artisanProfile?.rating?.toFixed(1) ?? '–'}</p>
+               <p className="text-xs text-muted-foreground">Note moyenne</p>
+-            </div>
+-            <div className="bg-white border border-amber-100 rounded-xl p-4 shadow-sm">
++            </Card>
++            <Card className="border-amber-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+               <div className="h-9 w-9 rounded-lg bg-blue-50 flex items-center justify-center mb-2">
+                 <MessageSquare className="h-4.5 w-4.5 text-blue-600" />
+               </div>
+-              <p className="text-2xl font-bold text-gray-900">{reviewsLoading ? '–' : reviews.length}</p>
++              {reviewsLoading ? (
++                <Skeleton className="h-7 w-10 mb-1" />
++              ) : (
++                <p className="text-2xl font-bold text-gray-900">{reviews.length}</p>
++              )}
+               <p className="text-xs text-muted-foreground">Avis reçus</p>
+-            </div>
++            </Card>
+           </div>
+ 
+           <div className="bg-white border border-amber-100 rounded-2xl p-6 shadow-sm">
+@@ -561,7 +587,7 @@ export function ArtisanDashboard() {
+                     </div>
+                     <span
+                       className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
+-                        m.status === 'terminée'
++                        m.status === 'terminee'
+                           ? 'bg-green-100 text-green-700'
+                           : 'bg-amber-100 text-amber-700'
+                       }`}
+@@ -583,9 +609,10 @@ export function ArtisanDashboard() {
+             Toutes mes missions
+           </h2>
+           {missionsLoading ? (
+-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+-              <Loader2 className="h-4 w-4 animate-spin" />
+-              Chargement...
++            <div className="space-y-3">
++              <Skeleton className="h-16 w-full rounded-lg" />
++              <Skeleton className="h-16 w-full rounded-lg" />
++              <Skeleton className="h-16 w-full rounded-lg" />
+             </div>
+           ) : missions.length === 0 ? (
+             <div className="text-center py-10 text-muted-foreground">
+@@ -599,7 +626,16 @@ export function ArtisanDashboard() {
+             </div>
+           ) : (
+             <ul className="divide-y">
+-              {missions.map((m) => (
++              {missions.map((m) => {
++                const missionStatusLabels: Record<string, string> = {
++                  ouverte: 'Ouverte',
++                  assignee: 'Assignée',
++                  en_cours: 'En cours',
++                  terminee_artisan: 'En attente du client',
++                  terminee: 'Terminée',
++                  annulee: 'Annulée',
++                };
++                return (
+                 <li key={m.id} className="py-3 flex items-center justify-between">
+                   <div>
+                     <p className="font-medium text-gray-900">{m.title}</p>
+@@ -610,12 +646,14 @@ export function ArtisanDashboard() {
+                   <div className="flex items-center gap-2">
+                     <span
+                       className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
+-                        m.status === 'terminée'
++                        m.status === 'terminee'
+                           ? 'bg-green-100 text-green-700'
++                          : m.status === 'terminee_artisan'
++                          ? 'bg-blue-100 text-blue-700'
+                           : 'bg-amber-100 text-amber-700'
+                       }`}
+                     >
+-                      {m.status}
++                      {missionStatusLabels[m.status] || m.status}
+                     </span>
+                     {(m as any).clientId && (
+                       <Link
+@@ -625,17 +663,18 @@ export function ArtisanDashboard() {
+                         Message
+                       </Link>
+                     )}
+-                    {m.status !== 'terminée' && (
++                    {(m.status === 'assignee' || m.status === 'en_cours') && (
+                       <button
+                         onClick={() => handleCompleteMission(m.id)}
+                         className="text-xs font-semibold px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 text-white hover:from-amber-600 hover:to-orange-700"
+                       >
+-                        Marquer terminee
++                        Marquer terminée
+                       </button>
+                     )}
+                   </div>
+                 </li>
+-              ))}
++                );
++              })}
+             </ul>
+           )}
+         </div>
+@@ -651,9 +690,10 @@ export function ArtisanDashboard() {
+             Missions publiees par des clients, pas encore prises par un artisan.
+           </p>
+           {openMissionsLoading ? (
+-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+-              <Loader2 className="h-4 w-4 animate-spin" />
+-              Chargement...
++            <div className="space-y-3">
++              <Skeleton className="h-16 w-full rounded-lg" />
++              <Skeleton className="h-16 w-full rounded-lg" />
++              <Skeleton className="h-16 w-full rounded-lg" />
+             </div>
+           ) : openMissions.length === 0 ? (
+             <div className="text-center py-10 text-muted-foreground">
+@@ -720,9 +760,10 @@ export function ArtisanDashboard() {
+             Demandes de rendez-vous envoyees directement par des clients.
+           </p>
+           {bookingsLoading ? (
+-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+-              <Loader2 className="h-4 w-4 animate-spin" />
+-              Chargement...
++            <div className="space-y-3">
++              <Skeleton className="h-16 w-full rounded-lg" />
++              <Skeleton className="h-16 w-full rounded-lg" />
++              <Skeleton className="h-16 w-full rounded-lg" />
+             </div>
+           ) : bookings.length === 0 ? (
+             <div className="text-center py-10 text-muted-foreground">
+@@ -823,9 +864,10 @@ export function ArtisanDashboard() {
+             </Link>
+           </div>
+           {conversationsLoading ? (
+-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+-              <Loader2 className="h-4 w-4 animate-spin" />
+-              Chargement...
++            <div className="space-y-3">
++              <Skeleton className="h-16 w-full rounded-lg" />
++              <Skeleton className="h-16 w-full rounded-lg" />
++              <Skeleton className="h-16 w-full rounded-lg" />
+             </div>
+           ) : conversations.length === 0 ? (
+             <div className="text-center py-10 text-muted-foreground">
+@@ -845,9 +887,11 @@ export function ArtisanDashboard() {
+                     href={`/messages?userId=${c.partnerId}`}
+                     className="flex items-center gap-3 py-3 hover:bg-gray-50 -mx-2 px-2 rounded-lg transition"
+                   >
+-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-orange-500 text-sm font-bold text-white">
+-                      {c.partner?.name?.charAt(0)?.toUpperCase() || '?'}
+-                    </div>
++                    <Avatar className="h-10 w-10 shrink-0">
++                      <AvatarFallback className="bg-gradient-to-br from-amber-400 to-orange-500 text-sm font-bold text-white">
++                        {c.partner?.name?.charAt(0)?.toUpperCase() || '?'}
++                      </AvatarFallback>
++                    </Avatar>
+                     <div className="flex-1 min-w-0">
+                       <p className="font-medium text-gray-900 text-sm truncate">
+                         {c.partner?.name || 'Client'}
+@@ -881,9 +925,10 @@ export function ArtisanDashboard() {
+             ) : null}
+           </h2>
+           {reviewsLoading ? (
+-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+-              <Loader2 className="h-4 w-4 animate-spin" />
+-              Chargement...
++            <div className="space-y-3">
++              <Skeleton className="h-16 w-full rounded-lg" />
++              <Skeleton className="h-16 w-full rounded-lg" />
++              <Skeleton className="h-16 w-full rounded-lg" />
+             </div>
+           ) : reviews.length === 0 ? (
+             <div className="text-center py-10 text-muted-foreground">
+@@ -898,29 +943,36 @@ export function ArtisanDashboard() {
+           ) : (
+             <ul className="divide-y">
+               {reviews.map((r) => (
+-                <li key={r.id} className="py-4">
+-                  <div className="flex items-center justify-between mb-1">
+-                    <p className="font-medium text-gray-900 text-sm">
+-                      {r.client?.name || 'Client'}
+-                    </p>
+-                    <div className="flex items-center gap-0.5">
+-                      {Array.from({ length: 5 }).map((_, i) => (
+-                        <Star
+-                          key={i}
+-                          className={`h-3.5 w-3.5 ${
+-                            i < r.rating ? 'fill-orange-400 text-orange-400' : 'text-gray-200'
+-                          }`}
+-                        />
+-                      ))}
++                <li key={r.id} className="py-4 flex gap-3">
++                  <Avatar className="h-9 w-9 shrink-0">
++                    <AvatarFallback className="bg-gradient-to-br from-amber-400 to-orange-500 text-white text-xs font-bold">
++                      {r.client?.name?.charAt(0)?.toUpperCase() || '?'}
++                    </AvatarFallback>
++                  </Avatar>
++                  <div className="flex-1 min-w-0">
++                    <div className="flex items-center justify-between mb-1">
++                      <p className="font-medium text-gray-900 text-sm">
++                        {r.client?.name || 'Client'}
++                      </p>
++                      <div className="flex items-center gap-0.5">
++                        {Array.from({ length: 5 }).map((_, i) => (
++                          <Star
++                            key={i}
++                            className={`h-3.5 w-3.5 ${
++                              i < r.rating ? 'fill-orange-400 text-orange-400' : 'text-gray-200'
++                            }`}
++                          />
++                        ))}
++                      </div>
+                     </div>
++                    {r.comment && (
++                      <p className="text-sm text-muted-foreground">{r.comment}</p>
++                    )}
++                    <p className="text-xs text-gray-400 mt-1">
++                      {new Date(r.createdAt).toLocaleDateString('fr-FR')}
++                      {r.mission?.title ? ` · ${r.mission.title}` : ''}
++                    </p>
+                   </div>
+-                  {r.comment && (
+-                    <p className="text-sm text-muted-foreground">{r.comment}</p>
+-                  )}
+-                  <p className="text-xs text-gray-400 mt-1">
+-                    {new Date(r.createdAt).toLocaleDateString('fr-FR')}
+-                    {r.mission?.title ? ` · ${r.mission.title}` : ''}
+-                  </p>
+                 </li>
+               ))}
+             </ul>
+@@ -938,12 +990,7 @@ export function ArtisanDashboard() {
+                   Profil complété à {completion}%
+                 </span>
+               </div>
+-              <div className="w-full bg-amber-200 rounded-full h-2 mb-2">
+-                <div
+-                  className="bg-gradient-to-r from-amber-500 to-orange-500 h-2 rounded-full transition-all"
+-                  style={{ width: `${completion}%` }}
+-                />
+-              </div>
++              <Progress value={completion} className="h-2 mb-2 [&>div]:bg-gradient-to-r [&>div]:from-amber-500 [&>div]:to-orange-500" />
+               <p className="text-sm text-amber-700">
+                 Champs manquants : {missing.join(', ')}
+               </p>
+diff --git a/src/app/dashboard/client/ClientDashboard.tsx b/src/app/dashboard/client/ClientDashboard.tsx
+index c1807de..71d50a9 100644
+--- a/src/app/dashboard/client/ClientDashboard.tsx
++++ b/src/app/dashboard/client/ClientDashboard.tsx
+@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
+ import Link from 'next/link'
+ import { ArrowLeftCircle } from 'lucide-react'
+ import { motion } from 'framer-motion'
++import { toast } from 'sonner'
+ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+ import { Badge } from '@/components/ui/badge'
+@@ -62,6 +63,7 @@ const STATUS_MAP: Record<string, { label: string; color: string }> = {
+   ouverte: { label: 'Ouverte', color: 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300' },
+   assignee: { label: 'Assignée', color: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300' },
+   en_cours: { label: 'En cours', color: 'bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300' },
++  terminee_artisan: { label: 'À confirmer', color: 'bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-300' },
+   terminee: { label: 'Terminée', color: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300' },
+   annulee: { label: 'Annulée', color: 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300' },
+ }
+@@ -108,7 +110,7 @@ export function ClientDashboard() {
+     if (!user) return
+     setLoadingReviews(true)
+     try {
+-      const res = await fetch(`/api/reviews?authorId=${user.id}`, {
++      const res = await fetch(`/api/reviews?clientId=${user.id}`, {
+         headers: token ? { Authorization: `Bearer ${token}` } : {},
+       })
+       const data = await res.json()
+@@ -173,8 +175,29 @@ export function ClientDashboard() {
+     fetchReviews()
+   }
+ 
++  const handleConfirmCompletion = async (mission: Mission) => {
++    try {
++      const res = await fetch(`/api/missions/${mission.id}`, {
++        method: 'PATCH',
++        headers: { 'Content-Type': 'application/json' },
++        body: JSON.stringify({ status: 'terminee' }),
++      })
++      const data = await res.json().catch(() => ({}))
++      if (res.ok) {
++        setMissions((prev) => prev.map((m) => (m.id === mission.id ? { ...m, status: 'terminee' as any } : m)))
++        toast.success('Mission confirmée ! Vous pouvez maintenant laisser un avis.')
++      } else {
++        toast.error(data.error || 'Impossible de confirmer la mission')
++      }
++    } catch {
++      toast.error('Erreur réseau')
++    }
++  }
++
++  const reviewedMissionIds = new Set(reviews.map((r: any) => r.missionId).filter(Boolean))
++
+   const ongoingMissions = missions.filter(m =>
+-    ['ouverte', 'assignee', 'en_cours', 'open', 'in_progress'].includes(m.status as string)
++    ['ouverte', 'assignee', 'en_cours', 'terminee_artisan', 'open', 'in_progress'].includes(m.status as string)
+   )
+   const completedMissions = missions.filter(m => (m.status as string) === 'terminee' || m.status === 'completed')
+   const uniqueArtisans = new Set(missions.filter(m => m.artisanId).map(m => m.artisanId)).size
+@@ -439,16 +462,38 @@ export function ClientDashboard() {
+                             </Link>
+                           </div>
+                         )}
++                        {mission.status === 'terminee_artisan' && (
++                          <div className="mt-3 pt-3 border-t border-sky-100 dark:border-sky-900">
++                            <p className="text-[11px] text-sky-700 dark:text-sky-300 mb-2 flex items-center gap-1.5">
++                              <CheckCircle2 className="h-3.5 w-3.5" />
++                              L'artisan indique avoir terminé.
++                            </p>
++                            <Button
++                              size="sm"
++                              className="w-full text-xs gap-1 bg-sky-600 hover:bg-sky-700 text-white"
++                              onClick={() => handleConfirmCompletion(mission)}
++                            >
++                              Confirmer la fin de la mission
++                            </Button>
++                          </div>
++                        )}
+                         {(mission.status === 'terminee' || mission.status === 'completed') && (
+-                          <Button
+-                            size="sm"
+-                            variant="outline"
+-                            className="w-full mt-3 text-xs gap-1 border-amber-200 dark:border-amber-800 text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/50"
+-                            onClick={() => handleLeaveReview(mission)}
+-                          >
+-                            <Star className="h-3 w-3" />
+-                            Laisser un avis
+-                          </Button>
++                          reviewedMissionIds.has(mission.id) ? (
++                            <div className="w-full mt-3 flex items-center justify-center gap-1.5 text-xs font-medium text-emerald-600 dark:text-emerald-400 py-1.5">
++                              <Star className="h-3 w-3 fill-emerald-500 text-emerald-500" />
++                              Avis envoyé, merci !
++                            </div>
++                          ) : (
++                            <Button
++                              size="sm"
++                              variant="outline"
++                              className="w-full mt-3 text-xs gap-1 border-amber-200 dark:border-amber-800 text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/50"
++                              onClick={() => handleLeaveReview(mission)}
++                            >
++                              <Star className="h-3 w-3" />
++                              Laisser un avis
++                            </Button>
++                          )
+                         )}
+                       </CardContent>
+                     </Card>
+@@ -637,7 +682,7 @@ export function ClientDashboard() {
+         <ReviewDialog
+           open={reviewDialogOpen}
+           onOpenChange={setReviewDialogOpen}
+-          artisanName={reviewMission.artisanId || 'Artisan'}
++          artisanName={(reviewMission as any).artisan?.user?.name || 'Artisan'}
+           missionTitle={reviewMission.title}
+           artisanId={reviewMission.artisanId || ''}
+           missionId={reviewMission.id}
+diff --git a/src/components/review-dialog.tsx b/src/components/review-dialog.tsx
+index f4d0b3e..9b974e8 100644
+--- a/src/components/review-dialog.tsx
++++ b/src/components/review-dialog.tsx
+@@ -95,28 +95,28 @@ export function ReviewDialog({
+     setIsSubmitting(true)
+ 
+     try {
+-      await onSubmit(rating, comment.trim())
++      const response = await fetch('/api/reviews', {
++        method: 'POST',
++        headers: { 'Content-Type': 'application/json' },
++        body: JSON.stringify({
++          rating,
++          comment: comment.trim(),
++          artisanId,
++          missionId,
++        }),
++      })
+ 
+-      try {
+-        const response = await fetch('/api/reviews', {
+-          method: 'POST',
+-          headers: { 'Content-Type': 'application/json' },
+-          body: JSON.stringify({
+-            rating,
+-            comment: comment.trim(),
+-            artisanId,
+-            missionId,
+-            authorId: '',
+-          }),
+-        })
++      const data = await response.json().catch(() => ({}))
+ 
+-        if (!response.ok) {
+-          throw new Error('Erreur lors de l\'envoi de l\'avis')
+-        }
+-      } catch {
+-        // The parent onSubmit is the primary handler; API call is supplementary
++      if (!response.ok) {
++        toast.error('Impossible d\'envoyer votre avis', {
++          description: data.error || 'Veuillez réessayer.',
++        })
++        return
+       }
+ 
++      await onSubmit(rating, comment.trim())
++
+       toast.success('Avis envoyé avec succès !', {
+         description: `Votre avis pour ${artisanName} a été enregistré.`,
+       })
+diff --git a/src/app/api/stats/route.ts b/src/app/api/stats/route.ts
+index bda4400..12efea5 100644
+--- a/src/app/api/stats/route.ts
++++ b/src/app/api/stats/route.ts
+@@ -28,7 +28,7 @@ export async function GET() {
+         db.message.count(),
+         db.notification.count(),
+         db.mission.count({ where: { status: 'ouverte' } }),
+-        db.mission.count({ where: { status: 'terminée' } }),
++        db.mission.count({ where: { status: 'terminee' } }),
+         db.user.count({ where: { isVerified: true } }),
+         db.artisan.count({ where: { badge: 'Élite' } }),
+         db.artisan.count({ where: { badge: 'Top' } }),
+diff --git a/src/app/api/missions/[id]/route.ts b/src/app/api/missions/[id]/route.ts
+index fe991e7..64b1ff9 100644
+--- a/src/app/api/missions/[id]/route.ts
++++ b/src/app/api/missions/[id]/route.ts
+@@ -47,7 +47,52 @@ export async function PATCH(
+     const body = await request.json();
+     const { status, artisanId } = body;
+ 
+-    // Get the artisan profile for this user
++    const existingMission = await db.mission.findUnique({ where: { id } });
++    if (!existingMission) {
++      return NextResponse.json({ error: 'Mission non trouvée' }, { status: 404 });
++    }
++
++    // The client who published the mission can only confirm the final completion,
++    // and only after the artisan has already marked their side as done.
++    if (status === 'terminee') {
++      if (existingMission.clientId !== session.user.id) {
++        return NextResponse.json(
++          { error: "Seul le client qui a publié la mission peut confirmer sa fin." },
++          { status: 403 }
++        );
++      }
++      if (existingMission.status !== 'terminee_artisan') {
++        return NextResponse.json(
++          { error: "L'artisan doit d'abord indiquer que la mission est terminée." },
++          { status: 400 }
++        );
++      }
++
++      const mission = await db.mission.update({
++        where: { id },
++        data: { status: 'terminee' },
++        include: {
++          client: { select: { id: true, name: true, image: true, location: true, phone: true } },
++          artisan: { include: { user: { select: { id: true, name: true, image: true } } } },
++        },
++      });
++
++      if (mission.artisan?.userId) {
++        await db.notification.create({
++          data: {
++            userId: mission.artisan.userId,
++            title: 'Mission confirmée par le client',
++            message: `Le client a confirmé la fin de la mission "${mission.title}". Elle compte maintenant dans vos missions terminées.`,
++            type: 'mission',
++            link: `/missions/${id}`,
++          },
++        });
++      }
++
++      return NextResponse.json({ mission });
++    }
++
++    // All other transitions (accepter, en cours, marquer terminée côté artisan) are done by the artisan
+     const artisan = await db.artisan.findUnique({
+       where: { userId: session.user.id },
+     });
+@@ -56,6 +101,13 @@ export async function PATCH(
+       return NextResponse.json({ error: 'Profil artisan non trouvé' }, { status: 404 });
+     }
+ 
++    if (status === 'terminee_artisan' && existingMission.artisanId !== artisan.id) {
++      return NextResponse.json(
++        { error: "Seul l'artisan assigné à cette mission peut la marquer comme terminée." },
++        { status: 403 }
++      );
++    }
++
+     const updateData: any = {};
+     if (status) updateData.status = status;
+     if (artisanId) {
+@@ -87,6 +139,18 @@ export async function PATCH(
+       });
+     }
+ 
++    if (status === 'terminee_artisan') {
++      await db.notification.create({
++        data: {
++          userId: mission.clientId,
++          title: 'Mission terminée par l\'artisan',
++          message: `L'artisan indique avoir terminé la mission "${mission.title}". Merci de confirmer pour pouvoir laisser un avis.`,
++          type: 'mission',
++          link: `/missions/${id}`,
++        },
++      });
++    }
++
+     return NextResponse.json({ mission });
+   } catch (error) {
+     console.error('Erreur mise à jour mission:', error);
+diff --git a/src/lib/types.ts b/src/lib/types.ts
+index aece887..84f0bfd 100644
+--- a/src/lib/types.ts
++++ b/src/lib/types.ts
+@@ -59,7 +59,13 @@ export type MissionStatus =
+   | "open"
+   | "in_progress"
+   | "completed"
+-  | "cancelled";
++  | "cancelled"
++  | "ouverte"
++  | "assignee"
++  | "en_cours"
++  | "terminee_artisan"
++  | "terminee"
++  | "annulee";
+ 
+ export type MissionCategory =
+   | "plumbing"

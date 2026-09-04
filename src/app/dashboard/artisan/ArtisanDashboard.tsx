@@ -4,6 +4,11 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { authClient } from '@/lib/auth-client';
 import { toast } from 'sonner';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   MapPin, Phone, Briefcase, Clock, Star, CheckCircle, AlertCircle, Crosshair,
   ClipboardList, MessageSquare, TrendingUp, Settings, Wrench, Hand,
@@ -292,13 +297,14 @@ export function ArtisanDashboard() {
       const res = await fetch(`/api/missions/${missionId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'terminée' }),
+        body: JSON.stringify({ status: 'terminee_artisan' }),
       });
       if (res.ok) {
-        setMissions((prev) => prev.map((m) => (m.id === missionId ? { ...m, status: 'terminée' } : m)));
-        toast.success('Mission marquee comme terminee ! Le client peut maintenant laisser un avis.');
+        setMissions((prev) => prev.map((m) => (m.id === missionId ? { ...m, status: 'terminee_artisan' } : m)));
+        toast.success('Mission marquée comme terminée ! En attente de confirmation du client.');
       } else {
-        toast.error('Erreur lors de la mise a jour');
+        const data = await res.json().catch(() => ({}));
+        toast.error(data.error || 'Erreur lors de la mise a jour');
       }
     } catch (error) {
       toast.error('Erreur reseau');
@@ -378,8 +384,15 @@ export function ArtisanDashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="h-10 w-10 rounded-full border-4 border-amber-200 border-t-orange-600 animate-spin" />
+      <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
+        <Skeleton className="h-24 w-full rounded-2xl" />
+        <Skeleton className="h-10 w-full rounded-xl" />
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="h-24 rounded-xl" />
+          ))}
+        </div>
+        <Skeleton className="h-56 w-full rounded-2xl" />
       </div>
     );
   }
@@ -387,7 +400,7 @@ export function ArtisanDashboard() {
   const completion = profileCompletion();
   const missing = missingFields();
   const missionsOuvertes = missions.filter((m) => m.status === 'ouverte').length;
-  const missionsTerminees = missions.filter((m) => m.status === 'terminée').length;
+  const missionsTerminees = missions.filter((m) => m.status === 'terminee').length;
   const totalUnread = conversations.reduce((sum, c) => sum + (c.unreadCount || 0), 0);
 
   return (
@@ -406,15 +419,18 @@ export function ArtisanDashboard() {
         <div className="absolute -right-6 -top-6 h-32 w-32 rounded-full bg-white/10" />
         <div className="absolute -right-2 bottom-[-2rem] h-20 w-20 rounded-full bg-white/10" />
         <div className="relative flex items-center gap-4">
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white/20 text-lg font-bold text-white ring-2 ring-white/40 backdrop-blur">
-            {initialsOf(session?.user?.name)}
-          </div>
-          <div>
+          <Avatar className="h-14 w-14 shrink-0 ring-2 ring-white/40 backdrop-blur">
+            <AvatarImage src={session?.user?.image || undefined} alt={session?.user?.name || 'Artisan'} />
+            <AvatarFallback className="bg-white/20 text-lg font-bold text-white">
+              {initialsOf(session?.user?.name)}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex-1 min-w-0">
             <h1 className="text-xl font-bold text-white sm:text-2xl flex items-center gap-2">
               Bonjour {session?.user?.name?.split(' ')[0] || 'Artisan'}
               <Hand className="h-5 w-5 sm:h-6 sm:w-6 text-white/90" />
             </h1>
-            <p className="text-sm text-amber-50/90 flex items-center gap-1.5">
+            <p className="text-sm text-amber-50/90 flex items-center gap-1.5 flex-wrap">
               <Briefcase className="h-3.5 w-3.5" />
               {artisanProfile?.profession || 'Métier non renseigné'}
               {artisanProfile?.location && (
@@ -426,6 +442,9 @@ export function ArtisanDashboard() {
               )}
             </p>
           </div>
+          <Badge className="hidden sm:inline-flex shrink-0 bg-white/20 text-white border-white/30 hover:bg-white/25">
+            {artisanProfile?.rating ? `★ ${artisanProfile.rating.toFixed(1)}` : 'Nouveau'}
+          </Badge>
         </div>
       </div>
 
@@ -466,12 +485,7 @@ export function ArtisanDashboard() {
                   Profil complété à {completion}%
                 </span>
               </div>
-              <div className="w-full bg-amber-200 rounded-full h-2 mb-2">
-                <div
-                  className="bg-gradient-to-r from-amber-500 to-orange-500 h-2 rounded-full transition-all"
-                  style={{ width: `${completion}%` }}
-                />
-              </div>
+              <Progress value={completion} className="h-2 mb-2 [&>div]:bg-gradient-to-r [&>div]:from-amber-500 [&>div]:to-orange-500" />
               <p className="text-sm text-amber-700 mb-3">
                 Champs manquants : {missing.join(', ')}
               </p>
@@ -494,34 +508,46 @@ export function ArtisanDashboard() {
           )}
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-            <div className="bg-white border border-amber-100 rounded-xl p-4 shadow-sm">
+            <Card className="border-amber-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
               <div className="h-9 w-9 rounded-lg bg-amber-50 flex items-center justify-center mb-2">
                 <ClipboardList className="h-4.5 w-4.5 text-amber-600" />
               </div>
-              <p className="text-2xl font-bold text-gray-900">{missionsLoading ? '–' : missionsOuvertes}</p>
+              {missionsLoading ? (
+                <Skeleton className="h-7 w-10 mb-1" />
+              ) : (
+                <p className="text-2xl font-bold text-gray-900">{missionsOuvertes}</p>
+              )}
               <p className="text-xs text-muted-foreground">Missions ouvertes</p>
-            </div>
-            <div className="bg-white border border-amber-100 rounded-xl p-4 shadow-sm">
+            </Card>
+            <Card className="border-amber-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
               <div className="h-9 w-9 rounded-lg bg-green-50 flex items-center justify-center mb-2">
                 <CheckCircle className="h-4.5 w-4.5 text-green-600" />
               </div>
-              <p className="text-2xl font-bold text-gray-900">{missionsLoading ? '–' : missionsTerminees}</p>
+              {missionsLoading ? (
+                <Skeleton className="h-7 w-10 mb-1" />
+              ) : (
+                <p className="text-2xl font-bold text-gray-900">{missionsTerminees}</p>
+              )}
               <p className="text-xs text-muted-foreground">Missions terminées</p>
-            </div>
-            <div className="bg-white border border-amber-100 rounded-xl p-4 shadow-sm">
+            </Card>
+            <Card className="border-amber-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
               <div className="h-9 w-9 rounded-lg bg-orange-50 flex items-center justify-center mb-2">
                 <Star className="h-4.5 w-4.5 text-orange-500" />
               </div>
               <p className="text-2xl font-bold text-gray-900">{artisanProfile?.rating?.toFixed(1) ?? '–'}</p>
               <p className="text-xs text-muted-foreground">Note moyenne</p>
-            </div>
-            <div className="bg-white border border-amber-100 rounded-xl p-4 shadow-sm">
+            </Card>
+            <Card className="border-amber-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
               <div className="h-9 w-9 rounded-lg bg-blue-50 flex items-center justify-center mb-2">
                 <MessageSquare className="h-4.5 w-4.5 text-blue-600" />
               </div>
-              <p className="text-2xl font-bold text-gray-900">{reviewsLoading ? '–' : reviews.length}</p>
+              {reviewsLoading ? (
+                <Skeleton className="h-7 w-10 mb-1" />
+              ) : (
+                <p className="text-2xl font-bold text-gray-900">{reviews.length}</p>
+              )}
               <p className="text-xs text-muted-foreground">Avis reçus</p>
-            </div>
+            </Card>
           </div>
 
           <div className="bg-white border border-amber-100 rounded-2xl p-6 shadow-sm">
@@ -561,7 +587,7 @@ export function ArtisanDashboard() {
                     </div>
                     <span
                       className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
-                        m.status === 'terminée'
+                        m.status === 'terminee'
                           ? 'bg-green-100 text-green-700'
                           : 'bg-amber-100 text-amber-700'
                       }`}
@@ -583,9 +609,10 @@ export function ArtisanDashboard() {
             Toutes mes missions
           </h2>
           {missionsLoading ? (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Chargement...
+            <div className="space-y-3">
+              <Skeleton className="h-16 w-full rounded-lg" />
+              <Skeleton className="h-16 w-full rounded-lg" />
+              <Skeleton className="h-16 w-full rounded-lg" />
             </div>
           ) : missions.length === 0 ? (
             <div className="text-center py-10 text-muted-foreground">
@@ -599,7 +626,16 @@ export function ArtisanDashboard() {
             </div>
           ) : (
             <ul className="divide-y">
-              {missions.map((m) => (
+              {missions.map((m) => {
+                const missionStatusLabels: Record<string, string> = {
+                  ouverte: 'Ouverte',
+                  assignee: 'Assignée',
+                  en_cours: 'En cours',
+                  terminee_artisan: 'En attente du client',
+                  terminee: 'Terminée',
+                  annulee: 'Annulée',
+                };
+                return (
                 <li key={m.id} className="py-3 flex items-center justify-between">
                   <div>
                     <p className="font-medium text-gray-900">{m.title}</p>
@@ -610,12 +646,14 @@ export function ArtisanDashboard() {
                   <div className="flex items-center gap-2">
                     <span
                       className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
-                        m.status === 'terminée'
+                        m.status === 'terminee'
                           ? 'bg-green-100 text-green-700'
+                          : m.status === 'terminee_artisan'
+                          ? 'bg-blue-100 text-blue-700'
                           : 'bg-amber-100 text-amber-700'
                       }`}
                     >
-                      {m.status}
+                      {missionStatusLabels[m.status] || m.status}
                     </span>
                     {(m as any).clientId && (
                       <Link
@@ -625,17 +663,18 @@ export function ArtisanDashboard() {
                         Message
                       </Link>
                     )}
-                    {m.status !== 'terminée' && (
+                    {(m.status === 'assignee' || m.status === 'en_cours') && (
                       <button
                         onClick={() => handleCompleteMission(m.id)}
                         className="text-xs font-semibold px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 text-white hover:from-amber-600 hover:to-orange-700"
                       >
-                        Marquer terminee
+                        Marquer terminée
                       </button>
                     )}
                   </div>
                 </li>
-              ))}
+                );
+              })}
             </ul>
           )}
         </div>
@@ -651,9 +690,10 @@ export function ArtisanDashboard() {
             Missions publiees par des clients, pas encore prises par un artisan.
           </p>
           {openMissionsLoading ? (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Chargement...
+            <div className="space-y-3">
+              <Skeleton className="h-16 w-full rounded-lg" />
+              <Skeleton className="h-16 w-full rounded-lg" />
+              <Skeleton className="h-16 w-full rounded-lg" />
             </div>
           ) : openMissions.length === 0 ? (
             <div className="text-center py-10 text-muted-foreground">
@@ -720,9 +760,10 @@ export function ArtisanDashboard() {
             Demandes de rendez-vous envoyees directement par des clients.
           </p>
           {bookingsLoading ? (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Chargement...
+            <div className="space-y-3">
+              <Skeleton className="h-16 w-full rounded-lg" />
+              <Skeleton className="h-16 w-full rounded-lg" />
+              <Skeleton className="h-16 w-full rounded-lg" />
             </div>
           ) : bookings.length === 0 ? (
             <div className="text-center py-10 text-muted-foreground">
@@ -823,9 +864,10 @@ export function ArtisanDashboard() {
             </Link>
           </div>
           {conversationsLoading ? (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Chargement...
+            <div className="space-y-3">
+              <Skeleton className="h-16 w-full rounded-lg" />
+              <Skeleton className="h-16 w-full rounded-lg" />
+              <Skeleton className="h-16 w-full rounded-lg" />
             </div>
           ) : conversations.length === 0 ? (
             <div className="text-center py-10 text-muted-foreground">
@@ -845,9 +887,11 @@ export function ArtisanDashboard() {
                     href={`/messages?userId=${c.partnerId}`}
                     className="flex items-center gap-3 py-3 hover:bg-gray-50 -mx-2 px-2 rounded-lg transition"
                   >
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-orange-500 text-sm font-bold text-white">
-                      {c.partner?.name?.charAt(0)?.toUpperCase() || '?'}
-                    </div>
+                    <Avatar className="h-10 w-10 shrink-0">
+                      <AvatarFallback className="bg-gradient-to-br from-amber-400 to-orange-500 text-sm font-bold text-white">
+                        {c.partner?.name?.charAt(0)?.toUpperCase() || '?'}
+                      </AvatarFallback>
+                    </Avatar>
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-gray-900 text-sm truncate">
                         {c.partner?.name || 'Client'}
@@ -881,9 +925,10 @@ export function ArtisanDashboard() {
             ) : null}
           </h2>
           {reviewsLoading ? (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Chargement...
+            <div className="space-y-3">
+              <Skeleton className="h-16 w-full rounded-lg" />
+              <Skeleton className="h-16 w-full rounded-lg" />
+              <Skeleton className="h-16 w-full rounded-lg" />
             </div>
           ) : reviews.length === 0 ? (
             <div className="text-center py-10 text-muted-foreground">
@@ -898,29 +943,36 @@ export function ArtisanDashboard() {
           ) : (
             <ul className="divide-y">
               {reviews.map((r) => (
-                <li key={r.id} className="py-4">
-                  <div className="flex items-center justify-between mb-1">
-                    <p className="font-medium text-gray-900 text-sm">
-                      {r.client?.name || 'Client'}
-                    </p>
-                    <div className="flex items-center gap-0.5">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`h-3.5 w-3.5 ${
-                            i < r.rating ? 'fill-orange-400 text-orange-400' : 'text-gray-200'
-                          }`}
-                        />
-                      ))}
+                <li key={r.id} className="py-4 flex gap-3">
+                  <Avatar className="h-9 w-9 shrink-0">
+                    <AvatarFallback className="bg-gradient-to-br from-amber-400 to-orange-500 text-white text-xs font-bold">
+                      {r.client?.name?.charAt(0)?.toUpperCase() || '?'}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-1">
+                      <p className="font-medium text-gray-900 text-sm">
+                        {r.client?.name || 'Client'}
+                      </p>
+                      <div className="flex items-center gap-0.5">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`h-3.5 w-3.5 ${
+                              i < r.rating ? 'fill-orange-400 text-orange-400' : 'text-gray-200'
+                            }`}
+                          />
+                        ))}
+                      </div>
                     </div>
+                    {r.comment && (
+                      <p className="text-sm text-muted-foreground">{r.comment}</p>
+                    )}
+                    <p className="text-xs text-gray-400 mt-1">
+                      {new Date(r.createdAt).toLocaleDateString('fr-FR')}
+                      {r.mission?.title ? ` · ${r.mission.title}` : ''}
+                    </p>
                   </div>
-                  {r.comment && (
-                    <p className="text-sm text-muted-foreground">{r.comment}</p>
-                  )}
-                  <p className="text-xs text-gray-400 mt-1">
-                    {new Date(r.createdAt).toLocaleDateString('fr-FR')}
-                    {r.mission?.title ? ` · ${r.mission.title}` : ''}
-                  </p>
                 </li>
               ))}
             </ul>
@@ -938,12 +990,7 @@ export function ArtisanDashboard() {
                   Profil complété à {completion}%
                 </span>
               </div>
-              <div className="w-full bg-amber-200 rounded-full h-2 mb-2">
-                <div
-                  className="bg-gradient-to-r from-amber-500 to-orange-500 h-2 rounded-full transition-all"
-                  style={{ width: `${completion}%` }}
-                />
-              </div>
+              <Progress value={completion} className="h-2 mb-2 [&>div]:bg-gradient-to-r [&>div]:from-amber-500 [&>div]:to-orange-500" />
               <p className="text-sm text-amber-700">
                 Champs manquants : {missing.join(', ')}
               </p>
@@ -1105,15 +1152,3 @@ export function ArtisanDashboard() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-

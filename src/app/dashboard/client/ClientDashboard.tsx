@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { ArrowLeftCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { toast } from 'sonner'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -62,6 +63,7 @@ const STATUS_MAP: Record<string, { label: string; color: string }> = {
   ouverte: { label: 'Ouverte', color: 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300' },
   assignee: { label: 'Assignée', color: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300' },
   en_cours: { label: 'En cours', color: 'bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300' },
+  terminee_artisan: { label: 'À confirmer', color: 'bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-300' },
   terminee: { label: 'Terminée', color: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300' },
   annulee: { label: 'Annulée', color: 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300' },
 }
@@ -108,7 +110,7 @@ export function ClientDashboard() {
     if (!user) return
     setLoadingReviews(true)
     try {
-      const res = await fetch(`/api/reviews?authorId=${user.id}`, {
+      const res = await fetch(`/api/reviews?clientId=${user.id}`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       })
       const data = await res.json()
@@ -173,8 +175,29 @@ export function ClientDashboard() {
     fetchReviews()
   }
 
+  const handleConfirmCompletion = async (mission: Mission) => {
+    try {
+      const res = await fetch(`/api/missions/${mission.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'terminee' }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (res.ok) {
+        setMissions((prev) => prev.map((m) => (m.id === mission.id ? { ...m, status: 'terminee' as any } : m)))
+        toast.success('Mission confirmée ! Vous pouvez maintenant laisser un avis.')
+      } else {
+        toast.error(data.error || 'Impossible de confirmer la mission')
+      }
+    } catch {
+      toast.error('Erreur réseau')
+    }
+  }
+
+  const reviewedMissionIds = new Set(reviews.map((r: any) => r.missionId).filter(Boolean))
+
   const ongoingMissions = missions.filter(m =>
-    ['ouverte', 'assignee', 'en_cours', 'open', 'in_progress'].includes(m.status as string)
+    ['ouverte', 'assignee', 'en_cours', 'terminee_artisan', 'open', 'in_progress'].includes(m.status as string)
   )
   const completedMissions = missions.filter(m => (m.status as string) === 'terminee' || m.status === 'completed')
   const uniqueArtisans = new Set(missions.filter(m => m.artisanId).map(m => m.artisanId)).size
@@ -439,16 +462,38 @@ export function ClientDashboard() {
                             </Link>
                           </div>
                         )}
+                        {mission.status === 'terminee_artisan' && (
+                          <div className="mt-3 pt-3 border-t border-sky-100 dark:border-sky-900">
+                            <p className="text-[11px] text-sky-700 dark:text-sky-300 mb-2 flex items-center gap-1.5">
+                              <CheckCircle2 className="h-3.5 w-3.5" />
+                              L'artisan indique avoir terminé.
+                            </p>
+                            <Button
+                              size="sm"
+                              className="w-full text-xs gap-1 bg-sky-600 hover:bg-sky-700 text-white"
+                              onClick={() => handleConfirmCompletion(mission)}
+                            >
+                              Confirmer la fin de la mission
+                            </Button>
+                          </div>
+                        )}
                         {(mission.status === 'terminee' || mission.status === 'completed') && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="w-full mt-3 text-xs gap-1 border-amber-200 dark:border-amber-800 text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/50"
-                            onClick={() => handleLeaveReview(mission)}
-                          >
-                            <Star className="h-3 w-3" />
-                            Laisser un avis
-                          </Button>
+                          reviewedMissionIds.has(mission.id) ? (
+                            <div className="w-full mt-3 flex items-center justify-center gap-1.5 text-xs font-medium text-emerald-600 dark:text-emerald-400 py-1.5">
+                              <Star className="h-3 w-3 fill-emerald-500 text-emerald-500" />
+                              Avis envoyé, merci !
+                            </div>
+                          ) : (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="w-full mt-3 text-xs gap-1 border-amber-200 dark:border-amber-800 text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/50"
+                              onClick={() => handleLeaveReview(mission)}
+                            >
+                              <Star className="h-3 w-3" />
+                              Laisser un avis
+                            </Button>
+                          )
                         )}
                       </CardContent>
                     </Card>
@@ -637,7 +682,7 @@ export function ClientDashboard() {
         <ReviewDialog
           open={reviewDialogOpen}
           onOpenChange={setReviewDialogOpen}
-          artisanName={reviewMission.artisanId || 'Artisan'}
+          artisanName={(reviewMission as any).artisan?.user?.name || 'Artisan'}
           missionTitle={reviewMission.title}
           artisanId={reviewMission.artisanId || ''}
           missionId={reviewMission.id}
@@ -647,4 +692,3 @@ export function ClientDashboard() {
     </div>
   )
 }
-

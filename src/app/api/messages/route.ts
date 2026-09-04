@@ -50,14 +50,14 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { content, receiverId, missionId } = body;
+    const { content, receiverId, missionId, type } = body;
 
     if (!content || !receiverId) {
       return NextResponse.json({ error: 'Contenu et receiverId sont requis' }, { status: 400 });
     }
 
     const message = await db.message.create({
-      data: { content, senderId: session.user.id, receiverId, missionId: missionId || null },
+      data: { content, type: type === 'audio' ? 'audio' : 'text', senderId: session.user.id, receiverId, missionId: missionId || null },
       include: {
         sender: { select: { id: true, name: true, image: true } },
         receiver: { select: { id: true, name: true, image: true } },
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
       data: {
         userId: receiverId,
         title: 'Nouveau message',
-        message: `${session.user.name} vous a envoyé un message`,
+        message: type === 'audio' ? `${session.user.name} vous a envoyé un message vocal` : `${session.user.name} vous a envoyé un message`,
         type: 'message',
         link: missionId ? `/missions/${missionId}` : null,
       },

@@ -225,6 +225,7 @@ model Review {
 model Message {
   id         String   @id @default(cuid())
   content    String
+  type       String   @default("text")
   senderId   String
   receiverId String
   missionId  String?
@@ -355,4 +356,3 @@ model Referral {
 
   @@index([referrerId])
 }
-

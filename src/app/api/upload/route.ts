@@ -10,7 +10,8 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
     const base64Data = buffer.toString('base64')
-    const dataUri = `data:${file.type};base64,${base64Data}`
+    const cleanMimeType = type === 'audio' ? 'video/webm' : (file.type.split(';')[0] || 'application/octet-stream')
+    const dataUri = `data:${cleanMimeType};base64,${base64Data}`
     const cloudName = process.env.CLOUDINARY_CLOUD_NAME
     const apiKey = process.env.CLOUDINARY_API_KEY
     const apiSecret = process.env.CLOUDINARY_API_SECRET
@@ -20,7 +21,8 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       )
     }
-    const uploadFolder = type === 'avatars' ? 'artisan_avatars' : 'artisan_portfolio'
+    const uploadFolder = type === 'avatars' ? 'artisan_avatars' : type === 'audio' ? 'artisan_voice_messages' : 'artisan_portfolio'
+    const resourceType = type === 'audio' ? 'video' : 'image'
     const timestamp = Math.round(new Date().getTime() / 1000)
     const crypto = await import('crypto')
     const paramsToSign = `folder=${uploadFolder}&overwrite=true&timestamp=${timestamp}`
@@ -33,7 +35,7 @@ export async function POST(request: NextRequest) {
     cloudinaryFormData.append('signature', signature)
     cloudinaryFormData.append('overwrite', 'true')
     const cloudinaryRes = await fetch(
-      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+      `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`,
       { method: 'POST', body: cloudinaryFormData }
     )
     if (!cloudinaryRes.ok) {
@@ -48,10 +50,10 @@ export async function POST(request: NextRequest) {
       publicId: cloudinaryData.public_id,
       width: cloudinaryData.width,
       height: cloudinaryData.height,
+      duration: cloudinaryData.duration,
     })
   } catch (error) {
     console.error('Upload error DETAILS:', (error as any)?.message || error)
     return NextResponse.json({ error: (error as any)?.message || 'Upload failed' }, { status: 500 })
   }
 }
-

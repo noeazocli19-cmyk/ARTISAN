@@ -59,7 +59,13 @@ export type MissionStatus =
   | "open"
   | "in_progress"
   | "completed"
-  | "cancelled";
+  | "cancelled"
+  | "ouverte"
+  | "assignee"
+  | "en_cours"
+  | "terminee_artisan"
+  | "terminee"
+  | "annulee";
 
 export type MissionCategory =
   | "plumbing"

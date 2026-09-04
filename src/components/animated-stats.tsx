@@ -594,14 +594,7 @@ export function AnimatedStats() {
           />
         </div>
 
-        {/* Charts row */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <BarChart inView={isInView} />
-          <DonutChart inView={isInView} />
-        </div>
-
-        {/* Line chart - full width */}
-        <LineChart inView={isInView} />
+        {/* Charts row removed — replaced by illustrations in the "Comment ça marche" section */}
 
         {/* Comparison cards */}
         <ComparisonCards inView={isInView} />

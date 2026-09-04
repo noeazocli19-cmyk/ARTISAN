@@ -28,7 +28,7 @@ export async function GET() {
         db.message.count(),
         db.notification.count(),
         db.mission.count({ where: { status: 'ouverte' } }),
-        db.mission.count({ where: { status: 'terminée' } }),
+        db.mission.count({ where: { status: 'terminee' } }),
         db.user.count({ where: { isVerified: true } }),
         db.artisan.count({ where: { badge: 'Élite' } }),
         db.artisan.count({ where: { badge: 'Top' } }),

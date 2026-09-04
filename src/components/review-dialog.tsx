@@ -95,27 +95,27 @@ export function ReviewDialog({
     setIsSubmitting(true)
 
     try {
-      await onSubmit(rating, comment.trim())
+      const response = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          rating,
+          comment: comment.trim(),
+          artisanId,
+          missionId,
+        }),
+      })
 
-      try {
-        const response = await fetch('/api/reviews', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            rating,
-            comment: comment.trim(),
-            artisanId,
-            missionId,
-            authorId: '',
-          }),
+      const data = await response.json().catch(() => ({}))
+
+      if (!response.ok) {
+        toast.error('Impossible d\'envoyer votre avis', {
+          description: data.error || 'Veuillez réessayer.',
         })
-
-        if (!response.ok) {
-          throw new Error('Erreur lors de l\'envoi de l\'avis')
-        }
-      } catch {
-        // The parent onSubmit is the primary handler; API call is supplementary
+        return
       }
+
+      await onSubmit(rating, comment.trim())
 
       toast.success('Avis envoyé avec succès !', {
         description: `Votre avis pour ${artisanName} a été enregistré.`,

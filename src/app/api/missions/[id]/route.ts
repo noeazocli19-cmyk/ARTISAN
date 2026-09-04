@@ -47,13 +47,65 @@ export async function PATCH(
     const body = await request.json();
     const { status, artisanId } = body;
 
-    // Get the artisan profile for this user
+    const existingMission = await db.mission.findUnique({ where: { id } });
+    if (!existingMission) {
+      return NextResponse.json({ error: 'Mission non trouvée' }, { status: 404 });
+    }
+
+    // The client who published the mission can only confirm the final completion,
+    // and only after the artisan has already marked their side as done.
+    if (status === 'terminee') {
+      if (existingMission.clientId !== session.user.id) {
+        return NextResponse.json(
+          { error: "Seul le client qui a publié la mission peut confirmer sa fin." },
+          { status: 403 }
+        );
+      }
+      if (existingMission.status !== 'terminee_artisan') {
+        return NextResponse.json(
+          { error: "L'artisan doit d'abord indiquer que la mission est terminée." },
+          { status: 400 }
+        );
+      }
+
+      const mission = await db.mission.update({
+        where: { id },
+        data: { status: 'terminee' },
+        include: {
+          client: { select: { id: true, name: true, image: true, location: true, phone: true } },
+          artisan: { include: { user: { select: { id: true, name: true, image: true } } } },
+        },
+      });
+
+      if (mission.artisan?.userId) {
+        await db.notification.create({
+          data: {
+            userId: mission.artisan.userId,
+            title: 'Mission confirmée par le client',
+            message: `Le client a confirmé la fin de la mission "${mission.title}". Elle compte maintenant dans vos missions terminées.`,
+            type: 'mission',
+            link: `/missions/${id}`,
+          },
+        });
+      }
+
+      return NextResponse.json({ mission });
+    }
+
+    // All other transitions (accepter, en cours, marquer terminée côté artisan) are done by the artisan
     const artisan = await db.artisan.findUnique({
       where: { userId: session.user.id },
     });
 
     if (!artisan) {
       return NextResponse.json({ error: 'Profil artisan non trouvé' }, { status: 404 });
+    }
+
+    if (status === 'terminee_artisan' && existingMission.artisanId !== artisan.id) {
+      return NextResponse.json(
+        { error: "Seul l'artisan assigné à cette mission peut la marquer comme terminée." },
+        { status: 403 }
+      );
     }
 
     const updateData: any = {};
@@ -81,6 +133,18 @@ export async function PATCH(
           userId: mission.clientId,
           title: 'Mission acceptée',
           message: `Un artisan a accepté votre mission "${mission.title}"`,
+          type: 'mission',
+          link: `/missions/${id}`,
+        },
+      });
+    }
+
+    if (status === 'terminee_artisan') {
+      await db.notification.create({
+        data: {
+          userId: mission.clientId,
+          title: 'Mission terminée par l\'artisan',
+          message: `L'artisan indique avoir terminé la mission "${mission.title}". Merci de confirmer pour pouvoir laisser un avis.`,
           type: 'mission',
           link: `/missions/${id}`,
         },

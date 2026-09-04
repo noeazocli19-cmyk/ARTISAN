@@ -33,7 +33,10 @@ import {
   ClipboardList,
   Siren,
   Gift,
+  LogIn,
+  UserPlus,
 } from 'lucide-react'
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip'
 
 interface NavbarProps {
   onOpenAuth: (tab?: 'login' | 'register') => void
@@ -260,19 +263,33 @@ export function Navbar({ onOpenAuth, onSearch }: NavbarProps) {
             </DropdownMenu>
           ) : (
             <>
-              <Button
-                variant="ghost"
-                className="hidden sm:inline-flex text-sm"
-                onClick={() => window.location.href='/login'}
-              >
-                Se connecter
-              </Button>
-              <Button
-                className="hidden sm:inline-flex bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 text-sm"
-                onClick={() => window.location.href='/register'}
-              >
-                S&apos;inscrire
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="hidden sm:inline-flex text-sm gap-1.5"
+                      onClick={() => window.location.href='/login'}
+                    >
+                      <LogIn className="h-4 w-4" />
+                      Se connecter
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Déjà inscrit ? Accédez à votre compte</TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      className="hidden sm:inline-flex bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 text-sm gap-1.5"
+                      onClick={() => window.location.href='/register'}
+                    >
+                      <UserPlus className="h-4 w-4" />
+                      S&apos;inscrire
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Créez un compte gratuit, client ou artisan</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </>
           )}
 
@@ -399,16 +416,24 @@ export function Navbar({ onOpenAuth, onSearch }: NavbarProps) {
                 <>
                   <Button
                     variant="ghost"
-                    className="justify-start text-sm"
+                    className="justify-start text-sm gap-1.5 h-auto py-2"
                     onClick={() => { window.location.href='/login'; setMobileMenuOpen(false) }}
                   >
-                    Se connecter
+                    <LogIn className="h-4 w-4 shrink-0" />
+                    <span className="flex flex-col items-start leading-tight">
+                      <span>Se connecter</span>
+                      <span className="text-[11px] font-normal text-muted-foreground">Déjà inscrit ? Accédez à votre compte</span>
+                    </span>
                   </Button>
                   <Button
-                    className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 text-sm"
+                    className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 text-sm gap-1.5 h-auto py-2 justify-start"
                     onClick={() => { window.location.href='/register'; setMobileMenuOpen(false) }}
                   >
-                    S&apos;inscrire
+                    <UserPlus className="h-4 w-4 shrink-0" />
+                    <span className="flex flex-col items-start leading-tight">
+                      <span>S&apos;inscrire</span>
+                      <span className="text-[11px] font-normal text-white/80">Compte gratuit, client ou artisan</span>
+                    </span>
                   </Button>
                 </>
               ) : (

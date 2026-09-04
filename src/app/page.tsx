@@ -532,8 +532,19 @@ const staggerContainer = {
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Landing Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: 'login' | 'register') => void; onSearch: (query: string, location: string) => void; onViewMap: () => void }) {
+  const router = useRouter()
   const [searchQuery, setSearchQuery] = useState("")
   const [searchLocation, setSearchLocation] = useState("")
+  const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>({})
+
+  useEffect(() => {
+    fetch('/api/categories/counts')
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.counts) setCategoryCounts(data.counts)
+      })
+      .catch(() => {})
+  }, [])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -544,10 +555,22 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
 
   return (
     <>
-      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ HERO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ────────── HERO ────────── */}
       <section className="relative pt-28 pb-10 sm:pt-36 sm:pb-16 overflow-hidden">
+        {/* Video background */}
+        <div className="absolute inset-0 w-full h-full overflow-hidden">
+          <video
+            src="/artisan-connect-v2.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover opacity-20"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/95 to-background" />
+        </div>
 
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             {/* Left: Text content */}
             <motion.div initial="hidden" animate="visible" variants={staggerContainer}>
@@ -631,21 +654,21 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               </motion.div>
             </motion.div>
 
-            {/* Right: Hero Image */}
+{/* Right: Hero Image (illustration, visible sur toutes tailles) */}
             <motion.div
               initial={{ opacity: 0, x: 60, scale: 0.95 }}
               animate={{ opacity: 1, x: 0, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-              className="relative hidden lg:block"
+              className="relative"
             >
               <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-                <video
-                  src="/artisan-connect-v2.mp4"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
+                <Image
+                  src="/artisan-hero-illustration.png"
+                  alt="Un artisan et un client se serrent la main, connectes via l'application"
+                  width={1080}
+                  height={1440}
                   className="w-full h-auto object-cover"
+                  priority
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4">
@@ -658,8 +681,8 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                       ))}
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-semibold">+10 000 artisans vérifiés</p>
-                      <p className="text-xs text-muted-foreground">Prêts Ã  intervenir chez vous</p>
+                      <p className="text-sm font-semibold">+10 000 artisans verifies</p>
+                      <p className="text-xs text-muted-foreground">Prets a intervenir chez vous</p>
                     </div>
                     <div className="flex items-center gap-1">
                       <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
@@ -674,7 +697,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                 animate={{ y: [0, -8, 0] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               >
-                <p className="text-xs font-semibold flex items-center gap-1"><Rocket className="w-3 h-3" /> Réponse en</p>
+                <p className="text-xs font-semibold flex items-center gap-1"><Rocket className="w-3 h-3" /> Reponse en</p>
                 <p className="text-lg font-extrabold">15 min</p>
               </motion.div>
             </motion.div>
@@ -714,17 +737,36 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
             {categories.map((cat) => (
               <motion.div key={cat.name} variants={fadeInUp}>
-                <Card className="group cursor-pointer border-border/50 hover:border-amber-300 dark:hover:border-amber-700 transition-all hover:shadow-lg hover:-translate-y-1">
+                <Card
+                  className="group cursor-pointer border-border/50 hover:border-amber-300 dark:hover:border-amber-700 transition-all hover:shadow-lg hover:-translate-y-1"
+                  onClick={() => router.push(`/search?category=${encodeURIComponent(cat.name)}`)}
+                >
                   <CardContent className="p-4 sm:p-5 flex flex-col items-center text-center gap-2">
                     <div className={`flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl transition-transform group-hover:scale-110 ${cat.color}`}>
                       <cat.icon className="h-6 w-6 sm:h-7 sm:w-7" />
                     </div>
                     <h3 className="font-semibold text-sm sm:text-base">{cat.name}</h3>
-                    <p className="text-xs sm:text-sm text-muted-foreground">{cat.count}</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">
+                      {categoryCounts[cat.name] !== undefined
+                        ? `${categoryCounts[cat.name]} artisan${categoryCounts[cat.name] !== 1 ? 's' : ''}`
+                        : cat.count}
+                    </p>
                   </CardContent>
                 </Card>
               </motion.div>
             ))}
+          </motion.div>
+
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp} className="mt-10 text-center">
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-amber-300 dark:border-amber-800 text-amber-700 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/50"
+              onClick={() => router.push('/search')}
+            >
+              Voir tous les artisans inscrits
+              <ArrowRight className="h-4 w-4 ml-2" />
+            </Button>
           </motion.div>
         </div>
       </section>
@@ -794,9 +836,45 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
         </div>
       </section>
 
-      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ HOW IT WORKS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <section id="comment-ca-marche" className="py-20 sm:py-28 bg-muted/30">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      {/* ────────── HOW IT WORKS ────────── */}
+      <section id="comment-ca-marche" className="relative py-20 sm:py-28 bg-muted/30 overflow-hidden">
+        {/* Illustrations décoratives */}
+        <div className="hidden lg:block absolute -top-6 -right-6 w-64 xl:w-80 opacity-90 pointer-events-none select-none rotate-3">
+          <Image
+            src="/how-it-works-1.png"
+            alt=""
+            width={600}
+            height={600}
+            className="w-full h-auto rounded-3xl shadow-2xl"
+          />
+        </div>
+        <div className="hidden lg:block absolute -bottom-10 -left-8 w-56 xl:w-72 opacity-90 pointer-events-none select-none -rotate-2">
+          <Image
+            src="/how-it-works-2.png"
+            alt=""
+            width={600}
+            height={600}
+            className="w-full h-auto rounded-3xl shadow-2xl"
+          />
+        </div>
+        <div className="hidden lg:block absolute -bottom-10 -right-4 w-56 xl:w-72 opacity-90 pointer-events-none select-none rotate-2">
+          <Image
+            src="/how-it-works-3.png"
+            alt=""
+            width={600}
+            height={600}
+            className="w-full h-auto rounded-3xl shadow-2xl"
+          />
+        </div>
+
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          {/* Version mobile : rangée compacte des 3 images */}
+          <div className="flex lg:hidden justify-center gap-3 mb-8">
+            <Image src="/how-it-works-1.png" alt="" width={200} height={200} className="w-1/3 h-24 sm:h-28 object-cover rounded-2xl shadow-md" />
+            <Image src="/how-it-works-2.png" alt="" width={200} height={200} className="w-1/3 h-24 sm:h-28 object-cover rounded-2xl shadow-md" />
+            <Image src="/how-it-works-3.png" alt="" width={200} height={200} className="w-1/3 h-24 sm:h-28 object-cover rounded-2xl shadow-md" />
+          </div>
+
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="text-center mb-14">
             <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold">
               Comment ça{" "}
@@ -807,13 +885,13 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
             </motion.p>
           </motion.div>
 
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             {howItWorks.map((step, idx) => (
               <motion.div key={step.step} variants={fadeInUp} className="relative">
                 {idx < howItWorks.length - 1 && (
                   <div className="hidden md:block absolute top-16 left-[calc(50%+60px)] w-[calc(100%-120px)] h-0.5 bg-gradient-to-r from-amber-300 to-orange-300 dark:from-amber-700 dark:to-orange-700" />
                 )}
-                <Card className="text-center border-border/50 hover:shadow-lg transition-shadow h-full">
+                <Card className="text-center border-border/50 hover:shadow-lg transition-shadow h-full bg-background/95 backdrop-blur">
                   <CardContent className="p-8">
                     <div className={`mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${step.color} shadow-lg mb-6`}>
                       <step.icon className="h-8 w-8 text-white" />
@@ -1540,4 +1618,3 @@ export default function Home() {
     </AnimatePresence>
   )
 }
-
