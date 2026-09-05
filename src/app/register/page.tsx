@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { Eye, EyeOff } from "lucide-react";
 import ArtisanAnimation from "@/components/ArtisanAnimation";
 
 const PROFESSIONS = [
@@ -49,6 +50,9 @@ export default function RegisterPage() {
   });
 
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
 
   const availableCities = CITIES[form.country] || [];
 
@@ -250,11 +254,21 @@ export default function RegisterPage() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className={labelCls}>Mot de passe *</label>
-                        <input name="password" type="password" value={form.password} onChange={handleChange} required minLength={8} className={inputCls} placeholder="Min. 8 caracteres" />
+                        <div className="relative">
+                          <input name="password" type={showPassword ? "text" : "password"} value={form.password} onChange={handleChange} required minLength={8} className={`${inputCls} pr-10`} placeholder="Min. 8 caracteres" />
+                          <button type="button" onClick={() => setShowPassword((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          </button>
+                        </div>
                       </div>
                       <div>
                         <label className={labelCls}>Confirmer *</label>
-                        <input name="confirmPassword" type="password" value={form.confirmPassword} onChange={handleChange} required className={inputCls} placeholder="Repetez le mot de passe" />
+                        <div className="relative">
+                          <input name="confirmPassword" type={showConfirmPassword ? "text" : "password"} value={form.confirmPassword} onChange={handleChange} required className={`${inputCls} pr-10`} placeholder="Repetez le mot de passe" />
+                          <button type="button" onClick={() => setShowConfirmPassword((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                            {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          </button>
+                        </div>
                       </div>
                     </div>
 
@@ -337,7 +351,12 @@ export default function RegisterPage() {
                     </div>
                     <div>
                       <label className={labelCls}>Mot de passe</label>
-                      <input name="password" type="password" value={loginForm.password} onChange={handleLoginChange} required className={inputCls} />
+                      <div className="relative">
+                        <input name="password" type={showLoginPassword ? "text" : "password"} value={loginForm.password} onChange={handleLoginChange} required className={`${inputCls} pr-10`} />
+                        <button type="button" onClick={() => setShowLoginPassword((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                          {showLoginPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </button>
+                      </div>
                     </div>
                     <button type="submit" disabled={loading} className="w-full py-3 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white font-semibold rounded-lg transition shadow-md">
                       {loading ? "Connexion..." : "Se connecter"}

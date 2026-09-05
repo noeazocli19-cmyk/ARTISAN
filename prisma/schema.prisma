@@ -120,6 +120,8 @@ model Artisan {
   hourlyRate     Int      @default(0)
   experience     Int      @default(0)
   badge          String   @default("Nouveau")
+  isPremium      Boolean  @default(false)
+  premiumUntil   DateTime?
   rating         Float    @default(0)
   reviewCount    Int      @default(0)
   missionCount   Int      @default(0)
@@ -269,11 +271,21 @@ model Notification {
 
 model Payment {
   id            String   @id @default(cuid())
-  amount        Int      // montant en FCFA ou devise
+  amount        Int
+  netAmount     Int?
+  commission    Int      @default(0)
   currency      String   @default("XAF")
-  status        String   @default("en_attente") // en_attente, payÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©, ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©chouÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©, remboursÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©
-  method        String?  // Mobile Money, Orange Money, carte, etc.
-  reference     String?  // rÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©fÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©rence de transaction
+  status        String   @default("en_attente")
+  method        String?
+  type          String   @default("mission")
+  reference     String?
+  phoneNumber   String?
+  description   String?
+  recipientId   String?
+  recipientName String?
+  kkiapayTransactionId String?
+  cinetPayTransId      String?
+  metadata      String?
   clientId      String
   artisanId     String?
   missionId     String?
@@ -356,3 +368,4 @@ model Referral {
 
   @@index([referrerId])
 }
+

@@ -565,9 +565,9 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
             loop
             muted
             playsInline
-            className="w-full h-full object-cover opacity-20"
+            className="w-full h-full object-cover opacity-45"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/95 to-background" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/75 to-background" />
         </div>
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

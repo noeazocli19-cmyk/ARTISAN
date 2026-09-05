@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
 
     // ---- Build where clause ----
     const where: Record<string, unknown> = {
-      userId: payload.userId,
+      clientId: payload.userId,
     }
 
     if (type) where.type = type
@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
     // Balance = sum of completed deposits/transfers received - sum of completed payments/withdrawals/transfers sent
     const allUserPayments = await db.payment.findMany({
       where: {
-        userId: payload.userId,
+        clientId: payload.userId,
         status: 'completed',
       },
       select: { amount: true, netAmount: true, type: true, recipientId: true },

@@ -6,8 +6,29 @@ import {
   isCinetPayConfigured,
   isKkiapayConfigured,
 } from '@/lib/payments'
+import { computeArtisanBadge } from '@/lib/badges'
 
 export const dynamic = 'force-dynamic'
+
+const PREMIUM_DURATION_DAYS = 30
+
+async function activatePremiumIfNeeded(payment: { type: string; artisanId: string | null }) {
+  if (payment.type !== 'premium_subscription' || !payment.artisanId) return
+  const artisan = await db.artisan.findUnique({ where: { id: payment.artisanId } })
+  if (!artisan) return
+  const now = new Date()
+  const currentUntil = artisan.premiumUntil && artisan.premiumUntil > now ? artisan.premiumUntil : now
+  const newUntil = new Date(currentUntil.getTime() + PREMIUM_DURATION_DAYS * 24 * 60 * 60 * 1000)
+  const computedBadge = computeArtisanBadge(artisan.missionCount, artisan.reviewCount, artisan.rating)
+  await db.artisan.update({
+    where: { id: payment.artisanId },
+    data: {
+      isPremium: true,
+      premiumUntil: newUntil,
+      badge: computedBadge === 'Nouveau' ? 'Vérifié' : artisan.badge,
+    },
+  })
+}
 
 /**
  * GET /api/payments/verify?reference=...&transactionId=...
@@ -71,6 +92,7 @@ export async function GET(request: NextRequest) {
           metadata: JSON.stringify(metadata),
         },
       })
+      if (success) await activatePremiumIfNeeded(payment)
     }
     // ---- CinetPay verification ----
     else if (isCinetPayConfigured() && payment.cinetPayTransId) {
@@ -93,6 +115,7 @@ export async function GET(request: NextRequest) {
           metadata: JSON.stringify(metadata),
         },
       })
+      if (success) await activatePremiumIfNeeded(payment)
     }
     // ---- Demo mode: return current status ----
     else {
@@ -181,6 +204,7 @@ export async function POST(request: NextRequest) {
           metadata: JSON.stringify(metadata),
         },
       })
+      if (success) await activatePremiumIfNeeded(payment)
     } else {
       success = payment.status === 'completed'
     }

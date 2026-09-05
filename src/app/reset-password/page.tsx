@@ -1,22 +1,28 @@
 'use client'
 
-import { useState, Suspense } from 'react'
+import { useState, Suspense, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { authClient } from '@/lib/auth-client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Loader2, Wrench } from 'lucide-react'
+import { Loader2, Wrench, Eye, EyeOff } from 'lucide-react'
 
 function ResetPasswordForm() {
   const searchParams = useSearchParams()
-  const token = searchParams.get('token')
 
+  const [email, setEmail] = useState('')
+  const [code, setCode] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    const emailFromUrl = searchParams.get('email')
+    if (emailFromUrl) setEmail(emailFromUrl)
+  }, [searchParams])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -32,20 +38,28 @@ function ResetPasswordForm() {
       return
     }
 
-    if (!token) {
-      setError('Token invalide ou expiré')
+    if (!email || !code) {
+      setError('Email et code sont requis')
       return
     }
 
     setLoading(true)
     try {
-      await authClient.resetPassword({
-        newPassword,
-        token,
+      const res = await fetch('/api/auth/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code, newPassword }),
       })
+      const data = await res.json()
+
+      if (!res.ok) {
+        setError(data.error || 'Erreur lors de la réinitialisation')
+        return
+      }
+
       setSuccess(true)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur lors de la réinitialisation')
+    } catch {
+      setError('Erreur de connexion')
     } finally {
       setLoading(false)
     }
@@ -86,21 +100,56 @@ function ResetPasswordForm() {
                 </div>
               )}
               <div className="space-y-2">
-                <Label htmlFor="new-password">Nouveau mot de passe</Label>
+                <Label htmlFor="email">Adresse email</Label>
                 <Input
-                  id="new-password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={newPassword}
-                  onChange={e => setNewPassword(e.target.value)}
+                  id="email"
+                  type="email"
+                  placeholder="votre@email.com"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
                   required
                 />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="code">Code à 6 chiffres</Label>
+                <Input
+                  id="code"
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={6}
+                  placeholder="123456"
+                  value={code}
+                  onChange={e => setCode(e.target.value.replace(/\D/g, ''))}
+                  required
+                  className="text-center text-lg tracking-widest"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="new-password">Nouveau mot de passe</Label>
+                <div className="relative">
+                  <Input
+                    id="new-password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="••••••••"
+                    value={newPassword}
+                    onChange={e => setNewPassword(e.target.value)}
+                    required
+                    className="pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(v => !v)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="confirm-password">Confirmer le mot de passe</Label>
                 <Input
                   id="confirm-password"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   placeholder="••••••••"
                   value={confirmPassword}
                   onChange={e => setConfirmPassword(e.target.value)}

@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { PremiumCard } from '@/components/premium-card';
 import {
   MapPin, Phone, Briefcase, Clock, Star, CheckCircle, AlertCircle, Crosshair,
   ClipboardList, MessageSquare, TrendingUp, Settings, Wrench, Hand,
@@ -30,6 +31,8 @@ interface ArtisanProfile {
   portfolio: string[];
   rating?: number | null;
   reviewCount?: number | null;
+  isPremium?: boolean;
+  premiumUntil?: string | null;
 }
 
 interface Mission {
@@ -549,6 +552,16 @@ export function ArtisanDashboard() {
               <p className="text-xs text-muted-foreground">Avis reçus</p>
             </Card>
           </div>
+
+          <PremiumCard
+            isPremium={!!artisanProfile?.isPremium}
+            premiumUntil={artisanProfile?.premiumUntil || null}
+            onActivated={() => {
+              fetch('/api/artisans/profile').then((r) => r.json()).then((data) => {
+                if (data.artisan) setArtisanProfile(data.artisan);
+              });
+            }}
+          />
 
           <div className="bg-white border border-amber-100 rounded-2xl p-6 shadow-sm">
             <div className="flex items-center justify-between mb-4">

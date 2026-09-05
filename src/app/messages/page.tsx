@@ -4,7 +4,7 @@ import { Suspense } from "react"
 import { useState, useEffect, useRef } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { authClient } from "@/lib/auth-client"
-import { MessageCircle, Send, Loader2, MessagesSquare, ArrowLeft, Mic, Square, Trash2, Play, Pause } from "lucide-react"
+import { MessageCircle, Send, Loader2, MessagesSquare, ArrowLeft, Mic, Square, Trash2, Play, Pause, ImagePlus, X } from "lucide-react"
 
 function AudioBubble({ src, isMe }: { src: string; isMe: boolean }) {
   const audioRef = useRef<HTMLAudioElement>(null)
@@ -71,9 +71,12 @@ function MessagesPageContent() {
   const [isRecording, setIsRecording] = useState(false)
   const [recordingSeconds, setRecordingSeconds] = useState(0)
   const [uploadingAudio, setUploadingAudio] = useState(false)
+  const [uploadingImage, setUploadingImage] = useState(false)
+  const [imagePreview, setImagePreview] = useState<{ file: File; url: string } | null>(null)
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const audioChunksRef = useRef<Blob[]>([])
   const recordingIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const imageInputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const partnerIdFromUrl = searchParams.get("userId")
@@ -231,6 +234,60 @@ function MessagesPageContent() {
     recorder.stop()
   }
 
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (!file.type.startsWith('image/')) {
+      alert('Merci de choisir une image.')
+      return
+    }
+    const url = URL.createObjectURL(file)
+    setImagePreview({ file, url })
+    e.target.value = ''
+  }
+
+  const cancelImagePreview = () => {
+    if (imagePreview) URL.revokeObjectURL(imagePreview.url)
+    setImagePreview(null)
+  }
+
+  const sendImage = async () => {
+    if (!imagePreview || !activePartner) return
+    setUploadingImage(true)
+    try {
+      const formData = new FormData()
+      formData.append('file', imagePreview.file)
+      formData.append('type', 'portfolio')
+      const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData })
+      const uploadData = await uploadRes.json()
+
+      if (uploadRes.ok && uploadData.url) {
+        const res = await fetch('/api/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            content: uploadData.url,
+            type: 'image',
+            receiverId: activePartner,
+            missionId: missionIdFromUrl || undefined,
+          }),
+        })
+        if (res.ok) {
+          const data = await fetch(`/api/messages?receiverId=${activePartner}`).then((r) => r.json())
+          setMessages(data.messages || [])
+          setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100)
+        }
+      } else {
+        alert(uploadData.error || "Erreur lors de l'envoi de la photo")
+      }
+    } catch {
+      alert("Erreur lors de l'envoi de la photo")
+    } finally {
+      setUploadingImage(false)
+      cancelImagePreview()
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex">
       {/* Sidebar */}
@@ -271,7 +328,7 @@ function MessagesPageContent() {
                       {conv.partner?.name || "Utilisateur"}
                     </p>
                     <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                      {conv.lastMessage?.type === "audio" ? "🎤 Message vocal" : conv.lastMessage?.content}
+                      {conv.lastMessage?.type === "audio" ? "🎤 Message vocal" : conv.lastMessage?.type === "image" ? "📷 Photo" : conv.lastMessage?.content}
                     </p>
                   </div>
                   {conv.unreadCount > 0 && (
@@ -314,17 +371,27 @@ function MessagesPageContent() {
                 const isMe = msg.senderId === session?.user?.id
                 return (
                   <div key={msg.id} className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
-                    <div className={`max-w-[70%] px-4 py-2.5 rounded-2xl shadow-sm ${
+                    <div className={`max-w-[70%] rounded-2xl shadow-sm overflow-hidden ${
+                      msg.type === "image" ? "p-1" : "px-4 py-2.5"
+                    } ${
                       isMe
                         ? "bg-gradient-to-br from-amber-500 to-orange-500 text-white rounded-br-md"
                         : "bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-bl-md border border-gray-200 dark:border-gray-700"
                     }`}>
                       {msg.type === "audio" ? (
                         <AudioBubble src={msg.content} isMe={isMe} />
+                      ) : msg.type === "image" ? (
+                        <a href={msg.content} target="_blank" rel="noopener noreferrer">
+                          <img
+                            src={msg.content}
+                            alt="Photo envoyée"
+                            className="rounded-xl max-h-64 w-auto object-cover"
+                          />
+                        </a>
                       ) : (
                         <p className="text-sm leading-relaxed">{msg.content}</p>
                       )}
-                      <p className={`text-[10px] mt-1 ${isMe ? "text-amber-200" : "text-gray-400 dark:text-gray-500"}`}>
+                      <p className={`text-[10px] mt-1 ${msg.type === "image" ? "px-2 pb-1" : ""} ${isMe ? "text-amber-200" : "text-gray-400 dark:text-gray-500"}`}>
                         {new Date(msg.createdAt).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
                       </p>
                     </div>
@@ -336,7 +403,28 @@ function MessagesPageContent() {
 
             {/* Input */}
             <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-              {isRecording ? (
+              {imagePreview ? (
+                <div className="flex items-center gap-3">
+                  <div className="relative shrink-0">
+                    <img src={imagePreview.url} alt="Aperçu" className="h-16 w-16 rounded-xl object-cover" />
+                    <button
+                      onClick={cancelImagePreview}
+                      className="absolute -top-1.5 -right-1.5 h-5 w-5 rounded-full bg-gray-800 text-white flex items-center justify-center"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                  <span className="flex-1 text-sm text-gray-500 dark:text-gray-400">Envoyer cette photo ?</span>
+                  <button
+                    onClick={sendImage}
+                    disabled={uploadingImage}
+                    className="h-11 w-11 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 text-white flex items-center justify-center shadow-md hover:from-amber-600 hover:to-orange-700 transition-all disabled:opacity-50"
+                    title="Envoyer"
+                  >
+                    {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                  </button>
+                </div>
+              ) : isRecording ? (
                 <div className="flex items-center gap-3 px-2">
                   <span className="relative flex h-3 w-3 shrink-0">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
@@ -362,6 +450,21 @@ function MessagesPageContent() {
                 </div>
               ) : (
                 <div className="flex gap-2">
+                  <input
+                    ref={imageInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageSelect}
+                    className="hidden"
+                  />
+                  <button
+                    onClick={() => imageInputRef.current?.click()}
+                    disabled={uploadingAudio}
+                    className="h-11 w-11 shrink-0 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-300 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-600 transition-all disabled:opacity-50"
+                    title="Envoyer une photo"
+                  >
+                    <ImagePlus className="w-4 h-4" />
+                  </button>
                   <input
                     type="text"
                     value={newMessage}

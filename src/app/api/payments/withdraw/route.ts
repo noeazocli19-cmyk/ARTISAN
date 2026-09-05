@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
 
     // ---- Check wallet balance ----
     const userPayments = await db.payment.findMany({
-      where: { userId: payload.userId, status: 'completed' },
+      where: { clientId: payload.userId, status: 'completed' },
       select: { amount: true, netAmount: true, type: true, recipientId: true },
     })
 
@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
 
     const withdrawal = await db.payment.create({
       data: {
-        userId: payload.userId,
+        clientId: payload.userId,
         amount,
         netAmount: amount,
         commission: 0,

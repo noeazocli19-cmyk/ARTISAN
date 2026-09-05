@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
 
     const payment = await db.payment.create({
       data: {
-        userId: payload.userId,
+        clientId: payload.userId,
         amount: totalToCharge,
         netAmount,
         commission: commission?.commission || 0,

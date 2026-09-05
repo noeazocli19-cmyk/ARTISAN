@@ -12,6 +12,7 @@ export default function ForgotPasswordPage() {
   const [loading, setLoading] = useState(false)
   const [sent, setSent] = useState(false)
   const [error, setError] = useState('')
+  const [devCode, setDevCode] = useState('')
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -28,6 +29,7 @@ export default function ForgotPasswordPage() {
         setError(data.error || 'Erreur')
         return
       }
+      if (data.devCode) setDevCode(data.devCode)
       setSent(true)
     } catch (err) {
       setError('Erreur de connexion')
@@ -63,6 +65,14 @@ export default function ForgotPasswordPage() {
               <p className="text-xs text-muted-foreground mb-4">
                 Le code expire dans 15 minutes.
               </p>
+              {devCode && (
+                <div className="mb-4 p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800">
+                  <p className="text-xs text-amber-700 dark:text-amber-400 mb-1">
+                    Envoi d&apos;email non configuré — voici votre code (visible uniquement en développement) :
+                  </p>
+                  <p className="text-2xl font-bold tracking-widest text-amber-700 dark:text-amber-400">{devCode}</p>
+                </div>
+              )}
               <Link href="/reset-password">
                 <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0">
                   Entrer le code
@@ -112,4 +122,4 @@ export default function ForgotPasswordPage() {
       </div>
     </div>
   )
-} 
+}

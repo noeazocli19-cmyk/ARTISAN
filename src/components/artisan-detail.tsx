@@ -55,7 +55,7 @@ interface ArtisanReview {
   rating: number
   comment: string
   createdAt: string
-  author: {
+  client?: {
     id: string
     name: string
     avatar?: string
@@ -378,9 +378,9 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
                             <div className="h-8 w-8 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white text-xs font-bold">
-                              {review.author.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                              {(review.client?.name || 'Client').split(' ').map(n => n[0]).join('').slice(0, 2)}
                             </div>
-                            <span className="font-medium text-sm">{review.author.name}</span>
+                            <span className="font-medium text-sm">{review.client?.name || 'Client'}</span>
                           </div>
                           <span className="text-xs text-muted-foreground">
                             {new Date(review.createdAt).toLocaleDateString('fr-FR')}

@@ -56,8 +56,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Contenu et receiverId sont requis' }, { status: 400 });
     }
 
+    const validTypes = ['audio', 'image', 'text'];
+    const messageType = validTypes.includes(type) ? type : 'text';
+
     const message = await db.message.create({
-      data: { content, type: type === 'audio' ? 'audio' : 'text', senderId: session.user.id, receiverId, missionId: missionId || null },
+      data: { content, type: messageType, senderId: session.user.id, receiverId, missionId: missionId || null },
       include: {
         sender: { select: { id: true, name: true, image: true } },
         receiver: { select: { id: true, name: true, image: true } },
@@ -68,7 +71,11 @@ export async function POST(request: NextRequest) {
       data: {
         userId: receiverId,
         title: 'Nouveau message',
-        message: type === 'audio' ? `${session.user.name} vous a envoyé un message vocal` : `${session.user.name} vous a envoyé un message`,
+        message: messageType === 'audio'
+          ? `${session.user.name} vous a envoyé un message vocal`
+          : messageType === 'image'
+          ? `${session.user.name} vous a envoyé une photo`
+          : `${session.user.name} vous a envoyé un message`,
         type: 'message',
         link: missionId ? `/missions/${missionId}` : null,
       },

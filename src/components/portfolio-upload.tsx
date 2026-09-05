@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Progress } from "@/components/ui/progress"
+import { toast } from "sonner"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   Dialog,
@@ -251,7 +252,11 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
             category: item.category,
           })
         } else {
-          console.error("Echec upload image:", data.error)
+          const detailMsg = data?.details?.error?.message || data?.details?.message
+          console.error("Echec upload image:", data.error, data.details)
+          toast.error(`Echec upload "${item.title || 'image'}"`, {
+            description: detailMsg || data.error || 'Erreur inconnue',
+          })
         }
 
         setUploadProgress(Math.round(((i + 1) / total) * 100))
@@ -786,5 +791,3 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
     </div>
   )
 }
-
-
