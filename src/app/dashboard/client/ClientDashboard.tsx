@@ -65,6 +65,7 @@ const STATUS_MAP: Record<string, { label: string; color: string }> = {
   en_cours: { label: 'En cours', color: 'bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300' },
   terminee_artisan: { label: 'À confirmer', color: 'bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-300' },
   terminee: { label: 'Terminée', color: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300' },
+  litige: { label: 'Litige en cours', color: 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300' },
   annulee: { label: 'Annulée', color: 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300' },
 }
 
@@ -173,6 +174,27 @@ export function ClientDashboard() {
   const handleSubmitReview = async (rating: number, comment: string) => {
     // Review submitted successfully
     fetchReviews()
+  }
+
+  const handleReportDispute = async (mission: Mission) => {
+    const reason = window.prompt('Explique brièvement le problème rencontré avec cette mission :')
+    if (!reason || !reason.trim()) return
+    try {
+      const res = await fetch(`/api/missions/${mission.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'litige', disputeReason: reason }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (res.ok) {
+        setMissions((prev) => prev.map((m) => (m.id === mission.id ? { ...m, status: 'litige' as any } : m)))
+        toast.success('Litige signalé. Notre équipe va examiner la situation.')
+      } else {
+        toast.error(data.error || 'Impossible de signaler le litige')
+      }
+    } catch {
+      toast.error('Erreur réseau')
+    }
   }
 
   const handleConfirmCompletion = async (mission: Mission) => {
@@ -476,6 +498,22 @@ export function ClientDashboard() {
                               Confirmer la fin de la mission
                             </Button>
                           </div>
+                        )}
+                        {(mission.status as any) === 'litige' && (
+                          <div className="mt-3 pt-3 border-t border-red-100 dark:border-red-900">
+                            <p className="text-[11px] text-red-600 dark:text-red-400 flex items-center gap-1.5">
+                              <AlertCircle className="h-3.5 w-3.5" />
+                              Litige signalé, en cours d'examen par notre équipe.
+                            </p>
+                          </div>
+                        )}
+                        {['ouverte', 'assignee', 'en_cours', 'terminee_artisan'].includes(mission.status as string) && (
+                          <button
+                            onClick={() => handleReportDispute(mission)}
+                            className="mt-2 text-[11px] text-gray-400 hover:text-red-500 underline decoration-dotted"
+                          >
+                            Signaler un problème
+                          </button>
                         )}
                         {(mission.status === 'terminee' || mission.status === 'completed') && (
                           reviewedMissionIds.has(mission.id) ? (

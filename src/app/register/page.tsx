@@ -123,6 +123,7 @@ export default function RegisterPage() {
             country: form.country,
             city: form.city,
             location: location,
+            address: location,
             bio: form.bio,
             skills: skillsArray.length > 0 ? skillsArray : [form.profession],
             certifications: [],

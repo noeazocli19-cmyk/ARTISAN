@@ -1,8 +1,9 @@
 ﻿'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import Link from 'next/link';
-import { MapPin, Search, Crosshair, SlidersHorizontal } from 'lucide-react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { MapPin, Search, Crosshair, SlidersHorizontal, X } from 'lucide-react';
 
 interface ArtisanResult {
   id: string;
@@ -31,16 +32,30 @@ const RADIUS_OPTIONS = [
   { label: 'Illimité', value: '0' },
 ];
 
-export default function SearchPage() {
+function SearchPageContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [query, setQuery] = useState('');
   const [location, setLocation] = useState('');
   const [country, setCountry] = useState('');
+  const [category, setCategory] = useState('');
   const [radius, setRadius] = useState('50');
   const [results, setResults] = useState<ArtisanResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [userLat, setUserLat] = useState<number | null>(null);
   const [userLng, setUserLng] = useState<number | null>(null);
   const [showFilters, setShowFilters] = useState(false);
+
+  // Lit la catégorie passée par l'URL (ex: /search?category=Plomberie)
+  useEffect(() => {
+    const cat = searchParams.get('category');
+    if (cat) setCategory(cat);
+  }, [searchParams]);
+
+  const clearCategory = () => {
+    setCategory('');
+    router.replace('/search');
+  };
 
   // Géolocalisation navigateur
   const geolocateMe = () => {
@@ -67,6 +82,7 @@ export default function SearchPage() {
       if (query) params.set('q', query);
       if (location) params.set('location', location);
       if (country) params.set('country', country);
+      if (category) params.set('category', category);
       if (userLat !== null) params.set('lat', userLat.toString());
       if (userLng !== null) params.set('lng', userLng.toString());
       params.set('radius', radius);
@@ -82,7 +98,7 @@ export default function SearchPage() {
     } finally {
       setLoading(false);
     }
-  }, [query, location, country, radius, userLat, userLng]);
+  }, [query, location, country, category, radius, userLat, userLng]);
 
   // Debounce 500ms
   useEffect(() => {
@@ -95,8 +111,18 @@ export default function SearchPage() {
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       <h1 className="text-2xl font-bold">
-        Trouver un artisan près de chez vous
+        {category ? `Artisans en ${category}` : 'Trouver un artisan près de chez vous'}
       </h1>
+
+      {category && (
+        <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-800 rounded-xl px-4 py-2 text-sm">
+          <span className="flex-1">Filtré sur la catégorie <strong>{category}</strong></span>
+          <button onClick={clearCategory} className="flex items-center gap-1 hover:underline shrink-0">
+            <X className="h-3.5 w-3.5" />
+            Voir tous les artisans
+          </button>
+        </div>
+      )}
 
       {/* Barre de recherche */}
       <div className="flex gap-2">
@@ -258,5 +284,13 @@ export default function SearchPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div className="max-w-4xl mx-auto p-6">Chargement...</div>}>
+      <SearchPageContent />
+    </Suspense>
   );
 }

@@ -30,18 +30,23 @@ import {
 
 // ─── Mock Data ────────────────────────────────────────────────────────────────
 
-const artisanLocations = [
-  { id: "1", name: "Amadou Diallo", skill: "Plombier certifié", location: "Dakar, Sénégal", lat: 14.7167, lng: -17.4677, rating: 4.9, reviews: 127, badge: "Élite", price: "8 000 FCFA/h", avatar: "AD", avatarColor: "bg-amber-500" },
-  { id: "2", name: "Fatou Ndiaye", skill: "Électricienne", location: "Abidjan, Côte d'Ivoire", lat: 5.3600, lng: -4.0083, rating: 4.8, reviews: 98, badge: "Top", price: "7 500 FCFA/h", avatar: "FN", avatarColor: "bg-emerald-500" },
-  { id: "3", name: "Kofi Mensah", skill: "Menuisier artisan", location: "Accra, Ghana", lat: 5.6037, lng: -0.1870, rating: 4.9, reviews: 156, badge: "Élite", price: "9 000 FCFA/h", avatar: "KM", avatarColor: "bg-orange-500" },
-  { id: "4", name: "Aïcha Bello", skill: "Peintre décoratrice", location: "Lomé, Togo", lat: 6.1319, lng: 1.2228, rating: 4.7, reviews: 73, badge: "Vérifié", price: "6 500 FCFA/h", avatar: "AB", avatarColor: "bg-teal-500" },
-  { id: "5", name: "Moussa Traoré", skill: "Climaticien expert", location: "Bamako, Mali", lat: 12.6392, lng: -8.0029, rating: 4.8, reviews: 112, badge: "Top", price: "8 500 FCFA/h", avatar: "MT", avatarColor: "bg-cyan-500" },
-  { id: "6", name: "Mariama Sow", skill: "Spécialiste nettoyage", location: "Conakry, Guinée", lat: 9.5092, lng: -13.7122, rating: 4.9, reviews: 201, badge: "Élite", price: "5 000 FCFA/h", avatar: "MS", avatarColor: "bg-violet-500" },
-  { id: "7", name: "Issouf Ouédraogo", skill: "Maçon expert", location: "Ouagadougou, Burkina Faso", lat: 12.3723, lng: -1.5197, rating: 4.6, reviews: 89, badge: "Vérifié", price: "6 000 FCFA/h", avatar: "IO", avatarColor: "bg-rose-500" },
-  { id: "8", name: "Adama Koné", skill: "Serrurier", location: "Bamako, Mali", lat: 12.6500, lng: -7.9833, rating: 4.7, reviews: 65, badge: "Vérifié", price: "5 500 FCFA/h", avatar: "AK", avatarColor: "bg-indigo-500" },
-  { id: "9", name: "Kadiatou Bah", skill: "Nettoyeuse pro", location: "Conakry, Guinée", lat: 9.5350, lng: -13.6877, rating: 4.8, reviews: 143, badge: "Top", price: "4 500 FCFA/h", avatar: "KB", avatarColor: "bg-pink-500" },
-  { id: "10", name: "Ousmane Camara", skill: "Électricien bâtiment", location: "Dakar, Sénégal", lat: 14.6937, lng: -17.4441, rating: 4.9, reviews: 178, badge: "Élite", price: "9 500 FCFA/h", avatar: "OC", avatarColor: "bg-amber-600" },
-]
+interface MapArtisan {
+  id: string
+  name: string
+  skill: string
+  location: string
+  lat: number
+  lng: number
+  rating: number
+  reviews: number
+  badge: string
+  price: string
+  avatar: string
+  avatarColor: string
+  isAvailable: boolean
+}
+
+const AVATAR_COLORS = ["bg-amber-500", "bg-emerald-500", "bg-orange-500", "bg-teal-500", "bg-cyan-500", "bg-violet-500", "bg-rose-500", "bg-indigo-500", "bg-pink-500", "bg-amber-600"]
 
 const categories = [
   "Toutes",
@@ -78,6 +83,8 @@ export function ArtisanMap({ onViewArtisan, onBack }: ArtisanMapProps) {
   const [radius, setRadius] = useState([500])
   const [availableOnly, setAvailableOnly] = useState(false)
   const [selectedArtisanId, setSelectedArtisanId] = useState<string | null>(null)
+  const [artisanLocations, setArtisanLocations] = useState<MapArtisan[]>([])
+  const [artisansLoading, setArtisansLoading] = useState(true)
 
   // Leaflet imports (dynamic, client-only)
   const [leafletComponents, setLeafletComponents] = useState<{
@@ -90,6 +97,35 @@ export function ArtisanMap({ onViewArtisan, onBack }: ArtisanMapProps) {
 
   useEffect(() => {
     setMounted(true)
+
+    fetch('/api/artisans/search')
+      .then((r) => r.json())
+      .then((data) => {
+        const real: MapArtisan[] = (data.artisans || [])
+          .filter((a: any) => typeof a.latitude === 'number' && typeof a.longitude === 'number')
+          .map((a: any, i: number) => {
+            const name = a.user?.name || 'Artisan'
+            const initials = name.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()
+            return {
+              id: a.id,
+              name,
+              skill: a.profession || 'Artisan',
+              location: a.location || a.address || a.country || '',
+              lat: a.latitude,
+              lng: a.longitude,
+              rating: a.rating || 0,
+              reviews: a.reviewCount || 0,
+              badge: a.badge || 'Nouveau',
+              price: a.hourlyRate ? `${a.hourlyRate.toLocaleString('fr-FR')} FCFA/h` : 'Sur devis',
+              avatar: initials || '?',
+              avatarColor: AVATAR_COLORS[i % AVATAR_COLORS.length],
+              isAvailable: a.isAvailable !== false,
+            }
+          })
+        setArtisanLocations(real)
+      })
+      .catch(() => setArtisanLocations([]))
+      .finally(() => setArtisansLoading(false))
 
     // Import leaflet CSS
     const link = document.createElement("link")
@@ -144,12 +180,11 @@ export function ArtisanMap({ onViewArtisan, onBack }: ArtisanMapProps) {
     }
 
     if (availableOnly) {
-      // Mock: filter to only "Élite" and "Top" artisans as "available"
-      result = result.filter((a) => a.badge === "Élite" || a.badge === "Top")
+      result = result.filter((a) => a.isAvailable)
     }
 
     return result
-  }, [searchQuery, selectedCategory, availableOnly])
+  }, [searchQuery, selectedCategory, availableOnly, artisanLocations])
 
   // Create custom marker icon for an artisan
   const createMarkerIcon = (artisan: typeof artisanLocations[0], L: any) => {

@@ -10,6 +10,7 @@ import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PremiumCard } from '@/components/premium-card';
+import { IdentityVerificationCard } from '@/components/identity-verification-card';
 import {
   MapPin, Phone, Briefcase, Clock, Star, CheckCircle, AlertCircle, Crosshair,
   ClipboardList, MessageSquare, TrendingUp, Settings, Wrench, Hand,
@@ -33,6 +34,7 @@ interface ArtisanProfile {
   reviewCount?: number | null;
   isPremium?: boolean;
   premiumUntil?: string | null;
+  identityStatus?: string;
 }
 
 interface Mission {
@@ -292,6 +294,27 @@ export function ArtisanDashboard() {
       toast.error('Erreur reseau');
     } finally {
       setRespondingId(null);
+    }
+  };
+
+  const handleReportDispute = async (missionId: string) => {
+    const reason = window.prompt('Explique brièvement le problème rencontré avec cette mission :');
+    if (!reason || !reason.trim()) return;
+    try {
+      const res = await fetch(`/api/missions/${missionId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'litige', disputeReason: reason }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok) {
+        setMissions((prev) => prev.map((m) => (m.id === missionId ? { ...m, status: 'litige' } : m)));
+        toast.success('Litige signalé. Notre équipe va examiner la situation.');
+      } else {
+        toast.error(data.error || 'Impossible de signaler le litige');
+      }
+    } catch {
+      toast.error('Erreur réseau');
     }
   };
 
@@ -563,6 +586,15 @@ export function ArtisanDashboard() {
             }}
           />
 
+          <IdentityVerificationCard
+            identityStatus={artisanProfile?.identityStatus || 'non_soumis'}
+            onSubmitted={() => {
+              fetch('/api/artisans/profile').then((r) => r.json()).then((data) => {
+                if (data.artisan) setArtisanProfile(data.artisan);
+              });
+            }}
+          />
+
           <div className="bg-white border border-amber-100 rounded-2xl p-6 shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold flex items-center gap-2 text-gray-900">
@@ -647,6 +679,7 @@ export function ArtisanDashboard() {
                   terminee_artisan: 'En attente du client',
                   terminee: 'Terminée',
                   annulee: 'Annulée',
+                  litige: 'Litige en cours',
                 };
                 return (
                 <li key={m.id} className="py-3 flex items-center justify-between">
@@ -663,6 +696,8 @@ export function ArtisanDashboard() {
                           ? 'bg-green-100 text-green-700'
                           : m.status === 'terminee_artisan'
                           ? 'bg-blue-100 text-blue-700'
+                          : (m.status as any) === 'litige'
+                          ? 'bg-red-100 text-red-700'
                           : 'bg-amber-100 text-amber-700'
                       }`}
                     >
@@ -682,6 +717,14 @@ export function ArtisanDashboard() {
                         className="text-xs font-semibold px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 text-white hover:from-amber-600 hover:to-orange-700"
                       >
                         Marquer terminée
+                      </button>
+                    )}
+                    {['assignee', 'en_cours', 'terminee_artisan'].includes(m.status) && (
+                      <button
+                        onClick={() => handleReportDispute(m.id)}
+                        className="text-[11px] text-gray-400 hover:text-red-500 underline decoration-dotted"
+                      >
+                        Signaler
                       </button>
                     )}
                   </div>

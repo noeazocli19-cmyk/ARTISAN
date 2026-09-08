@@ -75,6 +75,7 @@ interface ArtisanData {
   isAvailable: boolean
   certifications: string
   portfolio: string
+  identityStatus?: string
   user?: {
     id: string
     name: string
@@ -480,7 +481,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
           )}
 
           {/* Verification */}
-          {artisan.user?.isVerified && (
+          {artisan.identityStatus === 'approuve' && (
             <motion.div variants={fadeInUp} initial="hidden" animate="visible" transition={{ delay: 0.2 }}>
               <Card className="border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/20">
                 <CardContent className="p-4">

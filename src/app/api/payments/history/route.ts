@@ -23,16 +23,11 @@ export const dynamic = 'force-dynamic'
 export async function GET(request: NextRequest) {
   try {
     // ---- Auth ----
-    const authHeader = request.headers.get('authorization')
-    const token = authHeader?.replace('Bearer ', '')
-    if (!token) {
+    const session = await auth.api.getSession({ headers: request.headers })
+    if (!session?.user?.id) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
     }
-
-    const payload = verifyToken(token)
-    if (!payload) {
-      return NextResponse.json({ error: 'Token invalide' }, { status: 401 })
-    }
+    const payload = { userId: session.user.id, email: session.user.email }
 
     // ---- Parse query params ----
     const { searchParams } = new URL(request.url)

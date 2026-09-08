@@ -1,5 +1,6 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { getSynonymsForCategory } from '@/lib/categories-map';
 
 function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const R = 6371;
@@ -39,7 +40,10 @@ export async function GET(request: NextRequest) {
     if (profession) {
       andConditions.push({ profession: { contains: profession, mode: 'insensitive' } });
     } else if (category) {
-      andConditions.push({ profession: { contains: category, mode: 'insensitive' } });
+      const synonyms = getSynonymsForCategory(category);
+      andConditions.push({
+        OR: synonyms.map((s) => ({ profession: { contains: s, mode: 'insensitive' } })),
+      });
     }
 
     if (q && !profession && !category) {
@@ -123,6 +127,3 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Erreur lors de la recherche' }, { status: 500 });
   }
 }
-
-
-

@@ -122,6 +122,8 @@ model Artisan {
   badge          String   @default("Nouveau")
   isPremium      Boolean  @default(false)
   premiumUntil   DateTime?
+  identityDocument String?
+  identityStatus   String  @default("non_soumis")
   rating         Float    @default(0)
   reviewCount    Int      @default(0)
   missionCount   Int      @default(0)
@@ -176,6 +178,7 @@ model Mission {
   description String?
   category    String?
   status      String   @default("ouverte")
+  disputeReason String?
   budget      Int      @default(0)
   location    String?
   latitude    Float?

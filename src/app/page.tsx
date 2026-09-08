@@ -663,7 +663,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
             >
               <div className="relative rounded-3xl overflow-hidden shadow-2xl">
                 <Image
-                  src="/artisan-hero-illustration.png"
+                  src="/artisan-hero-illustration.jpg"
                   alt="Un artisan et un client se serrent la main, connectes via l'application"
                   width={1080}
                   height={1440}
@@ -841,7 +841,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
         {/* Illustrations décoratives */}
         <div className="hidden lg:block absolute -top-6 -right-6 w-64 xl:w-80 opacity-90 pointer-events-none select-none rotate-3">
           <Image
-            src="/how-it-works-1.png"
+            src="/how-it-works-1.jpg"
             alt=""
             width={600}
             height={600}
@@ -850,7 +850,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
         </div>
         <div className="hidden lg:block absolute -bottom-10 -left-8 w-56 xl:w-72 opacity-90 pointer-events-none select-none -rotate-2">
           <Image
-            src="/how-it-works-2.png"
+            src="/how-it-works-2.jpg"
             alt=""
             width={600}
             height={600}
@@ -859,7 +859,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
         </div>
         <div className="hidden lg:block absolute -bottom-10 -right-4 w-56 xl:w-72 opacity-90 pointer-events-none select-none rotate-2">
           <Image
-            src="/how-it-works-3.png"
+            src="/how-it-works-3.jpg"
             alt=""
             width={600}
             height={600}
@@ -870,9 +870,9 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Version mobile : rangée compacte des 3 images */}
           <div className="flex lg:hidden justify-center gap-3 mb-8">
-            <Image src="/how-it-works-1.png" alt="" width={200} height={200} className="w-1/3 h-24 sm:h-28 object-cover rounded-2xl shadow-md" />
-            <Image src="/how-it-works-2.png" alt="" width={200} height={200} className="w-1/3 h-24 sm:h-28 object-cover rounded-2xl shadow-md" />
-            <Image src="/how-it-works-3.png" alt="" width={200} height={200} className="w-1/3 h-24 sm:h-28 object-cover rounded-2xl shadow-md" />
+            <Image src="/how-it-works-1.jpg" alt="" width={200} height={200} className="w-1/3 h-24 sm:h-28 object-cover rounded-2xl shadow-md" />
+            <Image src="/how-it-works-2.jpg" alt="" width={200} height={200} className="w-1/3 h-24 sm:h-28 object-cover rounded-2xl shadow-md" />
+            <Image src="/how-it-works-3.jpg" alt="" width={200} height={200} className="w-1/3 h-24 sm:h-28 object-cover rounded-2xl shadow-md" />
           </div>
 
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="text-center mb-14">
@@ -1513,7 +1513,7 @@ export default function Home() {
               />
             )}
 
-            {currentView === 'admin' && (
+            {currentView === 'admin' && user?.role === 'admin' && (
               <AdminDashboard
                 key="admin"
                 onBack={handleBackFromAdmin}

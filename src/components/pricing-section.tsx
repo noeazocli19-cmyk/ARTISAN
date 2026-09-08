@@ -129,7 +129,7 @@ export function PricingSection() {
         </motion.div>
 
         {/* Pricing cards */}
-        <div className="mt-14 grid grid-cols-1 items-start gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+        <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2 max-w-3xl mx-auto md:gap-8">
           {plans.map((plan, index) => (
             <motion.div
               key={plan.name}
@@ -139,17 +139,17 @@ export function PricingSection() {
               viewport={{ once: true, margin: "-80px" }}
               variants={fadeInUp}
               className={cn(
-                plan.popular && "md:-mt-4 md:mb-0"
+                "h-full",
+                plan.popular && "md:mb-0"
               )}
             >
               <Card
                 className={cn(
-                  "relative flex flex-col overflow-hidden transition-shadow duration-300 hover:shadow-lg",
+                  "relative flex flex-col overflow-hidden transition-shadow duration-300 hover:shadow-lg h-full",
                   // Pro card: amber gradient border + glow
                   plan.popular && [
                     "border-0 ring-2 ring-amber-400/60 dark:ring-amber-500/50",
                     "shadow-xl shadow-amber-200/40 dark:shadow-amber-900/30",
-                    "lg:scale-105",
                     "before:absolute before:inset-0 before:rounded-xl before:bg-gradient-to-b before:from-amber-400/5 before:to-orange-400/5 dark:before:from-amber-400/10 dark:before:to-orange-400/10",
                   ],
                   // Élite card: subtle warm border

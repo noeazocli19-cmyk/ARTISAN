@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { auth } from '@/lib/better-auth';
+import { computeArtisanBadge } from '@/lib/badges';
 
 export async function GET(
   request: NextRequest,
@@ -77,6 +78,20 @@ export async function PATCH(
         },
       });
 
+      // La mission compte maintenant vraiment dans les stats de l'artisan
+      if (mission.artisanId) {
+        const newMissionCount = (mission.artisan?.missionCount ?? 0) + 1;
+        const newBadge = computeArtisanBadge(
+          newMissionCount,
+          mission.artisan?.reviewCount ?? 0,
+          mission.artisan?.rating ?? 0
+        );
+        await db.artisan.update({
+          where: { id: mission.artisanId },
+          data: { missionCount: newMissionCount, badge: newBadge },
+        });
+      }
+
       if (mission.artisan?.userId) {
         await db.notification.create({
           data: {
@@ -86,6 +101,74 @@ export async function PATCH(
             type: 'mission',
             link: `/missions/${id}`,
           },
+        });
+      }
+
+      return NextResponse.json({ mission });
+    }
+
+    // Either the client or the artisan can raise a dispute on an active mission.
+    if (status === 'litige') {
+      const isClient = existingMission.clientId === session.user.id;
+      const requesterArtisan = await db.artisan.findUnique({ where: { userId: session.user.id } });
+      const isArtisan = requesterArtisan && existingMission.artisanId === requesterArtisan.id;
+
+      if (!isClient && !isArtisan) {
+        return NextResponse.json(
+          { error: "Vous n'êtes pas concerné par cette mission." },
+          { status: 403 }
+        );
+      }
+
+      if (!['assignee', 'en_cours', 'terminee_artisan'].includes(existingMission.status)) {
+        return NextResponse.json(
+          { error: "Un litige ne peut être signalé que sur une mission en cours." },
+          { status: 400 }
+        );
+      }
+
+      const { disputeReason } = body;
+      if (!disputeReason || !disputeReason.trim()) {
+        return NextResponse.json(
+          { error: "Merci d'expliquer le problème rencontré." },
+          { status: 400 }
+        );
+      }
+
+      const mission = await db.mission.update({
+        where: { id },
+        data: { status: 'litige', disputeReason: disputeReason.trim() },
+        include: {
+          client: { select: { id: true, name: true } },
+          artisan: { include: { user: { select: { id: true, name: true } } } },
+        },
+      });
+
+      // Notify the other party
+      const otherPartyUserId = isClient ? mission.artisan?.userId : mission.clientId;
+      if (otherPartyUserId) {
+        await db.notification.create({
+          data: {
+            userId: otherPartyUserId,
+            title: 'Litige signalé sur une mission',
+            message: `Un problème a été signalé sur la mission "${mission.title}". Notre équipe va examiner la situation.`,
+            type: 'mission',
+            link: `/missions/${id}`,
+          },
+        });
+      }
+
+      // Notify any admin so it can be reviewed
+      const admins = await db.user.findMany({ where: { role: 'admin' }, select: { id: true } });
+      if (admins.length > 0) {
+        await db.notification.createMany({
+          data: admins.map((admin) => ({
+            userId: admin.id,
+            title: 'Nouveau litige à examiner',
+            message: `Litige sur la mission "${mission.title}" : ${disputeReason.trim()}`,
+            type: 'mission',
+            link: `/missions/${id}`,
+          })),
         });
       }
 
