@@ -571,7 +571,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
         </div>
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+          <div className="grid grid-cols-1 gap-10 items-center max-w-3xl mx-auto text-center">
             {/* Left: Text content */}
             <motion.div initial="hidden" animate="visible" variants={staggerContainer}>
               <motion.div variants={fadeInUp}>
@@ -651,54 +651,6 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                   <Navigation className="h-4 w-4" />
                   Voir la carte des artisans
                 </Button>
-              </motion.div>
-            </motion.div>
-
-{/* Right: Hero Image (illustration, visible sur toutes tailles) */}
-            <motion.div
-              initial={{ opacity: 0, x: 60, scale: 0.95 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-              className="relative"
-            >
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-                <Image
-                  src="/artisan-hero-illustration.jpg"
-                  alt="Un artisan et un client se serrent la main, connectes via l'application"
-                  width={1080}
-                  height={1440}
-                  className="w-full h-auto object-cover"
-                  priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-                <div className="absolute bottom-4 left-4 right-4">
-                  <div className="bg-white/90 dark:bg-black/70 backdrop-blur-md rounded-2xl p-4 flex items-center gap-3">
-                    <div className="flex -space-x-2">
-                      {["bg-amber-500", "bg-emerald-500", "bg-orange-500", "bg-teal-500"].map((c, i) => (
-                        <div key={i} className={`h-8 w-8 rounded-full ${c} border-2 border-white dark:border-neutral-800 flex items-center justify-center text-white text-xs font-bold`}>
-                          {["AD", "FN", "KM", "AB"][i]}
-                        </div>
-                      ))}
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-semibold">+10 000 artisans verifies</p>
-                      <p className="text-xs text-muted-foreground">Prets a intervenir chez vous</p>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                      <span className="text-sm font-bold">4.8</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/* Floating badge */}
-              <motion.div
-                className="absolute -top-4 -right-4 bg-gradient-to-br from-amber-500 to-orange-600 text-white rounded-2xl px-4 py-3 shadow-lg"
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <p className="text-xs font-semibold flex items-center gap-1"><Rocket className="w-3 h-3" /> Reponse en</p>
-                <p className="text-lg font-extrabold">15 min</p>
               </motion.div>
             </motion.div>
           </div>
