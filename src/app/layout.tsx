@@ -25,7 +25,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Artisan Connect â€” Trouvez l'artisan parfait pour chaque projet",
+  title: "FINDA â€” Trouvez l'artisan parfait pour chaque projet",
   description:
     "Plateforme premium connectant les clients avec les meilleurs artisans Ã  travers l'Afrique. Plomberie, électricité, menuiserie, peinture et plus encore. Service vérifié, paiement sécurisé, satisfaction garantie.",
   keywords: [
@@ -40,9 +40,9 @@ export const metadata: Metadata = {
     "climatisation",
     "nettoyage",
     "services",
-    "Artisan Connect",
+    "FINDA",
   ],
-  authors: [{ name: "Artisan Connect" }],
+  authors: [{ name: "FINDA" }],
   manifest: "/manifest.json",
   icons: {
     icon: "/icons/icon.svg",
@@ -51,19 +51,19 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Artisan Connect",
+    title: "FINDA",
   },
   openGraph: {
-    title: "Artisan Connect â€” Trouvez l'artisan parfait pour chaque projet",
+    title: "FINDA â€” Trouvez l'artisan parfait pour chaque projet",
     description:
       "Plateforme premium connectant les clients avec les meilleurs artisans Ã  travers l'Afrique.",
-    siteName: "Artisan Connect",
+    siteName: "FINDA",
     type: "website",
     locale: "fr_FR",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Artisan Connect â€” Trouvez l'artisan parfait pour chaque projet",
+    title: "FINDA â€” Trouvez l'artisan parfait pour chaque projet",
     description:
       "Plateforme premium connectant les clients avec les meilleurs artisans Ã  travers l'Afrique.",
   },
@@ -81,7 +81,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#d97706" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Artisan Connect" />
+        <meta name="apple-mobile-web-app-title" content="FINDA" />
         <link rel="apple-touch-icon" href="/icons/icon.svg" />
       </head>
       <body
@@ -91,7 +91,7 @@ export default function RootLayout({
         <PresenceHeartbeat />
         <ThemeProvider
           attribute="class"
-          defaultTheme="light"
+          defaultTheme="dark"
                     disableTransitionOnChange
         >
           {children}
@@ -102,4 +102,3 @@ export default function RootLayout({
     </html>
   );
 }
-

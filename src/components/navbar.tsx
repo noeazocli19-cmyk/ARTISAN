@@ -101,11 +101,11 @@ export function Navbar({ onOpenAuth, onSearch }: NavbarProps) {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <button onClick={handleLogoClick} className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-600">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg" style={{ backgroundColor: '#2596BE' }}>
             <Wrench className="h-5 w-5 text-white" />
           </div>
-          <span className="text-lg font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
-            Artisan Connect
+          <span className="text-lg font-bold" style={{ fontFamily: 'Foodpacker, sans-serif', color: '#2596BE' }}>
+            FINDA
           </span>
         </button>
 

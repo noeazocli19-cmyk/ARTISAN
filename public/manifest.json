@@ -1,11 +1,11 @@
 {
-  "name": "Artisan Connect",
-  "short_name": "ArtisanC",
+  "name": "FINDA",
+  "short_name": "FINDA",
   "description": "Trouvez l'artisan parfait pour chaque projet en Afrique",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#d97706",
+  "background_color": "#0d1117",
+  "theme_color": "#2596BE",
   "orientation": "portrait-primary",
   "icons": [
     {
