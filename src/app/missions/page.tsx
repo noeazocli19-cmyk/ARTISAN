@@ -14,7 +14,7 @@ const CATEGORIES = [
 const STATUS_COLORS: Record<string, string> = {
   ouverte: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
   assignee: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
-  en_cours: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+  en_cours: "bg-brand-100 text-brand-700 dark:bg-brand-900/30 dark:text-brand-400",
   terminee: "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400",
   annulee: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
 }
@@ -67,7 +67,7 @@ export default function MissionsPage() {
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center shadow-lg">
               <Search className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -82,7 +82,7 @@ export default function MissionsPage() {
           {session?.user?.role === "client" && (
             <button
               onClick={() => router.push("/missions/create")}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 text-white font-semibold hover:from-amber-600 hover:to-orange-700 transition-all shadow-md hover:shadow-lg"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-500 to-brand-600 text-white font-semibold hover:from-brand-600 hover:to-brand-700 transition-all shadow-md hover:shadow-lg"
             >
               <Plus className="w-4 h-4" />
               Publier
@@ -96,7 +96,7 @@ export default function MissionsPage() {
             onClick={() => setSelectedCategory("all")}
             className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
               selectedCategory === "all"
-                ? "bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-md"
+                ? "bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-md"
                 : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700"
             }`}
           >
@@ -109,7 +109,7 @@ export default function MissionsPage() {
               onClick={() => setSelectedCategory(cat)}
               className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
                 selectedCategory === cat
-                  ? "bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-md"
+                  ? "bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-md"
                   : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700"
               }`}
             >
@@ -136,10 +136,10 @@ export default function MissionsPage() {
               <div
                 key={mission.id}
                 onClick={() => router.push(`/missions/${mission.id}`)}
-                className="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:border-amber-200 dark:hover:border-amber-800 transition-all cursor-pointer group"
+                className="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:border-brand-200 dark:hover:border-brand-800 transition-all cursor-pointer group"
               >
                 <div className="flex items-start justify-between mb-2">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
                     {mission.title}
                   </h3>
                   <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${STATUS_COLORS[mission.status] || "bg-gray-100 text-gray-600"}`}>
@@ -152,7 +152,7 @@ export default function MissionsPage() {
                 </p>
 
                 <div className="flex items-center flex-wrap gap-3 text-sm text-gray-500 dark:text-gray-400">
-                  <span className="flex items-center gap-1 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 px-2.5 py-1 rounded-full text-xs font-medium">
+                  <span className="flex items-center gap-1 bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-400 px-2.5 py-1 rounded-full text-xs font-medium">
                     <Tag className="w-3 h-3" />
                     {mission.category}
                   </span>

@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Politique de Confidentialité - Artisan Connect',
+  title: 'Politique de Confidentialité - FINDA',
   description: 'Politique de protection des données personnelles',
 }
 
@@ -10,7 +10,7 @@ export default function ConfidentialitePage() {
     <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
         <div className="prose prose-lg dark:prose-invert max-w-none">
-          <h1 className="text-3xl font-bold text-amber-600 mb-8">
+          <h1 className="text-3xl font-bold text-brand-600 mb-8">
             Politique de Confidentialité
           </h1>
           <p className="text-sm text-muted-foreground mb-8">
@@ -19,7 +19,7 @@ export default function ConfidentialitePage() {
 
           <h2 className="text-xl font-semibold mt-8 mb-4">1. Responsable du traitement</h2>
           <p className="mb-4">
-            Le responsable du traitement des données personnelles est Artisan Connect, représenté par son fondateur. Pour toute question relative à vos données personnelles, vous pouvez contacter : support@artisan-connect.com
+            Le responsable du traitement des données personnelles est FINDA, représenté par son fondateur. Pour toute question relative à vos données personnelles, vous pouvez contacter : support@artisan-connect.com
           </p>
 
           <h2 className="text-xl font-semibold mt-8 mb-4">2. Données collectées</h2>
@@ -102,9 +102,9 @@ export default function ConfidentialitePage() {
             Si vous estimez que vos droits ne sont pas respectés, vous pouvez déposer une réclamation auprès de l'autorité de protection des données de votre pays.
           </p>
 
-          <div className="mt-12 p-6 bg-amber-50 dark:bg-amber-950/30 rounded-xl">
+          <div className="mt-12 p-6 bg-brand-50 dark:bg-brand-950/30 rounded-xl">
             <p className="text-sm text-muted-foreground">
-              © 2025 Artisan Connect - La 1ère plateforme d'artisans en Afrique. Tous droits réservés.
+              © 2025 FINDA - La 1ère plateforme d'artisans en Afrique. Tous droits réservés.
             </p>
           </div>
         </div>

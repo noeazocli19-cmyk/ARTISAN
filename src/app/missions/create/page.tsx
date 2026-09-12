@@ -3,7 +3,11 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { authClient } from "@/lib/auth-client"
-import { ClipboardList, MapPin, Phone, DollarSign, FileText, Tag, Send, Loader2 } from "lucide-react"
+import { ClipboardList, MapPin, Phone, DollarSign, FileText, Tag, Send, Loader2, Navigation } from "lucide-react"
+import { getIssuesForCategory } from "@/lib/categories-map"
+
+// Centre par défaut : Cotonou (utilisé si la géolocalisation du navigateur échoue ou est refusée)
+const COTONOU_COORDS = { latitude: 6.3703, longitude: 2.3912 }
 
 const CATEGORIES = [
   { name: "Plomberie", icon: "🔧" },
@@ -24,6 +28,9 @@ export default function CreateMissionPage() {
   const router = useRouter()
   const { data: session } = authClient.useSession()
   const [loading, setLoading] = useState(false)
+  const [locating, setLocating] = useState(false)
+  const [selectedIssue, setSelectedIssue] = useState("")
+  const [coords, setCoords] = useState<{ latitude: number; longitude: number } | null>(null)
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -32,6 +39,51 @@ export default function CreateMissionPage() {
     location: "",
     phone: "",
   })
+
+  const handleSelectCategory = (categoryName: string) => {
+    setForm({ ...form, category: categoryName })
+    setSelectedIssue("")
+  }
+
+  const handleSelectIssue = (issue: string) => {
+    setSelectedIssue(issue)
+    // Préremplit le titre avec le sous-problème choisi (reste modifiable ensuite)
+    setForm((f) => ({ ...f, title: issue === "Autre" ? "" : `${issue} — ${f.category}` }))
+  }
+
+  const handleUseMyLocation = () => {
+    setLocating(true)
+    if (!navigator.geolocation) {
+      setCoords(COTONOU_COORDS)
+      setLocating(false)
+      alert("La géolocalisation n'est pas disponible sur votre appareil. Merci de saisir votre adresse manuellement.")
+      return
+    }
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords
+        setCoords({ latitude, longitude })
+        try {
+          const res = await fetch(`/api/geocode?lat=${latitude}&lng=${longitude}`)
+          const data = await res.json()
+          if (data.success && data.formattedAddress) {
+            setForm((f) => ({ ...f, location: data.formattedAddress }))
+          }
+        } catch {
+          // Si le géocodage inverse échoue, on garde quand même les coordonnées
+        } finally {
+          setLocating(false)
+        }
+      },
+      () => {
+        // Refus ou échec : on retombe sur le centre de Cotonou par défaut
+        setCoords(COTONOU_COORDS)
+        setLocating(false)
+        alert("Localisation refusée ou indisponible. Vous pouvez saisir votre adresse manuellement.")
+      },
+      { enableHighAccuracy: true, timeout: 8000 }
+    )
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -47,6 +99,8 @@ export default function CreateMissionPage() {
           category: form.category,
           budget: parseInt(form.budget) || 0,
           location: form.location,
+          latitude: coords?.latitude ?? null,
+          longitude: coords?.longitude ?? null,
           phone: form.phone,
         }),
       })
@@ -70,7 +124,7 @@ export default function CreateMissionPage() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4">
       <div className="max-w-2xl mx-auto">
         <div className="flex items-center gap-3 mb-2">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center shadow-lg">
             <ClipboardList className="w-5 h-5 text-white" />
           </div>
           <div>
@@ -87,7 +141,7 @@ export default function CreateMissionPage() {
           {/* Catégorie */}
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-              <Tag className="w-4 h-4 text-amber-500" />
+              <Tag className="w-4 h-4 text-brand-500" />
               Catégorie <span className="text-gray-400 font-normal">(votre type de problème)</span>
             </label>
             <div className="grid grid-cols-3 gap-2">
@@ -95,10 +149,10 @@ export default function CreateMissionPage() {
                 <button
                   key={cat.name}
                   type="button"
-                  onClick={() => setForm({ ...form, category: cat.name })}
+                  onClick={() => handleSelectCategory(cat.name)}
                   className={`px-3 py-2.5 rounded-xl text-sm font-medium transition-all flex items-center gap-2 ${
                     form.category === cat.name
-                      ? "bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-md scale-[1.02]"
+                      ? "bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-md scale-[1.02]"
                       : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
                   }`}
                 >
@@ -109,10 +163,36 @@ export default function CreateMissionPage() {
             </div>
           </div>
 
+          {/* Sous-problème dynamique selon le métier choisi */}
+          {form.category && (
+            <div>
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                <Tag className="w-4 h-4 text-brand-500" />
+                Précisez le problème
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {getIssuesForCategory(form.category).map((issue) => (
+                  <button
+                    key={issue}
+                    type="button"
+                    onClick={() => handleSelectIssue(issue)}
+                    className={`px-3 py-2 rounded-full text-sm font-medium transition-all ${
+                      selectedIssue === issue
+                        ? "bg-brand-500 text-white shadow-md"
+                        : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                    }`}
+                  >
+                    {issue}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Titre */}
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-              <FileText className="w-4 h-4 text-amber-500" />
+              <FileText className="w-4 h-4 text-brand-500" />
               Titre de la mission
             </label>
             <input
@@ -121,14 +201,14 @@ export default function CreateMissionPage() {
               value={form.title}
               onChange={(e) => setForm({ ...form, title: e.target.value })}
               placeholder="Ex: Fuite d'eau sous l'évier de la cuisine"
-              className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all"
+              className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all"
             />
           </div>
 
           {/* Description */}
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-              <FileText className="w-4 h-4 text-amber-500" />
+              <FileText className="w-4 h-4 text-brand-500" />
               Description du problème
             </label>
             <textarea
@@ -137,14 +217,14 @@ export default function CreateMissionPage() {
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
               placeholder="Décrivez votre problème en détail : ce qui se passe, depuis quand, ce que vous avez essayé..."
-              className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none resize-none transition-all"
+              className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none resize-none transition-all"
             />
           </div>
 
           {/* Budget */}
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-              <DollarSign className="w-4 h-4 text-amber-500" />
+              <DollarSign className="w-4 h-4 text-brand-500" />
               Budget estimé <span className="text-gray-400 font-normal">(FCFA)</span>
             </label>
             <input
@@ -152,30 +232,44 @@ export default function CreateMissionPage() {
               value={form.budget}
               onChange={(e) => setForm({ ...form, budget: e.target.value })}
               placeholder="Ex: 15000"
-              className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all"
+              className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all"
             />
           </div>
 
           {/* Localisation */}
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-              <MapPin className="w-4 h-4 text-amber-500" />
+              <MapPin className="w-4 h-4 text-brand-500" />
               Votre localisation
             </label>
-            <input
-              type="text"
-              required
-              value={form.location}
-              onChange={(e) => setForm({ ...form, location: e.target.value })}
-              placeholder="Ex: Cotonou, Akpakpa, Bénin"
-              className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all"
-            />
+            <div className="flex gap-2">
+              <input
+                type="text"
+                required
+                value={form.location}
+                onChange={(e) => setForm({ ...form, location: e.target.value })}
+                placeholder="Ex: Cotonou, Akpakpa, Bénin"
+                className="flex-1 px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all"
+              />
+              <button
+                type="button"
+                onClick={handleUseMyLocation}
+                disabled={locating}
+                title="Utiliser ma position actuelle"
+                className="shrink-0 px-3.5 rounded-xl border border-brand-500 text-brand-500 hover:bg-brand-50 dark:hover:bg-brand-950 transition-all flex items-center justify-center disabled:opacity-50"
+              >
+                {locating ? <Loader2 className="w-5 h-5 animate-spin" /> : <Navigation className="w-5 h-5" />}
+              </button>
+            </div>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1.5 ml-1">
+              {coords ? "Position détectée — utilisée pour trouver les artisans les plus proches de vous." : "Astuce : utilisez le bouton pour partager votre position et trouver plus vite un artisan proche."}
+            </p>
           </div>
 
           {/* Téléphone */}
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-              <Phone className="w-4 h-4 text-amber-500" />
+              <Phone className="w-4 h-4 text-brand-500" />
               Votre numéro de téléphone
             </label>
             <input
@@ -184,7 +278,7 @@ export default function CreateMissionPage() {
               value={form.phone}
               onChange={(e) => setForm({ ...form, phone: e.target.value })}
               placeholder="Ex: +229 90 00 00 00"
-              className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all"
+              className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all"
             />
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1.5 ml-1">
               Ce numéro sera visible par l'artisan qui accepte votre mission
@@ -195,7 +289,7 @@ export default function CreateMissionPage() {
           <button
             type="submit"
             disabled={loading || !form.category}
-            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 text-white font-semibold text-lg hover:from-amber-600 hover:to-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-500 to-brand-600 text-white font-semibold text-lg hover:from-brand-600 hover:to-brand-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
           >
             {loading ? (
               <>

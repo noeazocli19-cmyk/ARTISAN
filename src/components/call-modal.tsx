@@ -130,7 +130,7 @@ export function CallModal({
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
           >
             {/* Gradient Background */}
-            <div className="bg-gradient-to-br from-amber-500 to-orange-600 px-6 pt-10 pb-8 text-white text-center relative overflow-hidden">
+            <div className="bg-gradient-to-br from-brand-500 to-brand-600 px-6 pt-10 pb-8 text-white text-center relative overflow-hidden">
               {/* Decorative circles */}
               <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-white/5" />
               <div className="absolute -bottom-20 -left-10 w-52 h-52 rounded-full bg-white/5" />
@@ -389,7 +389,7 @@ export function CallModal({
                     {/* Callback Button */}
                     <motion.button
                       onClick={handleCallback}
-                      className="flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 text-white font-medium shadow-lg hover:shadow-xl transition-shadow"
+                      className="flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-brand-500 to-brand-600 text-white font-medium shadow-lg hover:shadow-xl transition-shadow"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >

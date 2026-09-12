@@ -438,7 +438,7 @@ function getStatusBadge(status: 'open' | 'closed' | 'awarded') {
     case 'closed':
       return <Badge className="bg-neutral-500/15 text-neutral-500 dark:text-neutral-400 border-neutral-500/25 hover:bg-neutral-500/20 border">Fermée</Badge>
     case 'awarded':
-      return <Badge className="bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/25 hover:bg-amber-500/20 border">Attribuée</Badge>
+      return <Badge className="bg-brand-500/15 text-brand-600 dark:text-brand-400 border-brand-500/25 hover:bg-brand-500/20 border">Attribuée</Badge>
   }
 }
 
@@ -456,7 +456,7 @@ function getUrgencyBadge(urgency: 'low' | 'medium' | 'high') {
 function getBadgeColor(badge: string): string {
   switch (badge) {
     case 'Élite':
-      return 'bg-amber-500 text-white'
+      return 'bg-brand-500 text-white'
     case 'Top':
       return 'bg-emerald-500 text-white'
     case 'Vérifié':
@@ -468,7 +468,7 @@ function getBadgeColor(badge: string): string {
 
 function getAvatarColor(initial: string): string {
   const colors = [
-    'bg-amber-500', 'bg-emerald-500', 'bg-orange-500',
+    'bg-fuchsia-500', 'bg-emerald-500', 'bg-lime-500',
     'bg-teal-500', 'bg-cyan-500', 'bg-violet-500',
   ]
   const idx = initial.charCodeAt(0) % colors.length
@@ -507,9 +507,9 @@ function StarRating({ rating, size = 'sm' }: { rating: number; size?: 'sm' | 'md
           key={i}
           className={`${iconSize} ${
             i < Math.floor(rating)
-              ? 'fill-amber-400 text-amber-400'
+              ? 'fill-brand-400 text-brand-400'
               : i < rating
-                ? 'fill-amber-400/50 text-amber-400'
+                ? 'fill-brand-400/50 text-brand-400'
                 : 'fill-neutral-200 text-neutral-200 dark:fill-neutral-700 dark:text-neutral-700'
           }`}
         />
@@ -538,7 +538,7 @@ function QuoteCard({
 
   return (
     <motion.div variants={scaleIn} initial="hidden" animate="visible">
-      <Card className="border-border/50 hover:border-amber-300/50 dark:hover:border-amber-700/50 transition-all hover:shadow-md overflow-hidden">
+      <Card className="border-border/50 hover:border-brand-300/50 dark:hover:border-brand-700/50 transition-all hover:shadow-md overflow-hidden">
         <CardContent className="p-4 sm:p-6">
           {/* Highlight badges */}
           {(isLowest || isFastest || isHighestRated) && (
@@ -550,7 +550,7 @@ function QuoteCard({
                 </Badge>
               )}
               {isFastest && (
-                <Badge className="bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/25 gap-1 border">
+                <Badge className="bg-brand-500/15 text-brand-600 dark:text-brand-400 border-brand-500/25 gap-1 border">
                   <Zap className="h-3 w-3" />
                   Plus rapide
                 </Badge>
@@ -584,7 +584,7 @@ function QuoteCard({
           <div className="mb-4">
             <button
               type="button"
-              className="flex items-center gap-1 text-sm font-medium text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 transition-colors"
+              className="flex items-center gap-1 text-sm font-medium text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors"
               onClick={() => setShowItems(!showItems)}
             >
               <FileText className="h-4 w-4" />
@@ -628,9 +628,9 @@ function QuoteCard({
           </div>
 
           {/* Total */}
-          <div className="flex items-center justify-between mb-4 p-3 rounded-lg bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30">
+          <div className="flex items-center justify-between mb-4 p-3 rounded-lg bg-gradient-to-r from-brand-50 to-brand-50 dark:from-brand-950/30 dark:to-brand-950/30">
             <span className="font-semibold text-sm">Total</span>
-            <span className="text-xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+            <span className="text-xl font-bold bg-gradient-to-r from-brand-600 to-brand-600 bg-clip-text text-transparent">
               {formatFCFA(quote.totalAmount)}
             </span>
           </div>
@@ -638,11 +638,11 @@ function QuoteCard({
           {/* Duration & Availability */}
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mb-4 text-sm text-muted-foreground">
             <div className="flex items-center gap-1.5">
-              <Clock className="h-4 w-4 text-amber-500" />
+              <Clock className="h-4 w-4 text-brand-500" />
               <span>Durée : <strong className="text-foreground">{quote.estimatedDuration}</strong></span>
             </div>
             <div className="flex items-center gap-1.5">
-              <Calendar className="h-4 w-4 text-amber-500" />
+              <Calendar className="h-4 w-4 text-brand-500" />
               <span>{quote.availability}</span>
             </div>
           </div>
@@ -651,8 +651,8 @@ function QuoteCard({
           {quote.message && (
             <div className="mb-4 p-3 rounded-lg bg-muted/50 border border-border/30">
               <div className="flex items-center gap-1.5 mb-1">
-                <MessageSquare className="h-3.5 w-3.5 text-amber-500" />
-                <span className="text-xs font-medium text-amber-600 dark:text-amber-400">Message de l&apos;artisan</span>
+                <MessageSquare className="h-3.5 w-3.5 text-brand-500" />
+                <span className="text-xs font-medium text-brand-600 dark:text-brand-400">Message de l&apos;artisan</span>
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">{quote.message}</p>
             </div>
@@ -661,7 +661,7 @@ function QuoteCard({
           {/* Actions */}
           <div className="flex gap-3">
             <Button
-              className="flex-1 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0"
+              className="flex-1 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0"
               onClick={onAccept}
             >
               <ThumbsUp className="h-4 w-4 mr-1.5" />
@@ -820,7 +820,7 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
             <Card className="mb-6 border-border/50">
               <CardContent className="p-4 sm:p-6">
                 <div className="flex flex-wrap items-center gap-2 mb-3">
-                  <Badge variant="outline" className="border-amber-400/50 text-amber-600 dark:text-amber-400">
+                  <Badge variant="outline" className="border-brand-400/50 text-brand-600 dark:text-brand-400">
                     {selectedRequest.category}
                   </Badge>
                   {getUrgencyBadge(selectedRequest.urgency)}
@@ -829,15 +829,15 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
                 <p className="text-muted-foreground text-sm leading-relaxed mb-4">{selectedRequest.description}</p>
                 <div className="flex flex-wrap gap-4 text-sm">
                   <div className="flex items-center gap-1.5 text-muted-foreground">
-                    <DollarSign className="h-4 w-4 text-amber-500" />
+                    <DollarSign className="h-4 w-4 text-brand-500" />
                     <span>Budget : <strong className="text-foreground">{formatFCFA(selectedRequest.budget.min)} — {formatFCFA(selectedRequest.budget.max)}</strong></span>
                   </div>
                   <div className="flex items-center gap-1.5 text-muted-foreground">
-                    <Clock className="h-4 w-4 text-amber-500" />
+                    <Clock className="h-4 w-4 text-brand-500" />
                     <span>{getTimeRemaining(selectedRequest.expiresAt)}</span>
                   </div>
                   <div className="flex items-center gap-1.5 text-muted-foreground">
-                    <Users className="h-4 w-4 text-amber-500" />
+                    <Users className="h-4 w-4 text-brand-500" />
                     <span>{selectedRequest.quotes.length} devis reçu{selectedRequest.quotes.length > 1 ? 's' : ''}</span>
                   </div>
                 </div>
@@ -849,7 +849,7 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
           {comparisonData && comparisonData.quotes.length > 1 && (
             <div className="mb-6">
               <div className="flex items-center gap-2 mb-4">
-                <Eye className="h-5 w-5 text-amber-500" />
+                <Eye className="h-5 w-5 text-brand-500" />
                 <h3 className="font-bold text-lg">Comparaison des devis</h3>
                 <Badge variant="secondary" className="ml-2">{comparisonData.quotes.length} devis</Badge>
               </div>
@@ -867,10 +867,10 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
                     </div>
                   </CardContent>
                 </Card>
-                <Card className="border-amber-500/30 bg-amber-50/50 dark:bg-amber-950/20">
+                <Card className="border-brand-500/30 bg-brand-50/50 dark:bg-brand-950/20">
                   <CardContent className="p-3 flex items-center gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/50">
-                      <Zap className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-100 dark:bg-brand-900/50">
+                      <Zap className="h-5 w-5 text-brand-600 dark:text-brand-400" />
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">Plus rapide</p>
@@ -933,8 +933,8 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
 
           {selectedRequest.quotes.length === 0 && (
             <motion.div initial="hidden" animate="visible" variants={fadeInUp} className="text-center py-16">
-              <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-full bg-amber-100 dark:bg-amber-950/50 mb-4">
-                <Clock className="h-8 w-8 text-amber-500" />
+              <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-full bg-brand-100 dark:bg-brand-950/50 mb-4">
+                <Clock className="h-8 w-8 text-brand-500" />
               </div>
               <h3 className="font-semibold text-lg mb-2">Aucun devis reçu</h3>
               <p className="text-muted-foreground">Les artisans n&apos;ont pas encore répondu à cette demande.</p>
@@ -964,7 +964,7 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
                 Annuler
               </Button>
               <Button
-                className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0"
+                className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0"
                 onClick={confirmAccept}
               >
                 <CheckCircle2 className="h-4 w-4 mr-1.5" />
@@ -1030,7 +1030,7 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
               </div>
             </div>
             <Button
-              className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 gap-1.5"
+              className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 gap-1.5"
               onClick={() => setCreateDialogOpen(true)}
             >
               <Plus className="h-4 w-4" />
@@ -1063,13 +1063,13 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
           <TabsContent value="open">
             {openRequests.length === 0 ? (
               <motion.div initial="hidden" animate="visible" variants={fadeInUp} className="text-center py-16">
-                <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-full bg-amber-100 dark:bg-amber-950/50 mb-4">
-                  <FileText className="h-8 w-8 text-amber-500" />
+                <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-full bg-brand-100 dark:bg-brand-950/50 mb-4">
+                  <FileText className="h-8 w-8 text-brand-500" />
                 </div>
                 <h3 className="font-semibold text-lg mb-2">Aucune demande en cours</h3>
                 <p className="text-muted-foreground mb-4">Créez votre première demande de devis !</p>
                 <Button
-                  className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0"
+                  className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0"
                   onClick={() => setCreateDialogOpen(true)}
                 >
                   <Plus className="h-4 w-4 mr-1.5" />
@@ -1086,13 +1086,13 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
                 {openRequests.map((request) => (
                   <motion.div key={request.id} variants={fadeInUp}>
                     <Card
-                      className="cursor-pointer border-border/50 hover:border-amber-300 dark:hover:border-amber-700 transition-all hover:shadow-lg group"
+                      className="cursor-pointer border-border/50 hover:border-brand-300 dark:hover:border-brand-700 transition-all hover:shadow-lg group"
                       onClick={() => setSelectedRequest(request)}
                     >
                       <CardContent className="p-4 sm:p-6">
                         {/* Header */}
                         <div className="flex items-start justify-between gap-2 mb-3">
-                          <h3 className="font-semibold text-sm sm:text-base group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors leading-tight">
+                          <h3 className="font-semibold text-sm sm:text-base group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors leading-tight">
                             {request.title}
                           </h3>
                           {getStatusBadge(request.status)}
@@ -1100,7 +1100,7 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
 
                         {/* Badges row */}
                         <div className="flex flex-wrap items-center gap-2 mb-3">
-                          <Badge variant="outline" className="border-amber-400/50 text-amber-600 dark:text-amber-400 text-xs">
+                          <Badge variant="outline" className="border-brand-400/50 text-brand-600 dark:text-brand-400 text-xs">
                             {request.category}
                           </Badge>
                           {getUrgencyBadge(request.urgency)}
@@ -1108,14 +1108,14 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
 
                         {/* Location */}
                         <div className="flex items-center gap-1.5 text-sm text-muted-foreground mb-3">
-                          <MapPin className="h-3.5 w-3.5 text-amber-500" />
+                          <MapPin className="h-3.5 w-3.5 text-brand-500" />
                           <span>{request.location}</span>
                         </div>
 
                         {/* Stats row */}
                         <div className="grid grid-cols-3 gap-3 mb-3">
                           <div className="text-center p-2 rounded-lg bg-muted/50">
-                            <p className="text-lg font-bold text-amber-600 dark:text-amber-400">{request.quotes.length}</p>
+                            <p className="text-lg font-bold text-brand-600 dark:text-brand-400">{request.quotes.length}</p>
                             <p className="text-[10px] sm:text-xs text-muted-foreground">Devis</p>
                           </div>
                           <div className="text-center p-2 rounded-lg bg-muted/50">
@@ -1135,11 +1135,11 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
                           <div className="pt-3 border-t border-border/30">
                             <div className="flex items-center justify-between">
                               <span className="text-xs text-muted-foreground">
-                                À partir de <strong className="text-amber-600 dark:text-amber-400">
+                                À partir de <strong className="text-brand-600 dark:text-brand-400">
                                   {formatFCFA(Math.min(...request.quotes.map(q => q.totalAmount)))}
                                 </strong>
                               </span>
-                              <span className="text-xs text-amber-600 dark:text-amber-400 font-medium flex items-center gap-1 group-hover:gap-1.5 transition-all">
+                              <span className="text-xs text-brand-600 dark:text-brand-400 font-medium flex items-center gap-1 group-hover:gap-1.5 transition-all">
                                 Voir les devis
                                 <ChevronDown className="h-3 w-3 rotate-[-90deg]" />
                               </span>
@@ -1174,7 +1174,7 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
                 {closedRequests.map((request) => (
                   <motion.div key={request.id} variants={fadeInUp}>
                     <Card
-                      className="cursor-pointer border-border/50 hover:border-amber-300/50 dark:hover:border-amber-700/50 transition-all hover:shadow-md opacity-80 hover:opacity-100"
+                      className="cursor-pointer border-border/50 hover:border-brand-300/50 dark:hover:border-brand-700/50 transition-all hover:shadow-md opacity-80 hover:opacity-100"
                       onClick={() => setSelectedRequest(request)}
                     >
                       <CardContent className="p-4 sm:p-6">
@@ -1184,7 +1184,7 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
                         </div>
 
                         <div className="flex flex-wrap items-center gap-2 mb-3">
-                          <Badge variant="outline" className="border-amber-400/50 text-amber-600 dark:text-amber-400 text-xs">
+                          <Badge variant="outline" className="border-brand-400/50 text-brand-600 dark:text-brand-400 text-xs">
                             {request.category}
                           </Badge>
                           {getUrgencyBadge(request.urgency)}
@@ -1203,9 +1203,9 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
                         {request.status === 'awarded' && request.quotes.find(q => q.status === 'accepted') && (
                           <div className="mt-3 pt-3 border-t border-border/30">
                             <div className="flex items-center gap-2 text-sm">
-                              <CheckCircle2 className="h-4 w-4 text-amber-500" />
+                              <CheckCircle2 className="h-4 w-4 text-brand-500" />
                               <span>Accepté : <strong>{request.quotes.find(q => q.status === 'accepted')?.artisanName}</strong></span>
-                              <span className="text-amber-600 dark:text-amber-400 font-semibold">
+                              <span className="text-brand-600 dark:text-brand-400 font-semibold">
                                 {formatFCFA(request.quotes.find(q => q.status === 'accepted')?.totalAmount ?? 0)}
                               </span>
                             </div>
@@ -1240,7 +1240,7 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
               </div>
               <h3 className="text-xl font-bold mb-2">Demande envoyée !</h3>
               <p className="text-muted-foreground mb-2">Votre demande de devis a été publiée avec succès.</p>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-100 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 font-medium text-sm">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-100 dark:bg-brand-950/50 text-brand-700 dark:text-brand-300 font-medium text-sm">
                 <Sparkles className="h-4 w-4" />
                 3 artisans ont été notifiés !
               </div>
@@ -1249,7 +1249,7 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
             <>
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-600">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-brand-500 to-brand-600">
                     <FileText className="h-4 w-4 text-white" />
                   </div>
                   Nouvelle demande de devis
@@ -1383,7 +1383,7 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
                 <div className="space-y-2">
                   <Label>Photos (optionnel)</Label>
                   <div
-                    className="border-2 border-dashed border-border/60 rounded-lg p-6 text-center cursor-pointer hover:border-amber-400/60 hover:bg-amber-50/50 dark:hover:bg-amber-950/20 transition-colors"
+                    className="border-2 border-dashed border-border/60 rounded-lg p-6 text-center cursor-pointer hover:border-brand-400/60 hover:bg-brand-50/50 dark:hover:bg-brand-950/20 transition-colors"
                     onClick={() => {
                       if (formPhotos.length < 5) {
                         setFormPhotos(prev => [...prev, `photo-${prev.length + 1}`])
@@ -1397,8 +1397,8 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
                   {formPhotos.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-2">
                       {formPhotos.map((photo, idx) => (
-                        <div key={photo} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200/50 dark:border-amber-800/50">
-                          <Camera className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
+                        <div key={photo} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-brand-50 dark:bg-brand-950/30 border border-brand-200/50 dark:border-brand-800/50">
+                          <Camera className="h-3.5 w-3.5 text-brand-600 dark:text-brand-400" />
                           <span className="text-xs">Photo {idx + 1}</span>
                           <button
                             type="button"
@@ -1426,7 +1426,7 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
                   Annuler
                 </Button>
                 <Button
-                  className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0"
+                  className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0"
                   onClick={handleCreateSubmit}
                   disabled={
                     isSubmitting ||

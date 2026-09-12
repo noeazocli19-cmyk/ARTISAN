@@ -35,7 +35,7 @@ const CITIES: Record<string, string[]> = {
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(true);
   const [role, setRole] = useState<"client" | "artisan">("artisan");
   const [isLogin, setIsLogin] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -166,29 +166,21 @@ export default function RegisterPage() {
     }
   };
 
-  const inputCls = "w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition text-gray-900 placeholder:text-gray-400 bg-white";
+  const inputCls = "w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition text-gray-900 placeholder:text-gray-400 bg-white";
   const labelCls = "block text-sm font-medium text-gray-700 mb-1";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-50">
-      <div className="w-full bg-white/80 backdrop-blur-sm border-b border-orange-100 px-6 py-3 flex items-center justify-between">
-        <button onClick={() => router.push("/")} className="flex items-center gap-2 text-orange-600 hover:text-orange-700 transition">
+    <div className="min-h-screen bg-gradient-to-br from-brand-50 via-white to-brand-50">
+      <div className="w-full bg-white/80 backdrop-blur-sm border-b border-brand-100 px-6 py-3 flex items-center justify-between">
+        <button onClick={() => router.push("/")} className="flex items-center gap-2 text-brand-600 hover:text-brand-700 transition">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
           <span className="font-medium">Retour</span>
         </button>
-        <h1 className="text-lg font-bold text-orange-600">Artisan Connect</h1>
+        <h1 className="text-lg font-bold text-brand-600">FINDA</h1>
         <div className="w-20" />
       </div>
 
       <div className="max-w-5xl mx-auto px-4 py-8">
-        {!showForm && (
-          <div className="mb-8">
-            <ArtisanAnimation onAnimationComplete={() => setShowForm(true)} />
-            <motion.p className="text-center text-orange-500/60 mt-4 text-sm" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}>
-              L&apos;artisan prepare son espace de travail...
-            </motion.p>
-          </div>
-        )}
 
         <AnimatePresence>
           {showForm && (
@@ -196,17 +188,10 @@ export default function RegisterPage() {
               initial={{ opacity: 0, y: 40, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
-              className="bg-white rounded-2xl shadow-xl border border-orange-100 overflow-hidden"
+              className="bg-white rounded-2xl shadow-xl border border-brand-100 overflow-hidden"
             >
-              <div className="flex border-b border-orange-100">
-                <button
-                  onClick={() => { setIsLogin(false); setError(""); setSuccess(""); }}
-                  className={"flex-1 py-3 text-center font-semibold transition " + (!isLogin ? "bg-orange-500 text-white" : "bg-white text-orange-400 hover:bg-orange-50")}
-                >S&apos;inscrire</button>
-                <button
-                  onClick={() => { setIsLogin(true); setError(""); setSuccess(""); }}
-                  className={"flex-1 py-3 text-center font-semibold transition " + (isLogin ? "bg-orange-500 text-white" : "bg-white text-orange-400 hover:bg-orange-50")}
-                >Se connecter</button>
+              <div className="border-b border-brand-100 py-4 text-center">
+                <h2 className="font-semibold text-brand-600">Créer un compte</h2>
               </div>
 
               <div className="p-6 sm:p-8">
@@ -220,11 +205,11 @@ export default function RegisterPage() {
                       <p className={labelCls}>Je suis :</p>
                       <div className="flex gap-3">
                         <button type="button" onClick={() => setRole("client")}
-                          className={"flex-1 py-3 rounded-lg font-semibold border-2 transition " + (role === "client" ? "border-orange-500 bg-orange-50 text-orange-700" : "border-gray-200 bg-white text-gray-500 hover:border-orange-200")}>
+                          className={"flex-1 py-3 rounded-lg font-semibold border-2 transition " + (role === "client" ? "border-brand-500 bg-brand-50 text-brand-700" : "border-gray-200 bg-white text-gray-500 hover:border-brand-200")}>
                           Client
                         </button>
                         <button type="button" onClick={() => setRole("artisan")}
-                          className={"flex-1 py-3 rounded-lg font-semibold border-2 transition " + (role === "artisan" ? "border-orange-500 bg-orange-50 text-orange-700" : "border-gray-200 bg-white text-gray-500 hover:border-orange-200")}>
+                          className={"flex-1 py-3 rounded-lg font-semibold border-2 transition " + (role === "artisan" ? "border-brand-500 bg-brand-50 text-brand-700" : "border-gray-200 bg-white text-gray-500 hover:border-brand-200")}>
                           Artisan
                         </button>
                       </div>
@@ -300,8 +285,8 @@ export default function RegisterPage() {
 
                     {role === "artisan" && (
                       <>
-                        <hr className="border-orange-100" />
-                        <p className="text-sm font-semibold text-orange-600">Informations professionnelles</p>
+                        <hr className="border-brand-100" />
+                        <p className="text-sm font-semibold text-brand-600">Informations professionnelles</p>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div>
@@ -338,32 +323,20 @@ export default function RegisterPage() {
                       </>
                     )}
 
-                    <button type="submit" disabled={loading} className="w-full py-3 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white font-semibold rounded-lg transition-all shadow-md">
+                    <button type="submit" disabled={loading} className="w-full py-3 bg-brand-500 hover:bg-brand-600 disabled:bg-brand-300 text-white font-semibold rounded-lg transition-all shadow-md">
                       {loading ? "Creation en cours..." : (role === "artisan" ? "Creer mon compte artisan" : "Creer mon compte client")}
                     </button>
                   </form>
                 )}
 
-                {isLogin && (
-                  <form onSubmit={handleLogin} className="space-y-5">
-                    <div>
-                      <label className={labelCls}>Email</label>
-                      <input name="email" type="email" value={loginForm.email} onChange={handleLoginChange} required className={inputCls} />
-                    </div>
-                    <div>
-                      <label className={labelCls}>Mot de passe</label>
-                      <div className="relative">
-                        <input name="password" type={showLoginPassword ? "text" : "password"} value={loginForm.password} onChange={handleLoginChange} required className={`${inputCls} pr-10`} />
-                        <button type="button" onClick={() => setShowLoginPassword((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                          {showLoginPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                        </button>
-                      </div>
-                    </div>
-                    <button type="submit" disabled={loading} className="w-full py-3 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white font-semibold rounded-lg transition shadow-md">
-                      {loading ? "Connexion..." : "Se connecter"}
-                    </button>
-                  </form>
-                )}
+                {isLogin && null}
+
+                <p className="text-center text-sm text-gray-500 mt-6">
+                  Vous avez déjà un compte ?{" "}
+                  <button type="button" onClick={() => router.push("/login")} className="text-brand-600 font-semibold hover:underline">
+                    Se connecter
+                  </button>
+                </p>
               </div>
             </motion.div>
           )}

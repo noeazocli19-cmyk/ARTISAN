@@ -95,12 +95,12 @@ export function PricingSection() {
   return (
     <section
       id="tarifs"
-      className="relative w-full bg-gradient-to-b from-amber-50/50 to-white dark:from-amber-950/20 dark:to-background py-20 md:py-28"
+      className="relative w-full bg-gradient-to-b from-brand-50/50 to-white dark:from-brand-950/20 dark:to-background py-20 md:py-28"
     >
       {/* Decorative background elements */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 left-1/2 -translate-x-1/2 size-[600px] rounded-full bg-amber-200/20 blur-3xl dark:bg-amber-500/5" />
-        <div className="absolute -bottom-20 right-0 size-[400px] rounded-full bg-orange-200/20 blur-3xl dark:bg-orange-500/5" />
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 size-[600px] rounded-full bg-brand-200/20 blur-3xl dark:bg-brand-500/5" />
+        <div className="absolute -bottom-20 right-0 size-[400px] rounded-full bg-brand-200/20 blur-3xl dark:bg-brand-500/5" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -112,13 +112,13 @@ export function PricingSection() {
           viewport={{ once: true, margin: "-100px" }}
           variants={headerVariants}
         >
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-100/80 px-4 py-1.5 text-sm font-medium text-amber-700 dark:border-amber-800 dark:bg-amber-900/40 dark:text-amber-300">
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-100/80 px-4 py-1.5 text-sm font-medium text-brand-700 dark:border-brand-800 dark:bg-brand-900/40 dark:text-brand-300">
             <Sparkles className="size-4" />
             Tarifs simples & transparents
           </div>
           <h2 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
             Choisissez le plan qui
-            <span className="bg-gradient-to-r from-amber-600 to-orange-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-brand-600 to-brand-500 bg-clip-text text-transparent">
               {" "}convient à votre activité
             </span>
           </h2>
@@ -148,13 +148,13 @@ export function PricingSection() {
                   "relative flex flex-col overflow-hidden transition-shadow duration-300 hover:shadow-lg h-full",
                   // Pro card: amber gradient border + glow
                   plan.popular && [
-                    "border-0 ring-2 ring-amber-400/60 dark:ring-amber-500/50",
-                    "shadow-xl shadow-amber-200/40 dark:shadow-amber-900/30",
-                    "before:absolute before:inset-0 before:rounded-xl before:bg-gradient-to-b before:from-amber-400/5 before:to-orange-400/5 dark:before:from-amber-400/10 dark:before:to-orange-400/10",
+                    "border-0 ring-2 ring-brand-400/60 dark:ring-brand-500/50",
+                    "shadow-xl shadow-brand-200/40 dark:shadow-brand-900/30",
+                    "before:absolute before:inset-0 before:rounded-xl before:bg-gradient-to-b before:from-brand-400/5 before:to-brand-400/5 dark:before:from-brand-400/10 dark:before:to-brand-400/10",
                   ],
                   // Élite card: subtle warm border
                   plan.elite && [
-                    "border-amber-200/60 dark:border-amber-800/40",
+                    "border-brand-200/60 dark:border-brand-800/40",
                   ],
                   // Gratuit card: default
                   !plan.popular && !plan.elite && [
@@ -166,7 +166,7 @@ export function PricingSection() {
                 {plan.popular && (
                   <div className="absolute inset-x-0 top-0 flex justify-center">
                     <div className="relative -top-0 translate-y-[-50%]">
-                      <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white border-0 px-4 py-1 text-xs font-semibold shadow-md shadow-amber-300/30">
+                      <Badge className="bg-gradient-to-r from-brand-500 to-brand-500 text-white border-0 px-4 py-1 text-xs font-semibold shadow-md shadow-brand-300/30">
                         <Star className="mr-1 size-3 fill-current" />
                         Le plus populaire
                       </Badge>
@@ -180,9 +180,9 @@ export function PricingSection() {
                       className={cn(
                         "flex size-10 items-center justify-center rounded-lg",
                         plan.popular
-                          ? "bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-md shadow-amber-300/30"
+                          ? "bg-gradient-to-br from-brand-500 to-brand-500 text-white shadow-md shadow-brand-300/30"
                           : plan.elite
-                            ? "bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300"
+                            ? "bg-brand-100 text-brand-700 dark:bg-brand-900/50 dark:text-brand-300"
                             : "bg-muted text-muted-foreground"
                       )}
                     >
@@ -204,7 +204,7 @@ export function PricingSection() {
                       className={cn(
                         "text-4xl font-bold tracking-tight",
                         plan.popular
-                          ? "bg-gradient-to-r from-amber-600 to-orange-500 bg-clip-text text-transparent"
+                          ? "bg-gradient-to-r from-brand-600 to-brand-500 bg-clip-text text-transparent"
                           : "text-foreground"
                       )}
                     >
@@ -218,7 +218,7 @@ export function PricingSection() {
                   <Separator
                     className={cn(
                       plan.popular
-                        ? "bg-amber-200/60 dark:bg-amber-700/30"
+                        ? "bg-brand-200/60 dark:bg-brand-700/30"
                         : undefined
                     )}
                   />
@@ -231,9 +231,9 @@ export function PricingSection() {
                           className={cn(
                             "mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full",
                             plan.popular
-                              ? "bg-amber-100 text-amber-600 dark:bg-amber-900/50 dark:text-amber-400"
+                              ? "bg-brand-100 text-brand-600 dark:bg-brand-900/50 dark:text-brand-400"
                               : plan.elite
-                                ? "bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"
+                                ? "bg-brand-50 text-brand-600 dark:bg-brand-900/30 dark:text-brand-400"
                                 : "bg-muted text-muted-foreground"
                           )}
                         >
@@ -241,7 +241,7 @@ export function PricingSection() {
                         </div>
                         <span
                           className={cn(
-                            feature.highlighted && "font-medium text-amber-700 dark:text-amber-300"
+                            feature.highlighted && "font-medium text-brand-700 dark:text-brand-300"
                           )}
                         >
                           {feature.text}
@@ -256,9 +256,9 @@ export function PricingSection() {
                       className={cn(
                         "w-full",
                         plan.popular
-                          ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-300/30 hover:from-amber-600 hover:to-orange-600 border-0"
+                          ? "bg-gradient-to-r from-brand-500 to-brand-500 text-white shadow-lg shadow-brand-300/30 hover:from-brand-600 hover:to-brand-600 border-0"
                           : plan.elite
-                            ? "border-amber-300 bg-amber-50 text-amber-700 hover:bg-amber-100 dark:border-amber-700 dark:bg-amber-900/30 dark:text-amber-300 dark:hover:bg-amber-900/50"
+                            ? "border-brand-300 bg-brand-50 text-brand-700 hover:bg-brand-100 dark:border-brand-700 dark:bg-brand-900/30 dark:text-brand-300 dark:hover:bg-brand-900/50"
                             : ""
                       )}
                       variant={plan.popular ? "default" : plan.elite ? "outline" : "outline"}
@@ -286,7 +286,7 @@ export function PricingSection() {
           Besoin d&apos;un plan sur mesure ?{" "}
           <a
             href="#"
-            className="font-medium text-amber-600 underline underline-offset-4 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300"
+            className="font-medium text-brand-600 underline underline-offset-4 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300"
           >
             Contactez-nous
           </a>

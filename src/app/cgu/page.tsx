@@ -1,8 +1,8 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'CGU - Artisan Connect',
-  description: 'Conditions Générales d\'Utilisation d\'Artisan Connect',
+  title: 'CGU - FINDA',
+  description: 'Conditions Générales d\'Utilisation d\'FINDA',
 }
 
 export default function CGUPage() {
@@ -10,7 +10,7 @@ export default function CGUPage() {
     <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
         <div className="prose prose-lg dark:prose-invert max-w-none">
-          <h1 className="text-3xl font-bold text-amber-600 mb-8">
+          <h1 className="text-3xl font-bold text-brand-600 mb-8">
             Conditions Générales d'Utilisation
           </h1>
           <p className="text-sm text-muted-foreground mb-8">
@@ -19,12 +19,12 @@ export default function CGUPage() {
 
           <h2 className="text-xl font-semibold mt-8 mb-4">Article 1 : Objet</h2>
           <p className="mb-4">
-            Les présentes Conditions Générales d'Utilisation (ci-après "CGU") régissent l'utilisation de la plateforme Artisan Connect (ci-après "la Plateforme"), accessible à l'adresse https://artisan-nine-sigma.vercel.app. La Plateforme a pour objet la mise en relation entre des clients recherchant des services d'artisans et des artisans proposant leurs services en Afrique.
+            Les présentes Conditions Générales d'Utilisation (ci-après "CGU") régissent l'utilisation de la plateforme FINDA (ci-après "la Plateforme"), accessible à l'adresse https://artisan-nine-sigma.vercel.app. La Plateforme a pour objet la mise en relation entre des clients recherchant des services d'artisans et des artisans proposant leurs services en Afrique.
           </p>
 
           <h2 className="text-xl font-semibold mt-8 mb-4">Article 2 : Définitions</h2>
           <ul className="list-disc pl-6 mb-4 space-y-2">
-            <li><strong>Plateforme</strong> : Désigne le site web Artisan Connect</li>
+            <li><strong>Plateforme</strong> : Désigne le site web FINDA</li>
             <li><strong>Client</strong> : Utilisateur recherchant des services d'artisans</li>
             <li><strong>Artisan</strong> : Utilisateur proposant des services</li>
             <li><strong>Utilisateur</strong> : Désigne indistinctement le Client ou l'Artisan</li>
@@ -42,7 +42,7 @@ export default function CGUPage() {
 
           <h2 className="text-xl font-semibold mt-8 mb-4">Article 4 : Services proposés</h2>
           <p className="mb-4">
-            La Plateforme facilite la mise en relation entre Clients et Artisans. Artisan Connect n'est pas partie au contrat de prestation de services conclu entre le Client et l'Artisan. La Plateforme n'intervient que comme intermédiaire technique.
+            La Plateforme facilite la mise en relation entre Clients et Artisans. FINDA n'est pas partie au contrat de prestation de services conclu entre le Client et l'Artisan. La Plateforme n'intervient que comme intermédiaire technique.
           </p>
           <p className="mb-4">
             Les catégories de services disponibles incluent : plomberie, électricité, menuiserie, peinture, serrurerie, maçonnerie, climatisation, nettoyage, couture, pâtisserie, mécanique, coiffure, parmi d'autres.
@@ -61,10 +61,10 @@ export default function CGUPage() {
 
           <h2 className="text-xl font-semibold mt-8 mb-4">Article 6 : Responsabilités</h2>
           <p className="mb-4">
-            Artisan Connect ne saurait être tenu responsable de la qualité des services fournis par les Artisans. La Plateforme ne garantit pas que les services répondront aux attentes du Client. L'Utilisateur reconnaît utiliser la Plateforme à ses propres risques.
+            FINDA ne saurait être tenu responsable de la qualité des services fournis par les Artisans. La Plateforme ne garantit pas que les services répondront aux attentes du Client. L'Utilisateur reconnaît utiliser la Plateforme à ses propres risques.
           </p>
           <p className="mb-4">
-            Artisan Connect décline toute responsabilité en cas de litige entre un Client et un Artisan concernant l'exécution d'une mission. Les Utilisateurs sont invités à régler leurs litiges à l'amiable.
+            FINDA décline toute responsabilité en cas de litige entre un Client et un Artisan concernant l'exécution d'une mission. Les Utilisateurs sont invités à régler leurs litiges à l'amiable.
           </p>
 
           <h2 className="text-xl font-semibold mt-8 mb-4">Article 7 : Obligations des Utilisateurs</h2>
@@ -80,12 +80,12 @@ export default function CGUPage() {
 
           <h2 className="text-xl font-semibold mt-8 mb-4">Article 8 : Avis et évaluations</h2>
           <p className="mb-4">
-            Les Utilisateurs peuvent laisser des avis et évaluations à l'issue d'une mission. Les avis doivent être sincères et objectifs. Artisan Connect se réserve le droit de modérer les avis injurieux ou diffamatoires.
+            Les Utilisateurs peuvent laisser des avis et évaluations à l'issue d'une mission. Les avis doivent être sincères et objectifs. FINDA se réserve le droit de modérer les avis injurieux ou diffamatoires.
           </p>
 
           <h2 className="text-xl font-semibold mt-8 mb-4">Article 9 : Données personnelles</h2>
           <p className="mb-4">
-            Le traitement des données personnelles est régi par notre Politique de Confidentialité, accessible séparément. Artisan Connect s'engage à protéger les données personnelles des Utilisateurs conformément aux lois applicables.
+            Le traitement des données personnelles est régi par notre Politique de Confidentialité, accessible séparément. FINDA s'engage à protéger les données personnelles des Utilisateurs conformément aux lois applicables.
           </p>
 
           <h2 className="text-xl font-semibold mt-8 mb-4">Article 10 : Propriété intellectuelle</h2>
@@ -95,12 +95,12 @@ export default function CGUPage() {
 
           <h2 className="text-xl font-semibold mt-8 mb-4">Article 11 : Suspension et résiliation</h2>
           <p className="mb-4">
-            Artisan Connect se réserve le droit de suspendre ou résilier le compte d'un Utilisateur en cas de manquement aux présentes CGU. L'Utilisateur peut supprimer son compte à tout moment.
+            FINDA se réserve le droit de suspendre ou résilier le compte d'un Utilisateur en cas de manquement aux présentes CGU. L'Utilisateur peut supprimer son compte à tout moment.
           </p>
 
           <h2 className="text-xl font-semibold mt-8 mb-4">Article 12 : Modification des CGU</h2>
           <p className="mb-4">
-            Artisan Connect se réserve le droit de modifier les présentes CGU à tout moment. Les modifications entrent en vigueur dès leur publication sur la Plateforme.
+            FINDA se réserve le droit de modifier les présentes CGU à tout moment. Les modifications entrent en vigueur dès leur publication sur la Plateforme.
           </p>
 
           <h2 className="text-xl font-semibold mt-8 mb-4">Article 13 : Droit applicable</h2>
@@ -110,12 +110,12 @@ export default function CGUPage() {
 
           <h2 className="text-xl font-semibold mt-8 mb-4">Article 14 : Contact</h2>
           <p className="mb-4">
-            Pour toute question relative aux CGU, vous pouvez contacter Artisan Connect à l'adresse : support@artisan-connect.com
+            Pour toute question relative aux CGU, vous pouvez contacter FINDA à l'adresse : support@artisan-connect.com
           </p>
 
-          <div className="mt-12 p-6 bg-amber-50 dark:bg-amber-950/30 rounded-xl">
+          <div className="mt-12 p-6 bg-brand-50 dark:bg-brand-950/30 rounded-xl">
             <p className="text-sm text-muted-foreground">
-              © 2025 Artisan Connect - La 1ère plateforme d'artisans en Afrique. Tous droits réservés.
+              © 2025 FINDA - La 1ère plateforme d'artisans en Afrique. Tous droits réservés.
             </p>
           </div>
         </div>

@@ -90,8 +90,8 @@ const TOTAL_STEPS = 6
 
 const SKILLS_LIST = [
   { id: 'plomberie', label: 'Plomberie', icon: Droplets, color: 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300 border-blue-200 dark:border-blue-800' },
-  { id: 'electricite', label: 'Électricité', icon: Zap, color: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300 border-amber-200 dark:border-amber-800' },
-  { id: 'menuiserie', label: 'Menuiserie', icon: Hammer, color: 'bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300 border-orange-200 dark:border-orange-800' },
+  { id: 'electricite', label: 'Électricité', icon: Zap, color: 'bg-brand-100 text-brand-700 dark:bg-brand-950 dark:text-brand-300 border-brand-200 dark:border-brand-800' },
+  { id: 'menuiserie', label: 'Menuiserie', icon: Hammer, color: 'bg-brand-100 text-brand-700 dark:bg-brand-950 dark:text-brand-300 border-brand-200 dark:border-brand-800' },
   { id: 'peinture', label: 'Peinture', icon: Paintbrush, color: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800' },
   { id: 'serrurerie', label: 'Serrurerie', icon: KeyRound, color: 'bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300 border-rose-200 dark:border-rose-800' },
   { id: 'maconnerie', label: 'Maçonnerie', icon: BrickWall, color: 'bg-teal-100 text-teal-700 dark:bg-teal-950 dark:text-teal-300 border-teal-200 dark:border-teal-800' },
@@ -167,9 +167,9 @@ function StepIndicator({ step, currentStep }: { step: number; currentStep: numbe
           flex items-center justify-center rounded-full h-9 w-9 sm:h-10 sm:w-10 text-sm font-bold
           transition-all duration-300 border-2
           ${isCompleted
-            ? 'bg-gradient-to-br from-amber-500 to-orange-600 border-amber-500 text-white shadow-lg shadow-amber-500/30'
+            ? 'bg-gradient-to-br from-brand-500 to-brand-600 border-brand-500 text-white shadow-lg shadow-brand-500/30'
             : isCurrent
-              ? 'bg-amber-100 dark:bg-amber-950/50 border-amber-400 dark:border-amber-600 text-amber-600 dark:text-amber-400 shadow-md shadow-amber-500/20'
+              ? 'bg-brand-100 dark:bg-brand-950/50 border-brand-400 dark:border-brand-600 text-brand-600 dark:text-brand-400 shadow-md shadow-brand-500/20'
               : 'bg-muted border-muted-foreground/20 text-muted-foreground/50'
           }
         `}
@@ -198,11 +198,11 @@ function WelcomeIllustration() {
   return (
     <div className="relative w-48 h-48 sm:w-56 sm:h-56 mx-auto">
       {/* Background glow */}
-      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-amber-200/50 to-orange-200/50 dark:from-amber-900/30 dark:to-orange-900/30 blur-2xl" />
+      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-brand-200/50 to-brand-200/50 dark:from-brand-900/30 dark:to-brand-900/30 blur-2xl" />
 
       {/* Main circle */}
       <motion.div
-        className="absolute inset-4 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-950/50 dark:to-orange-950/50 flex items-center justify-center border-2 border-amber-200 dark:border-amber-800"
+        className="absolute inset-4 rounded-full bg-gradient-to-br from-brand-100 to-brand-100 dark:from-brand-950/50 dark:to-brand-950/50 flex items-center justify-center border-2 border-brand-200 dark:border-brand-800"
         animate={{ rotate: [0, 5, -5, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
       >
@@ -211,7 +211,7 @@ function WelcomeIllustration() {
             animate={{ y: [0, -5, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           >
-            <Wrench className="h-12 w-12 sm:h-14 sm:w-14 text-amber-600 dark:text-amber-400" />
+            <Wrench className="h-12 w-12 sm:h-14 sm:w-14 text-brand-600 dark:text-brand-400" />
           </motion.div>
           <div className="flex gap-1">
             {[Star, Heart, Shield].map((Icon, i) => (
@@ -220,7 +220,7 @@ function WelcomeIllustration() {
                 animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
                 transition={{ duration: 2, delay: i * 0.3, repeat: Infinity }}
               >
-                <Icon className="h-4 w-4 text-amber-500 dark:text-amber-400" />
+                <Icon className="h-4 w-4 text-brand-500 dark:text-brand-400" />
               </motion.div>
             ))}
           </div>
@@ -230,8 +230,8 @@ function WelcomeIllustration() {
       {/* Floating icons around the circle */}
       {[
         { Icon: Droplets, x: -15, y: -10, delay: 0, color: 'text-blue-500' },
-        { Icon: Zap, x: 30, y: -20, delay: 0.5, color: 'text-amber-500' },
-        { Icon: Hammer, x: -30, y: 20, delay: 1, color: 'text-orange-500' },
+        { Icon: Zap, x: 30, y: -20, delay: 0.5, color: 'text-brand-500' },
+        { Icon: Hammer, x: -30, y: 20, delay: 1, color: 'text-brand-500' },
         { Icon: Paintbrush, x: 25, y: 25, delay: 1.5, color: 'text-emerald-500' },
       ].map(({ Icon, x, y, delay, color }, i) => (
         <motion.div
@@ -272,7 +272,7 @@ function StepWelcome({ onNext }: { onNext: () => void }) {
           transition={{ delay: 0.3 }}
         >
           Bienvenue sur{' '}
-          <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-brand-500 via-brand-500 to-brand-600 bg-clip-text text-transparent">
             Artisan Connect
           </span>{' '}
           !
@@ -297,7 +297,7 @@ function StepWelcome({ onNext }: { onNext: () => void }) {
       >
         <Button
           size="lg"
-          className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 h-12 px-8 text-base font-semibold shadow-lg shadow-amber-500/25"
+          className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 h-12 px-8 text-base font-semibold shadow-lg shadow-brand-500/25"
           onClick={onNext}
         >
           Commencer
@@ -321,7 +321,7 @@ function StepWelcome({ onNext }: { onNext: () => void }) {
           <Badge
             key={text}
             variant="outline"
-            className="px-3 py-1 text-xs border-amber-200 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-300"
+            className="px-3 py-1 text-xs border-brand-200 dark:border-brand-800 bg-brand-50/50 dark:bg-brand-950/30 text-brand-700 dark:text-brand-300"
           >
             <Icon className="h-3 w-3 mr-1" />
             {text}
@@ -357,7 +357,7 @@ function StepProfile({
       <div className="text-center space-y-2 mb-6">
         <h2 className="text-xl sm:text-2xl font-bold">
           Votre{' '}
-          <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">
             profil
           </span>
         </h2>
@@ -371,10 +371,10 @@ function StepProfile({
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          <div className="h-24 w-24 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-950/50 dark:to-orange-950/50 border-2 border-dashed border-amber-300 dark:border-amber-700 flex items-center justify-center transition-colors group-hover:border-amber-500 dark:group-hover:border-amber-500">
-            <Camera className="h-8 w-8 text-amber-500 dark:text-amber-400" />
+          <div className="h-24 w-24 rounded-full bg-gradient-to-br from-brand-100 to-brand-100 dark:from-brand-950/50 dark:to-brand-950/50 border-2 border-dashed border-brand-300 dark:border-brand-700 flex items-center justify-center transition-colors group-hover:border-brand-500 dark:group-hover:border-brand-500">
+            <Camera className="h-8 w-8 text-brand-500 dark:text-brand-400" />
           </div>
-          <div className="absolute -bottom-1 -right-1 h-7 w-7 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-md">
+          <div className="absolute -bottom-1 -right-1 h-7 w-7 rounded-full bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center shadow-md">
             <Camera className="h-3.5 w-3.5 text-white" />
           </div>
         </motion.div>
@@ -384,7 +384,7 @@ function StepProfile({
         {/* Full Name */}
         <div className="space-y-2">
           <Label htmlFor="fullName" className="text-sm font-medium flex items-center gap-2">
-            <User className="h-3.5 w-3.5 text-amber-500" />
+            <User className="h-3.5 w-3.5 text-brand-500" />
             Nom complet
           </Label>
           <Input
@@ -392,14 +392,14 @@ function StepProfile({
             placeholder="Ex: Amadou Diallo"
             value={data.fullName}
             onChange={(e) => updateField('fullName', e.target.value)}
-            className="h-11 border-border/50 focus:border-amber-400 focus:ring-amber-400/20 transition-colors"
+            className="h-11 border-border/50 focus:border-brand-400 focus:ring-brand-400/20 transition-colors"
           />
         </div>
 
         {/* Phone */}
         <div className="space-y-2">
           <Label htmlFor="phone" className="text-sm font-medium flex items-center gap-2">
-            <Phone className="h-3.5 w-3.5 text-amber-500" />
+            <Phone className="h-3.5 w-3.5 text-brand-500" />
             Téléphone
           </Label>
           <Input
@@ -407,14 +407,14 @@ function StepProfile({
             placeholder="Ex: +221 77 123 45 67"
             value={data.phone}
             onChange={(e) => updateField('phone', e.target.value)}
-            className="h-11 border-border/50 focus:border-amber-400 focus:ring-amber-400/20 transition-colors"
+            className="h-11 border-border/50 focus:border-brand-400 focus:ring-brand-400/20 transition-colors"
           />
         </div>
 
         {/* Location */}
         <div className="space-y-2">
           <Label htmlFor="location" className="text-sm font-medium flex items-center gap-2">
-            <MapPin className="h-3.5 w-3.5 text-amber-500" />
+            <MapPin className="h-3.5 w-3.5 text-brand-500" />
             Localisation (ville/pays)
           </Label>
           <Input
@@ -422,14 +422,14 @@ function StepProfile({
             placeholder="Ex: Dakar, Sénégal"
             value={data.location}
             onChange={(e) => updateField('location', e.target.value)}
-            className="h-11 border-border/50 focus:border-amber-400 focus:ring-amber-400/20 transition-colors"
+            className="h-11 border-border/50 focus:border-brand-400 focus:ring-brand-400/20 transition-colors"
           />
         </div>
 
         {/* Bio */}
         <div className="space-y-2">
           <Label htmlFor="bio" className="text-sm font-medium flex items-center gap-2">
-            <FileText className="h-3.5 w-3.5 text-amber-500" />
+            <FileText className="h-3.5 w-3.5 text-brand-500" />
             Bio
           </Label>
           <Textarea
@@ -437,7 +437,7 @@ function StepProfile({
             placeholder="Parlez-nous de vous en quelques mots..."
             value={data.bio}
             onChange={(e) => updateField('bio', e.target.value)}
-            className="min-h-[80px] border-border/50 focus:border-amber-400 focus:ring-amber-400/20 transition-colors resize-none"
+            className="min-h-[80px] border-border/50 focus:border-brand-400 focus:ring-brand-400/20 transition-colors resize-none"
           />
         </div>
       </div>
@@ -470,10 +470,10 @@ function StepRole({
       title: 'Je suis un artisan',
       description: 'Recevez des demandes et développez votre activité en ligne',
       features: ['Profil professionnel', 'Demandes ciblées', 'Paiements rapides'],
-      gradient: 'from-amber-500 to-orange-600',
-      border: 'border-amber-400 dark:border-amber-600',
-      glow: 'shadow-amber-500/20',
-      bg: 'bg-amber-50 dark:bg-amber-950/30',
+      gradient: 'from-brand-500 to-brand-600',
+      border: 'border-brand-400 dark:border-brand-600',
+      glow: 'shadow-brand-500/20',
+      bg: 'bg-brand-50 dark:bg-brand-950/30',
     },
   ]
 
@@ -488,7 +488,7 @@ function StepRole({
       <div className="text-center space-y-2 mb-6">
         <h2 className="text-xl sm:text-2xl font-bold">
           Votre{' '}
-          <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">
             rôle
           </span>
         </h2>
@@ -508,7 +508,7 @@ function StepRole({
                 className={`cursor-pointer transition-all duration-300 overflow-hidden h-full
                   ${isSelected
                     ? `${role.border} border-2 shadow-xl ${role.glow} ${role.bg}`
-                    : 'border-border/50 hover:border-amber-300 dark:hover:border-amber-700 hover:shadow-md'
+                    : 'border-border/50 hover:border-brand-300 dark:hover:border-brand-700 hover:shadow-md'
                   }`}
                 onClick={() => setData((prev) => ({ ...prev, role: role.id }))}
               >
@@ -529,7 +529,7 @@ function StepRole({
                   <div className="flex flex-col gap-1.5 w-full">
                     {role.features.map((feat) => (
                       <div key={feat} className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <CheckCircle2 className={`h-3.5 w-3.5 shrink-0 ${isSelected ? 'text-amber-500' : 'text-muted-foreground/50'}`} />
+                        <CheckCircle2 className={`h-3.5 w-3.5 shrink-0 ${isSelected ? 'text-brand-500' : 'text-muted-foreground/50'}`} />
                         <span>{feat}</span>
                       </div>
                     ))}
@@ -592,7 +592,7 @@ function StepSkills({
       <div className="text-center space-y-2 mb-4">
         <h2 className="text-xl sm:text-2xl font-bold">
           Vos{' '}
-          <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">
             compétences
           </span>
         </h2>
@@ -602,7 +602,7 @@ function StepSkills({
       {/* Skill Tags */}
       <div className="max-w-2xl mx-auto">
         <Label className="text-sm font-medium mb-3 block flex items-center gap-2">
-          <Award className="h-3.5 w-3.5 text-amber-500" />
+          <Award className="h-3.5 w-3.5 text-brand-500" />
           Compétences
         </Label>
         <div className="flex flex-wrap gap-2 mb-8">
@@ -620,7 +620,7 @@ function StepSkills({
                     cursor-pointer px-3 py-1.5 text-sm transition-all duration-200
                     ${isSelected
                       ? `${skill.color} border-2 shadow-md`
-                      : 'border-border/50 hover:border-amber-300 dark:hover:border-amber-700'
+                      : 'border-border/50 hover:border-brand-300 dark:hover:border-brand-700'
                     }`}
                   onClick={() => toggleSkill(skill.id)}
                 >
@@ -644,7 +644,7 @@ function StepSkills({
         {/* Hourly Rate Slider */}
         <div className="space-y-4 mb-8">
           <Label className="text-sm font-medium flex items-center gap-2">
-            <Briefcase className="h-3.5 w-3.5 text-amber-500" />
+            <Briefcase className="h-3.5 w-3.5 text-brand-500" />
             Tarif horaire
           </Label>
           <div className="space-y-3">
@@ -654,7 +654,7 @@ function StepSkills({
               max={50000}
               step={500}
               onValueChange={(val) => setData((prev) => ({ ...prev, hourlyRate: val[0] }))}
-              className="w-full [&_[data-slot=slider-range]]:bg-gradient-to-r [&_[data-slot=slider-range]]:from-amber-500 [&_[data-slot=slider-range]]:to-orange-500 [&_[data-slot=slider-thumb]]:border-amber-500"
+              className="w-full [&_[data-slot=slider-range]]:bg-gradient-to-r [&_[data-slot=slider-range]]:from-brand-500 [&_[data-slot=slider-range]]:to-brand-500 [&_[data-slot=slider-thumb]]:border-brand-500"
             />
             <div className="flex items-center justify-between text-xs text-muted-foreground">
               <span>1 000 FCFA</span>
@@ -662,7 +662,7 @@ function StepSkills({
                 key={data.hourlyRate}
                 initial={{ scale: 1.2, color: '#f59e0b' }}
                 animate={{ scale: 1, color: 'inherit' }}
-                className="font-bold text-sm text-amber-600 dark:text-amber-400"
+                className="font-bold text-sm text-brand-600 dark:text-brand-400"
               >
                 {formatRate(data.hourlyRate)}
               </motion.span>
@@ -674,14 +674,14 @@ function StepSkills({
         {/* Experience */}
         <div className="space-y-3 mb-8">
           <Label className="text-sm font-medium flex items-center gap-2">
-            <Users className="h-3.5 w-3.5 text-amber-500" />
+            <Users className="h-3.5 w-3.5 text-brand-500" />
             Expérience
           </Label>
           <Select
             value={data.experience}
             onValueChange={(val) => setData((prev) => ({ ...prev, experience: val }))}
           >
-            <SelectTrigger className="w-full h-11 border-border/50 focus:border-amber-400">
+            <SelectTrigger className="w-full h-11 border-border/50 focus:border-brand-400">
               <SelectValue placeholder="Sélectionnez votre expérience" />
             </SelectTrigger>
             <SelectContent>
@@ -697,8 +697,8 @@ function StepSkills({
         {/* Certifications Toggle */}
         <div className="flex items-center justify-between p-4 rounded-xl bg-muted/50 border border-border/30">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-950/50">
-              <Award className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-100 dark:bg-brand-950/50">
+              <Award className="h-5 w-5 text-brand-600 dark:text-brand-400" />
             </div>
             <div>
               <Label className="text-sm font-medium">Certifications</Label>
@@ -708,7 +708,7 @@ function StepSkills({
           <Switch
             checked={data.hasCertifications}
             onCheckedChange={(val) => setData((prev) => ({ ...prev, hasCertifications: val }))}
-            className="data-[state=checked]:bg-amber-500"
+            className="data-[state=checked]:bg-brand-500"
           />
         </div>
       </div>
@@ -774,7 +774,7 @@ function StepPreferences({
       <div className="text-center space-y-2 mb-4">
         <h2 className="text-xl sm:text-2xl font-bold">
           Vos{' '}
-          <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">
             préférences
           </span>
         </h2>
@@ -789,10 +789,10 @@ function StepPreferences({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.08 }}
           >
-            <div className="flex items-center justify-between p-4 rounded-xl bg-muted/50 border border-border/30 hover:border-amber-300/50 dark:hover:border-amber-700/50 transition-colors">
+            <div className="flex items-center justify-between p-4 rounded-xl bg-muted/50 border border-border/30 hover:border-brand-300/50 dark:hover:border-brand-700/50 transition-colors">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-950/50">
-                  <item.icon className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-100 dark:bg-brand-950/50">
+                  <item.icon className="h-5 w-5 text-brand-600 dark:text-brand-400" />
                 </div>
                 <div>
                   <Label className="text-sm font-medium">{item.title}</Label>
@@ -802,7 +802,7 @@ function StepPreferences({
               <Switch
                 checked={data[item.field] as boolean}
                 onCheckedChange={() => toggleField(item.field)}
-                className="data-[state=checked]:bg-amber-500"
+                className="data-[state=checked]:bg-brand-500"
               />
             </div>
           </motion.div>
@@ -816,8 +816,8 @@ function StepPreferences({
         >
           <div className="flex items-center justify-between p-4 rounded-xl bg-muted/50 border border-border/30">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-950/50">
-                <Globe className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-100 dark:bg-brand-950/50">
+                <Globe className="h-5 w-5 text-brand-600 dark:text-brand-400" />
               </div>
               <div>
                 <Label className="text-sm font-medium">Langue</Label>
@@ -886,12 +886,12 @@ function StepComplete({
         transition={{ type: 'spring', stiffness: 200, damping: 15, delay: 0.2 }}
         className="relative"
       >
-        <div className="h-24 w-24 sm:h-28 sm:w-28 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-xl shadow-amber-500/30">
+        <div className="h-24 w-24 sm:h-28 sm:w-28 rounded-full bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center shadow-xl shadow-brand-500/30">
           <PartyPopper className="h-12 w-12 sm:h-14 sm:w-14 text-white" />
         </div>
         {/* Glow ring */}
         <motion.div
-          className="absolute inset-0 rounded-full border-2 border-amber-400/50"
+          className="absolute inset-0 rounded-full border-2 border-brand-400/50"
           animate={{ scale: [1, 1.3, 1], opacity: [0.5, 0, 0.5] }}
           transition={{ duration: 2, repeat: Infinity }}
         />
@@ -905,7 +905,7 @@ function StepComplete({
       >
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold">
           Vous êtes{' '}
-          <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-brand-500 via-brand-500 to-brand-600 bg-clip-text text-transparent">
             prêt
           </span>{' '}
           !
@@ -922,7 +922,7 @@ function StepComplete({
         transition={{ delay: 0.7 }}
         className="w-full max-w-sm"
       >
-        <Card className="border-amber-200 dark:border-amber-800 shadow-lg">
+        <Card className="border-brand-200 dark:border-brand-800 shadow-lg">
           <CardContent className="p-5 space-y-3">
             {summaryItems.map((item, idx) => (
               <motion.div
@@ -932,8 +932,8 @@ function StepComplete({
                 transition={{ delay: 0.8 + idx * 0.1 }}
                 className="flex items-center gap-3 py-1.5"
               >
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-950/50">
-                  <item.icon className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-100 dark:bg-brand-950/50">
+                  <item.icon className="h-4 w-4 text-brand-600 dark:text-brand-400" />
                 </div>
                 <div className="flex-1 min-w-0 text-left">
                   <p className="text-xs text-muted-foreground">{item.label}</p>
@@ -952,7 +952,7 @@ function StepComplete({
       >
         <Button
           size="lg"
-          className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 h-12 px-8 text-base font-semibold shadow-lg shadow-amber-500/25"
+          className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 h-12 px-8 text-base font-semibold shadow-lg shadow-brand-500/25"
           onClick={onComplete}
         >
           Aller au tableau de bord
@@ -1096,23 +1096,23 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
   const totalIndicatorSteps = visibleSteps.length
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-amber-50/30 to-orange-50/30 dark:from-neutral-950 dark:via-neutral-900 dark:to-amber-950/10 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-white via-brand-50/30 to-brand-50/30 dark:from-neutral-950 dark:via-neutral-900 dark:to-brand-950/10 flex flex-col">
       {/* Header with progress */}
       <div className="sticky top-0 z-20 bg-white/80 dark:bg-neutral-950/80 backdrop-blur-md border-b border-border/30">
         <div className="mx-auto max-w-2xl px-4 sm:px-6 py-4">
           {/* Skip button */}
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-600">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-brand-500 to-brand-600">
                 <Wrench className="h-4 w-4 text-white" />
               </div>
-              <span className="font-bold text-sm bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+              <span className="font-bold text-sm bg-gradient-to-r from-brand-600 to-brand-600 bg-clip-text text-transparent">
                 Artisan Connect
               </span>
             </div>
             <div className="flex items-center gap-2">
               {saving && (
-                <span className="text-xs text-amber-600 dark:text-amber-400 animate-pulse">
+                <span className="text-xs text-brand-600 dark:text-brand-400 animate-pulse">
                   Sauvegarde...
                 </span>
               )}
@@ -1131,7 +1131,7 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
           {/* Progress bar */}
           <Progress
             value={progressValue}
-            className="h-2 bg-amber-100 dark:bg-amber-950/50 [&>[data-slot=progress-indicator]]:bg-gradient-to-r [&>[data-slot=progress-indicator]]:from-amber-500 [&>[data-slot=progress-indicator]]:to-orange-500"
+            className="h-2 bg-brand-100 dark:bg-brand-950/50 [&>[data-slot=progress-indicator]]:bg-gradient-to-r [&>[data-slot=progress-indicator]]:from-brand-500 [&>[data-slot=progress-indicator]]:to-brand-500"
           />
 
           {/* Step indicators */}
@@ -1152,7 +1152,7 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
                 <div
                   key={`line-${idx}`}
                   className={`flex-1 h-0.5 mx-1 sm:mx-2 mb-5 sm:mb-6 transition-colors duration-300 ${
-                    isCompleted ? 'bg-amber-500' : 'bg-border/30'
+                    isCompleted ? 'bg-brand-500' : 'bg-border/30'
                   }`}
                 />
               )
@@ -1185,7 +1185,7 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
               <Button
                 variant="outline"
                 onClick={handlePrev}
-                className="h-10 border-border/50 hover:border-amber-300 dark:hover:border-amber-700"
+                className="h-10 border-border/50 hover:border-brand-300 dark:hover:border-brand-700"
               >
                 <ChevronLeft className="h-4 w-4 mr-1" />
                 Précédent
@@ -1203,7 +1203,7 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
 
                 <Button
                   onClick={handleNext}
-                  className="h-10 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 shadow-md shadow-amber-500/20"
+                  className="h-10 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 shadow-md shadow-brand-500/20"
                 >
                   Suivant
                   <ChevronRight className="h-4 w-4 ml-1" />

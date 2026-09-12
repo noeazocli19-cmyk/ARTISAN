@@ -144,8 +144,8 @@ export function PhotoUploader({
       {/* Avatar display area */}
       <div
         className={`relative group ${sizeClasses[size]} rounded-full overflow-hidden ${
-          isDragOver ? 'ring-4 ring-amber-400 ring-offset-2' : ''
-        } ${!preview ? 'bg-gradient-to-br from-amber-500 to-orange-600' : ''}`}
+          isDragOver ? 'ring-4 ring-brand-400 ring-offset-2' : ''
+        } ${!preview ? 'bg-gradient-to-br from-brand-500 to-brand-600' : ''}`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -205,7 +205,7 @@ export function PhotoUploader({
           type="button"
           variant="ghost"
           size="sm"
-          className="gap-2 text-xs text-amber-600 hover:text-amber-700"
+          className="gap-2 text-xs text-brand-600 hover:text-brand-700"
           disabled={isUploading}
           onClick={() => cameraInputRef.current?.click()}
         >

@@ -68,12 +68,12 @@ function ResetPasswordForm() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
       <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
-        <div className="bg-gradient-to-r from-amber-500 to-orange-600 p-6">
+        <div className="bg-gradient-to-r from-brand-500 to-brand-600 p-6">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20">
               <Wrench className="h-5 w-5 text-white" />
             </div>
-            <h1 className="text-white text-xl font-semibold">Artisan Connect</h1>
+            <h1 className="text-white text-xl font-semibold">FINDA</h1>
           </div>
           <p className="text-white/80 text-sm mt-2">Réinitialisation du mot de passe</p>
         </div>
@@ -87,7 +87,7 @@ function ResetPasswordForm() {
               </p>
               <Button
                 onClick={() => window.location.href = '/'}
-                className="bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0"
+                className="bg-gradient-to-r from-brand-500 to-brand-600 text-white border-0"
               >
                 Retour à l&apos;accueil
               </Button>
@@ -158,7 +158,7 @@ function ResetPasswordForm() {
               </div>
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0 h-11"
+                className="w-full bg-gradient-to-r from-brand-500 to-brand-600 text-white border-0 h-11"
                 disabled={loading}
               >
                 {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}

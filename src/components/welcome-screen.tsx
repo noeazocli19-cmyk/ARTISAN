@@ -20,10 +20,10 @@ import {
 function WelcomeIllustration() {
   return (
     <div className="relative w-48 h-48 sm:w-56 sm:h-56 mx-auto">
-      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-amber-200/50 to-orange-200/50 dark:from-amber-900/30 dark:to-orange-900/30 blur-2xl" />
+      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-brand-200/50 to-brand-200/50 dark:from-brand-900/30 dark:to-brand-900/30 blur-2xl" />
 
       <motion.div
-        className="absolute inset-4 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-950/50 dark:to-orange-950/50 flex items-center justify-center border-2 border-amber-200 dark:border-amber-800"
+        className="absolute inset-4 rounded-full bg-gradient-to-br from-brand-100 to-brand-100 dark:from-brand-950/50 dark:to-brand-950/50 flex items-center justify-center border-2 border-brand-200 dark:border-brand-800"
         animate={{ rotate: [0, 5, -5, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
       >
@@ -32,7 +32,7 @@ function WelcomeIllustration() {
             animate={{ y: [0, -5, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           >
-            <Wrench className="h-12 w-12 sm:h-14 sm:w-14 text-amber-600 dark:text-amber-400" />
+            <Wrench className="h-12 w-12 sm:h-14 sm:w-14 text-brand-600 dark:text-brand-400" />
           </motion.div>
           <div className="flex gap-1">
             {[Star, Heart, Shield].map((Icon, i) => (
@@ -41,7 +41,7 @@ function WelcomeIllustration() {
                 animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
                 transition={{ duration: 2, delay: i * 0.3, repeat: Infinity }}
               >
-                <Icon className="h-4 w-4 text-amber-500 dark:text-amber-400" />
+                <Icon className="h-4 w-4 text-brand-500 dark:text-brand-400" />
               </motion.div>
             ))}
           </div>
@@ -50,8 +50,8 @@ function WelcomeIllustration() {
 
       {[
         { Icon: Droplets, x: -15, y: -10, delay: 0, color: 'text-blue-500' },
-        { Icon: Zap, x: 30, y: -20, delay: 0.5, color: 'text-amber-500' },
-        { Icon: Hammer, x: -30, y: 20, delay: 1, color: 'text-orange-500' },
+        { Icon: Zap, x: 30, y: -20, delay: 0.5, color: 'text-brand-500' },
+        { Icon: Hammer, x: -30, y: 20, delay: 1, color: 'text-brand-500' },
         { Icon: Paintbrush, x: 25, y: 25, delay: 1.5, color: 'text-emerald-500' },
       ].map(({ Icon, x, y, delay, color }, i) => (
         <motion.div
@@ -95,7 +95,7 @@ export function WelcomeScreen({ onContinue, userName }: WelcomeScreenProps) {
             transition={{ delay: 0.3 }}
           >
             Bienvenue{userName ? `, ${userName}` : ''} sur{' '}
-            <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-brand-500 via-brand-500 to-brand-600 bg-clip-text text-transparent">
               Artisan Connect
             </span>{' '}
             !
@@ -118,7 +118,7 @@ export function WelcomeScreen({ onContinue, userName }: WelcomeScreenProps) {
         >
           <Button
             size="lg"
-            className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 h-12 px-8 text-base font-semibold shadow-lg shadow-amber-500/25"
+            className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 h-12 px-8 text-base font-semibold shadow-lg shadow-brand-500/25"
             onClick={onContinue}
           >
             Accéder à mon tableau de bord
@@ -141,7 +141,7 @@ export function WelcomeScreen({ onContinue, userName }: WelcomeScreenProps) {
             <Badge
               key={text}
               variant="outline"
-              className="px-3 py-1 text-xs border-amber-200 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-300"
+              className="px-3 py-1 text-xs border-brand-200 dark:border-brand-800 bg-brand-50/50 dark:bg-brand-950/30 text-brand-700 dark:text-brand-300"
             >
               <Icon className="h-3 w-3 mr-1" />
               {text}

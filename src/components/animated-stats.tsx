@@ -61,12 +61,12 @@ function CounterCard({
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay, ease: 'easeOut' }}
     >
-      <Card className="relative overflow-hidden border-0 bg-gradient-to-br from-white to-amber-50/50 dark:from-gray-900 dark:to-amber-950/20 shadow-lg hover:shadow-xl transition-shadow">
+      <Card className="relative overflow-hidden border-0 bg-gradient-to-br from-white to-brand-50/50 dark:from-gray-900 dark:to-brand-950/20 shadow-lg hover:shadow-xl transition-shadow">
         <CardContent className="flex flex-col items-center gap-3 pt-6 pb-6">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 shadow-md">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-600 shadow-md">
             <Icon className="h-7 w-7 text-white" />
           </div>
-          <div className="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+          <div className="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-brand-600 to-brand-600 bg-clip-text text-transparent">
             {count.toLocaleString('fr-FR')}{suffix}
           </div>
           <div className="text-sm text-muted-foreground text-center font-medium">
@@ -74,7 +74,7 @@ function CounterCard({
           </div>
         </CardContent>
         {/* Decorative corner */}
-        <div className="absolute -top-6 -right-6 h-20 w-20 rounded-full bg-amber-500/10" />
+        <div className="absolute -top-6 -right-6 h-20 w-20 rounded-full bg-brand-500/10" />
       </Card>
     </motion.div>
   )
@@ -101,14 +101,14 @@ function BarChart({ inView }: { inView: boolean }) {
   const maxValue = Math.max(...monthlyData.map(d => d.value))
 
   return (
-    <Card className="border-0 shadow-lg bg-gradient-to-br from-white to-amber-50/30 dark:from-gray-900 dark:to-amber-950/10">
+    <Card className="border-0 shadow-lg bg-gradient-to-br from-white to-brand-50/30 dark:from-gray-900 dark:to-brand-950/10">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-bold flex items-center gap-2">
-            <TrendingUp className="h-5 w-5 text-amber-500" />
+            <TrendingUp className="h-5 w-5 text-brand-500" />
             Croissance mensuelle
           </CardTitle>
-          <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white border-0">
+          <Badge className="bg-gradient-to-r from-brand-500 to-brand-500 text-white border-0">
             +817% YTD
           </Badge>
         </div>
@@ -120,7 +120,7 @@ function BarChart({ inView }: { inView: boolean }) {
             return (
               <div key={item.month} className="flex-1 flex flex-col items-center gap-1.5">
                 <motion.div
-                  className="w-full rounded-t-md bg-gradient-to-t from-amber-600 to-orange-400 relative group cursor-pointer min-w-0"
+                  className="w-full rounded-t-md bg-gradient-to-t from-brand-600 to-brand-400 relative group cursor-pointer min-w-0"
                   initial={{ height: 0 }}
                   whileInView={{ height: `${heightPercent}%` }}
                   viewport={{ once: true }}
@@ -174,10 +174,10 @@ function DonutChart({ inView }: { inView: boolean }) {
   }, [])
 
   return (
-    <Card className="border-0 shadow-lg bg-gradient-to-br from-white to-amber-50/30 dark:from-gray-900 dark:to-amber-950/10">
+    <Card className="border-0 shadow-lg bg-gradient-to-br from-white to-brand-50/30 dark:from-gray-900 dark:to-brand-950/10">
       <CardHeader>
         <CardTitle className="text-lg font-bold flex items-center gap-2">
-          <Heart className="h-5 w-5 text-amber-500" />
+          <Heart className="h-5 w-5 text-brand-500" />
           Répartition par catégorie
         </CardTitle>
       </CardHeader>
@@ -211,7 +211,7 @@ function DonutChart({ inView }: { inView: boolean }) {
             </svg>
             {/* Center text */}
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-2xl font-extrabold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+              <span className="text-2xl font-extrabold bg-gradient-to-r from-brand-600 to-brand-600 bg-clip-text text-transparent">
                 6
               </span>
               <span className="text-xs text-muted-foreground font-medium">Catégories</span>
@@ -285,11 +285,11 @@ function LineChart({ inView }: { inView: boolean }) {
   const yTicks = [86, 90, 94, 98]
 
   return (
-    <Card className="border-0 shadow-lg bg-gradient-to-br from-white to-amber-50/30 dark:from-gray-900 dark:to-amber-950/10">
+    <Card className="border-0 shadow-lg bg-gradient-to-br from-white to-brand-50/30 dark:from-gray-900 dark:to-brand-950/10">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-bold flex items-center gap-2">
-            <Star className="h-5 w-5 text-amber-500" />
+            <Star className="h-5 w-5 text-brand-500" />
             Évolution de la satisfaction
           </CardTitle>
           <Badge className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white border-0">
@@ -408,7 +408,7 @@ function LineChart({ inView }: { inView: boolean }) {
                 x={p.x}
                 y={p.y - 14}
                 textAnchor="middle"
-                className="fill-amber-600 text-[11px] font-bold"
+                className="fill-brand-600 text-[11px] font-bold"
                 initial={{ opacity: 0, y: p.y }}
                 whileInView={{ opacity: 1, y: p.y - 14 }}
                 viewport={{ once: true }}
@@ -435,8 +435,8 @@ const comparisonData = [
     title: 'Temps de réponse moyen',
     value: '15 min',
     versus: '48h traditionnel',
-    color: 'from-amber-500 to-orange-500',
-    bgColor: 'from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20',
+    color: 'from-brand-500 to-brand-500',
+    bgColor: 'from-brand-50 to-brand-50 dark:from-brand-950/20 dark:to-brand-950/20',
   },
   {
     icon: TrendingUp,
@@ -459,8 +459,8 @@ const comparisonData = [
     title: 'Artisans vérifiés',
     value: '100%',
     versus: '0% vérification',
-    color: 'from-orange-500 to-red-500',
-    bgColor: 'from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20',
+    color: 'from-brand-500 to-red-500',
+    bgColor: 'from-brand-50 to-red-50 dark:from-brand-950/20 dark:to-red-950/20',
   },
 ]
 
@@ -472,10 +472,10 @@ function ComparisonCards({ inView }: { inView: boolean }) {
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
     >
-      <Card className="border-0 shadow-lg bg-gradient-to-br from-white to-amber-50/30 dark:from-gray-900 dark:to-amber-950/10 overflow-hidden">
+      <Card className="border-0 shadow-lg bg-gradient-to-br from-white to-brand-50/30 dark:from-gray-900 dark:to-brand-950/10 overflow-hidden">
         <CardHeader>
           <CardTitle className="text-xl font-bold flex items-center gap-2">
-            <Shield className="h-5 w-5 text-amber-500" />
+            <Shield className="h-5 w-5 text-brand-500" />
             Pourquoi choisir Artisan Connect
           </CardTitle>
         </CardHeader>
@@ -500,7 +500,7 @@ function ComparisonCards({ inView }: { inView: boolean }) {
                       <div className="text-sm text-muted-foreground font-medium mb-1">
                         {item.title}
                       </div>
-                      <div className="text-2xl font-extrabold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+                      <div className="text-2xl font-extrabold bg-gradient-to-r from-brand-600 to-brand-600 bg-clip-text text-transparent">
                         {item.value}
                       </div>
                       <div className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
@@ -510,7 +510,7 @@ function ComparisonCards({ inView }: { inView: boolean }) {
                     </div>
                   </div>
                   {/* Decorative circle */}
-                  <div className="absolute -bottom-4 -right-4 h-16 w-16 rounded-full bg-gradient-to-br from-amber-500/10 to-orange-500/10" />
+                  <div className="absolute -bottom-4 -right-4 h-16 w-16 rounded-full bg-gradient-to-br from-brand-500/10 to-brand-500/10" />
                 </motion.div>
               )
             })}
@@ -533,10 +533,10 @@ export function AnimatedStats() {
       className="relative w-full py-16 sm:py-20 px-4 sm:px-6 lg:px-8"
     >
       {/* Subtle gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-amber-50/60 via-orange-50/30 to-transparent dark:from-amber-950/20 dark:via-orange-950/10 dark:to-transparent -z-10" />
+      <div className="absolute inset-0 bg-gradient-to-b from-brand-50/60 via-brand-50/30 to-transparent dark:from-brand-950/20 dark:via-brand-950/10 dark:to-transparent -z-10" />
       {/* Decorative blobs */}
-      <div className="absolute top-20 left-10 h-72 w-72 rounded-full bg-amber-400/10 blur-3xl -z-10" />
-      <div className="absolute bottom-20 right-10 h-72 w-72 rounded-full bg-orange-400/10 blur-3xl -z-10" />
+      <div className="absolute top-20 left-10 h-72 w-72 rounded-full bg-brand-400/10 blur-3xl -z-10" />
+      <div className="absolute bottom-20 right-10 h-72 w-72 rounded-full bg-brand-400/10 blur-3xl -z-10" />
 
       <div className="mx-auto max-w-7xl space-y-12">
         {/* Section header */}
@@ -547,10 +547,10 @@ export function AnimatedStats() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white border-0 px-4 py-1 text-sm">
+          <Badge className="bg-gradient-to-r from-brand-500 to-brand-500 text-white border-0 px-4 py-1 text-sm">
             Nos chiffres parlent
           </Badge>
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700 bg-clip-text text-transparent">
+          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-brand-600 via-brand-600 to-brand-700 bg-clip-text text-transparent">
             Artisan Connect en chiffres
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-base sm:text-lg">

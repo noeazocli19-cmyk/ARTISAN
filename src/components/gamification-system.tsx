@@ -221,9 +221,9 @@ const mockBadges: BadgeType[] = [
 ]
 
 const realLeaderboard = [
-  { rank: 1, name: 'Amadou Diallo', level: 18, points: 12450, avatar: 'AD', color: 'bg-amber-500' },
+  { rank: 1, name: 'Amadou Diallo', level: 18, points: 12450, avatar: 'AD', color: 'bg-brand-500' },
   { rank: 2, name: 'Fatou Ndiaye', level: 17, points: 11200, avatar: 'FN', color: 'bg-emerald-500' },
-  { rank: 3, name: 'Kofi Mensah', level: 16, points: 10800, avatar: 'KM', color: 'bg-orange-500' },
+  { rank: 3, name: 'Kofi Mensah', level: 16, points: 10800, avatar: 'KM', color: 'bg-brand-500' },
   { rank: 4, name: 'Aïcha Bello', level: 15, points: 9650, avatar: 'AB', color: 'bg-teal-500' },
   { rank: 5, name: 'Moussa Traoré', level: 14, points: 8900, avatar: 'MT', color: 'bg-cyan-500' },
   { rank: 6, name: 'Mariama Sow', level: 13, points: 8200, avatar: 'MS', color: 'bg-violet-500' },
@@ -233,9 +233,9 @@ const realLeaderboard = [
   { rank: 10, name: 'Jean-Pierre Aka', level: 11, points: 6500, avatar: 'JA', color: 'bg-sky-500' },
   { rank: 11, name: 'Mariam Doumbia', level: 11, points: 6200, avatar: 'MD', color: 'bg-lime-500' },
   { rank: 12, name: 'Abdoulaye Camara', level: 10, points: 5800, avatar: 'AC', color: 'bg-fuchsia-500' },
-  { rank: 13, name: 'Kadiatou Sylla', level: 10, points: 5400, avatar: 'KS', color: 'bg-amber-600' },
+  { rank: 13, name: 'Kadiatou Sylla', level: 10, points: 5400, avatar: 'KS', color: 'bg-brand-600' },
   { rank: 14, name: 'Boubacar Diop', level: 9, points: 5100, avatar: 'BD', color: 'bg-emerald-600' },
-  { rank: 15, name: 'Awa Touré', level: 9, points: 4800, avatar: 'AT', color: 'bg-orange-600' },
+  { rank: 15, name: 'Awa Touré', level: 9, points: 4800, avatar: 'AT', color: 'bg-brand-600' },
   { rank: 16, name: 'Seydou Keita', level: 8, points: 4500, avatar: 'SK', color: 'bg-teal-600' },
   { rank: 17, name: 'Fatoumata Diabaté', level: 8, points: 4200, avatar: 'FD', color: 'bg-cyan-600' },
   { rank: 18, name: 'Modibo Coulibaly', level: 7, points: 3900, avatar: 'MC', color: 'bg-violet-600' },
@@ -351,18 +351,18 @@ const categoryLabels: Record<BadgeCategory, string> = {
 }
 
 const categoryColors: Record<BadgeCategory, string> = {
-  achievement: 'bg-amber-100 text-amber-700 dark:bg-amber-950/50 dark:text-amber-300',
+  achievement: 'bg-brand-100 text-brand-700 dark:bg-brand-950/50 dark:text-brand-300',
   social: 'bg-rose-100 text-rose-700 dark:bg-rose-950/50 dark:text-rose-300',
   skill: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300',
-  loyalty: 'bg-orange-100 text-orange-700 dark:bg-orange-950/50 dark:text-orange-300',
+  loyalty: 'bg-brand-100 text-brand-700 dark:bg-brand-950/50 dark:text-brand-300',
   special: 'bg-violet-100 text-violet-700 dark:bg-violet-950/50 dark:text-violet-300',
 }
 
 const categoryIconColors: Record<BadgeCategory, string> = {
-  achievement: 'from-amber-400 to-amber-600',
+  achievement: 'from-brand-400 to-brand-600',
   social: 'from-rose-400 to-rose-600',
   skill: 'from-emerald-400 to-emerald-600',
-  loyalty: 'from-orange-400 to-orange-600',
+  loyalty: 'from-brand-400 to-brand-600',
   special: 'from-violet-400 to-violet-600',
 }
 
@@ -390,7 +390,7 @@ function ProfileHeader({ profile }: { profile: GamificationProfile }) {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-500 via-orange-500 to-amber-600 p-6 sm:p-8 text-white"
+      className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand-500 via-brand-500 to-brand-600 p-6 sm:p-8 text-white"
     >
       {/* Decorative elements */}
       <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-white/5 -translate-y-1/2 translate-x-1/2" />
@@ -402,8 +402,8 @@ function ProfileHeader({ profile }: { profile: GamificationProfile }) {
           {/* Avatar with level badge */}
           <div className="relative">
             <div className="relative w-20 h-20 sm:w-24 sm:h-24">
-              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-amber-300 to-orange-400 p-[3px]">
-                <div className="w-full h-full rounded-full bg-gradient-to-br from-amber-600 to-orange-700 flex items-center justify-center text-2xl sm:text-3xl font-bold text-white">
+              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-brand-300 to-brand-400 p-[3px]">
+                <div className="w-full h-full rounded-full bg-gradient-to-br from-brand-600 to-brand-700 flex items-center justify-center text-2xl sm:text-3xl font-bold text-white">
                   {user?.name?.split(' ').map(n => n[0]).join('') || 'AC'}
                 </div>
               </div>
@@ -412,7 +412,7 @@ function ProfileHeader({ profile }: { profile: GamificationProfile }) {
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.3, type: 'spring', stiffness: 300 }}
-                className="absolute -bottom-1 -right-1 flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-amber-300 to-yellow-500 text-amber-900 font-extrabold text-xs shadow-lg border-2 border-white"
+                className="absolute -bottom-1 -right-1 flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-brand-300 to-yellow-500 text-brand-900 font-extrabold text-xs shadow-lg border-2 border-white"
               >
                 {level.level}
               </motion.div>
@@ -423,22 +423,22 @@ function ProfileHeader({ profile }: { profile: GamificationProfile }) {
           <div className="flex-1 text-center sm:text-left">
             <h2 className="text-xl sm:text-2xl font-bold">{user?.name || 'Artisan Connect'}</h2>
             <div className="flex items-center justify-center sm:justify-start gap-2 mt-1">
-              <Crown className="h-4 w-4 text-amber-200" />
-              <span className="text-amber-100 font-medium">{level.title}</span>
+              <Crown className="h-4 w-4 text-brand-200" />
+              <span className="text-brand-100 font-medium">{level.title}</span>
             </div>
 
             {/* XP Progress */}
             <div className="mt-4 max-w-md">
               <div className="flex items-center justify-between text-sm mb-1.5">
-                <span className="text-amber-100">XP: {level.xp.toLocaleString()} / {level.xpToNext.toLocaleString()}</span>
-                <span className="text-amber-200 font-semibold">{xpPercent}%</span>
+                <span className="text-brand-100">XP: {level.xp.toLocaleString()} / {level.xpToNext.toLocaleString()}</span>
+                <span className="text-brand-200 font-semibold">{xpPercent}%</span>
               </div>
               <div className="h-3 rounded-full bg-white/20 overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${xpPercent}%` }}
                   transition={{ duration: 1.2, ease: 'easeOut', delay: 0.4 }}
-                  className="h-full rounded-full bg-gradient-to-r from-white/80 to-amber-200/90"
+                  className="h-full rounded-full bg-gradient-to-r from-white/80 to-brand-200/90"
                 />
               </div>
             </div>
@@ -460,9 +460,9 @@ function ProfileHeader({ profile }: { profile: GamificationProfile }) {
               transition={{ delay: 0.6, duration: 0.3 }}
               className="flex flex-col items-center rounded-xl bg-white/10 backdrop-blur-sm p-3 sm:p-4 text-center"
             >
-              <stat.icon className="h-5 w-5 mb-1.5 text-amber-200" />
+              <stat.icon className="h-5 w-5 mb-1.5 text-brand-200" />
               <span className="text-lg sm:text-xl font-bold">{stat.value}</span>
-              <span className="text-xs text-amber-200">{stat.label}</span>
+              <span className="text-xs text-brand-200">{stat.label}</span>
             </motion.div>
           ))}
         </div>
@@ -498,13 +498,13 @@ function BadgeCard({
       <Card
         className={`relative overflow-hidden transition-all duration-300 h-full ${
           badge.earned
-            ? 'border-amber-300 dark:border-amber-700 shadow-md hover:shadow-lg'
+            ? 'border-brand-300 dark:border-brand-700 shadow-md hover:shadow-lg'
             : 'border-border/50 hover:border-muted-foreground/30'
         }`}
       >
         {/* Golden glow for earned badges */}
         {badge.earned && (
-          <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 via-transparent to-orange-500/5 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-brand-500/5 via-transparent to-brand-500/5 pointer-events-none" />
         )}
 
         <CardContent className="p-4 sm:p-5 flex flex-col items-center text-center">
@@ -689,11 +689,11 @@ function LeaderboardRow({
 }) {
   const rankStyles =
     entry.rank === 1
-      ? 'bg-gradient-to-r from-yellow-400 to-amber-500 text-amber-950'
+      ? 'bg-gradient-to-r from-yellow-400 to-brand-500 text-brand-950'
       : entry.rank === 2
       ? 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-800'
       : entry.rank === 3
-      ? 'bg-gradient-to-r from-orange-400 to-amber-600 text-amber-950'
+      ? 'bg-gradient-to-r from-brand-400 to-brand-600 text-brand-950'
       : 'bg-muted text-muted-foreground'
 
   const rankIcons = ['', 'ðŸ¥‡', 'ðŸ¥ˆ', 'ðŸ¥‰']
@@ -707,7 +707,7 @@ function LeaderboardRow({
       <div
         className={`flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl transition-all ${
           isCurrentUser
-            ? 'bg-amber-50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-700'
+            ? 'bg-brand-50 dark:bg-brand-950/30 border border-brand-300 dark:border-brand-700'
             : 'hover:bg-muted/50'
         }`}
       >
@@ -731,10 +731,10 @@ function LeaderboardRow({
 
         {/* Info */}
         <div className="flex-1 min-w-0">
-          <p className={`font-semibold text-sm truncate ${isCurrentUser ? 'text-amber-700 dark:text-amber-300' : ''}`}>
+          <p className={`font-semibold text-sm truncate ${isCurrentUser ? 'text-brand-700 dark:text-brand-300' : ''}`}>
             {entry.name}
             {isCurrentUser && (
-              <Badge variant="secondary" className="ml-2 text-[10px] bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300">
+              <Badge variant="secondary" className="ml-2 text-[10px] bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300">
                 Vous
               </Badge>
             )}
@@ -744,7 +744,7 @@ function LeaderboardRow({
 
         {/* Points */}
         <div className="text-right shrink-0">
-          <p className="font-bold text-sm text-amber-600 dark:text-amber-400">
+          <p className="font-bold text-sm text-brand-600 dark:text-brand-400">
             {entry.points.toLocaleString()}
           </p>
           <p className="text-[10px] text-muted-foreground">points</p>
@@ -782,7 +782,7 @@ function ChallengeCard({
               className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-2xl ${
                 challenge.completed
                   ? 'bg-emerald-100 dark:bg-emerald-950/50'
-                  : 'bg-amber-100 dark:bg-amber-950/50'
+                  : 'bg-brand-100 dark:bg-brand-950/50'
               }`}
             >
               {challenge.rewardBadge}
@@ -798,7 +798,7 @@ function ChallengeCard({
 
               {/* Reward */}
               <div className="flex items-center gap-3 mt-2">
-                <div className="flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400">
+                <div className="flex items-center gap-1 text-xs text-brand-600 dark:text-brand-400">
                   <Zap className="h-3 w-3" />
                   <span>+{challenge.rewardXp} XP</span>
                 </div>
@@ -867,18 +867,18 @@ function DailyStreakCalendar({ streak, streakMax }: { streak: number; streakMax:
     <Card className="overflow-hidden">
       <CardHeader className="pb-3">
         <CardTitle className="text-base flex items-center gap-2">
-          <Flame className="h-5 w-5 text-orange-500" />
+          <Flame className="h-5 w-5 text-brand-500" />
           Série de jours consécutifs
         </CardTitle>
       </CardHeader>
       <CardContent className="p-4 pt-0">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <span className="text-2xl font-bold text-orange-500">{streak}</span>
+            <span className="text-2xl font-bold text-brand-500">{streak}</span>
             <span className="text-sm text-muted-foreground">jours actuels</span>
           </div>
           <div className="flex items-center gap-2">
-            <Trophy className="h-4 w-4 text-amber-500" />
+            <Trophy className="h-4 w-4 text-brand-500" />
             <span className="text-sm text-muted-foreground">Record: <strong>{streakMax}</strong> jours</span>
           </div>
         </div>
@@ -902,7 +902,7 @@ function DailyStreakCalendar({ streak, streakMax }: { streak: number; streakMax:
               transition={{ delay: i * 0.01, duration: 0.2 }}
               className={`aspect-square rounded-sm ${
                 active
-                  ? 'bg-gradient-to-br from-orange-400 to-amber-500'
+                  ? 'bg-gradient-to-br from-brand-400 to-brand-500'
                   : 'bg-muted/50'
               }`}
             />
@@ -977,7 +977,7 @@ export function GamificationSystem({ onBack }: GamificationSystemProps) {
             <span className="hidden sm:inline">Retour</span>
           </Button>
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-600">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-brand-500 to-brand-600">
               <Trophy className="h-4 w-4 text-white" />
             </div>
             <h1 className="text-lg font-bold">Succès & Récompenses</h1>
@@ -1011,7 +1011,7 @@ export function GamificationSystem({ onBack }: GamificationSystemProps) {
             {/* Filter + counter */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-2 text-sm">
-                <span className="font-semibold text-amber-600 dark:text-amber-400">{earnedCount}</span>
+                <span className="font-semibold text-brand-600 dark:text-brand-400">{earnedCount}</span>
                 <span className="text-muted-foreground">sur {mockBadges.length} badges obtenus</span>
               </div>
 
@@ -1026,7 +1026,7 @@ export function GamificationSystem({ onBack }: GamificationSystemProps) {
                       onClick={() => setBadgeFilter(cat)}
                       className={`text-xs h-7 px-2.5 ${
                         badgeFilter === cat
-                          ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0'
+                          ? 'bg-gradient-to-r from-brand-500 to-brand-600 text-white border-0'
                           : ''
                       }`}
                     >
@@ -1081,10 +1081,10 @@ export function GamificationSystem({ onBack }: GamificationSystemProps) {
                           ? 'border-yellow-400 dark:border-yellow-600 shadow-lg'
                           : entry.rank === 2
                           ? 'border-gray-300 dark:border-gray-600'
-                          : 'border-amber-400 dark:border-amber-700'
+                          : 'border-brand-400 dark:border-brand-700'
                       }`}
                     >
-                      <CardContent className={`p-3 sm:p-4 ${entry.rank === 1 ? 'bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-950/30 dark:to-amber-950/30' : ''}`}>
+                      <CardContent className={`p-3 sm:p-4 ${entry.rank === 1 ? 'bg-gradient-to-br from-yellow-50 to-brand-50 dark:from-yellow-950/30 dark:to-brand-950/30' : ''}`}>
                         <div className="text-2xl mb-1">
                           {entry.rank === 1 ? 'ðŸ¥‡' : entry.rank === 2 ? 'ðŸ¥ˆ' : 'ðŸ¥‰'}
                         </div>
@@ -1095,7 +1095,7 @@ export function GamificationSystem({ onBack }: GamificationSystemProps) {
                         </div>
                         <p className="font-semibold text-xs sm:text-sm mt-2 truncate">{entry.name}</p>
                         <p className="text-[10px] text-muted-foreground">Niv. {entry.level}</p>
-                        <p className="text-sm font-bold text-amber-600 dark:text-amber-400 mt-1">
+                        <p className="text-sm font-bold text-brand-600 dark:text-brand-400 mt-1">
                           {entry.points.toLocaleString()}
                         </p>
                       </CardContent>
@@ -1136,9 +1136,9 @@ export function GamificationSystem({ onBack }: GamificationSystemProps) {
             {/* Active challenges */}
             <div>
               <h3 className="text-base font-semibold flex items-center gap-2 mb-3">
-                <Target className="h-4 w-4 text-amber-500" />
+                <Target className="h-4 w-4 text-brand-500" />
                 Défis actifs
-                <Badge variant="secondary" className="text-xs bg-amber-100 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300">
+                <Badge variant="secondary" className="text-xs bg-brand-100 dark:bg-brand-950/50 text-brand-700 dark:text-brand-300">
                   {mockActiveChallenges.length}
                 </Badge>
               </h3>

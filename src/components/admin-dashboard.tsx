@@ -222,13 +222,13 @@ const statusBadge = (status: string) => {
   const map: Record<string, { variant: 'default' | 'secondary' | 'destructive' | 'outline'; className: string }> = {
     actif: { variant: 'secondary', className: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400 border-0' },
     suspendu: { variant: 'secondary', className: 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-400 border-0' },
-    en_attente: { variant: 'secondary', className: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-400 border-0' },
+    en_attente: { variant: 'secondary', className: 'bg-brand-100 text-brand-700 dark:bg-brand-950 dark:text-brand-400 border-0' },
     ouverte: { variant: 'secondary', className: 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400 border-0' },
-    en_cours: { variant: 'secondary', className: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-400 border-0' },
+    en_cours: { variant: 'secondary', className: 'bg-brand-100 text-brand-700 dark:bg-brand-950 dark:text-brand-400 border-0' },
     complétée: { variant: 'secondary', className: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400 border-0' },
     annulée: { variant: 'secondary', className: 'bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-400 border-0' },
     ouvert: { variant: 'secondary', className: 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-400 border-0' },
-    en_examen: { variant: 'secondary', className: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-400 border-0' },
+    en_examen: { variant: 'secondary', className: 'bg-brand-100 text-brand-700 dark:bg-brand-950 dark:text-brand-400 border-0' },
     résolu: { variant: 'secondary', className: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400 border-0' },
   }
   const config = map[status] || { variant: 'outline' as const, className: '' }
@@ -237,7 +237,7 @@ const statusBadge = (status: string) => {
 
 const badgeStyle = (badge: string) => {
   const map: Record<string, string> = {
-    'Élite': 'bg-amber-500 text-white border-0',
+    'Élite': 'bg-brand-500 text-white border-0',
     'Top': 'bg-emerald-500 text-white border-0',
     'Vérifié': 'bg-teal-500 text-white border-0',
   }
@@ -270,9 +270,9 @@ const navItems: { id: AdminTab; label: string; icon: React.ElementType }[] = [
 
 function OverviewTab() {
   const statCards = [
-    { title: 'Total Utilisateurs', value: '12 450', change: '+12.5%', up: true, icon: Users, color: 'from-amber-500 to-orange-500' },
+    { title: 'Total Utilisateurs', value: '12 450', change: '+12.5%', up: true, icon: Users, color: 'from-brand-500 to-brand-500' },
     { title: 'Artisans Actifs', value: '3 280', change: '+8.3%', up: true, icon: Wrench, color: 'from-emerald-500 to-teal-500' },
-    { title: 'Missions en cours', value: '845', change: '+5.2%', up: true, icon: Briefcase, color: 'from-orange-500 to-amber-500' },
+    { title: 'Missions en cours', value: '845', change: '+5.2%', up: true, icon: Briefcase, color: 'from-brand-500 to-brand-500' },
     { title: 'Revenus', value: '28.5M FCFA', change: '+15.8%', up: true, icon: DollarSign, color: 'from-teal-500 to-emerald-500' },
     { title: 'Vérifications en attente', value: '23', change: '-3.1%', up: false, icon: UserCheck, color: 'from-rose-500 to-red-500' },
     { title: 'Taux de complétion', value: '87%', change: '+2.4%', up: true, icon: TrendingUp, color: 'from-cyan-500 to-blue-500' },
@@ -398,8 +398,8 @@ function OverviewTab() {
           <div className="space-y-3 max-h-96 overflow-y-auto">
             {recentActivity.map((activity) => (
               <div key={activity.id} className="flex items-start gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-950/50">
-                  <activity.icon className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand-100 dark:bg-brand-950/50">
+                  <activity.icon className="h-4 w-4 text-brand-600 dark:text-brand-400" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium leading-tight">{activity.message}</p>
@@ -572,7 +572,7 @@ function UsersTab() {
           )}
           <DialogFooter>
             {dialogAction.type === 'view' ? (
-              <Button onClick={() => setDialogOpen(false)} className="bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0">
+              <Button onClick={() => setDialogOpen(false)} className="bg-gradient-to-r from-brand-500 to-brand-600 text-white border-0">
                 Fermer
               </Button>
             ) : (
@@ -581,7 +581,7 @@ function UsersTab() {
                 <Button
                   className={dialogAction.type === 'delete'
                     ? 'bg-red-600 hover:bg-red-700 text-white'
-                    : 'bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0'
+                    : 'bg-gradient-to-r from-brand-500 to-brand-600 text-white border-0'
                   }
                   onClick={() => setDialogOpen(false)}
                 >
@@ -709,7 +709,7 @@ function ArtisansTab() {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1">
-                        <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                        <Star className="h-3.5 w-3.5 fill-brand-400 text-brand-400" />
                         <span className="font-medium">{artisan.rating}</span>
                       </div>
                     </TableCell>
@@ -829,10 +829,10 @@ function MissionsTab() {
                     <TableCell className="text-muted-foreground">{mission.client}</TableCell>
                     <TableCell className="text-muted-foreground">{mission.artisan}</TableCell>
                     <TableCell>{statusBadge(mission.status)}</TableCell>
-                    <TableCell className="font-medium text-amber-600 dark:text-amber-400">{formatFCFA(mission.budget)}</TableCell>
+                    <TableCell className="font-medium text-brand-600 dark:text-brand-400">{formatFCFA(mission.budget)}</TableCell>
                     <TableCell className="text-muted-foreground">{mission.date}</TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="sm" className="gap-1.5 text-amber-600 hover:text-amber-700 dark:text-amber-400">
+                      <Button variant="ghost" size="sm" className="gap-1.5 text-brand-600 hover:text-brand-700 dark:text-brand-400">
                         <Eye className="h-3.5 w-3.5" />
                         <span className="hidden sm:inline">Détails</span>
                       </Button>
@@ -877,8 +877,8 @@ function ReviewsTab() {
         </Card>
         <Card className="border-border/50">
           <CardContent className="p-4 flex items-center gap-4">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-950/50">
-              <MessageSquare className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-100 dark:bg-brand-950/50">
+              <MessageSquare className="h-5 w-5 text-brand-600 dark:text-brand-400" />
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Total avis</p>
@@ -943,7 +943,7 @@ function ReviewsTab() {
                         {Array.from({ length: 5 }).map((_, i) => (
                           <Star
                             key={i}
-                            className={`h-3.5 w-3.5 ${i < review.rating ? 'fill-amber-400 text-amber-400' : 'fill-neutral-200 text-neutral-200 dark:fill-neutral-700 dark:text-neutral-700'}`}
+                            className={`h-3.5 w-3.5 ${i < review.rating ? 'fill-brand-400 text-brand-400' : 'fill-neutral-200 text-neutral-200 dark:fill-neutral-700 dark:text-neutral-700'}`}
                           />
                         ))}
                       </div>
@@ -986,8 +986,8 @@ function ModerationTab() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-950/50">
-                <UserCheck className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-100 dark:bg-brand-950/50">
+                <UserCheck className="h-4 w-4 text-brand-600 dark:text-brand-400" />
               </div>
               <div>
                 <CardTitle className="text-base">Vérifications en attente</CardTitle>
@@ -1092,7 +1092,7 @@ function ModerationTab() {
                     <TableCell className="max-w-[300px] truncate text-muted-foreground">{review.comment}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-1.5">
-                        <Button size="sm" variant="ghost" className="h-8 gap-1 text-amber-600 hover:text-amber-700 dark:text-amber-400">
+                        <Button size="sm" variant="ghost" className="h-8 gap-1 text-brand-600 hover:text-brand-700 dark:text-brand-400">
                           <Eye className="h-3.5 w-3.5" />
                           Examiner
                         </Button>
@@ -1114,8 +1114,8 @@ function ModerationTab() {
       <Card className="border-border/50">
         <CardHeader>
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-100 dark:bg-orange-950/50">
-              <FileWarning className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-100 dark:bg-brand-950/50">
+              <FileWarning className="h-4 w-4 text-brand-600 dark:text-brand-400" />
             </div>
             <div>
               <CardTitle className="text-base">Litiges</CardTitle>
@@ -1143,14 +1143,14 @@ function ModerationTab() {
                     <TableCell className="font-medium">{dispute.title}</TableCell>
                     <TableCell className="text-muted-foreground">{dispute.client}</TableCell>
                     <TableCell className="text-muted-foreground">{dispute.artisan}</TableCell>
-                    <TableCell className="font-medium text-amber-600 dark:text-amber-400">{formatFCFA(dispute.amount)}</TableCell>
+                    <TableCell className="font-medium text-brand-600 dark:text-brand-400">{formatFCFA(dispute.amount)}</TableCell>
                     <TableCell className="text-muted-foreground">{dispute.date}</TableCell>
                     <TableCell>{statusBadge(dispute.status)}</TableCell>
                     <TableCell className="text-right">
                       <Button
                         size="sm"
                         variant="ghost"
-                        className="h-8 gap-1 text-amber-600 hover:text-amber-700 dark:text-amber-400"
+                        className="h-8 gap-1 text-brand-600 hover:text-brand-700 dark:text-brand-400"
                         onClick={() => handleAction('examine', dispute)}
                       >
                         <Eye className="h-3.5 w-3.5" />
@@ -1188,7 +1188,7 @@ function ModerationTab() {
                   ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
                   : dialogAction.type === 'reject'
                     ? 'bg-red-600 hover:bg-red-700 text-white'
-                    : 'bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0'
+                    : 'bg-gradient-to-r from-brand-500 to-brand-600 text-white border-0'
               }
               onClick={() => setDialogOpen(false)}
             >
@@ -1261,7 +1261,7 @@ function SettingsTab() {
                 <p className="text-sm font-medium">{item.label}</p>
                 <p className="text-xs text-muted-foreground">{item.desc}</p>
               </div>
-              <div className="flex h-6 w-11 items-center rounded-full bg-amber-500 p-0.5 cursor-pointer">
+              <div className="flex h-6 w-11 items-center rounded-full bg-brand-500 p-0.5 cursor-pointer">
                 <div className="h-5 w-5 translate-x-5 rounded-full bg-white shadow-sm transition-transform" />
               </div>
             </div>
@@ -1286,7 +1286,7 @@ function SettingsTab() {
       </Card>
 
       <div className="flex justify-end">
-        <Button className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0">
+        <Button className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0">
           Sauvegarder les modifications
         </Button>
       </div>
@@ -1338,10 +1338,10 @@ export function AdminDashboard({ onBack }: AdminDashboardProps) {
             </Button>
             <div className="hidden sm:block h-5 w-px bg-border" />
             <div className="hidden sm:flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-600">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-brand-500 to-brand-600">
                 <Wrench className="h-3.5 w-3.5 text-white" />
               </div>
-              <span className="font-bold text-sm bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+              <span className="font-bold text-sm bg-gradient-to-r from-brand-600 to-brand-600 bg-clip-text text-transparent">
                 Admin Dashboard
               </span>
             </div>
@@ -1352,7 +1352,7 @@ export function AdminDashboard({ onBack }: AdminDashboardProps) {
               <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white font-bold">3</span>
             </Button>
             <div className="flex items-center gap-2 ml-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-orange-600 text-white text-xs font-bold">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-brand-600 text-white text-xs font-bold">
                 AD
               </div>
               <span className="hidden sm:inline text-sm font-medium">Admin</span>
@@ -1391,7 +1391,7 @@ export function AdminDashboard({ onBack }: AdminDashboardProps) {
                     onClick={() => setActiveTab(item.id)}
                     className={`w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all ${
                       isActive
-                        ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-md shadow-amber-500/25'
+                        ? 'bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-md shadow-brand-500/25'
                         : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                     }`}
                   >
@@ -1405,10 +1405,10 @@ export function AdminDashboard({ onBack }: AdminDashboardProps) {
             {/* Sidebar Footer */}
             {!sidebarCollapsed && (
               <div className="px-3 pt-4 border-t border-border/50">
-                <div className="rounded-lg bg-gradient-to-br from-amber-500/10 to-orange-500/10 p-3">
-                  <p className="text-xs font-medium text-amber-700 dark:text-amber-400">Besoin d&apos;aide ?</p>
+                <div className="rounded-lg bg-gradient-to-br from-brand-500/10 to-brand-500/10 p-3">
+                  <p className="text-xs font-medium text-brand-700 dark:text-brand-400">Besoin d&apos;aide ?</p>
                   <p className="text-xs text-muted-foreground mt-1">Consultez la documentation admin</p>
-                  <Button size="sm" variant="outline" className="w-full mt-2 h-7 text-xs border-amber-300 dark:border-amber-700 text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/50">
+                  <Button size="sm" variant="outline" className="w-full mt-2 h-7 text-xs border-brand-300 dark:border-brand-700 text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/50">
                     Documentation
                   </Button>
                 </div>
@@ -1428,7 +1428,7 @@ export function AdminDashboard({ onBack }: AdminDashboardProps) {
                   onClick={() => setActiveTab(item.id)}
                   className={`flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-lg text-[10px] font-medium transition-colors ${
                     isActive
-                      ? 'text-amber-600 dark:text-amber-400'
+                      ? 'text-brand-600 dark:text-brand-400'
                       : 'text-muted-foreground'
                   }`}
                 >

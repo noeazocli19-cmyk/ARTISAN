@@ -43,3 +43,26 @@ export const NEW_PROFESSIONS_TO_ADD = [
 export function getSynonymsForCategory(category: string): string[] {
   return CATEGORY_PROFESSION_MAP[category] || [category];
 }
+
+// Sous-problèmes proposés dynamiquement selon le métier choisi lors de la
+// publication d'une mission (ex: Plomberie → "Fuite d'eau", "Robinet défectueux").
+// Sert uniquement à préremplir le titre/la description ; aucune colonne de
+// base de données supplémentaire n'est nécessaire.
+export const ISSUES_BY_CATEGORY: Record<string, string[]> = {
+  "Plomberie": ["Fuite d'eau", "Robinet défectueux", "Toilette bouchée", "Chauffe-eau en panne", "Tuyau cassé", "Autre"],
+  "Électricité": ["Panne de courant", "Prise défectueuse", "Court-circuit", "Installation nouvelle", "Disjoncteur qui saute", "Autre"],
+  "Menuiserie": ["Porte cassée", "Meuble à réparer", "Fabrication sur mesure", "Fenêtre bloquée", "Autre"],
+  "Peinture": ["Peinture intérieure", "Peinture extérieure", "Rénovation façade", "Retouches", "Autre"],
+  "Serrurerie": ["Porte claquée", "Clé perdue", "Serrure à changer", "Ouverture de porte", "Autre"],
+  "Maçonnerie": ["Fissure sur un mur", "Construction", "Rénovation", "Carrelage", "Autre"],
+  "Climatisation": ["Climatiseur en panne", "Installation climatiseur", "Entretien/nettoyage", "Fuite de gaz", "Autre"],
+  "Nettoyage": ["Nettoyage maison", "Nettoyage bureau", "Nettoyage après travaux", "Nettoyage canapé/tapis", "Autre"],
+  "Cuisine": ["Réparation électroménager", "Installation cuisine", "Fuite évier", "Autre"],
+  "Jardinage": ["Entretien jardin", "Taille de haie", "Tonte de pelouse", "Aménagement paysager", "Autre"],
+  "Réparation auto": ["Panne moteur", "Vidange", "Pneu crevé", "Freins", "Autre"],
+  "Autre": ["Autre besoin"],
+};
+
+export function getIssuesForCategory(category: string): string[] {
+  return ISSUES_BY_CATEGORY[category] || ["Autre"];
+}

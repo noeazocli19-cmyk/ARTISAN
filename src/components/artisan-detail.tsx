@@ -34,7 +34,7 @@ import {
 } from 'lucide-react'
 
 const BADGE_STYLES: Record<string, { color: string; icon: typeof Award }> = {
-  'Élite': { color: 'bg-amber-500 text-white', icon: Award },
+  'Élite': { color: 'bg-brand-500 text-white', icon: Award },
   'Top': { color: 'bg-emerald-500 text-white', icon: Star },
   'Vérifié': { color: 'bg-teal-500 text-white', icon: Shield },
   'Nouveau': { color: 'bg-neutral-500 text-white', icon: Briefcase },
@@ -218,12 +218,12 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
       {/* Header */}
       <motion.div variants={fadeInUp} initial="hidden" animate="visible">
         <Card className="border-border/50 overflow-hidden">
-          <div className="h-32 bg-gradient-to-r from-amber-500 to-orange-600 relative">
+          <div className="h-32 bg-gradient-to-r from-brand-500 to-brand-600 relative">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.15),transparent)]" />
           </div>
           <CardContent className="p-6 -mt-12 relative">
             <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-end">
-              <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-white font-bold text-2xl border-4 border-background shadow-lg">
+              <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-600 text-white font-bold text-2xl border-4 border-background shadow-lg">
                 {initials}
               </div>
               <div className="flex-1 min-w-0">
@@ -248,7 +248,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
                     </span>
                   )}
                   <span className="flex items-center gap-1">
-                    <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                    <Star className="h-3.5 w-3.5 fill-brand-400 text-brand-400" />
                     {artisan.rating.toFixed(1)} ({artisan.reviewCount} avis)
                   </span>
                   {memberSince && (
@@ -261,7 +261,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
               </div>
               <div className="flex gap-2 sm:self-end">
                 <button
-                  className="h-10 w-10 flex items-center justify-center rounded-lg border border-border/50 hover:bg-amber-50 dark:hover:bg-amber-950/50 transition-colors"
+                  className="h-10 w-10 flex items-center justify-center rounded-lg border border-border/50 hover:bg-brand-50 dark:hover:bg-brand-950/50 transition-colors"
                   onClick={() => toggleFavorite(artisanId)}
                   aria-label={favoriteIds.includes(artisanId) ? 'Retirer des favoris' : 'Ajouter aux favoris'}
                 >
@@ -276,7 +276,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
                   Contacter
                 </Button>
                 <Button
-                  className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 gap-1"
+                  className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 gap-1"
                   onClick={() => setDevisOpen(true)}
                 >
                   <FileText className="h-4 w-4" />
@@ -318,7 +318,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
                       <p className="text-sm font-medium mb-2">Spécialités</p>
                       <div className="flex flex-wrap gap-2">
                         {specialties.map((spec) => (
-                          <Badge key={spec} className="bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300 border-0">
+                          <Badge key={spec} className="bg-brand-100 text-brand-700 dark:bg-brand-950 dark:text-brand-300 border-0">
                             {spec}
                           </Badge>
                         ))}
@@ -367,7 +367,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
             <Card className="border-border/50">
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <Star className="h-5 w-5 text-amber-500" />
+                  <Star className="h-5 w-5 text-brand-500" />
                   Avis ({artisan.reviewCount})
                 </CardTitle>
               </CardHeader>
@@ -378,7 +378,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
                       <div key={review.id} className="pb-4 border-b border-border/50 last:border-0 last:pb-0">
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
-                            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white text-xs font-bold">
+                            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center text-white text-xs font-bold">
                               {(review.client?.name || 'Client').split(' ').map(n => n[0]).join('').slice(0, 2)}
                             </div>
                             <span className="font-medium text-sm">{review.client?.name || 'Client'}</span>
@@ -393,7 +393,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
                               key={i}
                               className={`h-3 w-3 ${
                                 i < review.rating
-                                  ? 'fill-amber-400 text-amber-400'
+                                  ? 'fill-brand-400 text-brand-400'
                                   : 'fill-neutral-200 text-neutral-200 dark:fill-neutral-700 dark:text-neutral-700'
                               }`}
                             />
@@ -418,7 +418,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
             <Card className="border-border/50">
               <CardContent className="p-6 space-y-4">
                 <div className="text-center">
-                  <p className="text-3xl font-bold text-amber-600 dark:text-amber-400">
+                  <p className="text-3xl font-bold text-brand-600 dark:text-brand-400">
                     {artisan.hourlyRate.toLocaleString()} <span className="text-base font-normal text-muted-foreground">FCFA/h</span>
                   </p>
                 </div>
@@ -438,7 +438,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
                   </div>
                 </div>
                 <Button
-                  className="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0"
+                  className="w-full bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0"
                   onClick={() => setDevisOpen(true)}
                 >
                   <FileText className="h-4 w-4 mr-2" />
@@ -462,7 +462,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
               <Card className="border-border/50">
                 <CardHeader>
                   <CardTitle className="text-base flex items-center gap-2">
-                    <Award className="h-4 w-4 text-amber-500" />
+                    <Award className="h-4 w-4 text-brand-500" />
                     Certifications
                   </CardTitle>
                 </CardHeader>
@@ -504,7 +504,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
         <DialogContent className="sm:max-w-[450px]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <MessageSquare className="h-5 w-5 text-amber-500" />
+              <MessageSquare className="h-5 w-5 text-brand-500" />
               Contacter {name}
             </DialogTitle>
           </DialogHeader>
@@ -519,7 +519,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
               />
             </div>
             <Button
-              className="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0"
+              className="w-full bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0"
               onClick={handleSendMessage}
               disabled={sending || !messageText.trim()}
             >
@@ -535,7 +535,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
         <DialogContent className="sm:max-w-[450px]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5 text-amber-500" />
+              <FileText className="h-5 w-5 text-brand-500" />
               Demander un devis Ã  {name}
             </DialogTitle>
           </DialogHeader>
@@ -559,7 +559,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
               />
             </div>
             <Button
-              className="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0"
+              className="w-full bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0"
               onClick={handleSendDevis}
               disabled={sending || !devisText.trim()}
             >

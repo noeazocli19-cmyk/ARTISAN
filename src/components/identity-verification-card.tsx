@@ -64,11 +64,11 @@ export function IdentityVerificationCard({ identityStatus, onSubmitted }: Props)
 
   if (identityStatus === 'en_attente') {
     return (
-      <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 flex items-center gap-3">
-        <Clock className="h-6 w-6 text-amber-500 shrink-0" />
+      <div className="bg-brand-50 border border-brand-200 rounded-2xl p-5 flex items-center gap-3">
+        <Clock className="h-6 w-6 text-brand-500 shrink-0" />
         <div>
-          <p className="font-bold text-amber-800">Vérification en cours</p>
-          <p className="text-sm text-amber-700">Votre document est en cours d'examen par notre équipe.</p>
+          <p className="font-bold text-brand-800">Vérification en cours</p>
+          <p className="text-sm text-brand-700">Votre document est en cours d'examen par notre équipe.</p>
         </div>
       </div>
     );

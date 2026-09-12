@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTheme } from 'next-themes'
 import { Button } from '@/components/ui/button'
@@ -61,6 +62,7 @@ export function Navbar({ onOpenAuth, onSearch }: NavbarProps) {
   const [searchLocation, setSearchLocation] = useState('')
 
   const { user, isAuthenticated, logout, setView } = useAppStore()
+  const router = useRouter()
 
   // Use mounted from parent or local
   useState(() => {
@@ -153,7 +155,7 @@ export function Navbar({ onOpenAuth, onSearch }: NavbarProps) {
                 placeholder="Rechercher un artisan..."
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
-                className="w-full rounded-lg border border-border/50 bg-muted/50 pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber-500"
+                className="w-full rounded-lg border border-border/50 bg-muted/50 pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-brand-500"
               />
             </div>
           </form>
@@ -199,7 +201,7 @@ export function Navbar({ onOpenAuth, onSearch }: NavbarProps) {
                 <Button variant="ghost" className="flex items-center gap-2 px-2">
                   <Avatar className="h-8 w-8">
                     <AvatarImage src={user.avatar || undefined} alt={user.name} />
-                    <AvatarFallback className="bg-gradient-to-br from-amber-500 to-orange-600 text-white text-xs font-bold">
+                    <AvatarFallback className="bg-gradient-to-br from-brand-500 to-brand-600 text-white text-xs font-bold">
                       {getInitials(user.name)}
                     </AvatarFallback>
                   </Avatar>
@@ -212,7 +214,7 @@ export function Navbar({ onOpenAuth, onSearch }: NavbarProps) {
                   <p className="text-xs text-muted-foreground">{user.email}</p>
                 </div>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => setView('dashboard')} className="cursor-pointer">
+                <DropdownMenuItem onClick={() => router.push('/dashboard')} className="cursor-pointer">
                   <LayoutDashboard className="mr-2 h-4 w-4" />
                   Mon Tableau de bord
                 </DropdownMenuItem>
@@ -280,7 +282,7 @@ export function Navbar({ onOpenAuth, onSearch }: NavbarProps) {
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
-                      className="hidden sm:inline-flex bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 text-sm gap-1.5"
+                      className="hidden sm:inline-flex bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 text-sm gap-1.5"
                       onClick={() => window.location.href='/register'}
                     >
                       <UserPlus className="h-4 w-4" />
@@ -348,7 +350,7 @@ export function Navbar({ onOpenAuth, onSearch }: NavbarProps) {
               {isAuthenticated && (
                 <>
                   <button
-                    onClick={() => { setView('dashboard'); setMobileMenuOpen(false) }}
+                    onClick={() => { router.push('/dashboard'); setMobileMenuOpen(false) }}
                     className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-accent text-left"
                   >
                     Mon Tableau de bord
@@ -426,7 +428,7 @@ export function Navbar({ onOpenAuth, onSearch }: NavbarProps) {
                     </span>
                   </Button>
                   <Button
-                    className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 text-sm gap-1.5 h-auto py-2 justify-start"
+                    className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 text-sm gap-1.5 h-auto py-2 justify-start"
                     onClick={() => { window.location.href='/register'; setMobileMenuOpen(false) }}
                   >
                     <UserPlus className="h-4 w-4 shrink-0" />

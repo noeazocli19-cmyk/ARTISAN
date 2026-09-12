@@ -87,8 +87,8 @@ const categoryIcons: Record<string, typeof Droplets> = {
 
 const categoryColors: Record<string, string> = {
   "Plomberie": "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300",
-  "Électricité": "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300",
-  "Menuiserie": "bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300",
+  "Électricité": "bg-brand-100 text-brand-700 dark:bg-brand-950 dark:text-brand-300",
+  "Menuiserie": "bg-brand-100 text-brand-700 dark:bg-brand-950 dark:text-brand-300",
   "Peinture": "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300",
   "Autre": "bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300",
 }
@@ -298,7 +298,7 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
   const lightboxItem = lightboxIndex !== null ? filteredItems[lightboxIndex] : null
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50/50 via-white to-orange-50/50 dark:from-neutral-950 dark:via-neutral-950 dark:to-neutral-950">
+    <div className="min-h-screen bg-gradient-to-br from-brand-50/50 via-white to-brand-50/50 dark:from-neutral-950 dark:via-neutral-950 dark:to-neutral-950">
       {/* Header */}
       <div className="sticky top-16 z-30 bg-white/80 dark:bg-neutral-950/80 backdrop-blur-md border-b border-border/50">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
@@ -308,13 +308,13 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
                 variant="ghost"
                 size="icon"
                 onClick={onBack}
-                className="rounded-full hover:bg-amber-100 dark:hover:bg-amber-950"
+                className="rounded-full hover:bg-brand-100 dark:hover:bg-brand-950"
               >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
               <div>
                 <h1 className="text-xl sm:text-2xl font-bold">
-                  <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-brand-500 via-brand-500 to-brand-600 bg-clip-text text-transparent">
                     Portfolio
                   </span>
                 </h1>
@@ -324,7 +324,7 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-orange-600 shadow-md">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-brand-600 shadow-md">
                 <FolderOpen className="h-5 w-5 text-white" />
               </div>
             </div>
@@ -334,17 +334,17 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <Tabs defaultValue="gallery" className="w-full">
-          <TabsList className="mb-8 bg-amber-50 dark:bg-amber-950/30 p-1 h-auto rounded-xl">
+          <TabsList className="mb-8 bg-brand-50 dark:bg-brand-950/30 p-1 h-auto rounded-xl">
             <TabsTrigger
               value="gallery"
-              className="rounded-lg px-6 py-2.5 data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all"
+              className="rounded-lg px-6 py-2.5 data-[state=active]:bg-gradient-to-r data-[state=active]:from-brand-500 data-[state=active]:to-brand-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all"
             >
               <ImageIcon className="h-4 w-4 mr-2" />
               Galerie
             </TabsTrigger>
             <TabsTrigger
               value="upload"
-              className="rounded-lg px-6 py-2.5 data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all"
+              className="rounded-lg px-6 py-2.5 data-[state=active]:bg-gradient-to-r data-[state=active]:from-brand-500 data-[state=active]:to-brand-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all"
             >
               <Upload className="h-4 w-4 mr-2" />
               Ajouter
@@ -367,8 +367,8 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
                       onClick={() => setActiveCategory(cat)}
                       className={
                         isActive
-                          ? "bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 shadow-md"
-                          : "hover:border-amber-300 dark:hover:border-amber-700 hover:bg-amber-50 dark:hover:bg-amber-950/50"
+                          ? "bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 shadow-md"
+                          : "hover:border-brand-300 dark:hover:border-brand-700 hover:bg-brand-50 dark:hover:bg-brand-950/50"
                       }
                     >
                       {Icon && <Icon className="h-3.5 w-3.5 mr-1.5" />}
@@ -403,7 +403,7 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
                     layout
                   >
                     <Card
-                      className="group overflow-hidden cursor-pointer border-border/50 hover:border-amber-300 dark:hover:border-amber-700 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 break-inside-avoid"
+                      className="group overflow-hidden cursor-pointer border-border/50 hover:border-brand-300 dark:hover:border-brand-700 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 break-inside-avoid"
                       onClick={() => openLightbox(index)}
                     >
                       <div className="relative overflow-hidden">
@@ -449,8 +449,8 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
                 animate={{ opacity: 1, y: 0 }}
                 className="text-center py-20"
               >
-                <div className="flex h-20 w-20 mx-auto items-center justify-center rounded-2xl bg-amber-100 dark:bg-amber-950/50 mb-4">
-                  <ImageIcon className="h-10 w-10 text-amber-500" />
+                <div className="flex h-20 w-20 mx-auto items-center justify-center rounded-2xl bg-brand-100 dark:bg-brand-950/50 mb-4">
+                  <ImageIcon className="h-10 w-10 text-brand-500" />
                 </div>
                 <p className="text-muted-foreground text-lg">
                   Aucun projet dans cette catégorie
@@ -479,8 +479,8 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
                     relative rounded-2xl border-2 border-dashed p-8 sm:p-12
                     transition-all duration-300 cursor-pointer
                     ${isDragOver
-                      ? "border-amber-500 bg-amber-50 dark:bg-amber-950/30 scale-[1.01]"
-                      : "border-amber-300/50 dark:border-amber-700/50 bg-amber-50/30 dark:bg-amber-950/10 hover:border-amber-400 dark:hover:border-amber-600 hover:bg-amber-50/50 dark:hover:bg-amber-950/20"
+                      ? "border-brand-500 bg-brand-50 dark:bg-brand-950/30 scale-[1.01]"
+                      : "border-brand-300/50 dark:border-brand-700/50 bg-brand-50/30 dark:bg-brand-950/10 hover:border-brand-400 dark:hover:border-brand-600 hover:bg-brand-50/50 dark:hover:bg-brand-950/20"
                     }
                   `}
                   onClick={() => fileInputRef.current?.click()}
@@ -499,11 +499,11 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
                       flex h-20 w-20 items-center justify-center rounded-2xl
                       transition-all duration-300
                       ${isDragOver
-                        ? "bg-gradient-to-br from-amber-500 to-orange-600 shadow-lg scale-110"
-                        : "bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-950/50 dark:to-orange-950/50"
+                        ? "bg-gradient-to-br from-brand-500 to-brand-600 shadow-lg scale-110"
+                        : "bg-gradient-to-br from-brand-100 to-brand-100 dark:from-brand-950/50 dark:to-brand-950/50"
                       }
                     `}>
-                      <Upload className={`h-10 w-10 transition-colors ${isDragOver ? "text-white" : "text-amber-600 dark:text-amber-400"}`} />
+                      <Upload className={`h-10 w-10 transition-colors ${isDragOver ? "text-white" : "text-brand-600 dark:text-brand-400"}`} />
                     </div>
 
                     <div>
@@ -535,7 +535,7 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                   >
-                    <Card className="border-amber-200 dark:border-amber-800 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30">
+                    <Card className="border-brand-200 dark:border-brand-800 bg-gradient-to-r from-brand-50 to-brand-50 dark:from-brand-950/30 dark:to-brand-950/30">
                       <CardContent className="p-4">
                         <div className="flex items-center gap-3">
                           {uploadComplete ? (
@@ -554,14 +554,14 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
                             </>
                           ) : (
                             <>
-                              <Loader2 className="h-5 w-5 text-amber-600 animate-spin" />
+                              <Loader2 className="h-5 w-5 text-brand-600 animate-spin" />
                               <div className="flex-1">
                                 <p className="font-semibold text-sm">
                                   Publication en cours...
                                 </p>
                                 <Progress value={uploadProgress} className="mt-2 h-2" />
                               </div>
-                              <span className="text-sm font-mono text-amber-600 dark:text-amber-400">
+                              <span className="text-sm font-mono text-brand-600 dark:text-brand-400">
                                 {uploadProgress}%
                               </span>
                             </>
@@ -591,7 +591,7 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
                       <Button
                         onClick={handlePublish}
                         disabled={isUploading}
-                        className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 shadow-md"
+                        className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 shadow-md"
                       >
                         {isUploading ? (
                           <>
@@ -647,20 +647,20 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
                                       placeholder="Titre du projet"
                                       value={item.title}
                                       onChange={(e) => updateUploadItem(item.id, "title", e.target.value)}
-                                      className="border-border/50 focus-visible:ring-amber-500"
+                                      className="border-border/50 focus-visible:ring-brand-500"
                                     />
                                     <Textarea
                                       placeholder="Description du projet..."
                                       value={item.description}
                                       onChange={(e) => updateUploadItem(item.id, "description", e.target.value)}
                                       rows={2}
-                                      className="border-border/50 focus-visible:ring-amber-500 resize-none"
+                                      className="border-border/50 focus-visible:ring-brand-500 resize-none"
                                     />
                                     <Select
                                       value={item.category}
                                       onValueChange={(val) => updateUploadItem(item.id, "category", val)}
                                     >
-                                      <SelectTrigger className="border-border/50 focus:ring-amber-500">
+                                      <SelectTrigger className="border-border/50 focus:ring-brand-500">
                                         <SelectValue placeholder="Catégorie" />
                                       </SelectTrigger>
                                       <SelectContent>

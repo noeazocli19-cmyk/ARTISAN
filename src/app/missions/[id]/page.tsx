@@ -69,7 +69,7 @@ export default function MissionDetailPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <Loader2 className="w-6 h-6 animate-spin text-amber-500" />
+        <Loader2 className="w-6 h-6 animate-spin text-brand-500" />
       </div>
     )
   }
@@ -90,7 +90,7 @@ export default function MissionDetailPage() {
       <div className="max-w-3xl mx-auto">
         <button
           onClick={() => router.back()}
-          className="mb-4 flex items-center gap-1.5 text-amber-600 dark:text-amber-400 hover:underline font-medium"
+          className="mb-4 flex items-center gap-1.5 text-brand-600 dark:text-brand-400 hover:underline font-medium"
         >
           <ArrowLeft className="w-4 h-4" />
           Retour aux missions
@@ -108,7 +108,7 @@ export default function MissionDetailPage() {
           </div>
 
           <div className="flex flex-wrap gap-2 mb-4">
-            <span className="flex items-center gap-1.5 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 px-3 py-1.5 rounded-full text-sm font-medium">
+            <span className="flex items-center gap-1.5 bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-400 px-3 py-1.5 rounded-full text-sm font-medium">
               <Tag className="w-3.5 h-3.5" />
               {mission.category}
             </span>
@@ -127,12 +127,12 @@ export default function MissionDetailPage() {
           <div className="flex flex-wrap gap-4 text-sm text-gray-500 dark:text-gray-400">
             {mission.location && (
               <span className="flex items-center gap-1.5">
-                <MapPin className="w-4 h-4 text-amber-500" />
+                <MapPin className="w-4 h-4 text-brand-500" />
                 {mission.location}
               </span>
             )}
             <span className="flex items-center gap-1.5">
-              <CalendarDays className="w-4 h-4 text-amber-500" />
+              <CalendarDays className="w-4 h-4 text-brand-500" />
               {new Date(mission.createdAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
             </span>
           </div>
@@ -140,15 +140,15 @@ export default function MissionDetailPage() {
 
         {/* Infos client - VISIBLE PAR L'ARTISAN */}
         {isArtisan && (
-          <div className="bg-amber-50 dark:bg-amber-900/10 rounded-2xl border border-amber-200 dark:border-amber-800 p-6 mb-6">
-            <h2 className="flex items-center gap-2 text-lg font-bold text-amber-800 dark:text-amber-300 mb-4">
+          <div className="bg-brand-50 dark:bg-brand-900/10 rounded-2xl border border-brand-200 dark:border-brand-800 p-6 mb-6">
+            <h2 className="flex items-center gap-2 text-lg font-bold text-brand-800 dark:text-brand-300 mb-4">
               <User className="w-5 h-5" />
               Informations du client
             </h2>
             
             <div className="space-y-3">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center text-lg font-bold text-white shadow-md">
+                <div className="w-12 h-12 bg-gradient-to-br from-brand-400 to-brand-500 rounded-full flex items-center justify-center text-lg font-bold text-white shadow-md">
                   {mission.client?.name?.charAt(0)?.toUpperCase() || "?"}
                 </div>
                 <div>

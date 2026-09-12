@@ -42,8 +42,8 @@ const TYPE_ICON_MAP: Record<NotificationType, React.ElementType> = {
 };
 
 const TYPE_COLOR_MAP: Record<NotificationType, string> = {
-  mission: 'text-amber-600 bg-amber-50 dark:bg-amber-950/40 dark:text-amber-400',
-  message: 'text-orange-600 bg-orange-50 dark:bg-orange-950/40 dark:text-orange-400',
+  mission: 'text-brand-600 bg-brand-50 dark:bg-brand-950/40 dark:text-brand-400',
+  message: 'text-brand-600 bg-brand-50 dark:bg-brand-950/40 dark:text-brand-400',
   review: 'text-yellow-600 bg-yellow-50 dark:bg-yellow-950/40 dark:text-yellow-400',
   payment: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-400',
   system: 'text-slate-600 bg-slate-50 dark:bg-slate-950/40 dark:text-slate-400',
@@ -113,12 +113,12 @@ function NotificationItem({
       exit={{ opacity: 0, x: 40 }}
       transition={{ duration: 0.2, ease: 'easeOut' }}
       className={`group relative flex items-start gap-3 rounded-lg px-3 py-3 transition-colors hover:bg-accent/50 ${
-        !notification.isRead ? 'bg-amber-50/60 dark:bg-amber-950/20' : ''
+        !notification.isRead ? 'bg-brand-50/60 dark:bg-brand-950/20' : ''
       }`}
     >
       {/* Unread dot */}
       {!notification.isRead && (
-        <span className="absolute left-1.5 top-4 h-2 w-2 rounded-full bg-amber-500" />
+        <span className="absolute left-1.5 top-4 h-2 w-2 rounded-full bg-brand-500" />
       )}
 
       {/* Icon */}
@@ -151,7 +151,7 @@ function NotificationItem({
           }}
           aria-label="Marquer comme lu"
         >
-          <Check className="size-3.5 text-amber-600" />
+          <Check className="size-3.5 text-brand-600" />
         </Button>
       )}
     </motion.div>
@@ -240,7 +240,7 @@ export function NotificationBell() {
         <Button
           variant="ghost"
           size="icon"
-          className="relative size-9 rounded-full hover:bg-amber-100 dark:hover:bg-amber-900/30"
+          className="relative size-9 rounded-full hover:bg-brand-100 dark:hover:bg-brand-900/30"
           aria-label={`Notifications${unreadCount > 0 ? ` â€“ ${unreadCount} non lue${unreadCount > 1 ? 's' : ''}` : ''}`}
         >
           <Bell className="size-5 text-foreground" />
@@ -257,7 +257,7 @@ export function NotificationBell() {
                 className="absolute -right-0.5 -top-0.5"
               >
                 <Badge
-                  className="min-w-[18px] h-[18px] flex items-center justify-center rounded-full bg-amber-500 text-white border-0 px-1 text-[10px] font-bold shadow-sm"
+                  className="min-w-[18px] h-[18px] flex items-center justify-center rounded-full bg-brand-500 text-white border-0 px-1 text-[10px] font-bold shadow-sm"
                 >
                   {unreadCount > 9 ? '9+' : unreadCount}
                 </Badge>
@@ -270,7 +270,7 @@ export function NotificationBell() {
       <PopoverContent
         align="end"
         sideOffset={8}
-        className="w-80 p-0 gap-0 rounded-xl shadow-lg border-amber-200/50 dark:border-amber-800/30"
+        className="w-80 p-0 gap-0 rounded-xl shadow-lg border-brand-200/50 dark:border-brand-800/30"
       >
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3">
@@ -279,7 +279,7 @@ export function NotificationBell() {
             {unreadCount > 0 && (
               <Badge
                 variant="secondary"
-                className="bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400 text-[10px] px-1.5"
+                className="bg-brand-100 text-brand-700 dark:bg-brand-900/40 dark:text-brand-400 text-[10px] px-1.5"
               >
                 {unreadCount} nouvelle{unreadCount > 1 ? 's' : ''}
               </Badge>
@@ -326,7 +326,7 @@ export function NotificationBell() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="w-full text-amber-700 hover:text-amber-800 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-950/30 text-xs"
+                    className="w-full text-brand-700 hover:text-brand-800 hover:bg-brand-50 dark:text-brand-400 dark:hover:bg-brand-950/30 text-xs"
                     onClick={markAllNotificationsRead}
                   >
                     <Check className="mr-1.5 size-3.5" />

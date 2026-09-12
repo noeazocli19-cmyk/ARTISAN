@@ -47,7 +47,7 @@ export default function ContactPage() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <h1 className="text-4xl font-bold text-amber-600 mb-4">
+          <h1 className="text-4xl font-bold text-brand-600 mb-4">
             Contactez-nous
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -62,18 +62,18 @@ export default function ContactPage() {
             animate={{ opacity: 1, x: 0 }}
             className="space-y-6"
           >
-            <Card className="border-amber-200 dark:border-amber-800">
+            <Card className="border-brand-200 dark:border-brand-800">
               <CardContent className="p-6">
                 <div className="flex items-start gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-950/50">
-                    <Mail className="h-6 w-6 text-amber-600" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-100 dark:bg-brand-950/50">
+                    <Mail className="h-6 w-6 text-brand-600" />
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">Email</h3>
                     <p className="text-sm text-muted-foreground mb-2">
                       Pour toute question
                     </p>
-                    <a href="mailto:support@artisan-connect.com" className="text-sm font-medium text-amber-600 hover:underline">
+                    <a href="mailto:support@artisan-connect.com" className="text-sm font-medium text-brand-600 hover:underline">
                       support@artisan-connect.com
                     </a>
                   </div>
@@ -81,18 +81,18 @@ export default function ContactPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-amber-200 dark:border-amber-800">
+            <Card className="border-brand-200 dark:border-brand-800">
               <CardContent className="p-6">
                 <div className="flex items-start gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-950/50">
-                    <Phone className="h-6 w-6 text-amber-600" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-100 dark:bg-brand-950/50">
+                    <Phone className="h-6 w-6 text-brand-600" />
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">Téléphone</h3>
                     <p className="text-sm text-muted-foreground mb-2">
                       Du lundi au samedi, 8h - 22h
                     </p>
-                    <a href="tel:+22177123456" className="text-sm font-medium text-amber-600 hover:underline">
+                    <a href="tel:+22177123456" className="text-sm font-medium text-brand-600 hover:underline">
                       +221 77 123 456
                     </a>
                   </div>
@@ -100,11 +100,11 @@ export default function ContactPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-amber-200 dark:border-amber-800">
+            <Card className="border-brand-200 dark:border-brand-800">
               <CardContent className="p-6">
                 <div className="flex items-start gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-950/50">
-                    <MapPin className="h-6 w-6 text-amber-600" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-100 dark:bg-brand-950/50">
+                    <MapPin className="h-6 w-6 text-brand-600" />
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">Adresse</h3>
@@ -119,7 +119,7 @@ export default function ContactPage() {
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-amber-500 to-orange-600 border-0 text-white">
+            <Card className="bg-gradient-to-br from-brand-500 to-brand-600 border-0 text-white">
               <CardContent className="p-6">
                 <div className="flex items-start gap-4">
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20">
@@ -165,7 +165,7 @@ export default function ContactPage() {
                     </p>
                     <Button
                       onClick={() => setSuccess(false)}
-                      className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0"
+                      className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0"
                     >
                       Envoyer un autre message
                     </Button>
@@ -227,7 +227,7 @@ export default function ContactPage() {
 
                     <Button
                       type="submit"
-                      className="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 h-12"
+                      className="w-full bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 h-12"
                       disabled={loading}
                     >
                       {loading ? (

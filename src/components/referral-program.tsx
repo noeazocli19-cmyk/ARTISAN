@@ -129,10 +129,10 @@ const REWARD_TIERS = [
     title: 'Réduction sur prochaine mission',
     description: 'Obtenez une réduction de 2 500 FCFA sur votre prochaine mission réservée sur la plateforme.',
     icon: Sparkles,
-    color: 'from-amber-400 to-amber-500',
-    bgLight: 'bg-amber-50',
-    bgDark: 'dark:bg-amber-950/30',
-    borderColor: 'border-amber-200 dark:border-amber-800',
+    color: 'from-brand-400 to-brand-500',
+    bgLight: 'bg-brand-50',
+    bgDark: 'dark:bg-brand-950/30',
+    borderColor: 'border-brand-200 dark:border-brand-800',
   },
   {
     id: '2',
@@ -140,10 +140,10 @@ const REWARD_TIERS = [
     title: 'Mission gratuite',
     description: 'Profitez d\'une mission gratuite d\'une valeur maximale de 5 000 FCFA. Parfait pour les petits travaux !',
     icon: Gift,
-    color: 'from-orange-400 to-orange-600',
-    bgLight: 'bg-orange-50',
-    bgDark: 'dark:bg-orange-950/30',
-    borderColor: 'border-orange-200 dark:border-orange-800',
+    color: 'from-brand-400 to-brand-600',
+    bgLight: 'bg-brand-50',
+    bgDark: 'dark:bg-brand-950/30',
+    borderColor: 'border-brand-200 dark:border-brand-800',
   },
   {
     id: '3',
@@ -151,10 +151,10 @@ const REWARD_TIERS = [
     title: 'Badge "Ambassadeur" + 1 mois Pro',
     description: 'Recevez le badge exclusif "Ambassadeur" et un mois gratuit de l\'abonnement Pro avec toutes les fonctionnalités avancées.',
     icon: Award,
-    color: 'from-amber-500 to-orange-600',
-    bgLight: 'bg-amber-50',
-    bgDark: 'dark:bg-amber-950/30',
-    borderColor: 'border-amber-300 dark:border-amber-700',
+    color: 'from-brand-500 to-brand-600',
+    bgLight: 'bg-brand-50',
+    bgDark: 'dark:bg-brand-950/30',
+    borderColor: 'border-brand-300 dark:border-brand-700',
   },
   {
     id: '4',
@@ -162,10 +162,10 @@ const REWARD_TIERS = [
     title: 'Statut VIP + Support prioritaire',
     description: 'Accédez au statut VIP avec support prioritaire 24/7, accès anticipé aux nouvelles fonctionnalités et avantages exclusifs.',
     icon: Crown,
-    color: 'from-orange-500 to-red-500',
-    bgLight: 'bg-orange-50',
-    bgDark: 'dark:bg-orange-950/30',
-    borderColor: 'border-orange-300 dark:border-orange-700',
+    color: 'from-brand-500 to-red-500',
+    bgLight: 'bg-brand-50',
+    bgDark: 'dark:bg-brand-950/30',
+    borderColor: 'border-brand-300 dark:border-brand-700',
   },
 ]
 
@@ -266,7 +266,7 @@ function StatusBadge({ status }: { status: ReferralInvite['status'] }) {
     },
     completed: {
       label: 'Complété',
-      className: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300 border-amber-200 dark:border-amber-800',
+      className: 'bg-brand-100 text-brand-700 dark:bg-brand-950 dark:text-brand-300 border-brand-200 dark:border-brand-800',
       icon: CheckCircle2,
     },
   }
@@ -400,7 +400,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
   // â”€â”€â”€ Render â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-amber-50/20 to-orange-50/20 dark:from-neutral-950 dark:via-neutral-900 dark:to-amber-950/5">
+    <div className="min-h-screen bg-gradient-to-br from-white via-brand-50/20 to-brand-50/20 dark:from-neutral-950 dark:via-neutral-900 dark:to-brand-950/5">
       {/* Header */}
       <div className="sticky top-0 z-30 bg-white/80 dark:bg-neutral-950/80 backdrop-blur-md border-b border-border/30">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 py-3">
@@ -409,17 +409,17 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-9 w-9 hover:bg-amber-100 dark:hover:bg-amber-950/50"
+                className="h-9 w-9 hover:bg-brand-100 dark:hover:bg-brand-950/50"
                 onClick={onBack}
               >
                 <ArrowLeft className="h-4 w-4" />
               </Button>
               <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-600">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-brand-500 to-brand-600">
                   <Gift className="h-4 w-4 text-white" />
                 </div>
                 <div>
-                  <h1 className="font-bold text-base bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+                  <h1 className="font-bold text-base bg-gradient-to-r from-brand-600 to-brand-600 bg-clip-text text-transparent">
                     Programme de parrainage
                   </h1>
                   <p className="text-[10px] text-muted-foreground hidden sm:block">
@@ -433,7 +433,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
             <div className="hidden md:flex items-center gap-4">
               <div className="text-right">
                 <p className="text-xs text-muted-foreground">Crédits disponibles</p>
-                <p className="font-bold text-sm text-amber-600 dark:text-amber-400">
+                <p className="font-bold text-sm text-brand-600 dark:text-brand-400">
                   {new Intl.NumberFormat('fr-FR').format(stats.creditsAvailable)} FCFA
                 </p>
               </div>
@@ -453,28 +453,28 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
           <TabsList className="w-full grid grid-cols-4 mb-6 bg-muted/50 p-1 h-auto">
             <TabsTrigger
               value="dashboard"
-              className="text-xs sm:text-sm data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500 data-[state=active]:to-orange-600 data-[state=active]:text-white py-2"
+              className="text-xs sm:text-sm data-[state=active]:bg-gradient-to-r data-[state=active]:from-brand-500 data-[state=active]:to-brand-600 data-[state=active]:text-white py-2"
             >
               <Trophy className="h-3.5 w-3.5 mr-1 hidden sm:inline" />
               Tableau
             </TabsTrigger>
             <TabsTrigger
               value="how-it-works"
-              className="text-xs sm:text-sm data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500 data-[state=active]:to-orange-600 data-[state=active]:text-white py-2"
+              className="text-xs sm:text-sm data-[state=active]:bg-gradient-to-r data-[state=active]:from-brand-500 data-[state=active]:to-brand-600 data-[state=active]:text-white py-2"
             >
               <Sparkles className="h-3.5 w-3.5 mr-1 hidden sm:inline" />
               Comment ça marche
             </TabsTrigger>
             <TabsTrigger
               value="invites"
-              className="text-xs sm:text-sm data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500 data-[state=active]:to-orange-600 data-[state=active]:text-white py-2"
+              className="text-xs sm:text-sm data-[state=active]:bg-gradient-to-r data-[state=active]:from-brand-500 data-[state=active]:to-brand-600 data-[state=active]:text-white py-2"
             >
               <Users className="h-3.5 w-3.5 mr-1 hidden sm:inline" />
               Mes invitations
             </TabsTrigger>
             <TabsTrigger
               value="rewards"
-              className="text-xs sm:text-sm data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500 data-[state=active]:to-orange-600 data-[state=active]:text-white py-2"
+              className="text-xs sm:text-sm data-[state=active]:bg-gradient-to-r data-[state=active]:from-brand-500 data-[state=active]:to-brand-600 data-[state=active]:text-white py-2"
             >
               <Award className="h-3.5 w-3.5 mr-1 hidden sm:inline" />
               Récompenses
@@ -493,13 +493,13 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
             >
               {/* Referral Code Card */}
               <motion.div variants={fadeInUp}>
-                <Card className="overflow-hidden border-amber-200 dark:border-amber-800 shadow-lg relative">
+                <Card className="overflow-hidden border-brand-200 dark:border-brand-800 shadow-lg relative">
                   {showConfetti && <ShareConfetti show={showConfetti} />}
-                  <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 via-orange-500/5 to-amber-600/5 dark:from-amber-500/10 dark:via-orange-500/10 dark:to-amber-600/10 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-brand-500/5 via-brand-500/5 to-brand-600/5 dark:from-brand-500/10 dark:via-brand-500/10 dark:to-brand-600/10 pointer-events-none" />
                   <CardContent className="p-6 sm:p-8 relative z-[5]">
                     <div className="text-center space-y-4">
                       <div className="flex items-center justify-center gap-2 mb-2">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 shadow-lg shadow-amber-500/20">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 shadow-lg shadow-brand-500/20">
                           <Gift className="h-5 w-5 text-white" />
                         </div>
                         <h2 className="text-xl sm:text-2xl font-bold">
@@ -513,13 +513,13 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       >
-                        <div className="relative rounded-2xl border-2 border-dashed border-amber-300 dark:border-amber-700 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 p-6 cursor-pointer group"
+                        <div className="relative rounded-2xl border-2 border-dashed border-brand-300 dark:border-brand-700 bg-gradient-to-br from-brand-50 to-brand-50 dark:from-brand-950/30 dark:to-brand-950/30 p-6 cursor-pointer group"
                           onClick={handleCopyCode}
                         >
-                          <p className="text-3xl sm:text-4xl font-extrabold tracking-widest bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700 bg-clip-text text-transparent">
+                          <p className="text-3xl sm:text-4xl font-extrabold tracking-widest bg-gradient-to-r from-brand-600 via-brand-600 to-brand-700 bg-clip-text text-transparent">
                             {stats.code}
                           </p>
-                          <p className="text-xs text-muted-foreground mt-2 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                          <p className="text-xs text-muted-foreground mt-2 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
                             Cliquez pour copier
                           </p>
                         </div>
@@ -529,7 +529,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                       <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                         <Button
                           size="lg"
-                          className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 h-11 px-6 font-semibold shadow-lg shadow-amber-500/20"
+                          className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 h-11 px-6 font-semibold shadow-lg shadow-brand-500/20"
                           onClick={handleCopyCode}
                         >
                           <AnimatePresence mode="wait">
@@ -615,22 +615,22 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                     label: 'Missions complétées',
                     value: missionsCompleted,
                     icon: CheckCircle2,
-                    color: 'text-amber-600 dark:text-amber-400',
-                    bg: 'bg-amber-100 dark:bg-amber-950/50',
+                    color: 'text-brand-600 dark:text-brand-400',
+                    bg: 'bg-brand-100 dark:bg-brand-950/50',
                     format: false,
                   },
                   {
                     label: 'Crédits gagnés',
                     value: stats.creditsEarned,
                     icon: Star,
-                    color: 'text-orange-600 dark:text-orange-400',
-                    bg: 'bg-orange-100 dark:bg-orange-950/50',
+                    color: 'text-brand-600 dark:text-brand-400',
+                    bg: 'bg-brand-100 dark:bg-brand-950/50',
                     format: true,
                     suffix: ' FCFA',
                   },
                 ].map((stat, idx) => (
                   <motion.div key={stat.label} variants={fadeInUp}>
-                    <Card className="border-border/50 hover:border-amber-300 dark:hover:border-amber-700 transition-all hover:shadow-md h-full">
+                    <Card className="border-border/50 hover:border-brand-300 dark:hover:border-brand-700 transition-all hover:shadow-md h-full">
                       <CardContent className="p-4 sm:p-5">
                         <div className="flex items-start justify-between mb-3">
                           <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${stat.bg}`}>
@@ -652,15 +652,15 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 {/* Available Credits Card */}
                 <motion.div variants={fadeInUp}>
-                  <Card className="border-amber-200 dark:border-amber-800 shadow-md h-full">
+                  <Card className="border-brand-200 dark:border-brand-800 shadow-md h-full">
                     <CardContent className="p-5 sm:p-6">
                       <div className="flex items-center gap-3 mb-4">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 shadow-lg shadow-amber-500/20">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-600 shadow-lg shadow-brand-500/20">
                           <Trophy className="h-6 w-6 text-white" />
                         </div>
                         <div>
                           <p className="text-sm text-muted-foreground">Crédits disponibles</p>
-                          <p className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+                          <p className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-brand-600 to-brand-600 bg-clip-text text-transparent">
                             <AnimatedCounter value={stats.creditsAvailable} /> FCFA
                           </p>
                         </div>
@@ -680,7 +680,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                       </div>
 
                       <Button
-                        className="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 font-semibold shadow-lg shadow-amber-500/20"
+                        className="w-full bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 font-semibold shadow-lg shadow-brand-500/20"
                         onClick={() => setActiveTab('rewards')}
                       >
                         <Sparkles className="h-4 w-4 mr-2" />
@@ -692,10 +692,10 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
 
                 {/* Progress toward next milestone */}
                 <motion.div variants={fadeInUp}>
-                  <Card className="border-border/50 hover:border-amber-300 dark:hover:border-amber-700 transition-all shadow-md h-full">
+                  <Card className="border-border/50 hover:border-brand-300 dark:hover:border-brand-700 transition-all shadow-md h-full">
                     <CardContent className="p-5 sm:p-6">
                       <div className="flex items-center gap-3 mb-4">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-400 to-red-500 shadow-lg shadow-orange-500/20">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-400 to-red-500 shadow-lg shadow-brand-500/20">
                           <Zap className="h-6 w-6 text-white" />
                         </div>
                         <div>
@@ -707,16 +707,16 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                       <div className="space-y-3 mb-4">
                         <div className="flex items-center justify-between text-sm">
                           <span className="text-muted-foreground">Progression</span>
-                          <span className="font-semibold text-amber-600 dark:text-amber-400">
+                          <span className="font-semibold text-brand-600 dark:text-brand-400">
                             {completedInvites}/{nextMilestoneTarget} parrainages
                           </span>
                         </div>
                         <Progress
                           value={nextMilestoneProgress}
-                          className="h-3 bg-amber-100 dark:bg-amber-950/50 [&>[data-slot=progress-indicator]]:bg-gradient-to-r [&>[data-slot=progress-indicator]]:from-amber-500 [&>[data-slot=progress-indicator]]:to-orange-500 [&>[data-slot=progress-indicator]]:rounded-full"
+                          className="h-3 bg-brand-100 dark:bg-brand-950/50 [&>[data-slot=progress-indicator]]:bg-gradient-to-r [&>[data-slot=progress-indicator]]:from-brand-500 [&>[data-slot=progress-indicator]]:to-brand-500 [&>[data-slot=progress-indicator]]:rounded-full"
                         />
                         <p className="text-sm text-muted-foreground">
-                          <span className="font-semibold text-amber-600 dark:text-amber-400">{remainingToMilestone} parrainage{remainingToMilestone > 1 ? 's' : ''}</span> de plus pour débloquer{' '}
+                          <span className="font-semibold text-brand-600 dark:text-brand-400">{remainingToMilestone} parrainage{remainingToMilestone > 1 ? 's' : ''}</span> de plus pour débloquer{' '}
                           <span className="font-semibold">10 000 FCFA</span>
                         </p>
                       </div>
@@ -731,11 +731,11 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                             type="email"
                             value={inviteEmail}
                             onChange={(e) => setInviteEmail(e.target.value)}
-                            className="h-10 border-border/50 focus:border-amber-400 focus:ring-amber-400/20 text-sm"
+                            className="h-10 border-border/50 focus:border-brand-400 focus:ring-brand-400/20 text-sm"
                             onKeyDown={(e) => e.key === 'Enter' && handleSendInvite()}
                           />
                           <Button
-                            className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 shrink-0"
+                            className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 shrink-0"
                             onClick={handleSendInvite}
                             disabled={!inviteEmail.trim()}
                           >
@@ -783,7 +783,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
               <motion.div variants={fadeInUp} className="text-center space-y-3">
                 <h2 className="text-2xl sm:text-3xl font-bold">
                   Comment ça{' '}
-                  <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">
                     marche
                   </span>{' '}
                   ?
@@ -802,9 +802,9 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                     title: 'Partagez votre code',
                     description: 'Envoyez votre code unique Ã  vos amis via WhatsApp, SMS, email ou en copiant le lien.',
                     icon: Share2,
-                    gradient: 'from-amber-400 to-amber-600',
-                    bg: 'from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30',
-                    border: 'border-amber-200 dark:border-amber-800',
+                    gradient: 'from-brand-400 to-brand-600',
+                    bg: 'from-brand-50 to-brand-50 dark:from-brand-950/30 dark:to-brand-950/30',
+                    border: 'border-brand-200 dark:border-brand-800',
                   },
                   {
                     step: 2,
@@ -812,9 +812,9 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                     title: 'Ils s\'inscrivent',
                     description: 'Vos amis créent un compte sur Artisan Connect en utilisant votre code de parrainage.',
                     icon: UserPlus,
-                    gradient: 'from-orange-400 to-orange-600',
-                    bg: 'from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/30',
-                    border: 'border-orange-200 dark:border-orange-800',
+                    gradient: 'from-brand-400 to-brand-600',
+                    bg: 'from-brand-50 to-brand-50 dark:from-brand-950/30 dark:to-brand-950/30',
+                    border: 'border-brand-200 dark:border-brand-800',
                   },
                   {
                     step: 3,
@@ -822,17 +822,17 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                     title: 'Gagnez des crédits',
                     description: 'Recevez 2 500 FCFA pour chaque ami qui complète une mission sur la plateforme.',
                     icon: Gift,
-                    gradient: 'from-amber-500 to-orange-600',
-                    bg: 'from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30',
-                    border: 'border-amber-300 dark:border-amber-700',
+                    gradient: 'from-brand-500 to-brand-600',
+                    bg: 'from-brand-50 to-brand-50 dark:from-brand-950/30 dark:to-brand-950/30',
+                    border: 'border-brand-300 dark:border-brand-700',
                   },
                 ].map((stepData, idx) => (
                   <motion.div key={stepData.step} variants={fadeInUp} className="relative">
                     {/* Connecting arrow (desktop) */}
                     {idx < 2 && (
                       <div className="hidden md:flex absolute top-20 -right-4 sm:-right-6 z-10 items-center">
-                        <div className="w-8 sm:w-12 h-0.5 bg-gradient-to-r from-amber-300 to-orange-300 dark:from-amber-700 dark:to-orange-700" />
-                        <ChevronRight className="h-5 w-5 text-amber-400 dark:text-amber-600 -ml-1" />
+                        <div className="w-8 sm:w-12 h-0.5 bg-gradient-to-r from-brand-300 to-brand-300 dark:from-brand-700 dark:to-brand-700" />
+                        <ChevronRight className="h-5 w-5 text-brand-400 dark:text-brand-600 -ml-1" />
                       </div>
                     )}
 
@@ -840,7 +840,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                       <CardContent className="p-6 sm:p-8 text-center">
                         {/* Step number */}
                         <div className="absolute top-3 right-3">
-                          <Badge className="bg-white/60 dark:bg-neutral-900/60 text-amber-600 dark:text-amber-400 border-0 text-xs font-bold backdrop-blur-sm">
+                          <Badge className="bg-white/60 dark:bg-neutral-900/60 text-brand-600 dark:text-brand-400 border-0 text-xs font-bold backdrop-blur-sm">
                             Étape {stepData.step}
                           </Badge>
                         </div>
@@ -869,22 +869,22 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
 
               {/* Bonus info card */}
               <motion.div variants={fadeInUp}>
-                <Card className="border-amber-200 dark:border-amber-800 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30">
+                <Card className="border-brand-200 dark:border-brand-800 bg-gradient-to-r from-brand-50 to-brand-50 dark:from-brand-950/30 dark:to-brand-950/30">
                   <CardContent className="p-5 sm:p-6">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 shadow-lg">
+                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-600 shadow-lg">
                         <PartyPopper className="h-7 w-7 text-white" />
                       </div>
                       <div className="flex-1">
                         <h3 className="font-bold text-lg mb-1">Bonus de bienvenue !</h3>
                         <p className="text-muted-foreground text-sm">
                           Pour chaque ami qui s&apos;inscrit avec votre code et complète sa première mission, vous recevez{' '}
-                          <span className="font-bold text-amber-600 dark:text-amber-400">2 500 FCFA</span> de crédits.
+                          <span className="font-bold text-brand-600 dark:text-brand-400">2 500 FCFA</span> de crédits.
                           Il n&apos;y a pas de limite ! Plus vous parrainez, plus vous gagnez.
                         </p>
                       </div>
                       <Button
-                        className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 shrink-0 font-semibold shadow-lg shadow-amber-500/20"
+                        className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 shrink-0 font-semibold shadow-lg shadow-brand-500/20"
                         onClick={() => setActiveTab('dashboard')}
                       >
                         <Share2 className="h-4 w-4 mr-2" />
@@ -911,7 +911,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                 <div>
                   <h2 className="text-xl sm:text-2xl font-bold">
                     Mes{' '}
-                    <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">
+                    <span className="bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">
                       invitations
                     </span>
                   </h2>
@@ -920,8 +920,8 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                   </p>
                 </div>
                 <div className="flex gap-2">
-                  <Badge variant="outline" className="px-3 py-1 border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30">
-                    <CheckCircle2 className="h-3 w-3 mr-1 text-amber-500" />
+                  <Badge variant="outline" className="px-3 py-1 border-brand-200 dark:border-brand-800 bg-brand-50 dark:bg-brand-950/30">
+                    <CheckCircle2 className="h-3 w-3 mr-1 text-brand-500" />
                     {completedInvites} complété{completedInvites > 1 ? 's' : ''}
                   </Badge>
                   <Badge variant="outline" className="px-3 py-1 border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30">
@@ -948,12 +948,12 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
 
                   {invites.map((invite, idx) => (
                     <motion.div key={invite.id} variants={fadeInUp}>
-                      <Card className="border-border/50 hover:border-amber-300 dark:hover:border-amber-700 transition-all hover:shadow-sm">
+                      <Card className="border-border/50 hover:border-brand-300 dark:hover:border-brand-700 transition-all hover:shadow-sm">
                         <CardContent className="p-4">
                           {/* Desktop layout */}
                           <div className="hidden md:grid grid-cols-12 gap-4 items-center">
                             <div className="col-span-3 flex items-center gap-3">
-                              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-orange-500 text-white font-bold text-xs">
+                              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-400 to-brand-500 text-white font-bold text-xs">
                                 {invite.inviteeName.split(' ').map((n) => n[0]).join('')}
                               </div>
                               <span className="font-medium text-sm truncate">{invite.inviteeName}</span>
@@ -964,7 +964,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                             </div>
                             <div className="col-span-2 text-right">
                               {invite.creditsEarned > 0 ? (
-                                <span className="font-semibold text-amber-600 dark:text-amber-400 text-sm">
+                                <span className="font-semibold text-brand-600 dark:text-brand-400 text-sm">
                                   +{new Intl.NumberFormat('fr-FR').format(invite.creditsEarned)} FCFA
                                 </span>
                               ) : (
@@ -982,7 +982,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
 
                           {/* Mobile layout */}
                           <div className="md:hidden flex items-center gap-3">
-                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-orange-500 text-white font-bold text-xs">
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-400 to-brand-500 text-white font-bold text-xs">
                               {invite.inviteeName.split(' ').map((n) => n[0]).join('')}
                             </div>
                             <div className="flex-1 min-w-0">
@@ -1000,7 +1000,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                                   })}
                                 </span>
                                 {invite.creditsEarned > 0 && (
-                                  <span className="font-semibold text-amber-600 dark:text-amber-400 text-xs">
+                                  <span className="font-semibold text-brand-600 dark:text-brand-400 text-xs">
                                     +{new Intl.NumberFormat('fr-FR').format(invite.creditsEarned)} FCFA
                                   </span>
                                 )}
@@ -1018,18 +1018,18 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                   <Card className="border-dashed border-2 border-border/50">
                     <CardContent className="p-8 sm:p-12 text-center">
                       <motion.div
-                        className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-950/50 mb-4"
+                        className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-brand-100 dark:bg-brand-950/50 mb-4"
                         animate={{ scale: [1, 1.05, 1] }}
                         transition={{ duration: 2, repeat: Infinity }}
                       >
-                        <Users className="h-10 w-10 text-amber-500 dark:text-amber-400" />
+                        <Users className="h-10 w-10 text-brand-500 dark:text-brand-400" />
                       </motion.div>
                       <h3 className="text-lg font-bold mb-2">Aucune invitation pour le moment</h3>
                       <p className="text-muted-foreground text-sm mb-6 max-w-sm mx-auto">
                         Commencez Ã  partager votre code de parrainage avec vos amis pour gagner des crédits !
                       </p>
                       <Button
-                        className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 font-semibold"
+                        className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 font-semibold"
                         onClick={() => setActiveTab('dashboard')}
                       >
                         <Share2 className="h-4 w-4 mr-2" />
@@ -1057,7 +1057,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                   <div>
                     <h2 className="text-xl sm:text-2xl font-bold">
                       {' '}
-                      <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">
+                      <span className="bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">
                         Récompenses
                       </span>{' '}
                       disponibles
@@ -1066,7 +1066,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                       Échangez vos crédits contre des récompenses exclusives
                     </p>
                   </div>
-                  <Badge className="bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0 px-3 py-1 text-sm">
+                  <Badge className="bg-gradient-to-r from-brand-500 to-brand-600 text-white border-0 px-3 py-1 text-sm">
                     <Trophy className="h-3.5 w-3.5 mr-1.5" />
                     {new Intl.NumberFormat('fr-FR').format(stats.creditsAvailable)} FCFA
                   </Badge>
@@ -1080,11 +1080,11 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
 
                   return (
                     <motion.div key={reward.id} variants={fadeInUp}>
-                      <Card className={`h-full relative overflow-hidden transition-all hover:shadow-lg ${isPopular ? 'border-amber-300 dark:border-amber-700 shadow-md' : 'border-border/50 hover:border-amber-300 dark:hover:border-amber-700'}`}>
+                      <Card className={`h-full relative overflow-hidden transition-all hover:shadow-lg ${isPopular ? 'border-brand-300 dark:border-brand-700 shadow-md' : 'border-border/50 hover:border-brand-300 dark:hover:border-brand-700'}`}>
                         {/* Popular badge */}
                         {isPopular && (
                           <div className="absolute top-3 right-3">
-                            <Badge className="bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0 text-[10px] px-2 py-0.5">
+                            <Badge className="bg-gradient-to-r from-brand-500 to-brand-600 text-white border-0 text-[10px] px-2 py-0.5">
                               <Star className="h-2.5 w-2.5 mr-1" />
                               Populaire
                             </Badge>
@@ -1107,14 +1107,14 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                           <div className="flex items-center justify-between">
                             <div>
                               <p className="text-xs text-muted-foreground">Coût</p>
-                              <p className="text-lg font-extrabold text-amber-600 dark:text-amber-400">
+                              <p className="text-lg font-extrabold text-brand-600 dark:text-brand-400">
                                 {new Intl.NumberFormat('fr-FR').format(reward.credits)} FCFA
                               </p>
                             </div>
 
                             {canRedeem ? (
                               <Button
-                                className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 font-semibold shadow-lg shadow-amber-500/20"
+                                className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 font-semibold shadow-lg shadow-brand-500/20"
                                 onClick={() => handleRedeemReward(reward)}
                               >
                                 <Sparkles className="h-4 w-4 mr-1.5" />
@@ -1131,7 +1131,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                                 <Button
                                   variant="outline"
                                   size="sm"
-                                  className="mt-1 text-xs border-amber-300 dark:border-amber-700 text-amber-600 dark:text-amber-400"
+                                  className="mt-1 text-xs border-brand-300 dark:border-brand-700 text-brand-600 dark:text-brand-400"
                                   onClick={() => setActiveTab('dashboard')}
                                 >
                                   Inviter
@@ -1157,7 +1157,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Gift className="h-5 w-5 text-amber-500" />
+              <Gift className="h-5 w-5 text-brand-500" />
               Confirmer l&apos;échange
             </DialogTitle>
             <DialogDescription>
@@ -1167,7 +1167,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
 
           {selectedReward && (
             <div className="space-y-4 py-2">
-              <div className="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border border-amber-200 dark:border-amber-800">
+              <div className="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-br from-brand-50 to-brand-50 dark:from-brand-950/30 dark:to-brand-950/30 border border-brand-200 dark:border-brand-800">
                 <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${selectedReward.color} shadow-lg`}>
                   <selectedReward.icon className="h-7 w-7 text-white" />
                 </div>
@@ -1184,7 +1184,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Vos crédits</span>
-                  <span className="font-semibold text-amber-600 dark:text-amber-400">{new Intl.NumberFormat('fr-FR').format(stats.creditsAvailable)} FCFA</span>
+                  <span className="font-semibold text-brand-600 dark:text-brand-400">{new Intl.NumberFormat('fr-FR').format(stats.creditsAvailable)} FCFA</span>
                 </div>
                 <Separator />
                 <div className="flex justify-between">
@@ -1202,7 +1202,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                   Annuler
                 </Button>
                 <Button
-                  className="flex-1 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 font-semibold"
+                  className="flex-1 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 font-semibold"
                   onClick={() => setRedeemDialogOpen(false)}
                 >
                   <Check className="h-4 w-4 mr-1.5" />

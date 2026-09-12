@@ -22,8 +22,8 @@ export default function ArtisanAnimation({ onAnimationComplete }: ArtisanAnimati
   const walking = phase === "walk";
 
   return (
-    <div className="relative w-full h-[360px] sm:h-[420px] overflow-hidden bg-gradient-to-br from-orange-50 via-amber-50/30 to-white rounded-2xl border border-orange-100">
-      <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-amber-100/60 to-transparent" />
+    <div className="relative w-full h-[360px] sm:h-[420px] overflow-hidden bg-gradient-to-br from-brand-50 via-brand-50/30 to-white rounded-2xl border border-brand-100">
+      <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-brand-100/60 to-transparent" />
 
       {/* ===== ARTISAN CHARACTER ===== */}
       <motion.div
@@ -203,13 +203,13 @@ export default function ArtisanAnimation({ onAnimationComplete }: ArtisanAnimati
             transition={{ duration: 0.5 }}
           >
             <motion.div
-              className="flex items-center gap-3 bg-white/95 backdrop-blur-sm px-6 py-3 rounded-full shadow-xl border border-orange-200"
+              className="flex items-center gap-3 bg-white/95 backdrop-blur-sm px-6 py-3 rounded-full shadow-xl border border-brand-200"
               animate={{ y: [0, -6, 0] }}
               transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
             >
-              <span className="text-orange-500 text-xl">?</span>
-              <span className="text-sm font-semibold text-orange-700">Bienvenue ! Remplissez le formulaire</span>
-              <span className="text-orange-500 text-xl">?</span>
+              <span className="text-brand-500 text-xl">?</span>
+              <span className="text-sm font-semibold text-brand-700">Bienvenue ! Remplissez le formulaire</span>
+              <span className="text-brand-500 text-xl">?</span>
             </motion.div>
           </motion.div>
         )}
@@ -222,7 +222,7 @@ export default function ArtisanAnimation({ onAnimationComplete }: ArtisanAnimati
         animate={{ opacity: 0.1 }}
         transition={{ delay: 1 }}
       >
-        <span className="text-5xl font-bold text-orange-600 tracking-tight">Artisan Connect</span>
+        <span className="text-5xl font-bold text-brand-600 tracking-tight">Artisan Connect</span>
       </motion.div>
     </div>
   );

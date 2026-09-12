@@ -61,8 +61,8 @@ const CATEGORY_OPTIONS = [
 
 const STATUS_MAP: Record<string, { label: string; color: string }> = {
   ouverte: { label: 'Ouverte', color: 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300' },
-  assignee: { label: 'Assignée', color: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300' },
-  en_cours: { label: 'En cours', color: 'bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300' },
+  assignee: { label: 'Assignée', color: 'bg-brand-100 text-brand-700 dark:bg-brand-950 dark:text-brand-300' },
+  en_cours: { label: 'En cours', color: 'bg-brand-100 text-brand-700 dark:bg-brand-950 dark:text-brand-300' },
   terminee_artisan: { label: 'À confirmer', color: 'bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-300' },
   terminee: { label: 'Terminée', color: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300' },
   litige: { label: 'Litige en cours', color: 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300' },
@@ -237,20 +237,20 @@ export function ClientDashboard() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-      <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-orange-700 transition mb-4">
+      <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-brand-700 transition mb-4">
         <ArrowLeftCircle className="h-4 w-4" />
         Retour au site
       </Link>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold">
-            Bonjour, <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">{user?.name}</span>
+            Bonjour, <span className="bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">{user?.name}</span>
           </h1>
           <p className="text-muted-foreground mt-1">Bienvenue sur votre espace client</p>
         </div>
         <Dialog open={newMissionOpen} onOpenChange={setNewMissionOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0">
+            <Button className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0">
               <Plus className="h-4 w-4 mr-2" />
               Nouvelle Mission
             </Button>
@@ -258,7 +258,7 @@ export function ClientDashboard() {
           <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
-                <Briefcase className="h-5 w-5 text-amber-500" />
+                <Briefcase className="h-5 w-5 text-brand-500" />
                 Créer une mission
               </DialogTitle>
             </DialogHeader>
@@ -298,7 +298,7 @@ export function ClientDashboard() {
                 <Label htmlFor="m-location">Localisation</Label>
                 <Input id="m-location" placeholder="Dakar, Sénégal" value={mLocation} onChange={e => setMLocation(e.target.value)} />
               </div>
-              <Button type="submit" className="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0" disabled={submitting}>
+              <Button type="submit" className="w-full bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0" disabled={submitting}>
                 {submitting && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
                 Publier la mission
               </Button>
@@ -336,8 +336,8 @@ export function ClientDashboard() {
               <Card className="border-border/50 hover:shadow-md transition-shadow">
                 <CardContent className="p-6">
                   <div className="flex items-center gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-950/50">
-                      <Clock className="h-6 w-6 text-amber-600 dark:text-amber-400" />
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-100 dark:bg-brand-950/50">
+                      <Clock className="h-6 w-6 text-brand-600 dark:text-brand-400" />
                     </div>
                     <div>
                       <p className="text-2xl font-bold">{ongoingMissions.length}</p>
@@ -368,8 +368,8 @@ export function ClientDashboard() {
               <Card className="border-border/50 hover:shadow-md transition-shadow">
                 <CardContent className="p-6">
                   <div className="flex items-center gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-100 dark:bg-orange-950/50">
-                      <Users className="h-6 w-6 text-orange-600 dark:text-orange-400" />
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-100 dark:bg-brand-950/50">
+                      <Users className="h-6 w-6 text-brand-600 dark:text-brand-400" />
                     </div>
                     <div>
                       <p className="text-2xl font-bold">{uniqueArtisans}</p>
@@ -429,7 +429,7 @@ export function ClientDashboard() {
         <TabsContent value="missions" className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">Toutes mes missions</h2>
-            <Button size="sm" className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0" onClick={() => setNewMissionOpen(true)}>
+            <Button size="sm" className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0" onClick={() => setNewMissionOpen(true)}>
               <Plus className="h-3 w-3 mr-1" />
               Nouvelle
             </Button>
@@ -473,7 +473,7 @@ export function ClientDashboard() {
                             )}
                           </div>
                           {mission.budget && (
-                            <span className="font-semibold text-amber-600 dark:text-amber-400">
+                            <span className="font-semibold text-brand-600 dark:text-brand-400">
                               {mission.budget.toLocaleString()} FCFA
                             </span>
                           )}
@@ -481,7 +481,7 @@ export function ClientDashboard() {
                         {mission.artisanId && (mission as any).artisan?.user && (
                           <div className="mt-3 pt-3 border-t border-border/50 flex items-center justify-between gap-2">
                             <div className="flex items-center gap-2 min-w-0">
-                              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-orange-600 text-white text-[10px] font-bold">
+                              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-brand-600 text-white text-[10px] font-bold">
                                 {(mission as any).artisan.user.name?.charAt(0)?.toUpperCase() || 'A'}
                               </div>
                               <span className="text-xs font-medium truncate">
@@ -490,7 +490,7 @@ export function ClientDashboard() {
                             </div>
                             <Link
                               href={`/messages?userId=${(mission as any).artisan.user.id}`}
-                              className="shrink-0 text-[11px] font-semibold px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-600 text-white hover:from-amber-600 hover:to-orange-700"
+                              className="shrink-0 text-[11px] font-semibold px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-brand-500 to-brand-600 text-white hover:from-brand-600 hover:to-brand-700"
                             >
                               Envoyer un message
                             </Link>
@@ -537,7 +537,7 @@ export function ClientDashboard() {
                             <Button
                               size="sm"
                               variant="outline"
-                              className="w-full mt-3 text-xs gap-1 border-amber-200 dark:border-amber-800 text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/50"
+                              className="w-full mt-3 text-xs gap-1 border-brand-200 dark:border-brand-800 text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-950/50"
                               onClick={() => handleLeaveReview(mission)}
                             >
                               <Star className="h-3 w-3" />
@@ -561,7 +561,7 @@ export function ClientDashboard() {
             <Link href="/messages">
               <Button
                 size="sm"
-                className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0"
+                className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0"
               >
                 <MessageSquare className="h-3.5 w-3.5 mr-1.5" />
                 Ouvrir le chat
@@ -586,7 +586,7 @@ export function ClientDashboard() {
                     <CardContent className="p-4">
                       <div className="flex items-center gap-3">
                         <div className="relative shrink-0">
-                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-orange-600 text-white text-xs font-bold">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-brand-600 text-white text-xs font-bold">
                             {conv.partner?.name?.charAt(0)?.toUpperCase() || '?'}
                           </div>
                         </div>
@@ -597,7 +597,7 @@ export function ClientDashboard() {
                           <div className="flex items-center gap-2">
                             <p className="text-sm text-muted-foreground truncate">{conv.lastMessage?.content || ''}</p>
                             {conv.unreadCount > 0 && (
-                              <div className="h-2 w-2 rounded-full bg-amber-500 shrink-0" />
+                              <div className="h-2 w-2 rounded-full bg-brand-500 shrink-0" />
                             )}
                           </div>
                         </div>
@@ -658,7 +658,7 @@ export function ClientDashboard() {
                             key={i}
                             className={`h-4 w-4 ${
                               i < review.rating
-                                ? 'fill-amber-400 text-amber-400'
+                                ? 'fill-brand-400 text-brand-400'
                                 : 'fill-neutral-200 text-neutral-200 dark:fill-neutral-700 dark:text-neutral-700'
                             }`}
                           />
@@ -681,7 +681,7 @@ export function ClientDashboard() {
           <Card className="border-border/50">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <User className="h-5 w-5 text-amber-500" />
+                <User className="h-5 w-5 text-brand-500" />
                 Mon profil
               </CardTitle>
             </CardHeader>

@@ -38,15 +38,15 @@ function AudioBubble({ src, isMe }: { src: string; isMe: boolean }) {
       <button
         onClick={togglePlay}
         className={`shrink-0 h-8 w-8 rounded-full flex items-center justify-center ${
-          isMe ? "bg-white/25 text-white" : "bg-amber-500 text-white"
+          isMe ? "bg-white/25 text-white" : "bg-brand-500 text-white"
         }`}
       >
         {playing ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 ml-0.5" />}
       </button>
       <div className="flex-1">
-        <div className={`h-1.5 rounded-full ${isMe ? "bg-white/25" : "bg-amber-200 dark:bg-amber-900"}`}>
+        <div className={`h-1.5 rounded-full ${isMe ? "bg-white/25" : "bg-brand-200 dark:bg-brand-900"}`}>
           <div
-            className={`h-1.5 rounded-full ${isMe ? "bg-white" : "bg-amber-500"}`}
+            className={`h-1.5 rounded-full ${isMe ? "bg-white" : "bg-brand-500"}`}
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -293,7 +293,7 @@ function MessagesPageContent() {
       {/* Sidebar */}
       <div className="w-80 border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex flex-col">
         <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center gap-2">
-          <MessagesSquare className="w-5 h-5 text-amber-500" />
+          <MessagesSquare className="w-5 h-5 text-brand-500" />
           <h2 className="text-lg font-bold text-gray-900 dark:text-white">Messages</h2>
         </div>
         <div className="flex-1 overflow-y-auto">
@@ -316,11 +316,11 @@ function MessagesPageContent() {
                   router.push(`/messages?userId=${conv.partnerId}`)
                 }}
                 className={`w-full p-4 text-left hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors border-b border-gray-100 dark:border-gray-700/50 ${
-                  activePartner === conv.partnerId ? "bg-amber-50 dark:bg-amber-900/20" : ""
+                  activePartner === conv.partnerId ? "bg-brand-50 dark:bg-brand-900/20" : ""
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center font-bold text-white text-sm shadow-sm">
+                  <div className="w-10 h-10 bg-gradient-to-br from-brand-400 to-brand-500 rounded-full flex items-center justify-center font-bold text-white text-sm shadow-sm">
                     {conv.partner?.name?.charAt(0)?.toUpperCase() || "?"}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -332,7 +332,7 @@ function MessagesPageContent() {
                     </p>
                   </div>
                   {conv.unreadCount > 0 && (
-                    <span className="bg-amber-500 text-white text-[10px] rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                    <span className="bg-brand-500 text-white text-[10px] rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
                       {conv.unreadCount}
                     </span>
                   )}
@@ -349,7 +349,7 @@ function MessagesPageContent() {
           <>
             {/* Header */}
             <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex items-center gap-3">
-              <div className="w-9 h-9 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center font-bold text-white text-sm">
+              <div className="w-9 h-9 bg-gradient-to-br from-brand-400 to-brand-500 rounded-full flex items-center justify-center font-bold text-white text-sm">
                 {activePartnerInfo?.name?.charAt(0)?.toUpperCase() || "?"}
               </div>
               <div>
@@ -357,7 +357,7 @@ function MessagesPageContent() {
                   {activePartnerInfo?.name || "Utilisateur"}
                 </p>
                 {missionIdFromUrl && (
-                  <p className="text-xs text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                  <p className="text-xs text-brand-600 dark:text-brand-400 flex items-center gap-1">
                     <MessageCircle className="w-3 h-3" />
                     Mission liée
                   </p>
@@ -375,7 +375,7 @@ function MessagesPageContent() {
                       msg.type === "image" ? "p-1" : "px-4 py-2.5"
                     } ${
                       isMe
-                        ? "bg-gradient-to-br from-amber-500 to-orange-500 text-white rounded-br-md"
+                        ? "bg-gradient-to-br from-brand-500 to-brand-500 text-white rounded-br-md"
                         : "bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-bl-md border border-gray-200 dark:border-gray-700"
                     }`}>
                       {msg.type === "audio" ? (
@@ -391,7 +391,7 @@ function MessagesPageContent() {
                       ) : (
                         <p className="text-sm leading-relaxed">{msg.content}</p>
                       )}
-                      <p className={`text-[10px] mt-1 ${msg.type === "image" ? "px-2 pb-1" : ""} ${isMe ? "text-amber-200" : "text-gray-400 dark:text-gray-500"}`}>
+                      <p className={`text-[10px] mt-1 ${msg.type === "image" ? "px-2 pb-1" : ""} ${isMe ? "text-brand-200" : "text-gray-400 dark:text-gray-500"}`}>
                         {new Date(msg.createdAt).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
                       </p>
                     </div>
@@ -418,7 +418,7 @@ function MessagesPageContent() {
                   <button
                     onClick={sendImage}
                     disabled={uploadingImage}
-                    className="h-11 w-11 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 text-white flex items-center justify-center shadow-md hover:from-amber-600 hover:to-orange-700 transition-all disabled:opacity-50"
+                    className="h-11 w-11 rounded-full bg-gradient-to-r from-brand-500 to-brand-600 text-white flex items-center justify-center shadow-md hover:from-brand-600 hover:to-brand-700 transition-all disabled:opacity-50"
                     title="Envoyer"
                   >
                     {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
@@ -442,7 +442,7 @@ function MessagesPageContent() {
                   </button>
                   <button
                     onClick={stopAndSendRecording}
-                    className="h-11 w-11 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 text-white flex items-center justify-center shadow-md hover:from-amber-600 hover:to-orange-700 transition-all"
+                    className="h-11 w-11 rounded-full bg-gradient-to-r from-brand-500 to-brand-600 text-white flex items-center justify-center shadow-md hover:from-brand-600 hover:to-brand-700 transition-all"
                     title="Envoyer"
                   >
                     <Send className="w-4 h-4" />
@@ -472,13 +472,13 @@ function MessagesPageContent() {
                     onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend()}
                     placeholder="Écrire un message..."
                     disabled={uploadingAudio}
-                    className="flex-1 px-4 py-3 rounded-full border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all disabled:opacity-60"
+                    className="flex-1 px-4 py-3 rounded-full border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all disabled:opacity-60"
                   />
                   {newMessage.trim() ? (
                     <button
                       onClick={handleSend}
                       disabled={sending}
-                      className="px-5 py-3 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 text-white font-semibold hover:from-amber-600 hover:to-orange-700 disabled:opacity-50 transition-all shadow-md flex items-center gap-1.5"
+                      className="px-5 py-3 rounded-full bg-gradient-to-r from-brand-500 to-brand-600 text-white font-semibold hover:from-brand-600 hover:to-brand-700 disabled:opacity-50 transition-all shadow-md flex items-center gap-1.5"
                     >
                       {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                     </button>
@@ -486,7 +486,7 @@ function MessagesPageContent() {
                     <button
                       onClick={startRecording}
                       disabled={uploadingAudio}
-                      className="px-5 py-3 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 text-white font-semibold hover:from-amber-600 hover:to-orange-700 disabled:opacity-50 transition-all shadow-md flex items-center gap-1.5"
+                      className="px-5 py-3 rounded-full bg-gradient-to-r from-brand-500 to-brand-600 text-white font-semibold hover:from-brand-600 hover:to-brand-700 disabled:opacity-50 transition-all shadow-md flex items-center gap-1.5"
                       title="Message vocal"
                     >
                       {uploadingAudio ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mic className="w-4 h-4" />}

@@ -132,8 +132,8 @@ const stats = [
 
 const categories = [
   { name: "Plomberie", icon: Droplets, count: "1 250 artisans", color: "bg-blue-100 text-blue-600 dark:bg-blue-950 dark:text-blue-400" },
-  { name: "Électricité", icon: Zap, count: "1 100 artisans", color: "bg-amber-100 text-amber-600 dark:bg-amber-950 dark:text-amber-400" },
-  { name: "Menuiserie", icon: Hammer, count: "980 artisans", color: "bg-orange-100 text-orange-600 dark:bg-orange-950 dark:text-orange-400" },
+  { name: "Électricité", icon: Zap, count: "1 100 artisans", color: "bg-brand-100 text-brand-600 dark:bg-brand-950 dark:text-brand-400" },
+  { name: "Menuiserie", icon: Hammer, count: "980 artisans", color: "bg-brand-100 text-brand-600 dark:bg-brand-950 dark:text-brand-400" },
   { name: "Peinture", icon: Paintbrush, count: "870 artisans", color: "bg-emerald-100 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400" },
   { name: "Serrurerie", icon: KeyRound, count: "650 artisans", color: "bg-rose-100 text-rose-600 dark:bg-rose-950 dark:text-rose-400" },
   { name: "Maçonnerie", icon: BrickWall, count: "920 artisans", color: "bg-teal-100 text-teal-600 dark:bg-teal-950 dark:text-teal-400" },
@@ -161,9 +161,9 @@ const artisans = [
     rating: 4.9,
     reviews: 127,
     badge: "Élite",
-    badgeColor: "bg-amber-500 text-white",
+    badgeColor: "bg-brand-500 text-white",
     avatar: "AD",
-    avatarColor: "bg-amber-500",
+    avatarColor: "bg-brand-500",
     image: "/images/artisan-plumber.png",
   },
   {
@@ -185,9 +185,9 @@ const artisans = [
     rating: 4.9,
     reviews: 156,
     badge: "Élite",
-    badgeColor: "bg-amber-500 text-white",
+    badgeColor: "bg-brand-500 text-white",
     avatar: "KM",
-    avatarColor: "bg-orange-500",
+    avatarColor: "bg-brand-500",
     image: "/images/artisan-carpenter.png",
   },
   {
@@ -221,7 +221,7 @@ const artisans = [
     rating: 4.9,
     reviews: 201,
     badge: "Élite",
-    badgeColor: "bg-amber-500 text-white",
+    badgeColor: "bg-brand-500 text-white",
     avatar: "MS",
     avatarColor: "bg-sky-500",
     image: "/images/artisan-tiler.png",
@@ -245,7 +245,7 @@ const artisans = [
     rating: 4.9,
     reviews: 178,
     badge: "Élite",
-    badgeColor: "bg-amber-500 text-white",
+    badgeColor: "bg-brand-500 text-white",
     avatar: "AK",
     avatarColor: "bg-pink-500",
     image: "/images/artisan-tailor.png",
@@ -269,7 +269,7 @@ const artisans = [
     rating: 4.9,
     reviews: 95,
     badge: "Élite",
-    badgeColor: "bg-amber-500 text-white",
+    badgeColor: "bg-brand-500 text-white",
     avatar: "SK",
     avatarColor: "bg-zinc-600",
     image: "/images/artisan-blacksmith.png",
@@ -317,7 +317,7 @@ const artisans = [
     rating: 4.9,
     reviews: 210,
     badge: "Élite",
-    badgeColor: "bg-amber-500 text-white",
+    badgeColor: "bg-brand-500 text-white",
     avatar: "RD",
     avatarColor: "bg-yellow-500",
     image: "/images/artisan-baker.png",
@@ -342,7 +342,7 @@ const howItWorks = [
     title: "Décrivez",
     description: "Décrivez votre projet en quelques clics. Précisez le type de service, la localisation et vos préférences.",
     icon: Search,
-    color: "from-amber-500 to-orange-500",
+    color: "from-brand-500 to-brand-500",
   },
   {
     step: "02",
@@ -356,7 +356,7 @@ const howItWorks = [
     title: "Choisissez",
     description: "Comparez les profils, avis et tarifs. Choisissez l'artisan idéal et réservez en toute confiance.",
     icon: CheckCircle2,
-    color: "from-orange-500 to-amber-500",
+    color: "from-brand-500 to-brand-500",
   },
 ]
 
@@ -364,15 +364,15 @@ const testimonials = [
   {
     name: "Ousmane Ba",
     role: "Propriétaire Ã  Dakar",
-    text: "Artisan Connect m'a permis de trouver un plombier exceptionnel en moins de 30 minutes. Le service était rapide, professionnel et le prix très raisonnable. Je recommande vivement !",
+    text: "FINDA m'a permis de trouver un plombier exceptionnel en moins de 30 minutes. Le service était rapide, professionnel et le prix très raisonnable. Je recommande vivement !",
     rating: 5,
     avatar: "OB",
-    avatarColor: "bg-amber-500",
+    avatarColor: "bg-brand-500",
   },
   {
     name: "Aminata Koné",
     role: "Gérante d'hôtel Ã  Abidjan",
-    text: "Nous utilisons Artisan Connect pour tous nos besoins en maintenance. La qualité des artisans est constante et le support est toujours disponible. Un partenaire de confiance.",
+    text: "Nous utilisons FINDA pour tous nos besoins en maintenance. La qualité des artisans est constante et le support est toujours disponible. Un partenaire de confiance.",
     rating: 5,
     avatar: "AK",
     avatarColor: "bg-emerald-500",
@@ -380,15 +380,15 @@ const testimonials = [
   {
     name: "Jean-Pierre Aka",
     role: "Architecte Ã  Lomé",
-    text: "En tant qu'architecte, j'ai besoin d'artisans fiables pour mes projets. Artisan Connect m'offre un vivier de professionnels vérifiés avec des avis authentiques. Indispensable !",
+    text: "En tant qu'architecte, j'ai besoin d'artisans fiables pour mes projets. FINDA m'offre un vivier de professionnels vérifiés avec des avis authentiques. Indispensable !",
     rating: 5,
     avatar: "JA",
-    avatarColor: "bg-orange-500",
+    avatarColor: "bg-brand-500",
   },
   {
     name: "Mariam Doumbia",
     role: "Restauratrice Ã  Bamako",
-    text: "Mon restaurant avait un problème électrique urgent un dimanche soir. Grâce Ã  Artisan Connect, un électricien est arrivé en 45 minutes. Service au top, je suis cliente pour la vie !",
+    text: "Mon restaurant avait un problème électrique urgent un dimanche soir. Grâce Ã  FINDA, un électricien est arrivé en 45 minutes. Service au top, je suis cliente pour la vie !",
     rating: 4,
     avatar: "MD",
     avatarColor: "bg-teal-500",
@@ -408,8 +408,8 @@ const trustFeatures = [
     icon: Shield,
     title: "Identité Vérifiée",
     description: "Chaque artisan passe par un processus de vérification d'identité rigoureux avant de rejoindre la plateforme.",
-    color: "text-amber-500",
-    bg: "bg-amber-50 dark:bg-amber-950/30",
+    color: "text-brand-500",
+    bg: "bg-brand-50 dark:bg-brand-950/30",
   },
   {
     icon: MessageSquare,
@@ -422,8 +422,8 @@ const trustFeatures = [
     icon: CreditCard,
     title: "Paiement Sécurisé",
     description: "Vos transactions sont protégées par un système de paiement sécurisé avec retention jusqu'Ã  validation du travail.",
-    color: "text-orange-500",
-    bg: "bg-orange-50 dark:bg-orange-950/30",
+    color: "text-brand-500",
+    bg: "bg-brand-50 dark:bg-brand-950/30",
   },
   {
     icon: Headphones,
@@ -450,8 +450,8 @@ const trustFeatures = [
 
 const faqItems = [
   {
-    question: "Comment fonctionne Artisan Connect ?",
-    answer: "Artisan Connect est une plateforme qui met en relation les clients avec des artisans qualifiés et vérifiés Ã  travers l'Afrique. Il vous suffit de décrire votre besoin, de recevoir des propositions d'artisans, et de choisir celui qui vous convient le mieux. Le processus est simple, rapide et sécurisé.",
+    question: "Comment fonctionne FINDA ?",
+    answer: "FINDA est une plateforme qui met en relation les clients avec des artisans qualifiés et vérifiés Ã  travers l'Afrique. Il vous suffit de décrire votre besoin, de recevoir des propositions d'artisans, et de choisir celui qui vous convient le mieux. Le processus est simple, rapide et sécurisé.",
   },
   {
     question: "Comment les artisans sont-ils vérifiés ?",
@@ -466,12 +466,12 @@ const faqItems = [
     answer: "Votre satisfaction est notre priorité. Si le travail ne correspond pas Ã  la description initiale, vous pouvez signaler un litige dans les 48 heures. Notre équipe de médiation examinera votre dossier et vous pourrez bénéficier d'un remboursement partiel ou total selon le cas.",
   },
   {
-    question: "Dans quels pays Artisan Connect est-il disponible ?",
-    answer: "Artisan Connect est actuellement disponible dans 15 pays africains : Sénégal, Côte d'Ivoire, Ghana, Togo, Mali, Guinée, Bénin, Burkina Faso, Cameroun, Gabon, Congo, RDC, Niger, Mauritanie et Cap-Vert. Nous étendons régulièrement notre couverture.",
+    question: "Dans quels pays FINDA est-il disponible ?",
+    answer: "FINDA est actuellement disponible dans 15 pays africains : Sénégal, Côte d'Ivoire, Ghana, Togo, Mali, Guinée, Bénin, Burkina Faso, Cameroun, Gabon, Congo, RDC, Niger, Mauritanie et Cap-Vert. Nous étendons régulièrement notre couverture.",
   },
   {
     question: "Comment devenir artisan sur la plateforme ?",
-    answer: "Pour rejoindre Artisan Connect, créez un compte artisan, soumettez vos documents de vérification (identité, certifications, références), complétez votre profil avec vos compétences et tarifs, puis passez l'entretien de validation. Une fois approuvé, vous pourrez recevoir des demandes de clients.",
+    answer: "Pour rejoindre FINDA, créez un compte artisan, soumettez vos documents de vérification (identité, certifications, références), complétez votre profil avec vos compétences et tarifs, puis passez l'entretien de validation. Une fois approuvé, vous pourrez recevoir des demandes de clients.",
   },
 ]
 
@@ -577,7 +577,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               <motion.div variants={fadeInUp}>
                 <Badge
                   variant="secondary"
-                  className="mb-6 px-4 py-1.5 text-sm border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300"
+                  className="mb-6 px-4 py-1.5 text-sm border-brand-200 dark:border-brand-800 bg-brand-50 dark:bg-brand-950/50 text-brand-700 dark:text-brand-300"
                 >
                   La 1ère plateforme d&apos;artisans en Afrique
                 </Badge>
@@ -585,7 +585,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
 
               <motion.h1 variants={fadeInUp} className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight">
                 Trouvez l&apos;artisan{" "}
-                <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-brand-500 via-brand-500 to-brand-600 bg-clip-text text-transparent">
                   parfait
                 </span>{" "}
                 pour chaque projet
@@ -619,7 +619,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                           onChange={e => setSearchLocation(e.target.value)}
                         />
                       </div>
-                      <Button type="submit" className="h-12 px-8 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0">
+                      <Button type="submit" className="h-12 px-8 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0">
                         <Search className="h-4 w-4 mr-2" />
                         Rechercher
                       </Button>
@@ -634,7 +634,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                   <Badge
                     key={cat}
                     variant="outline"
-                    className="cursor-pointer px-4 py-1.5 text-sm hover:bg-amber-50 dark:hover:bg-amber-950/50 hover:border-amber-300 dark:hover:border-amber-700 transition-colors"
+                    className="cursor-pointer px-4 py-1.5 text-sm hover:bg-brand-50 dark:hover:bg-brand-950/50 hover:border-brand-300 dark:hover:border-brand-700 transition-colors"
                   >
                     {cat}
                   </Badge>
@@ -645,7 +645,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               <motion.div variants={fadeInUp} className="mt-4 flex flex-wrap gap-3">
                 <Button
                   variant="outline"
-                  className="gap-2 border-amber-300 dark:border-amber-700 text-amber-700 dark:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/50"
+                  className="gap-2 border-brand-300 dark:border-brand-700 text-brand-700 dark:text-brand-300 hover:bg-brand-50 dark:hover:bg-brand-950/50"
                   onClick={onViewMap}
                 >
                   <Navigation className="h-4 w-4" />
@@ -659,8 +659,8 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
           <motion.div initial="hidden" animate="visible" variants={staggerContainer} className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
             {stats.map((stat) => (
               <motion.div key={stat.label} variants={fadeInUp} className="flex flex-col items-center gap-2">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-950/50">
-                  <stat.icon className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-100 dark:bg-brand-950/50">
+                  <stat.icon className="h-5 w-5 text-brand-600 dark:text-brand-400" />
                 </div>
                 <span className="text-2xl sm:text-3xl font-bold">{stat.value}</span>
                 <span className="text-sm text-muted-foreground">{stat.label}</span>
@@ -679,7 +679,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="text-center mb-14">
             <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold">
               Explorez nos{" "}
-              <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">catégories</span>
+              <span className="bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">catégories</span>
             </motion.h2>
             <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground text-lg max-w-2xl mx-auto">
               Des milliers d&apos;artisans spécialisés dans tous les corps de métier, prêts Ã  intervenir près de chez vous.
@@ -690,7 +690,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
             {categories.map((cat) => (
               <motion.div key={cat.name} variants={fadeInUp}>
                 <Card
-                  className="group cursor-pointer border-border/50 hover:border-amber-300 dark:hover:border-amber-700 transition-all hover:shadow-lg hover:-translate-y-1"
+                  className="group cursor-pointer border-border/50 hover:border-brand-300 dark:hover:border-brand-700 transition-all hover:shadow-lg hover:-translate-y-1"
                   onClick={() => router.push(`/search?category=${encodeURIComponent(cat.name)}`)}
                 >
                   <CardContent className="p-4 sm:p-5 flex flex-col items-center text-center gap-2">
@@ -713,7 +713,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
             <Button
               size="lg"
               variant="outline"
-              className="border-amber-300 dark:border-amber-800 text-amber-700 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/50"
+              className="border-brand-300 dark:border-brand-800 text-brand-700 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/50"
               onClick={() => router.push('/search')}
             >
               Voir tous les artisans inscrits
@@ -741,9 +741,9 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               <CarouselContent className="-ml-4">
                 {artisans.map((artisan) => (
                   <CarouselItem key={artisan.name} className="pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5">
-                    <Card className="group hover:border-amber-300 dark:hover:border-amber-700 transition-all hover:shadow-xl overflow-hidden h-full">
+                    <Card className="group hover:border-brand-300 dark:hover:border-brand-700 transition-all hover:shadow-xl overflow-hidden h-full">
                       {/* Full image card */}
-                      <div className={`relative h-72 overflow-hidden bg-gradient-to-br ${artisan.avatarColor.replace('bg-', 'from-').replace('-500', '-400')} to-amber-600`}>
+                      <div className={`relative h-72 overflow-hidden bg-gradient-to-br ${artisan.avatarColor.replace('bg-', 'from-').replace('-500', '-400')} to-brand-600`}>
                         <Image
                           src={artisan.image}
                           alt={`${artisan.name} - ${artisan.skill}`}
@@ -770,7 +770,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                               <span className="truncate">{artisan.location}</span>
                             </div>
                             <div className="flex items-center gap-1">
-                              <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                              <Star className="h-3.5 w-3.5 fill-brand-400 text-brand-400" />
                               <span className="font-bold text-xs text-white">{artisan.rating}</span>
                               <span className="text-[10px] text-white/60">({artisan.reviews})</span>
                             </div>
@@ -830,7 +830,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="text-center mb-14">
             <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold">
               Comment ça{" "}
-              <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">marche</span>{" "}?
+              <span className="bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">marche</span>{" "}?
             </motion.h2>
             <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground text-lg max-w-2xl mx-auto">
               Trois étapes simples pour trouver l&apos;artisan idéal et réaliser votre projet en toute sérénité.
@@ -841,14 +841,14 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
             {howItWorks.map((step, idx) => (
               <motion.div key={step.step} variants={fadeInUp} className="relative">
                 {idx < howItWorks.length - 1 && (
-                  <div className="hidden md:block absolute top-16 left-[calc(50%+60px)] w-[calc(100%-120px)] h-0.5 bg-gradient-to-r from-amber-300 to-orange-300 dark:from-amber-700 dark:to-orange-700" />
+                  <div className="hidden md:block absolute top-16 left-[calc(50%+60px)] w-[calc(100%-120px)] h-0.5 bg-gradient-to-r from-brand-300 to-brand-300 dark:from-brand-700 dark:to-brand-700" />
                 )}
                 <Card className="text-center border-border/50 hover:shadow-lg transition-shadow h-full bg-background/95 backdrop-blur">
                   <CardContent className="p-8">
                     <div className={`mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${step.color} shadow-lg mb-6`}>
                       <step.icon className="h-8 w-8 text-white" />
                     </div>
-                    <div className="text-sm font-bold text-amber-600 dark:text-amber-400 mb-2">Étape {step.step}</div>
+                    <div className="text-sm font-bold text-brand-600 dark:text-brand-400 mb-2">Étape {step.step}</div>
                     <h3 className="text-xl font-bold mb-3">{step.title}</h3>
                     <p className="text-muted-foreground">{step.description}</p>
                   </CardContent>
@@ -865,7 +865,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="text-center mb-14">
             <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold">
               Des fonctionnalités{" "}
-              <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">complètes</span>
+              <span className="bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">complètes</span>
             </motion.h2>
             <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground text-lg max-w-2xl mx-auto">
               Tout ce dont vous avez besoin pour trouver un artisan, réserver, payer et gérer vos projets.
@@ -874,17 +874,17 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
 
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
             {[
-              { icon: CalendarDays, title: "Réservation", desc: "Réservez un créneau en quelques clics", color: "from-amber-500 to-orange-500" },
+              { icon: CalendarDays, title: "Réservation", desc: "Réservez un créneau en quelques clics", color: "from-brand-500 to-brand-500" },
               { icon: CreditCard, title: "Mobile Money", desc: "Orange Money, MTN, Wave â€” paiement africain", color: "from-emerald-500 to-teal-500" },
-              { icon: Trophy, title: "Badges & Niveaux", desc: "Gagnez des points et débloquez des récompenses", color: "from-yellow-500 to-amber-500" },
-              { icon: ClipboardList, title: "Demande de devis", desc: "Comparez les devis de plusieurs artisans", color: "from-orange-500 to-red-500" },
+              { icon: Trophy, title: "Badges & Niveaux", desc: "Gagnez des points et débloquez des récompenses", color: "from-yellow-500 to-brand-500" },
+              { icon: ClipboardList, title: "Demande de devis", desc: "Comparez les devis de plusieurs artisans", color: "from-brand-500 to-red-500" },
               { icon: Siren, title: "Service d'urgence", desc: "Un artisan chez vous en moins de 30 min", color: "from-red-500 to-rose-500" },
               { icon: Gift, title: "Parrainage", desc: "Invitez vos amis et gagnez des crédits", color: "from-violet-500 to-purple-500" },
               { icon: MapPin, title: "Géolocalisation", desc: "Trouvez les artisans proches de chez vous", color: "from-cyan-500 to-blue-500" },
               { icon: MessageSquare, title: "Messagerie", desc: "Chat en temps réel avec les artisans", color: "from-teal-500 to-emerald-500" },
             ].map((feat) => (
               <motion.div key={feat.title} variants={fadeInUp}>
-                <Card className="group cursor-pointer border-border/50 hover:border-amber-300 dark:hover:border-amber-700 transition-all hover:shadow-lg hover:-translate-y-1 h-full">
+                <Card className="group cursor-pointer border-border/50 hover:border-brand-300 dark:hover:border-brand-700 transition-all hover:shadow-lg hover:-translate-y-1 h-full">
                   <CardContent className="p-5 flex flex-col items-center text-center gap-3">
                     <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${feat.color} shadow-md`}>
                       <feat.icon className="h-6 w-6 text-white" />
@@ -908,7 +908,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">clients</span>{" "}disent
             </motion.h2>
             <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground text-lg max-w-2xl mx-auto">
-              Des milliers de clients satisfaits font confiance Ã  Artisan Connect chaque jour.
+              Des milliers de clients satisfaits font confiance Ã  FINDA chaque jour.
             </motion.p>
           </motion.div>
 
@@ -921,7 +921,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                       <CardContent className="p-6 flex flex-col h-full">
                         <div className="flex items-center gap-1 mb-4">
                           {Array.from({ length: 5 }).map((_, i) => (
-                            <Star key={i} className={`h-4 w-4 ${i < t.rating ? "fill-amber-400 text-amber-400" : "fill-neutral-200 text-neutral-200 dark:fill-neutral-700 dark:text-neutral-700"}`} />
+                            <Star key={i} className={`h-4 w-4 ${i < t.rating ? "fill-brand-400 text-brand-400" : "fill-neutral-200 text-neutral-200 dark:fill-neutral-700 dark:text-neutral-700"}`} />
                           ))}
                         </div>
                         <p className="text-muted-foreground flex-1 leading-relaxed">&ldquo;{t.text}&rdquo;</p>
@@ -950,7 +950,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="text-center mb-14">
             <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold">
               Pourquoi nous{" "}
-              <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">faire confiance</span>
+              <span className="bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">faire confiance</span>
             </motion.h2>
             <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground text-lg max-w-2xl mx-auto">
               Votre sécurité et satisfaction sont au cÅ“ur de tout ce que nous faisons.
@@ -1003,8 +1003,8 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                 icon: Zap,
                 title: "Réponse en < 100ms",
                 description: "Grâce au cache serveur et aux index de base de données optimisés, chaque requête est traitée en moins de 100 millisecondes.",
-                color: "text-amber-500",
-                bg: "bg-amber-50 dark:bg-amber-950/30",
+                color: "text-brand-500",
+                bg: "bg-brand-50 dark:bg-brand-950/30",
                 stat: "< 100ms",
                 statLabel: "temps de réponse",
               },
@@ -1021,8 +1021,8 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                 icon: CreditCard,
                 title: "Paiement Sécurisé",
                 description: "Transactions chiffrées de bout en bout avec Mobile Money, cartes bancaires et virements. Protection anti-fraude intégrée.",
-                color: "text-orange-500",
-                bg: "bg-orange-50 dark:bg-orange-950/30",
+                color: "text-brand-500",
+                bg: "bg-brand-50 dark:bg-brand-950/30",
                 stat: "256-bit",
                 statLabel: "chiffrement SSL",
               },
@@ -1076,7 +1076,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                 </div>
                 <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground">
                   <div className="flex items-center gap-2">
-                    <Zap className="h-4 w-4 text-amber-500" />
+                    <Zap className="h-4 w-4 text-brand-500" />
                     <span>Latence: <strong className="text-foreground">42ms</strong></span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -1103,10 +1103,10 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="text-center mb-14">
             <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold">
               Questions{" "}
-              <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">fréquentes</span>
+              <span className="bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">fréquentes</span>
             </motion.h2>
             <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground text-lg">
-              Tout ce que vous devez savoir sur Artisan Connect.
+              Tout ce que vous devez savoir sur FINDA.
             </motion.p>
           </motion.div>
 
@@ -1124,7 +1124,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
       </section>
 
       {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ CTA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <section className="py-20 sm:py-28 bg-gradient-to-r from-amber-500 to-orange-600 relative overflow-hidden">
+      <section className="py-20 sm:py-28 bg-gradient-to-r from-brand-500 to-brand-600 relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(255,255,255,0.1),transparent)] pointer-events-none" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.1),transparent)] pointer-events-none" />
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center relative z-10">
@@ -1138,7 +1138,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
             <motion.div variants={fadeInUp} className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button
                 size="lg"
-                className="bg-white text-amber-600 hover:bg-white/90 h-12 px-8 font-semibold"
+                className="bg-white text-brand-600 hover:bg-white/90 h-12 px-8 font-semibold"
                 onClick={() => window.location.href='/register'}
               >
                 S&apos;inscrire gratuitement
@@ -1164,17 +1164,17 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
             {/* Brand + Newsletter */}
             <div className="col-span-2">
               <div className="flex items-center gap-2 mb-4">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-600">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-brand-500 to-brand-600">
                   <Wrench className="h-5 w-5 text-white" />
                 </div>
-                <span className="text-lg font-bold text-white">Artisan Connect</span>
+                <span className="text-lg font-bold text-white">FINDA</span>
               </div>
               <p className="text-sm text-neutral-400 leading-relaxed mb-6">
                 La première plateforme africaine qui connecte les clients avec des artisans qualifiés et vérifiés.
               </p>
               <div className="flex gap-3">
                 {[Facebook, Twitter, Instagram, Linkedin].map((Icon, idx) => (
-                  <a key={idx} href="#" className="flex h-9 w-9 items-center justify-center rounded-lg bg-neutral-800 hover:bg-amber-500 transition-colors text-neutral-400 hover:text-white">
+                  <a key={idx} href="#" className="flex h-9 w-9 items-center justify-center rounded-lg bg-neutral-800 hover:bg-brand-500 transition-colors text-neutral-400 hover:text-white">
                     <Icon className="h-4 w-4" />
                   </a>
                 ))}
@@ -1185,7 +1185,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               <h4 className="font-semibold text-white mb-4 text-sm">Plateforme</h4>
               <ul className="space-y-2">
                 {footerLinks.platform.map((link) => (
-                  <li key={link.label}><a href={link.href} className="text-sm text-neutral-400 hover:text-amber-400 transition-colors">{link.label}</a></li>
+                  <li key={link.label}><a href={link.href} className="text-sm text-neutral-400 hover:text-brand-400 transition-colors">{link.label}</a></li>
                 ))}
               </ul>
             </div>
@@ -1194,7 +1194,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               <h4 className="font-semibold text-white mb-4 text-sm">Services</h4>
               <ul className="space-y-2">
                 {footerLinks.services.map((link) => (
-                  <li key={link.label}><a href={link.href} className="text-sm text-neutral-400 hover:text-amber-400 transition-colors">{link.label}</a></li>
+                  <li key={link.label}><a href={link.href} className="text-sm text-neutral-400 hover:text-brand-400 transition-colors">{link.label}</a></li>
                 ))}
               </ul>
             </div>
@@ -1203,18 +1203,18 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               <h4 className="font-semibold text-white mb-4 text-sm">Légal</h4>
               <ul className="space-y-2">
                 {footerLinks.legal.map((link) => (
-                  <li key={link.label}><a href={link.href} className="text-sm text-neutral-400 hover:text-amber-400 transition-colors">{link.label}</a></li>
+                  <li key={link.label}><a href={link.href} className="text-sm text-neutral-400 hover:text-brand-400 transition-colors">{link.label}</a></li>
                 ))}
               </ul>
             </div>
           </div>
 
           <div className="mt-12 pt-8 border-t border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-neutral-500">&copy; 2025 Artisan Connect. Tous droits réservés.</p>
+            <p className="text-sm text-neutral-500">&copy; 2025 FINDA. Tous droits réservés.</p>
             <div className="flex items-center gap-4 text-sm text-neutral-500">
-              <a href="#" className="hover:text-amber-400 transition-colors">Conditions</a>
-              <a href="#" className="hover:text-amber-400 transition-colors">Confidentialité</a>
-              <a href="#" className="hover:text-amber-400 transition-colors">Cookies</a>
+              <a href="#" className="hover:text-brand-400 transition-colors">Conditions</a>
+              <a href="#" className="hover:text-brand-400 transition-colors">Confidentialité</a>
+              <a href="#" className="hover:text-brand-400 transition-colors">Cookies</a>
             </div>
           </div>
         </div>
@@ -1246,6 +1246,12 @@ export default function Home() {
   useEffect(() => {
     initializeAuth()
   }, [initializeAuth])
+
+  useEffect(() => {
+    if (currentView === 'dashboard' && isAuthenticated && user) {
+      router.push('/dashboard')
+    }
+  }, [currentView, isAuthenticated, user, router])
 
   const handleOpenAuth = useCallback((tab?: 'login' | 'register') => {
     if (tab === 'register') { window.location.href = '/register' } else { window.location.href = '/login' }
@@ -1319,11 +1325,11 @@ export default function Home() {
           className="flex flex-col items-center gap-4"
         >
           <div className="flex items-center gap-2">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 shadow-lg">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 shadow-lg">
               <Wrench className="h-7 w-7 text-white" />
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
-              Artisan Connect
+            <span className="text-2xl font-bold bg-gradient-to-r from-brand-600 to-brand-600 bg-clip-text text-transparent">
+              FINDA
             </span>
           </div>
           <motion.div
@@ -1333,7 +1339,7 @@ export default function Home() {
             transition={{ delay: 0.3 }}
           >
             <motion.div
-              className="h-full bg-gradient-to-r from-amber-500 to-orange-500"
+              className="h-full bg-gradient-to-r from-brand-500 to-brand-500"
               initial={{ x: "-100%" }}
               animate={{ x: "100%" }}
               transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
@@ -1387,7 +1393,7 @@ export default function Home() {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
               >
-                <a href="/dashboard" className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold transition">Mon Tableau de Bord</a>
+                <a href="/dashboard" className="bg-brand-500 hover:bg-brand-600 text-white px-6 py-3 rounded-lg font-semibold transition">Mon Tableau de Bord</a>
               </motion.div>
             )}
 

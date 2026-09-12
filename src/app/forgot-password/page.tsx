@@ -41,12 +41,12 @@ export default function ForgotPasswordPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
       <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
-        <div className="bg-gradient-to-r from-amber-500 to-orange-600 p-6">
+        <div className="bg-gradient-to-r from-brand-500 to-brand-600 p-6">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20">
               <Wrench className="h-5 w-5 text-white" />
             </div>
-            <h1 className="text-white text-xl font-semibold">Artisan Connect</h1>
+            <h1 className="text-white text-xl font-semibold">FINDA</h1>
           </div>
           <p className="text-white/80 text-sm mt-2">Mot de passe oublie</p>
         </div>
@@ -66,15 +66,15 @@ export default function ForgotPasswordPage() {
                 Le code expire dans 15 minutes.
               </p>
               {devCode && (
-                <div className="mb-4 p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800">
-                  <p className="text-xs text-amber-700 dark:text-amber-400 mb-1">
+                <div className="mb-4 p-3 rounded-lg bg-brand-50 dark:bg-brand-950/30 border border-brand-200 dark:border-brand-800">
+                  <p className="text-xs text-brand-700 dark:text-brand-400 mb-1">
                     Envoi d&apos;email non configuré — voici votre code (visible uniquement en développement) :
                   </p>
-                  <p className="text-2xl font-bold tracking-widest text-amber-700 dark:text-amber-400">{devCode}</p>
+                  <p className="text-2xl font-bold tracking-widest text-brand-700 dark:text-brand-400">{devCode}</p>
                 </div>
               )}
               <Link href="/reset-password">
-                <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0">
+                <Button className="w-full bg-gradient-to-r from-brand-500 to-brand-600 text-white border-0">
                   Entrer le code
                 </Button>
               </Link>
@@ -104,7 +104,7 @@ export default function ForgotPasswordPage() {
                 </div>
                 <Button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0 h-11"
+                  className="w-full bg-gradient-to-r from-brand-500 to-brand-600 text-white border-0 h-11"
                   disabled={loading}
                 >
                   {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Mail className="h-4 w-4 mr-2" />}
@@ -112,7 +112,7 @@ export default function ForgotPasswordPage() {
                 </Button>
               </form>
               <div className="mt-4 text-center">
-                <Link href="/" className="text-sm text-amber-600 hover:text-amber-700 hover:underline">
+                <Link href="/" className="text-sm text-brand-600 hover:text-brand-700 hover:underline">
                   Retour a la connexion
                 </Link>
               </div>

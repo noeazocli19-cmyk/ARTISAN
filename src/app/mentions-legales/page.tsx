@@ -1,8 +1,8 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Mentions Légales - Artisan Connect',
-  description: 'Mentions légales de la plateforme Artisan Connect',
+  title: 'Mentions Légales - FINDA',
+  description: 'Mentions légales de la plateforme FINDA',
 }
 
 export default function MentionsLegalesPage() {
@@ -10,7 +10,7 @@ export default function MentionsLegalesPage() {
     <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
         <div className="prose prose-lg dark:prose-invert max-w-none">
-          <h1 className="text-3xl font-bold text-amber-600 mb-8">
+          <h1 className="text-3xl font-bold text-brand-600 mb-8">
             Mentions Légales
           </h1>
           <p className="text-sm text-muted-foreground mb-8">
@@ -19,7 +19,7 @@ export default function MentionsLegalesPage() {
 
           <h2 className="text-xl font-semibold mt-8 mb-4">1. Éditeur de la Plateforme</h2>
           <p className="mb-4">
-            <strong>Artisan Connect</strong><br />
+            <strong>FINDA</strong><br />
             La 1ère plateforme d'artisans en Afrique<br />
             Fondée en 2025<br />
             Fondateur : NOE AZOCLI EZECKIAS<br />
@@ -51,7 +51,7 @@ export default function MentionsLegalesPage() {
             Email : contact@kkiapay.me
           </p>
           <p className="mb-4">
-            Kkiapay est le prestataire de service de paiement de la Plateforme. Les paiements sont sécurisés et traités par Kkiapay. Artisan Connect ne stocke aucune donnée bancaire.
+            Kkiapay est le prestataire de service de paiement de la Plateforme. Les paiements sont sécurisés et traités par Kkiapay. FINDA ne stocke aucune donnée bancaire.
           </p>
 
           <h2 className="text-xl font-semibold mt-8 mb-4">4. Propriété intellectuelle</h2>
@@ -61,7 +61,7 @@ export default function MentionsLegalesPage() {
 
           <h2 className="text-xl font-semibold mt-8 mb-4">5. Responsabilité</h2>
           <p className="mb-4">
-            Artisan Connect met tout en œuvre pour assurer la disponibilité et la sécurité de la Plateforme. Cependant, la Plateforme ne peut garantir un fonctionnement sans interruption ni erreur. La responsabilité d'Artisan Connect ne saurait être engagée en cas de :
+            FINDA met tout en œuvre pour assurer la disponibilité et la sécurité de la Plateforme. Cependant, la Plateforme ne peut garantir un fonctionnement sans interruption ni erreur. La responsabilité d'FINDA ne saurait être engagée en cas de :
           </p>
           <ul className="list-disc pl-6 mb-4 space-y-2">
             <li>Indisponibilité temporaire de la Plateforme</li>
@@ -72,7 +72,7 @@ export default function MentionsLegalesPage() {
 
           <h2 className="text-xl font-semibold mt-8 mb-4">6. Liens hypertextes</h2>
           <p className="mb-4">
-            La Plateforme peut contenir des liens vers des sites tiers. Artisan Connect n'a aucun contrôle sur ces sites et décline toute responsabilité quant à leur contenu.
+            La Plateforme peut contenir des liens vers des sites tiers. FINDA n'a aucun contrôle sur ces sites et décline toute responsabilité quant à leur contenu.
           </p>
 
           <h2 className="text-xl font-semibold mt-8 mb-4">7. Droit applicable</h2>
@@ -90,9 +90,9 @@ export default function MentionsLegalesPage() {
             <li>Adresse : Dakar, Sénégal</li>
           </ul>
 
-          <div className="mt-12 p-6 bg-amber-50 dark:bg-amber-950/30 rounded-xl">
+          <div className="mt-12 p-6 bg-brand-50 dark:bg-brand-950/30 rounded-xl">
             <p className="text-sm text-muted-foreground">
-              © 2025 Artisan Connect - La 1ère plateforme d'artisans en Afrique. Tous droits réservés.
+              © 2025 FINDA - La 1ère plateforme d'artisans en Afrique. Tous droits réservés.
             </p>
           </div>
         </div>

@@ -55,7 +55,7 @@ interface PaymentWalletProps {
 // =============================================================================
 
 const PAYMENT_METHODS: { id: PaymentMethod; label: string; icon: string; color: string; bgColor: string; borderColor: string }[] = [
-  { id: 'orange_money', label: 'Orange Money', icon: '🟠', color: 'text-orange-700 dark:text-orange-300', bgColor: 'bg-gradient-to-br from-orange-400 to-orange-600', borderColor: 'border-orange-400' },
+  { id: 'orange_money', label: 'Orange Money', icon: '🟠', color: 'text-brand-700 dark:text-brand-300', bgColor: 'bg-gradient-to-br from-brand-400 to-brand-600', borderColor: 'border-brand-400' },
   { id: 'mtn_money', label: 'MTN Money', icon: '🟡', color: 'text-yellow-700 dark:text-yellow-300', bgColor: 'bg-gradient-to-br from-yellow-400 to-yellow-600', borderColor: 'border-yellow-400' },
   { id: 'wave', label: 'Wave', icon: '🔵', color: 'text-blue-700 dark:text-blue-300', bgColor: 'bg-gradient-to-br from-blue-400 to-blue-600', borderColor: 'border-blue-400' },
   { id: 'moov_money', label: 'Moov Money', icon: '🟣', color: 'text-purple-700 dark:text-purple-300', bgColor: 'bg-gradient-to-br from-purple-400 to-purple-600', borderColor: 'border-purple-400' },
@@ -64,7 +64,7 @@ const PAYMENT_METHODS: { id: PaymentMethod; label: string; icon: string; color: 
 ]
 
 const METHOD_BADGE_MAP: Record<PaymentMethod, { label: string; className: string }> = {
-  orange_money: { label: 'Orange Money', className: 'bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300' },
+  orange_money: { label: 'Orange Money', className: 'bg-brand-100 text-brand-700 dark:bg-brand-950 dark:text-brand-300' },
   mtn_money: { label: 'MTN Money', className: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-300' },
   wave: { label: 'Wave', className: 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300' },
   moov_money: { label: 'Moov Money', className: 'bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300' },
@@ -73,7 +73,7 @@ const METHOD_BADGE_MAP: Record<PaymentMethod, { label: string; className: string
 }
 
 const STATUS_BADGE_MAP: Record<PaymentStatus, { label: string; className: string; icon: typeof Clock }> = {
-  pending: { label: 'En attente', className: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300', icon: Clock },
+  pending: { label: 'En attente', className: 'bg-brand-100 text-brand-700 dark:bg-brand-950 dark:text-brand-300', icon: Clock },
   processing: { label: 'En cours', className: 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300', icon: Loader2 },
   completed: { label: 'Complété', className: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300', icon: CheckCircle2 },
   failed: { label: 'Échoué', className: 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300', icon: XCircle },
@@ -660,7 +660,7 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-6">
         {/* Header */}
         <motion.div initial="hidden" animate="visible" variants={fadeInUp} className="flex items-center gap-3 mb-6">
-          <Button variant="ghost" size="icon" onClick={onBack} className="shrink-0 hover:bg-amber-50 dark:hover:bg-amber-950/50">
+          <Button variant="ghost" size="icon" onClick={onBack} className="shrink-0 hover:bg-brand-50 dark:hover:bg-brand-950/50">
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div className="flex-1">
@@ -670,7 +670,7 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
             </p>
           </div>
           {pendingCount > 0 && (
-            <Badge className="bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300 border-0">
+            <Badge className="bg-brand-100 text-brand-700 dark:bg-brand-950 dark:text-brand-300 border-0">
               {pendingCount} en attente
             </Badge>
           )}
@@ -679,15 +679,15 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-3 bg-muted/50">
-            <TabsTrigger value="wallet" className="gap-1.5 data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500 data-[state=active]:to-orange-600 data-[state=active]:text-white">
+            <TabsTrigger value="wallet" className="gap-1.5 data-[state=active]:bg-gradient-to-r data-[state=active]:from-brand-500 data-[state=active]:to-brand-600 data-[state=active]:text-white">
               <WalletIcon className="h-4 w-4 hidden sm:block" />
               Portefeuille
             </TabsTrigger>
-            <TabsTrigger value="send" className="gap-1.5 data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500 data-[state=active]:to-orange-600 data-[state=active]:text-white">
+            <TabsTrigger value="send" className="gap-1.5 data-[state=active]:bg-gradient-to-r data-[state=active]:from-brand-500 data-[state=active]:to-brand-600 data-[state=active]:text-white">
               <Send className="h-4 w-4 hidden sm:block" />
               Envoyer
             </TabsTrigger>
-            <TabsTrigger value="history" className="gap-1.5 data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500 data-[state=active]:to-orange-600 data-[state=active]:text-white">
+            <TabsTrigger value="history" className="gap-1.5 data-[state=active]:bg-gradient-to-r data-[state=active]:from-brand-500 data-[state=active]:to-brand-600 data-[state=active]:text-white">
               <History className="h-4 w-4 hidden sm:block" />
               Historique
             </TabsTrigger>
@@ -699,7 +699,7 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
               {/* Balance Card */}
               <motion.div variants={fadeInUp}>
                 <Card className="overflow-hidden border-0 shadow-lg">
-                  <div className="bg-gradient-to-br from-amber-500 via-orange-500 to-amber-600 p-6 sm:p-8 relative">
+                  <div className="bg-gradient-to-br from-brand-500 via-brand-500 to-brand-600 p-6 sm:p-8 relative">
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(255,255,255,0.15),transparent)] pointer-events-none" />
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.1),transparent)] pointer-events-none" />
                     <div className="relative z-10">
@@ -734,7 +734,7 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
                   {[
                     { icon: Plus, label: 'Déposer', color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-950/30', onClick: () => setDepositOpen(true) },
                     { icon: ArrowUpRight, label: 'Retirer', color: 'text-red-600 dark:text-red-400', bg: 'bg-red-50 dark:bg-red-950/30', onClick: () => setWithdrawOpen(true) },
-                    { icon: Send, label: 'Transférer', color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-950/30', onClick: () => setActiveTab('send') },
+                    { icon: Send, label: 'Transférer', color: 'text-brand-600 dark:text-brand-400', bg: 'bg-brand-50 dark:bg-brand-950/30', onClick: () => setActiveTab('send') },
                     { icon: History, label: 'Historique', color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-950/30', onClick: () => setActiveTab('history') },
                   ].map((action) => (
                     <Button
@@ -756,7 +756,7 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
               <motion.div variants={fadeInUp}>
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-semibold text-base">Transactions récentes</h3>
-                  <Button variant="ghost" size="sm" className="text-amber-600 dark:text-amber-400 text-xs" onClick={() => setActiveTab('history')}>
+                  <Button variant="ghost" size="sm" className="text-brand-600 dark:text-brand-400 text-xs" onClick={() => setActiveTab('history')}>
                     Voir tout
                     <ChevronRight className="h-3 w-3 ml-1" />
                   </Button>
@@ -849,7 +849,7 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
                     className="flex gap-3"
                   >
                     <Button
-                      className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0"
+                      className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0"
                       onClick={handlePaymentReset}
                     >
                       Nouveau paiement
@@ -872,7 +872,7 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
                     transition={{ repeat: Infinity, duration: 1.5, ease: 'linear' as const }}
                     className="mb-6"
                   >
-                    <Loader2 className="h-16 w-16 text-amber-500" />
+                    <Loader2 className="h-16 w-16 text-brand-500" />
                   </motion.div>
                   <h3 className="text-lg font-semibold mb-2">Traitement en cours...</h3>
                   <p className="text-sm text-muted-foreground text-center">
@@ -893,14 +893,14 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
                         <div key={step} className="flex items-center gap-2 flex-1">
                           <div className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold shrink-0 transition-all ${
                             paymentStep >= step
-                              ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-md'
+                              ? 'bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-md'
                               : 'bg-muted text-muted-foreground'
                           }`}>
                             {step + 1}
                           </div>
                           {step < 2 && (
                             <div className={`flex-1 h-1 rounded-full transition-all ${
-                              paymentStep > step ? 'bg-gradient-to-r from-amber-500 to-orange-600' : 'bg-muted'
+                              paymentStep > step ? 'bg-gradient-to-r from-brand-500 to-brand-600' : 'bg-muted'
                             }`} />
                           )}
                         </div>
@@ -986,7 +986,7 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
                                 key={amt}
                                 variant="outline"
                                 size="sm"
-                                className="text-xs hover:bg-amber-50 hover:border-amber-300 dark:hover:bg-amber-950/50 dark:hover:border-amber-700"
+                                className="text-xs hover:bg-brand-50 hover:border-brand-300 dark:hover:bg-brand-950/50 dark:hover:border-brand-700"
                                 onClick={() => setPayAmount(amt.toString())}
                               >
                                 {amt.toLocaleString('fr-FR')}
@@ -1045,7 +1045,7 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
                             Retour
                           </Button>
                           <Button
-                            className="flex-1 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0"
+                            className="flex-1 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0"
                             disabled={!canProceed}
                             onClick={() => setPaymentStep(2)}
                           >
@@ -1119,20 +1119,20 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
                               <Separator />
                               <div className="flex justify-between text-sm font-bold">
                                 <span>Total</span>
-                                <span className="text-amber-600 dark:text-amber-400 text-lg">{formatFCFA(Number(payAmount))}</span>
+                                <span className="text-brand-600 dark:text-brand-400 text-lg">{formatFCFA(Number(payAmount))}</span>
                               </div>
                             </div>
                           </CardContent>
                         </Card>
 
-                        <div className="rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 p-4">
+                        <div className="rounded-xl bg-brand-50 dark:bg-brand-950/30 border border-brand-200 dark:border-brand-800 p-4">
                           <div className="flex items-start gap-3">
-                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/50">
-                              <WalletIcon className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-100 dark:bg-brand-900/50">
+                              <WalletIcon className="h-4 w-4 text-brand-600 dark:text-brand-400" />
                             </div>
                             <div>
-                              <p className="text-sm font-medium text-amber-800 dark:text-amber-200">Solde après paiement</p>
-                              <p className="text-lg font-bold text-amber-600 dark:text-amber-400">
+                              <p className="text-sm font-medium text-brand-800 dark:text-brand-200">Solde après paiement</p>
+                              <p className="text-lg font-bold text-brand-600 dark:text-brand-400">
                                 {formatFCFA(balance - Number(payAmount))}
                               </p>
                             </div>
@@ -1144,7 +1144,7 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
                             Retour
                           </Button>
                           <Button
-                            className="flex-1 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 h-12 text-base font-semibold"
+                            className="flex-1 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 h-12 text-base font-semibold"
                             onClick={handlePaySubmit}
                           >
                             <Send className="h-4 w-4 mr-2" />
@@ -1183,7 +1183,7 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
                             <RadioGroupItem value={opt.value} id={`filter-${opt.value}`} className="peer sr-only" />
                             <Label
                               htmlFor={`filter-${opt.value}`}
-                              className="cursor-pointer rounded-full border px-3 py-1 text-xs font-medium transition-all peer-data-[state=checked]:bg-gradient-to-r peer-data-[state=checked]:from-amber-500 peer-data-[state=checked]:to-orange-600 peer-data-[state=checked]:text-white peer-data-[state=checked]:border-transparent hover:bg-muted/50"
+                              className="cursor-pointer rounded-full border px-3 py-1 text-xs font-medium transition-all peer-data-[state=checked]:bg-gradient-to-r peer-data-[state=checked]:from-brand-500 peer-data-[state=checked]:to-brand-600 peer-data-[state=checked]:text-white peer-data-[state=checked]:border-transparent hover:bg-muted/50"
                             >
                               {opt.label}
                             </Label>
@@ -1267,7 +1267,7 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
                 <Button
                   variant="outline"
                   size="sm"
-                  className="text-xs gap-1.5 hover:bg-amber-50 hover:border-amber-300 dark:hover:bg-amber-950/50 dark:hover:border-amber-700"
+                  className="text-xs gap-1.5 hover:bg-brand-50 hover:border-brand-300 dark:hover:bg-brand-950/50 dark:hover:border-brand-700"
                   onClick={handleExportCSV}
                 >
                   <Download className="h-3.5 w-3.5" />
@@ -1444,10 +1444,10 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
-            <div className="rounded-xl bg-amber-50 dark:bg-amber-950/30 p-3">
+            <div className="rounded-xl bg-brand-50 dark:bg-brand-950/30 p-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs text-amber-700 dark:text-amber-300">Solde disponible</span>
-                <span className="font-bold text-amber-600 dark:text-amber-400">{formatFCFA(balance)}</span>
+                <span className="text-xs text-brand-700 dark:text-brand-300">Solde disponible</span>
+                <span className="font-bold text-brand-600 dark:text-brand-400">{formatFCFA(balance)}</span>
               </div>
             </div>
             <div className="space-y-2">

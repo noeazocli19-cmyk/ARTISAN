@@ -349,7 +349,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
           name: a.user?.name || 'Artisan',
           specialty: a.profession || 'Service',
           avatar: (a.user?.name || 'AR').split(' ').map((p: string) => p[0]).join('').slice(0, 2).toUpperCase(),
-          avatarColor: 'bg-amber-500',
+          avatarColor: 'bg-brand-500',
           rating: a.rating || 0,
           hourlyRate: a.hourlyRate || 0,
         }))
@@ -603,7 +603,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
           </Button>
           <div className="flex-1 min-w-0">
             <h1 className="text-xl sm:text-2xl font-bold truncate">
-              <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">
                 Réservation
               </span>{' '}
               & Calendrier
@@ -616,7 +616,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
             )}
           </div>
           <div className="hidden sm:flex items-center gap-2">
-            <Badge variant="outline" className="border-amber-300 dark:border-amber-700 text-amber-700 dark:text-amber-300">
+            <Badge variant="outline" className="border-brand-300 dark:border-brand-700 text-brand-700 dark:text-brand-300">
               <CalendarDays className="h-3 w-3 mr-1" />
               {MONTHS_FR[currentMonth]} {currentYear}
             </Badge>
@@ -636,7 +636,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
               <Briefcase className="h-4 w-4" />
               Mes Réservations
               {bookings.filter((b) => b.status === 'pending').length > 0 && (
-                <Badge className="ml-1 h-5 w-5 p-0 flex items-center justify-center bg-amber-500 text-white text-[10px] border-0">
+                <Badge className="ml-1 h-5 w-5 p-0 flex items-center justify-center bg-brand-500 text-white text-[10px] border-0">
                   {bookings.filter((b) => b.status === 'pending').length}
                 </Badge>
               )}
@@ -669,7 +669,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                           <Button
                             variant="link"
                             size="sm"
-                            className="text-amber-600 dark:text-amber-400 text-xs h-auto p-0"
+                            className="text-brand-600 dark:text-brand-400 text-xs h-auto p-0"
                             onClick={goToToday}
                           >
                             Aujourd&apos;hui
@@ -711,11 +711,11 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                           if (isSunday || isPast) {
                             cellClass += 'text-muted-foreground/40 cursor-not-allowed '
                           } else if (isSelected) {
-                            cellClass += 'bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/25 scale-105 '
+                            cellClass += 'bg-gradient-to-br from-brand-500 to-brand-600 text-white shadow-lg shadow-brand-500/25 scale-105 '
                           } else if (isToday) {
-                            cellClass += 'ring-2 ring-amber-500 ring-offset-1 dark:ring-offset-neutral-900 bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-300 '
+                            cellClass += 'ring-2 ring-brand-500 ring-offset-1 dark:ring-offset-neutral-900 bg-brand-50 dark:bg-brand-950/30 text-brand-700 dark:text-brand-300 '
                           } else if (hasAvail) {
-                            cellClass += 'bg-amber-50 dark:bg-amber-950/20 text-amber-800 dark:text-amber-200 hover:bg-amber-100 dark:hover:bg-amber-950/40 hover:shadow-md '
+                            cellClass += 'bg-brand-50 dark:bg-brand-950/20 text-brand-800 dark:text-brand-200 hover:bg-brand-100 dark:hover:bg-brand-950/40 hover:shadow-md '
                           } else {
                             cellClass += 'text-muted-foreground hover:bg-muted/50 '
                           }
@@ -730,10 +730,10 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                             >
                               {day}
                               {hasAvail && !isPast && !isSunday && !isSelected && (
-                                <div className="absolute bottom-1 h-1 w-1 rounded-full bg-amber-500" />
+                                <div className="absolute bottom-1 h-1 w-1 rounded-full bg-brand-500" />
                               )}
                               {isToday && !isSelected && (
-                                <div className="absolute bottom-1 h-1 w-1 rounded-full bg-amber-600 dark:bg-amber-300" />
+                                <div className="absolute bottom-1 h-1 w-1 rounded-full bg-brand-600 dark:bg-brand-300" />
                               )}
                             </motion.button>
                           )
@@ -743,15 +743,15 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                       {/* Legend */}
                       <div className="flex flex-wrap gap-4 mt-4 pt-3 border-t border-border/50 text-xs text-muted-foreground">
                         <div className="flex items-center gap-1.5">
-                          <div className="h-2.5 w-2.5 rounded-full bg-amber-500" />
+                          <div className="h-2.5 w-2.5 rounded-full bg-brand-500" />
                           Disponible
                         </div>
                         <div className="flex items-center gap-1.5">
-                          <div className="h-2.5 w-2.5 rounded-full ring-2 ring-amber-500 ring-offset-1 dark:ring-offset-neutral-900" />
+                          <div className="h-2.5 w-2.5 rounded-full ring-2 ring-brand-500 ring-offset-1 dark:ring-offset-neutral-900" />
                           Aujourd&apos;hui
                         </div>
                         <div className="flex items-center gap-1.5">
-                          <div className="h-2.5 w-2.5 rounded-full bg-gradient-to-br from-amber-500 to-orange-600" />
+                          <div className="h-2.5 w-2.5 rounded-full bg-gradient-to-br from-brand-500 to-brand-600" />
                           Sélectionné
                         </div>
                       </div>
@@ -774,7 +774,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                       <Card className="border-border/50">
                         <CardHeader className="pb-3">
                           <CardTitle className="text-base flex items-center gap-2">
-                            <Clock className="h-4 w-4 text-amber-500" />
+                            <Clock className="h-4 w-4 text-brand-500" />
                             Créneaux disponibles
                           </CardTitle>
                           <p className="text-sm text-muted-foreground">
@@ -794,7 +794,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                                   slot.available
                                     ? 'border-green-300 dark:border-green-700 bg-green-50 dark:bg-green-950/30 hover:bg-green-100 dark:hover:bg-green-950/50 hover:shadow-md cursor-pointer'
                                     : startH === 12
-                                      ? 'border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/20 cursor-not-allowed'
+                                      ? 'border-brand-200 dark:border-brand-800 bg-brand-50 dark:bg-brand-950/20 cursor-not-allowed'
                                       : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/30 cursor-not-allowed opacity-60'
                                 }`}
                                 onClick={() => handleSlotClick(slot)}
@@ -813,7 +813,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                                       Disponible
                                     </Badge>
                                   ) : startH === 12 ? (
-                                    <Badge className="bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800 text-[10px]">
+                                    <Badge className="bg-brand-100 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300 border-brand-200 dark:border-brand-800 text-[10px]">
                                       Pause
                                     </Badge>
                                   ) : (
@@ -838,8 +838,8 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                       <Card className="border-border/50">
                         <CardContent className="p-8 text-center">
                           <div className="flex flex-col items-center gap-3">
-                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-100 dark:bg-amber-950/30">
-                              <CalendarDays className="h-8 w-8 text-amber-500" />
+                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-100 dark:bg-brand-950/30">
+                              <CalendarDays className="h-8 w-8 text-brand-500" />
                             </div>
                             <h3 className="font-semibold text-base">Sélectionnez un jour</h3>
                             <p className="text-sm text-muted-foreground max-w-xs">
@@ -854,7 +854,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
 
                 {/* Artisan info card (if specific artisan) */}
                 {selectedArtisan && (
-                  <Card className="border-amber-200 dark:border-amber-800 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20">
+                  <Card className="border-brand-200 dark:border-brand-800 bg-gradient-to-br from-brand-50 to-brand-50 dark:from-brand-950/20 dark:to-brand-950/20">
                     <CardContent className="p-4">
                       <div className="flex items-center gap-3">
                         <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-white font-bold ${selectedArtisan.avatarColor}`}>
@@ -865,11 +865,11 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                           <p className="text-xs text-muted-foreground">{selectedArtisan.specialty}</p>
                           <div className="flex items-center gap-2 mt-1">
                             <div className="flex items-center gap-0.5">
-                              <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                              <Star className="h-3 w-3 fill-brand-400 text-brand-400" />
                               <span className="text-xs font-medium">{selectedArtisan.rating}</span>
                             </div>
                             <span className="text-xs text-muted-foreground">â€¢</span>
-                            <span className="text-xs font-semibold text-amber-600 dark:text-amber-400">
+                            <span className="text-xs font-semibold text-brand-600 dark:text-brand-400">
                               {formatPrice(selectedArtisan.hourlyRate)}/h
                             </span>
                           </div>
@@ -883,12 +883,12 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                 <Card className="border-border/50">
                   <CardContent className="p-4">
                     <h4 className="font-semibold text-sm mb-3 flex items-center gap-2">
-                      <Filter className="h-4 w-4 text-amber-500" />
+                      <Filter className="h-4 w-4 text-brand-500" />
                       Résumé
                     </h4>
                     <div className="grid grid-cols-2 gap-3">
-                      <div className="rounded-lg bg-amber-50 dark:bg-amber-950/30 p-3 text-center">
-                        <p className="text-xl font-bold text-amber-600 dark:text-amber-400">
+                      <div className="rounded-lg bg-brand-50 dark:bg-brand-950/30 p-3 text-center">
+                        <p className="text-xl font-bold text-brand-600 dark:text-brand-400">
                           {bookings.filter((b) => b.status === 'pending').length}
                         </p>
                         <p className="text-[10px] text-muted-foreground mt-0.5">En attente</p>
@@ -939,7 +939,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                         size="sm"
                         className={
                           bookingFilter === f.key
-                            ? 'bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0'
+                            ? 'bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0'
                             : 'border-border/50'
                         }
                         onClick={() => setBookingFilter(f.key)}
@@ -1008,7 +1008,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                                 <div className="flex-1 p-4 sm:p-5">
                                   <div className="flex items-start gap-3">
                                     {/* Avatar */}
-                                    <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white font-bold text-sm ${artisan?.avatarColor ?? 'bg-amber-500'}`}>
+                                    <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white font-bold text-sm ${artisan?.avatarColor ?? 'bg-brand-500'}`}>
                                       {artisan?.avatar ?? '??'}
                                     </div>
 
@@ -1039,7 +1039,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                                           <MapPin className="h-3 w-3" />
                                           <span className="truncate">{booking.location}</span>
                                         </div>
-                                        <div className="flex items-center gap-1.5 font-semibold text-amber-600 dark:text-amber-400">
+                                        <div className="flex items-center gap-1.5 font-semibold text-brand-600 dark:text-brand-400">
                                           {formatPrice(booking.price)}
                                         </div>
                                       </div>
@@ -1069,7 +1069,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                                           <Button
                                             variant="outline"
                                             size="sm"
-                                            className="text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800 hover:bg-amber-50 dark:hover:bg-amber-950/30 text-xs h-8"
+                                            className="text-brand-600 dark:text-brand-400 border-brand-200 dark:border-brand-800 hover:bg-brand-50 dark:hover:bg-brand-950/30 text-xs h-8"
                                           >
                                             <Star className="h-3 w-3 mr-1" />
                                             Laisser un avis
@@ -1130,7 +1130,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
               >
                 <DialogHeader>
                   <DialogTitle className="flex items-center gap-2">
-                    <CalendarDays className="h-5 w-5 text-amber-500" />
+                    <CalendarDays className="h-5 w-5 text-brand-500" />
                     Nouvelle réservation
                   </DialogTitle>
                   <DialogDescription>
@@ -1140,9 +1140,9 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
 
                 <div className="mt-4 space-y-4">
                   {/* Artisan & time info */}
-                  <div className="rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 p-4 border border-amber-200 dark:border-amber-800">
+                  <div className="rounded-xl bg-gradient-to-r from-brand-50 to-brand-50 dark:from-brand-950/30 dark:to-brand-950/30 p-4 border border-brand-200 dark:border-brand-800">
                     <div className="flex items-center gap-3 mb-2">
-                      <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white font-bold text-sm ${selectedArtisan?.avatarColor ?? 'bg-amber-500'}`}>
+                      <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white font-bold text-sm ${selectedArtisan?.avatarColor ?? 'bg-brand-500'}`}>
                         {selectedArtisan?.avatar ?? 'A'}
                       </div>
                       <div>
@@ -1150,17 +1150,17 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                         <p className="text-xs text-muted-foreground">{selectedArtisan?.specialty ?? 'Service'}</p>
                       </div>
                     </div>
-                    <Separator className="my-2 bg-amber-200 dark:bg-amber-800" />
+                    <Separator className="my-2 bg-brand-200 dark:bg-brand-800" />
                     <div className="grid grid-cols-2 gap-2 text-xs">
                       {selectedDate && (
                         <div className="flex items-center gap-1.5">
-                          <CalendarDays className="h-3 w-3 text-amber-600 dark:text-amber-400" />
+                          <CalendarDays className="h-3 w-3 text-brand-600 dark:text-brand-400" />
                           <span>{selectedDate.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })}</span>
                         </div>
                       )}
                       {selectedSlot && (
                         <div className="flex items-center gap-1.5">
-                          <Clock className="h-3 w-3 text-amber-600 dark:text-amber-400" />
+                          <Clock className="h-3 w-3 text-brand-600 dark:text-brand-400" />
                           <span>
                             {String(new Date(selectedSlot.start).getHours()).padStart(2, '0')}:00 â€” {String(new Date(selectedSlot.end).getHours()).padStart(2, '0')}:00
                           </span>
@@ -1226,14 +1226,14 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-muted-foreground">Tarif horaire</span>
                     </div>
-                    <span className="text-lg font-bold bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">
+                    <span className="text-lg font-bold bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">
                       {formatPrice(selectedArtisan?.hourlyRate ?? 8000)}
                     </span>
                   </div>
 
                   {/* Submit button */}
                   <Button
-                    className="w-full h-12 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 font-semibold text-base"
+                    className="w-full h-12 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 font-semibold text-base"
                     onClick={handleSubmitBooking}
                     disabled={!formState.service || isSubmitting}
                   >

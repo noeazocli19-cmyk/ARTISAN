@@ -105,9 +105,9 @@ function getInitials(name: string): string {
 }
 
 const AVATAR_COLORS = [
-  'bg-amber-500',
+  'bg-brand-500',
   'bg-emerald-500',
-  'bg-orange-500',
+  'bg-brand-500',
   'bg-teal-500',
   'bg-cyan-500',
   'bg-rose-500',
@@ -363,13 +363,13 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
           variant="ghost"
           size="icon"
           onClick={onBack}
-          className="shrink-0 hover:bg-amber-50 dark:hover:bg-amber-950/50"
+          className="shrink-0 hover:bg-brand-50 dark:hover:bg-brand-950/50"
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <div className="flex-1">
           <h1 className="text-2xl font-bold flex items-center gap-2">
-            <MessageSquare className="h-6 w-6 text-amber-500" />
+            <MessageSquare className="h-6 w-6 text-brand-500" />
             Messages
           </h1>
           <p className="text-sm text-muted-foreground">
@@ -383,13 +383,13 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
               En ligne
             </Badge>
           ) : (
-            <Badge variant="outline" className="border-amber-300 dark:border-amber-700 text-amber-600 dark:text-amber-400 gap-1">
+            <Badge variant="outline" className="border-brand-300 dark:border-brand-700 text-brand-600 dark:text-brand-400 gap-1">
               <WifiOff className="h-3 w-3" />
               Connexion...
             </Badge>
           )}
           {totalUnread > 0 && (
-            <Badge className="bg-amber-500 text-white border-0">
+            <Badge className="bg-brand-500 text-white border-0">
               {totalUnread}
             </Badge>
           )}
@@ -435,7 +435,7 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
                         key={room.id}
                         onClick={() => handleJoinRoom(room.id)}
                         className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-muted/50 transition-colors text-left ${
-                          isActive ? 'bg-amber-50 dark:bg-amber-950/30 border-l-2 border-l-amber-500' : ''
+                          isActive ? 'bg-brand-50 dark:bg-brand-950/30 border-l-2 border-l-brand-500' : ''
                         }`}
                       >
                         <div className="relative shrink-0">
@@ -458,7 +458,7 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
                           <div className="flex items-center justify-between gap-2 mt-0.5">
                             <p className="text-xs text-muted-foreground truncate">{room.lastMessage}</p>
                             {room.unreadCount > 0 && (
-                              <span className="shrink-0 flex h-5 w-5 items-center justify-center rounded-full bg-amber-500 text-white text-[10px] font-bold">
+                              <span className="shrink-0 flex h-5 w-5 items-center justify-center rounded-full bg-brand-500 text-white text-[10px] font-bold">
                                 {room.unreadCount}
                               </span>
                             )}
@@ -481,7 +481,7 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
             {activeRoom ? (
               <>
                 {/* Chat Header */}
-                <div className="flex items-center gap-3 px-4 py-3 border-b border-border/50 bg-gradient-to-r from-amber-50/80 to-orange-50/80 dark:from-amber-950/30 dark:to-orange-950/30">
+                <div className="flex items-center gap-3 px-4 py-3 border-b border-border/50 bg-gradient-to-r from-brand-50/80 to-brand-50/80 dark:from-brand-950/30 dark:to-brand-950/30">
                   <Button
                     variant="ghost"
                     size="icon"
@@ -513,7 +513,7 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
                     </p>
                   </div>
                   <div className="flex items-center gap-1">
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-amber-500" onClick={() => {
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-brand-500" onClick={() => {
                       if (onCallArtisan && activeRoom) {
                         onCallArtisan(activeRoom.artisanName, getInitials(activeRoom.artisanName), getAvatarColor(activeRoom.artisanId).replace('bg-', '#').replace(/-\d+$/, '') || '#f59e0b')
                       }
@@ -540,7 +540,7 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
                           <div
                             className={`max-w-[75%] sm:max-w-[65%] ${
                               isOwn
-                                ? 'bg-gradient-to-br from-amber-500 to-orange-500 text-white rounded-2xl rounded-br-md'
+                                ? 'bg-gradient-to-br from-brand-500 to-brand-500 text-white rounded-2xl rounded-br-md'
                                 : 'bg-muted dark:bg-neutral-800 rounded-2xl rounded-bl-md'
                             } px-4 py-2.5 shadow-sm`}
                           >
@@ -569,9 +569,9 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
                         <div className="bg-muted dark:bg-neutral-800 rounded-2xl rounded-bl-md px-4 py-3 shadow-sm">
                           <div className="flex items-center gap-2">
                             <div className="flex gap-1">
-                              <span className="h-2 w-2 rounded-full bg-amber-500 animate-bounce" style={{ animationDelay: '0ms' }} />
-                              <span className="h-2 w-2 rounded-full bg-amber-500 animate-bounce" style={{ animationDelay: '150ms' }} />
-                              <span className="h-2 w-2 rounded-full bg-amber-500 animate-bounce" style={{ animationDelay: '300ms' }} />
+                              <span className="h-2 w-2 rounded-full bg-brand-500 animate-bounce" style={{ animationDelay: '0ms' }} />
+                              <span className="h-2 w-2 rounded-full bg-brand-500 animate-bounce" style={{ animationDelay: '150ms' }} />
+                              <span className="h-2 w-2 rounded-full bg-brand-500 animate-bounce" style={{ animationDelay: '300ms' }} />
                             </div>
                             <span className="text-xs text-muted-foreground">{typingText}</span>
                           </div>
@@ -608,7 +608,7 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="shrink-0 h-9 w-9 text-muted-foreground hover:text-amber-500"
+                    className="shrink-0 h-9 w-9 text-muted-foreground hover:text-brand-500"
                     onClick={() => setShowEmojiPicker((prev) => !prev)}
                   >
                     <Smile className="h-5 w-5" />
@@ -628,7 +628,7 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
                   />
                   <Button
                     size="icon"
-                    className="shrink-0 h-10 w-10 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 rounded-full shadow-md"
+                    className="shrink-0 h-10 w-10 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 rounded-full shadow-md"
                     onClick={handleSendMessage}
                     disabled={!messageInput.trim()}
                   >
@@ -639,8 +639,8 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
             ) : (
               <div className="flex-1 flex items-center justify-center">
                 <div className="text-center px-6">
-                  <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-950/50 mb-4">
-                    <MessageSquare className="h-10 w-10 text-amber-500" />
+                  <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-brand-100 dark:bg-brand-950/50 mb-4">
+                    <MessageSquare className="h-10 w-10 text-brand-500" />
                   </div>
                   <h3 className="text-lg font-semibold mb-2">Vos messages</h3>
                   <p className="text-sm text-muted-foreground max-w-xs mx-auto">

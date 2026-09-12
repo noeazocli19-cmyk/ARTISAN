@@ -66,6 +66,19 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  /* Palette de marque FINDA — générée à partir de #2596BE (brand-500 = couleur exacte demandée) */
+  --color-brand-50: #EEF8FC;
+  --color-brand-100: #D9EFF8;
+  --color-brand-200: #B6E2F1;
+  --color-brand-300: #83CDE7;
+  --color-brand-400: #4CB6DC;
+  --color-brand-500: #2596BE;
+  --color-brand-600: #1F7EA0;
+  --color-brand-700: #196580;
+  --color-brand-800: #144F64;
+  --color-brand-900: #0F3B4B;
+  --color-brand-950: #08222B;
 }
 
 :root {

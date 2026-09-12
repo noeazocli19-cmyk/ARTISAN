@@ -56,7 +56,7 @@ export default function AdminVerificationsPage() {
   }
 
   if (isPending || loading) {
-    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-6 w-6 animate-spin text-amber-500" /></div>
+    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-6 w-6 animate-spin text-brand-500" /></div>
   }
 
   if (forbidden || !session?.user) {
@@ -64,7 +64,7 @@ export default function AdminVerificationsPage() {
       <div className="min-h-screen flex flex-col items-center justify-center gap-3 text-center px-4">
         <XCircle className="h-10 w-10 text-red-400" />
         <p className="font-semibold">Accès réservé aux administrateurs</p>
-        <Link href="/" className="text-sm text-amber-600 hover:underline">Retour à l'accueil</Link>
+        <Link href="/" className="text-sm text-brand-600 hover:underline">Retour à l'accueil</Link>
       </div>
     )
   }
@@ -79,7 +79,7 @@ export default function AdminVerificationsPage() {
       </Link>
 
       <h1 className="text-2xl font-bold flex items-center gap-2 mb-1">
-        <ShieldCheck className="h-6 w-6 text-amber-500" />
+        <ShieldCheck className="h-6 w-6 text-brand-500" />
         Vérifications d'identité
       </h1>
       <p className="text-muted-foreground text-sm mb-8">

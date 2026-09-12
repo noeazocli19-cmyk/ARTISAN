@@ -179,7 +179,7 @@ export function ReviewDialog({
                       onClick={() => handleStarClick(starValue)}
                       onMouseEnter={() => handleStarHover(starValue)}
                       onMouseLeave={handleStarLeave}
-                      className="relative cursor-pointer rounded-md p-0.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2"
+                      className="relative cursor-pointer rounded-md p-0.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-2"
                       whileHover={{ scale: 1.25 }}
                       whileTap={{ scale: 0.9 }}
                       animate={{
@@ -195,7 +195,7 @@ export function ReviewDialog({
                       <Star
                         className={`size-8 transition-colors duration-150 ${
                           isFilled
-                            ? 'fill-amber-400 text-amber-400'
+                            ? 'fill-brand-400 text-brand-400'
                             : 'fill-transparent text-muted-foreground/40'
                         }`}
                       />
@@ -212,7 +212,7 @@ export function ReviewDialog({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 4 }}
                     transition={{ duration: 0.15 }}
-                    className="text-sm font-medium text-amber-600"
+                    className="text-sm font-medium text-brand-600"
                   >
                     {RATING_LABELS[displayRating]}
                   </motion.p>
@@ -284,7 +284,7 @@ export function ReviewDialog({
             type="button"
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="bg-amber-500 text-white shadow-xs hover:bg-amber-600 focus-visible:ring-amber-400"
+            className="bg-brand-500 text-white shadow-xs hover:bg-brand-600 focus-visible:ring-brand-400"
           >
             {isSubmitting ? (
               <>

@@ -102,23 +102,23 @@ export function InstallPrompt() {
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
           className="fixed bottom-4 left-4 right-4 z-50 sm:left-auto sm:right-4 sm:max-w-sm"
         >
-          <div className="relative overflow-hidden rounded-2xl border border-amber-200 dark:border-amber-800 bg-gradient-to-br from-amber-50 via-orange-50 to-amber-50 dark:from-amber-950/80 dark:via-orange-950/80 dark:to-amber-950/80 shadow-2xl backdrop-blur-sm">
+          <div className="relative overflow-hidden rounded-2xl border border-brand-200 dark:border-brand-800 bg-gradient-to-br from-brand-50 via-brand-50 to-brand-50 dark:from-brand-950/80 dark:via-brand-950/80 dark:to-brand-950/80 shadow-2xl backdrop-blur-sm">
             {/* Decorative gradient accent */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 via-orange-500 to-amber-500" />
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-500" />
 
             <div className="p-4">
               <div className="flex items-start gap-3">
                 {/* App Icon */}
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 shadow-lg">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 shadow-lg">
                   <Wrench className="h-6 w-6 text-white" />
                 </div>
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-bold text-sm text-amber-900 dark:text-amber-100">
+                  <h3 className="font-bold text-sm text-brand-900 dark:text-brand-100">
                     Installer Artisan Connect
                   </h3>
-                  <p className="mt-1 text-xs text-amber-700/80 dark:text-amber-300/80 leading-relaxed">
+                  <p className="mt-1 text-xs text-brand-700/80 dark:text-brand-300/80 leading-relaxed">
                     Accédez rapidement à nos artisans depuis votre écran d&apos;accueil. Fonctionne même hors connexion !
                   </p>
 
@@ -128,7 +128,7 @@ export function InstallPrompt() {
                       size="sm"
                       onClick={handleInstall}
                       disabled={isInstalling}
-                      className="h-8 px-4 text-xs font-semibold bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 shadow-md"
+                      className="h-8 px-4 text-xs font-semibold bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 shadow-md"
                     >
                       {isInstalling ? (
                         <span className="flex items-center gap-1.5">
@@ -151,7 +151,7 @@ export function InstallPrompt() {
                       size="sm"
                       variant="ghost"
                       onClick={handleDismiss}
-                      className="h-8 px-3 text-xs text-amber-600 dark:text-amber-400 hover:bg-amber-100/50 dark:hover:bg-amber-900/50"
+                      className="h-8 px-3 text-xs text-brand-600 dark:text-brand-400 hover:bg-brand-100/50 dark:hover:bg-brand-900/50"
                     >
                       Plus tard
                     </Button>
@@ -161,7 +161,7 @@ export function InstallPrompt() {
                 {/* Close button */}
                 <button
                   onClick={handleDismiss}
-                  className="shrink-0 flex h-7 w-7 items-center justify-center rounded-full text-amber-400 hover:text-amber-600 dark:text-amber-500 dark:hover:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/50 transition-colors"
+                  className="shrink-0 flex h-7 w-7 items-center justify-center rounded-full text-brand-400 hover:text-brand-600 dark:text-brand-500 dark:hover:text-brand-300 hover:bg-brand-100 dark:hover:bg-brand-900/50 transition-colors"
                   aria-label="Fermer"
                 >
                   <X className="h-4 w-4" />
@@ -169,7 +169,7 @@ export function InstallPrompt() {
               </div>
 
               {/* Bottom hint */}
-              <div className="mt-3 flex items-center gap-1.5 text-[10px] text-amber-600/60 dark:text-amber-400/40">
+              <div className="mt-3 flex items-center gap-1.5 text-[10px] text-brand-600/60 dark:text-brand-400/40">
                 <Smartphone className="h-3 w-3" />
                 <span>Expérience optimale sur mobile</span>
               </div>

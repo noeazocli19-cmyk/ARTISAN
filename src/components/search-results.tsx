@@ -33,14 +33,14 @@ const CATEGORY_FILTERS = [
 ]
 
 const BADGE_STYLES: Record<string, string> = {
-  'Ã‰lite': 'bg-amber-500 text-white',
+  'Ã‰lite': 'bg-brand-500 text-white',
   'Top': 'bg-emerald-500 text-white',
   'VÃ©rifiÃ©': 'bg-teal-500 text-white',
   'Nouveau': 'bg-neutral-500 text-white',
 }
 
 const AVATAR_COLORS = [
-  'bg-amber-500', 'bg-emerald-500', 'bg-orange-500',
+  'bg-fuchsia-500', 'bg-emerald-500', 'bg-lime-500',
   'bg-teal-500', 'bg-cyan-500', 'bg-violet-500',
 ]
 
@@ -131,9 +131,9 @@ export function SearchResults({ onViewArtisan }: SearchResultsProps) {
       <div className="mb-8">
         <h1 className="text-2xl sm:text-3xl font-bold mb-4">
           {searchQuery ? (
-            <>RÃ©sultats pour &laquo; <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">{searchQuery}</span> &raquo;</>
+            <>RÃ©sultats pour &laquo; <span className="bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">{searchQuery}</span> &raquo;</>
           ) : (
-            <>Trouvez votre <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">artisan</span></>
+            <>Trouvez votre <span className="bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">artisan</span></>
           )}
         </h1>
 
@@ -157,7 +157,7 @@ export function SearchResults({ onViewArtisan }: SearchResultsProps) {
               className="pl-10 h-11"
             />
           </div>
-          <Button type="submit" className="h-11 px-6 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0">
+          <Button type="submit" className="h-11 px-6 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0">
             {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4 mr-2" />}
             Rechercher
           </Button>
@@ -241,7 +241,7 @@ export function SearchResults({ onViewArtisan }: SearchResultsProps) {
               </Select>
             </div>
 
-            <Button onClick={handleSearch} className="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0">
+            <Button onClick={handleSearch} className="w-full bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0">
               Appliquer
             </Button>
           </div>
@@ -325,7 +325,7 @@ export function SearchResults({ onViewArtisan }: SearchResultsProps) {
 
                   return (
                     <motion.div key={artisan.id} variants={fadeInUp} initial="hidden" animate="visible" transition={{ delay: idx * 0.05 }}>
-                      <Card className="group hover:border-amber-300 dark:hover:border-amber-700 transition-all hover:shadow-lg overflow-hidden h-full">
+                      <Card className="group hover:border-brand-300 dark:hover:border-brand-700 transition-all hover:shadow-lg overflow-hidden h-full">
                         <CardContent className="p-6 flex flex-col h-full">
                           <div className="flex items-start gap-4">
                             <div className="relative shrink-0">
@@ -357,7 +357,7 @@ export function SearchResults({ onViewArtisan }: SearchResultsProps) {
                               )}
                             </div>
                             <button
-                              className="shrink-0 h-8 w-8 flex items-center justify-center rounded-full hover:bg-amber-50 dark:hover:bg-amber-950/50 transition-colors"
+                              className="shrink-0 h-8 w-8 flex items-center justify-center rounded-full hover:bg-brand-50 dark:hover:bg-brand-950/50 transition-colors"
                               onClick={(e) => { e.stopPropagation(); toggleFavorite(artisan.id) }}
                               aria-label={favoriteIds.includes(artisan.id) ? 'Retirer des favoris' : 'Ajouter aux favoris'}
                             >
@@ -367,19 +367,19 @@ export function SearchResults({ onViewArtisan }: SearchResultsProps) {
 
                           <div className="mt-4 flex items-center justify-between">
                             <div className="flex items-center gap-1">
-                              <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                              <Star className="h-4 w-4 fill-brand-400 text-brand-400" />
                               <span className="font-semibold text-sm">{artisan.rating.toFixed(1)}</span>
                               <span className="text-sm text-muted-foreground">
                                 ({artisan.reviewCount} avis)
                               </span>
                             </div>
-                            <span className="font-semibold text-sm text-amber-600 dark:text-amber-400">
+                            <span className="font-semibold text-sm text-brand-600 dark:text-brand-400">
                               {artisan.hourlyRate.toLocaleString()} FCFA/h
                             </span>
                           </div>
 
                           <Button
-                            className="w-full mt-4 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 mt-auto"
+                            className="w-full mt-4 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 mt-auto"
                             size="sm"
                             onClick={() => onViewArtisan(artisan.id)}
                           >

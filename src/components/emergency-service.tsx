@@ -50,7 +50,7 @@ const EMERGENCY_TYPES: { type: EmergencyType; icon: string; label: string; color
   { type: 'plumbing', icon: '💧', label: "Fuite d'eau", color: 'bg-blue-500' },
   { type: 'electrical', icon: '⚡', label: 'Panne électrique', color: 'bg-yellow-500' },
   { type: 'locksmith', icon: '🔒', label: 'Serrurerie', color: 'bg-gray-600' },
-  { type: 'gas', icon: '🔥', label: 'Fuite de gaz', color: 'bg-orange-500' },
+  { type: 'gas', icon: '🔥', label: 'Fuite de gaz', color: 'bg-brand-500' },
   { type: 'flood', icon: '🌊', label: 'Inondation', color: 'bg-cyan-500' },
   { type: 'other', icon: '❓', label: 'Autre', color: 'bg-purple-500' },
 ];
@@ -461,9 +461,9 @@ function MapPlaceholder() {
         ))}
       </div>
       {/* Road lines */}
-      <div className="absolute top-1/2 left-0 right-0 h-1 bg-amber-300/40 -translate-y-1/2" />
-      <div className="absolute top-0 bottom-0 left-1/3 w-1 bg-amber-300/40" />
-      <div className="absolute top-0 bottom-0 right-1/4 w-1 bg-amber-300/30" />
+      <div className="absolute top-1/2 left-0 right-0 h-1 bg-brand-300/40 -translate-y-1/2" />
+      <div className="absolute top-0 bottom-0 left-1/3 w-1 bg-brand-300/40" />
+      <div className="absolute top-0 bottom-0 right-1/4 w-1 bg-brand-300/30" />
       {/* Destination pin */}
       <motion.div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-full"
@@ -491,10 +491,10 @@ function MapPlaceholder() {
 /** Artisan info card */
 function ArtisanCard({ artisan }: { artisan: NonNullable<EmergencyRequest['assignedArtisan']> }) {
   return (
-    <Card className="border-2 border-amber-300 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-zinc-900 dark:to-zinc-800 dark:border-amber-800">
+    <Card className="border-2 border-brand-300 bg-gradient-to-r from-brand-50 to-brand-50 dark:from-zinc-900 dark:to-zinc-800 dark:border-brand-800">
       <CardContent className="p-4 flex items-center gap-4">
         {/* Avatar */}
-        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white font-bold text-xl shrink-0 shadow-lg">
+        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-brand-400 to-brand-500 flex items-center justify-center text-white font-bold text-xl shrink-0 shadow-lg">
           {artisan.name
             .split(' ')
             .map((n) => n[0])
@@ -504,9 +504,9 @@ function ArtisanCard({ artisan }: { artisan: NonNullable<EmergencyRequest['assig
           <h4 className="font-bold text-base text-gray-900 dark:text-white truncate">
             {artisan.name}
           </h4>
-          <p className="text-sm text-amber-700 dark:text-amber-400">Plombier certifié</p>
+          <p className="text-sm text-brand-700 dark:text-brand-400">Plombier certifié</p>
           <div className="flex items-center gap-1 mt-0.5">
-            <span className="text-amber-500">★</span>
+            <span className="text-brand-500">★</span>
             <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
               {artisan.rating}
             </span>
@@ -1043,7 +1043,7 @@ export function EmergencyService({ onBack }: EmergencyServiceProps) {
                       type="button"
                       variant="outline"
                       onClick={handleUseGPS}
-                      className="shrink-0 border-amber-300 hover:bg-amber-50 text-amber-700 dark:border-amber-800 dark:hover:bg-amber-950 dark:text-amber-400 gap-1.5"
+                      className="shrink-0 border-brand-300 hover:bg-brand-50 text-brand-700 dark:border-brand-800 dark:hover:bg-brand-950 dark:text-brand-400 gap-1.5"
                     >
                       📍 <span className="hidden sm:inline">GPS</span>
                     </Button>
@@ -1104,7 +1104,7 @@ export function EmergencyService({ onBack }: EmergencyServiceProps) {
             >
               {/* Emergency info */}
               <Card className="border-2 border-red-400 dark:border-red-800 overflow-hidden">
-                <div className="h-1 bg-gradient-to-r from-red-600 via-red-500 to-amber-500" />
+                <div className="h-1 bg-gradient-to-r from-red-600 via-red-500 to-brand-500" />
                 <CardContent className="p-4 space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -1233,9 +1233,9 @@ export function EmergencyService({ onBack }: EmergencyServiceProps) {
                     <p className="text-xs text-gray-500 dark:text-zinc-400">Résolues</p>
                   </CardContent>
                 </Card>
-                <Card className="border-amber-200 dark:border-amber-900">
+                <Card className="border-brand-200 dark:border-brand-900">
                   <CardContent className="p-3 text-center">
-                    <p className="text-2xl font-bold text-amber-600">~49</p>
+                    <p className="text-2xl font-bold text-brand-600">~49</p>
                     <p className="text-xs text-gray-500 dark:text-zinc-400">Min moy.</p>
                   </CardContent>
                 </Card>

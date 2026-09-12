@@ -115,7 +115,7 @@ function SearchPageContent() {
       </h1>
 
       {category && (
-        <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-800 rounded-xl px-4 py-2 text-sm">
+        <div className="flex items-center gap-2 bg-brand-50 border border-brand-200 text-brand-800 rounded-xl px-4 py-2 text-sm">
           <span className="flex-1">Filtré sur la catégorie <strong>{category}</strong></span>
           <button onClick={clearCategory} className="flex items-center gap-1 hover:underline shrink-0">
             <X className="h-3.5 w-3.5" />
@@ -274,7 +274,7 @@ function SearchPageContent() {
               )}
               <Link
                 href={`/artisan/${artisan.id}`}
-                className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-orange-600 hover:text-orange-700"
+                className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-brand-600 hover:text-brand-700"
               >
                 Voir le profil
                 <span aria-hidden>&rarr;</span>

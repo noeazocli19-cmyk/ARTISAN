@@ -434,14 +434,14 @@ export function ArtisanDashboard() {
       {/* Bouton retour au site */}
       <Link
         href="/"
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-orange-700 transition"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-brand-700 transition"
       >
         <ArrowLeftCircle className="h-4 w-4" />
         Retour au site
       </Link>
 
       {/* Bandeau d'en-tête — signature de marque (dégradé ambre → orange) */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-500 via-orange-500 to-orange-600 p-6 shadow-lg">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand-500 via-brand-500 to-brand-600 p-6 shadow-lg">
         <div className="absolute -right-6 -top-6 h-32 w-32 rounded-full bg-white/10" />
         <div className="absolute -right-2 bottom-[-2rem] h-20 w-20 rounded-full bg-white/10" />
         <div className="relative flex items-center gap-4">
@@ -456,7 +456,7 @@ export function ArtisanDashboard() {
               Bonjour {session?.user?.name?.split(' ')[0] || 'Artisan'}
               <Hand className="h-5 w-5 sm:h-6 sm:w-6 text-white/90" />
             </h1>
-            <p className="text-sm text-amber-50/90 flex items-center gap-1.5 flex-wrap">
+            <p className="text-sm text-brand-50/90 flex items-center gap-1.5 flex-wrap">
               <Briefcase className="h-3.5 w-3.5" />
               {artisanProfile?.profession || 'Métier non renseigné'}
               {artisanProfile?.location && (
@@ -492,7 +492,7 @@ export function ArtisanDashboard() {
               <Icon className="h-4 w-4" />
               {tab.label}
               {tab.id === 'messages' && totalUnread > 0 && (
-                <span className="ml-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-orange-500 px-1 text-[10px] font-bold text-white">
+                <span className="ml-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-brand-500 px-1 text-[10px] font-bold text-white">
                   {totalUnread}
                 </span>
               )}
@@ -504,20 +504,20 @@ export function ArtisanDashboard() {
       {activeTab === 'apercu' && (
         <div className="space-y-6">
           {artisanProfile && completion < 100 && (
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+            <div className="bg-brand-50 border border-brand-200 rounded-xl p-4">
               <div className="flex items-center gap-3 mb-2">
-                <AlertCircle className="h-5 w-5 text-amber-600" />
-                <span className="font-semibold text-amber-800">
+                <AlertCircle className="h-5 w-5 text-brand-600" />
+                <span className="font-semibold text-brand-800">
                   Profil complété à {completion}%
                 </span>
               </div>
-              <Progress value={completion} className="h-2 mb-2 [&>div]:bg-gradient-to-r [&>div]:from-amber-500 [&>div]:to-orange-500" />
-              <p className="text-sm text-amber-700 mb-3">
+              <Progress value={completion} className="h-2 mb-2 [&>div]:bg-gradient-to-r [&>div]:from-brand-500 [&>div]:to-brand-500" />
+              <p className="text-sm text-brand-700 mb-3">
                 Champs manquants : {missing.join(', ')}
               </p>
               <button
                 onClick={() => setActiveTab('profil')}
-                className="text-sm font-semibold text-amber-800 underline"
+                className="text-sm font-semibold text-brand-800 underline"
               >
                 Compléter maintenant
               </button>
@@ -534,9 +534,9 @@ export function ArtisanDashboard() {
           )}
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-            <Card className="border-amber-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
-              <div className="h-9 w-9 rounded-lg bg-amber-50 flex items-center justify-center mb-2">
-                <ClipboardList className="h-4.5 w-4.5 text-amber-600" />
+            <Card className="border-brand-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+              <div className="h-9 w-9 rounded-lg bg-brand-50 flex items-center justify-center mb-2">
+                <ClipboardList className="h-4.5 w-4.5 text-brand-600" />
               </div>
               {missionsLoading ? (
                 <Skeleton className="h-7 w-10 mb-1" />
@@ -545,7 +545,7 @@ export function ArtisanDashboard() {
               )}
               <p className="text-xs text-muted-foreground">Missions ouvertes</p>
             </Card>
-            <Card className="border-amber-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+            <Card className="border-brand-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
               <div className="h-9 w-9 rounded-lg bg-green-50 flex items-center justify-center mb-2">
                 <CheckCircle className="h-4.5 w-4.5 text-green-600" />
               </div>
@@ -556,14 +556,14 @@ export function ArtisanDashboard() {
               )}
               <p className="text-xs text-muted-foreground">Missions terminées</p>
             </Card>
-            <Card className="border-amber-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
-              <div className="h-9 w-9 rounded-lg bg-orange-50 flex items-center justify-center mb-2">
-                <Star className="h-4.5 w-4.5 text-orange-500" />
+            <Card className="border-brand-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+              <div className="h-9 w-9 rounded-lg bg-brand-50 flex items-center justify-center mb-2">
+                <Star className="h-4.5 w-4.5 text-brand-500" />
               </div>
               <p className="text-2xl font-bold text-gray-900">{artisanProfile?.rating?.toFixed(1) ?? '–'}</p>
               <p className="text-xs text-muted-foreground">Note moyenne</p>
             </Card>
-            <Card className="border-amber-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+            <Card className="border-brand-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
               <div className="h-9 w-9 rounded-lg bg-blue-50 flex items-center justify-center mb-2">
                 <MessageSquare className="h-4.5 w-4.5 text-blue-600" />
               </div>
@@ -595,15 +595,15 @@ export function ArtisanDashboard() {
             }}
           />
 
-          <div className="bg-white border border-amber-100 rounded-2xl p-6 shadow-sm">
+          <div className="bg-white border border-brand-100 rounded-2xl p-6 shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold flex items-center gap-2 text-gray-900">
-                <Wrench className="h-5 w-5 text-orange-500" />
+                <Wrench className="h-5 w-5 text-brand-500" />
                 Mes missions récentes
               </h2>
               <button
                 onClick={() => setActiveTab('missions')}
-                className="text-xs font-semibold text-orange-700 hover:underline"
+                className="text-xs font-semibold text-brand-700 hover:underline"
               >
                 Tout voir
               </button>
@@ -612,8 +612,8 @@ export function ArtisanDashboard() {
               <p className="text-sm text-muted-foreground">Chargement...</p>
             ) : missions.length === 0 ? (
               <div className="text-center py-10 text-muted-foreground">
-                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-amber-50">
-                  <TrendingUp className="h-6 w-6 text-amber-500" />
+                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-brand-50">
+                  <TrendingUp className="h-6 w-6 text-brand-500" />
                 </div>
                 <p className="text-sm font-medium text-gray-700">Aucune mission pour le moment.</p>
                 <p className="text-xs mt-1">
@@ -634,7 +634,7 @@ export function ArtisanDashboard() {
                       className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
                         m.status === 'terminee'
                           ? 'bg-green-100 text-green-700'
-                          : 'bg-amber-100 text-amber-700'
+                          : 'bg-brand-100 text-brand-700'
                       }`}
                     >
                       {m.status}
@@ -648,9 +648,9 @@ export function ArtisanDashboard() {
       )}
 
       {activeTab === 'missions' && (
-        <div className="bg-white border border-amber-100 rounded-2xl p-6 shadow-sm">
+        <div className="bg-white border border-brand-100 rounded-2xl p-6 shadow-sm">
           <h2 className="text-lg font-bold mb-4 flex items-center gap-2 text-gray-900">
-            <ClipboardList className="h-5 w-5 text-orange-500" />
+            <ClipboardList className="h-5 w-5 text-brand-500" />
             Toutes mes missions
           </h2>
           {missionsLoading ? (
@@ -661,8 +661,8 @@ export function ArtisanDashboard() {
             </div>
           ) : missions.length === 0 ? (
             <div className="text-center py-10 text-muted-foreground">
-              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-amber-50">
-                <TrendingUp className="h-6 w-6 text-amber-500" />
+              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-brand-50">
+                <TrendingUp className="h-6 w-6 text-brand-500" />
               </div>
               <p className="text-sm font-medium text-gray-700">Aucune mission pour le moment.</p>
               <p className="text-xs mt-1">
@@ -698,7 +698,7 @@ export function ArtisanDashboard() {
                           ? 'bg-blue-100 text-blue-700'
                           : (m.status as any) === 'litige'
                           ? 'bg-red-100 text-red-700'
-                          : 'bg-amber-100 text-amber-700'
+                          : 'bg-brand-100 text-brand-700'
                       }`}
                     >
                       {missionStatusLabels[m.status] || m.status}
@@ -706,7 +706,7 @@ export function ArtisanDashboard() {
                     {(m as any).clientId && (
                       <Link
                         href={`/messages?userId=${(m as any).clientId}`}
-                        className="text-xs font-semibold px-2.5 py-1 rounded-full border border-amber-300 text-amber-700 hover:bg-amber-50"
+                        className="text-xs font-semibold px-2.5 py-1 rounded-full border border-brand-300 text-brand-700 hover:bg-brand-50"
                       >
                         Message
                       </Link>
@@ -714,7 +714,7 @@ export function ArtisanDashboard() {
                     {(m.status === 'assignee' || m.status === 'en_cours') && (
                       <button
                         onClick={() => handleCompleteMission(m.id)}
-                        className="text-xs font-semibold px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 text-white hover:from-amber-600 hover:to-orange-700"
+                        className="text-xs font-semibold px-2.5 py-1 rounded-full bg-gradient-to-r from-brand-500 to-brand-600 text-white hover:from-brand-600 hover:to-brand-700"
                       >
                         Marquer terminée
                       </button>
@@ -737,9 +737,9 @@ export function ArtisanDashboard() {
       )}
 
       {activeTab === 'dispo' && (
-        <div className="bg-white border border-amber-100 rounded-2xl p-6 shadow-sm">
+        <div className="bg-white border border-brand-100 rounded-2xl p-6 shadow-sm">
           <h2 className="text-lg font-bold mb-1 flex items-center gap-2 text-gray-900">
-            <Search className="h-5 w-5 text-orange-500" />
+            <Search className="h-5 w-5 text-brand-500" />
             Missions disponibles
           </h2>
           <p className="text-sm text-muted-foreground mb-4">
@@ -753,8 +753,8 @@ export function ArtisanDashboard() {
             </div>
           ) : openMissions.length === 0 ? (
             <div className="text-center py-10 text-muted-foreground">
-              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-amber-50">
-                <Search className="h-6 w-6 text-amber-500" />
+              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-brand-50">
+                <Search className="h-6 w-6 text-brand-500" />
               </div>
               <p className="text-sm font-medium text-gray-700">Aucune mission disponible pour le moment.</p>
             </div>
@@ -764,13 +764,13 @@ export function ArtisanDashboard() {
                 const isMatch = artisanProfile?.profession &&
                   m.category?.toLowerCase().includes(artisanProfile.profession.toLowerCase());
                 return (
-                  <li key={m.id} className={`py-4 ${isMatch ? 'bg-amber-50/50 -mx-2 px-2 rounded-lg' : ''}`}>
+                  <li key={m.id} className={`py-4 ${isMatch ? 'bg-brand-50/50 -mx-2 px-2 rounded-lg' : ''}`}>
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
                           <p className="font-medium text-gray-900">{m.title}</p>
                           {isMatch && (
-                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-100 text-orange-700">
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-100 text-brand-700">
                               Correspond a votre metier
                             </span>
                           )}
@@ -793,7 +793,7 @@ export function ArtisanDashboard() {
                       <button
                         onClick={() => handleAcceptMission(m.id)}
                         disabled={acceptingId === m.id}
-                        className="shrink-0 text-xs font-semibold px-3 py-2 rounded-lg bg-gradient-to-r from-amber-500 to-orange-600 text-white hover:from-amber-600 hover:to-orange-700 disabled:opacity-50"
+                        className="shrink-0 text-xs font-semibold px-3 py-2 rounded-lg bg-gradient-to-r from-brand-500 to-brand-600 text-white hover:from-brand-600 hover:to-brand-700 disabled:opacity-50"
                       >
                         {acceptingId === m.id ? 'En cours...' : 'Accepter'}
                       </button>
@@ -807,9 +807,9 @@ export function ArtisanDashboard() {
       )}
 
       {activeTab === 'reservations' && (
-        <div className="bg-white border border-amber-100 rounded-2xl p-6 shadow-sm">
+        <div className="bg-white border border-brand-100 rounded-2xl p-6 shadow-sm">
           <h2 className="text-lg font-bold mb-1 flex items-center gap-2 text-gray-900">
-            <CalendarCheck className="h-5 w-5 text-orange-500" />
+            <CalendarCheck className="h-5 w-5 text-brand-500" />
             Mes reservations
           </h2>
           <p className="text-sm text-muted-foreground mb-4">
@@ -823,8 +823,8 @@ export function ArtisanDashboard() {
             </div>
           ) : bookings.length === 0 ? (
             <div className="text-center py-10 text-muted-foreground">
-              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-amber-50">
-                <CalendarCheck className="h-6 w-6 text-amber-500" />
+              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-brand-50">
+                <CalendarCheck className="h-6 w-6 text-brand-500" />
               </div>
               <p className="text-sm font-medium text-gray-700">Aucune reservation pour le moment.</p>
             </div>
@@ -833,7 +833,7 @@ export function ArtisanDashboard() {
               {bookings.map((b: any) => {
                 const d = new Date(b.date);
                 const statusStyles: Record<string, string> = {
-                  pending: 'bg-amber-100 text-amber-700',
+                  pending: 'bg-brand-100 text-brand-700',
                   confirmed: 'bg-green-100 text-green-700',
                   completed: 'bg-blue-100 text-blue-700',
                   cancelled: 'bg-red-100 text-red-700',
@@ -866,7 +866,7 @@ export function ArtisanDashboard() {
                           <button
                             onClick={() => handleClaimBooking(b.id)}
                             disabled={respondingId === b.id}
-                            className="text-xs font-semibold px-3 py-2 rounded-lg bg-gradient-to-r from-amber-500 to-orange-600 text-white hover:from-amber-600 hover:to-orange-700 disabled:opacity-50"
+                            className="text-xs font-semibold px-3 py-2 rounded-lg bg-gradient-to-r from-brand-500 to-brand-600 text-white hover:from-brand-600 hover:to-brand-700 disabled:opacity-50"
                           >
                             {respondingId === b.id ? 'En cours...' : 'Accepter'}
                           </button>
@@ -877,7 +877,7 @@ export function ArtisanDashboard() {
                           <button
                             onClick={() => handleRespondBooking(b.id, 'confirmed')}
                             disabled={respondingId === b.id}
-                            className="text-xs font-semibold px-3 py-2 rounded-lg bg-gradient-to-r from-amber-500 to-orange-600 text-white hover:from-amber-600 hover:to-orange-700 disabled:opacity-50"
+                            className="text-xs font-semibold px-3 py-2 rounded-lg bg-gradient-to-r from-brand-500 to-brand-600 text-white hover:from-brand-600 hover:to-brand-700 disabled:opacity-50"
                           >
                             Confirmer
                           </button>
@@ -892,7 +892,7 @@ export function ArtisanDashboard() {
                       )}
                       <Link
                         href={`/messages?userId=${b.clientId}`}
-                        className="text-xs font-semibold px-3 py-2 rounded-lg border border-amber-300 text-amber-700 hover:bg-amber-50 shrink-0"
+                        className="text-xs font-semibold px-3 py-2 rounded-lg border border-brand-300 text-brand-700 hover:bg-brand-50 shrink-0"
                       >
                         Message
                       </Link>
@@ -906,15 +906,15 @@ export function ArtisanDashboard() {
       )}
 
       {activeTab === 'messages' && (
-        <div className="bg-white border border-amber-100 rounded-2xl p-6 shadow-sm">
+        <div className="bg-white border border-brand-100 rounded-2xl p-6 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold flex items-center gap-2 text-gray-900">
-              <MessageSquare className="h-5 w-5 text-orange-500" />
+              <MessageSquare className="h-5 w-5 text-brand-500" />
               Mes conversations
             </h2>
             <Link
               href="/messages"
-              className="text-xs font-semibold text-orange-700 hover:underline"
+              className="text-xs font-semibold text-brand-700 hover:underline"
             >
               Ouvrir la messagerie
             </Link>
@@ -927,8 +927,8 @@ export function ArtisanDashboard() {
             </div>
           ) : conversations.length === 0 ? (
             <div className="text-center py-10 text-muted-foreground">
-              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-amber-50">
-                <MessageSquare className="h-6 w-6 text-amber-500" />
+              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-brand-50">
+                <MessageSquare className="h-6 w-6 text-brand-500" />
               </div>
               <p className="text-sm font-medium text-gray-700">Aucune conversation pour le moment.</p>
               <p className="text-xs mt-1">
@@ -944,7 +944,7 @@ export function ArtisanDashboard() {
                     className="flex items-center gap-3 py-3 hover:bg-gray-50 -mx-2 px-2 rounded-lg transition"
                   >
                     <Avatar className="h-10 w-10 shrink-0">
-                      <AvatarFallback className="bg-gradient-to-br from-amber-400 to-orange-500 text-sm font-bold text-white">
+                      <AvatarFallback className="bg-gradient-to-br from-brand-400 to-brand-500 text-sm font-bold text-white">
                         {c.partner?.name?.charAt(0)?.toUpperCase() || '?'}
                       </AvatarFallback>
                     </Avatar>
@@ -957,7 +957,7 @@ export function ArtisanDashboard() {
                       </p>
                     </div>
                     {c.unreadCount > 0 && (
-                      <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-orange-500 px-1.5 text-[11px] font-bold text-white">
+                      <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-brand-500 px-1.5 text-[11px] font-bold text-white">
                         {c.unreadCount}
                       </span>
                     )}
@@ -970,9 +970,9 @@ export function ArtisanDashboard() {
       )}
 
       {activeTab === 'avis' && (
-        <div className="bg-white border border-amber-100 rounded-2xl p-6 shadow-sm">
+        <div className="bg-white border border-brand-100 rounded-2xl p-6 shadow-sm">
           <h2 className="text-lg font-bold mb-4 flex items-center gap-2 text-gray-900">
-            <Star className="h-5 w-5 text-orange-500" />
+            <Star className="h-5 w-5 text-brand-500" />
             Avis reçus
             {artisanProfile?.rating ? (
               <span className="text-sm font-normal text-muted-foreground">
@@ -988,8 +988,8 @@ export function ArtisanDashboard() {
             </div>
           ) : reviews.length === 0 ? (
             <div className="text-center py-10 text-muted-foreground">
-              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-amber-50">
-                <Star className="h-6 w-6 text-amber-500" />
+              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-brand-50">
+                <Star className="h-6 w-6 text-brand-500" />
               </div>
               <p className="text-sm font-medium text-gray-700">Aucun avis pour le moment.</p>
               <p className="text-xs mt-1">
@@ -1001,7 +1001,7 @@ export function ArtisanDashboard() {
               {reviews.map((r) => (
                 <li key={r.id} className="py-4 flex gap-3">
                   <Avatar className="h-9 w-9 shrink-0">
-                    <AvatarFallback className="bg-gradient-to-br from-amber-400 to-orange-500 text-white text-xs font-bold">
+                    <AvatarFallback className="bg-gradient-to-br from-brand-400 to-brand-500 text-white text-xs font-bold">
                       {r.client?.name?.charAt(0)?.toUpperCase() || '?'}
                     </AvatarFallback>
                   </Avatar>
@@ -1015,7 +1015,7 @@ export function ArtisanDashboard() {
                           <Star
                             key={i}
                             className={`h-3.5 w-3.5 ${
-                              i < r.rating ? 'fill-orange-400 text-orange-400' : 'text-gray-200'
+                              i < r.rating ? 'fill-brand-400 text-brand-400' : 'text-gray-200'
                             }`}
                           />
                         ))}
@@ -1039,15 +1039,15 @@ export function ArtisanDashboard() {
       {activeTab === 'profil' && (
         <div className="space-y-6">
           {artisanProfile && completion < 100 && (
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+            <div className="bg-brand-50 border border-brand-200 rounded-xl p-4">
               <div className="flex items-center gap-3 mb-2">
-                <AlertCircle className="h-5 w-5 text-amber-600" />
-                <span className="font-semibold text-amber-800">
+                <AlertCircle className="h-5 w-5 text-brand-600" />
+                <span className="font-semibold text-brand-800">
                   Profil complété à {completion}%
                 </span>
               </div>
-              <Progress value={completion} className="h-2 mb-2 [&>div]:bg-gradient-to-r [&>div]:from-amber-500 [&>div]:to-orange-500" />
-              <p className="text-sm text-amber-700">
+              <Progress value={completion} className="h-2 mb-2 [&>div]:bg-gradient-to-r [&>div]:from-brand-500 [&>div]:to-brand-500" />
+              <p className="text-sm text-brand-700">
                 Champs manquants : {missing.join(', ')}
               </p>
             </div>
@@ -1067,12 +1067,12 @@ export function ArtisanDashboard() {
             </div>
           )}
 
-          <div className="bg-white rounded-2xl border border-amber-100 shadow-sm p-6 space-y-4">
+          <div className="bg-white rounded-2xl border border-brand-100 shadow-sm p-6 space-y-4">
             <h2 className="text-xl font-bold text-gray-900">Mon profil artisan</h2>
 
             <div>
               <label className="block text-sm font-medium mb-1">
-                <Briefcase className="inline h-4 w-4 mr-1 text-orange-500" />
+                <Briefcase className="inline h-4 w-4 mr-1 text-brand-500" />
                 Métier *
               </label>
               <input
@@ -1080,13 +1080,13 @@ export function ArtisanDashboard() {
                 value={form.profession}
                 onChange={(e) => setForm({ ...form, profession: e.target.value })}
                 placeholder="Ex: Plombier, Électricien, Menuisier..."
-                className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none"
+                className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-brand-400 focus:border-brand-400 outline-none"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium mb-1">
-                <Clock className="inline h-4 w-4 mr-1 text-orange-500" />
+                <Clock className="inline h-4 w-4 mr-1 text-brand-500" />
                 Années d'expérience
               </label>
               <input
@@ -1095,13 +1095,13 @@ export function ArtisanDashboard() {
                 onChange={(e) => setForm({ ...form, experience: e.target.value })}
                 placeholder="5"
                 min="0"
-                className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none"
+                className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-brand-400 focus:border-brand-400 outline-none"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium mb-1">
-                <MapPin className="inline h-4 w-4 mr-1 text-orange-500" />
+                <MapPin className="inline h-4 w-4 mr-1 text-brand-500" />
                 Quartier / Ville *
               </label>
               <input
@@ -1109,7 +1109,7 @@ export function ArtisanDashboard() {
                 value={form.location}
                 onChange={(e) => setForm({ ...form, location: e.target.value })}
                 placeholder="Ex: Agla, Cotonou"
-                className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none"
+                className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-brand-400 focus:border-brand-400 outline-none"
               />
             </div>
 
@@ -1118,7 +1118,7 @@ export function ArtisanDashboard() {
               <select
                 value={form.country}
                 onChange={(e) => setForm({ ...form, country: e.target.value })}
-                className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none"
+                className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-brand-400 focus:border-brand-400 outline-none"
               >
                 <option value="">Sélectionner un pays</option>
                 {AFRICAN_COUNTRIES.map((c, i) => (
@@ -1131,7 +1131,7 @@ export function ArtisanDashboard() {
 
             <div>
               <label className="block text-sm font-medium mb-1">
-                <MapPin className="inline h-4 w-4 mr-1 text-orange-500" />
+                <MapPin className="inline h-4 w-4 mr-1 text-brand-500" />
                 Adresse précise (pour géolocalisation)
               </label>
               <div className="flex gap-2">
@@ -1140,12 +1140,12 @@ export function ArtisanDashboard() {
                   value={form.address}
                   onChange={(e) => setForm({ ...form, address: e.target.value })}
                   placeholder="Ex: Rue de la République, Douala"
-                  className="flex-1 border rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none"
+                  className="flex-1 border rounded-lg px-3 py-2 focus:ring-2 focus:ring-brand-400 focus:border-brand-400 outline-none"
                 />
                 <button
                   type="button"
                   onClick={geolocateMe}
-                  className="px-3 py-2 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-lg hover:from-amber-600 hover:to-orange-700 flex items-center gap-1"
+                  className="px-3 py-2 bg-gradient-to-r from-brand-500 to-brand-600 text-white rounded-lg hover:from-brand-600 hover:to-brand-700 flex items-center gap-1"
                   title="Utiliser ma position GPS"
                 >
                   <Crosshair className="h-4 w-4" />
@@ -1158,7 +1158,7 @@ export function ArtisanDashboard() {
 
             <div>
               <label className="block text-sm font-medium mb-1">
-                <Phone className="inline h-4 w-4 mr-1 text-orange-500" />
+                <Phone className="inline h-4 w-4 mr-1 text-brand-500" />
                 Téléphone
               </label>
               <input
@@ -1166,7 +1166,7 @@ export function ArtisanDashboard() {
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
                 placeholder="+229 01 XX XX XX XX"
-                className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none"
+                className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-brand-400 focus:border-brand-400 outline-none"
               />
             </div>
 
@@ -1177,13 +1177,13 @@ export function ArtisanDashboard() {
                 onChange={(e) => setForm({ ...form, bio: e.target.value })}
                 placeholder="Décrivez votre activité, vos spécialités..."
                 rows={3}
-                className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none"
+                className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-brand-400 focus:border-brand-400 outline-none"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium mb-1">
-                <Star className="inline h-4 w-4 mr-1 text-orange-500" />
+                <Star className="inline h-4 w-4 mr-1 text-brand-500" />
                 Compétences (séparées par des virgules)
               </label>
               <input
@@ -1191,14 +1191,14 @@ export function ArtisanDashboard() {
                 value={form.skills}
                 onChange={(e) => setForm({ ...form, skills: e.target.value })}
                 placeholder="Plomberie, Chauffe-eau, Tuyauterie"
-                className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none"
+                className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-brand-400 focus:border-brand-400 outline-none"
               />
             </div>
 
             <button
               onClick={handleSave}
               disabled={saving}
-              className="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white py-3 rounded-lg font-semibold disabled:opacity-50 transition"
+              className="w-full bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white py-3 rounded-lg font-semibold disabled:opacity-50 transition"
             >
               {saving ? 'Sauvegarde en cours...' : artisanProfile ? 'Mettre à jour le profil' : 'Créer mon profil'}
             </button>

@@ -195,7 +195,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
       {/* ====== DIALOGUE PRINCIPAL (Login / Register) ====== */}
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-[480px] p-0 gap-0 overflow-hidden">
-          <div className="relative bg-gradient-to-r from-amber-500 to-orange-600 p-6 pb-8">
+          <div className="relative bg-gradient-to-r from-brand-500 to-brand-600 p-6 pb-8">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.1),transparent)]" />
             <DialogHeader className="relative">
               <div className="flex items-center gap-3 mb-2">
@@ -217,7 +217,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                     animate={{ x: 0, y: [-6, -6, 0], rotate: [-25, 12, 0], opacity: 1 }}
                     transition={{ duration: 0.75, delay: 0.15, ease: 'easeOut' }}
                   >
-                    <Briefcase className="h-4 w-4 text-amber-50" />
+                    <Briefcase className="h-4 w-4 text-brand-50" />
                   </motion.div>
                   {/* Etincelles quand le sac s'ouvre */}
                   <motion.div
@@ -237,10 +237,10 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
 
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'login' | 'register')} className="w-full">
             <TabsList className="w-full rounded-none border-b bg-transparent h-12 p-0">
-              <TabsTrigger value="login" className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-amber-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none h-12 font-medium">
+              <TabsTrigger value="login" className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-brand-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none h-12 font-medium">
                 Se connecter
               </TabsTrigger>
-              <TabsTrigger value="register" className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-amber-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none h-12 font-medium">
+              <TabsTrigger value="register" className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-brand-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none h-12 font-medium">
                 S&apos;inscrire
               </TabsTrigger>
             </TabsList>
@@ -266,7 +266,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                     </button>
                   </div>
                 </div>
-                <Button type="submit" className="w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0 h-11" disabled={isLoading}>
+                <Button type="submit" className="w-full bg-gradient-to-r from-brand-500 to-brand-600 text-white border-0 h-11" disabled={isLoading}>
                   {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
                   Se connecter
                 </Button>
@@ -290,13 +290,13 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                 <div className="space-y-2">
                   <Label>Vous êtes</Label>
                   <div className="grid grid-cols-2 gap-3">
-                    <button type="button" onClick={() => setRegRole('client')} className={`relative flex flex-col items-center gap-2 rounded-xl border-2 p-4 transition-all ${regRole === 'client' ? 'border-amber-500 bg-amber-50 dark:bg-amber-950/30' : 'border-border hover:border-amber-300'}`}>
-                      <User className={`h-6 w-6 ${regRole === 'client' ? 'text-amber-600' : 'text-muted-foreground'}`} />
-                      <span className={`text-sm font-medium ${regRole === 'client' ? 'text-amber-600' : 'text-muted-foreground'}`}>Client</span>
+                    <button type="button" onClick={() => setRegRole('client')} className={`relative flex flex-col items-center gap-2 rounded-xl border-2 p-4 transition-all ${regRole === 'client' ? 'border-brand-500 bg-brand-50 dark:bg-brand-950/30' : 'border-border hover:border-brand-300'}`}>
+                      <User className={`h-6 w-6 ${regRole === 'client' ? 'text-brand-600' : 'text-muted-foreground'}`} />
+                      <span className={`text-sm font-medium ${regRole === 'client' ? 'text-brand-600' : 'text-muted-foreground'}`}>Client</span>
                     </button>
-                    <button type="button" onClick={() => setRegRole('artisan')} className={`relative flex flex-col items-center gap-2 rounded-xl border-2 p-4 transition-all ${regRole === 'artisan' ? 'border-amber-500 bg-amber-50 dark:bg-amber-950/30' : 'border-border hover:border-amber-300'}`}>
-                      <Wrench className={`h-6 w-6 ${regRole === 'artisan' ? 'text-amber-600' : 'text-muted-foreground'}`} />
-                      <span className={`text-sm font-medium ${regRole === 'artisan' ? 'text-amber-600' : 'text-muted-foreground'}`}>Artisan</span>
+                    <button type="button" onClick={() => setRegRole('artisan')} className={`relative flex flex-col items-center gap-2 rounded-xl border-2 p-4 transition-all ${regRole === 'artisan' ? 'border-brand-500 bg-brand-50 dark:bg-brand-950/30' : 'border-border hover:border-brand-300'}`}>
+                      <Wrench className={`h-6 w-6 ${regRole === 'artisan' ? 'text-brand-600' : 'text-muted-foreground'}`} />
+                      <span className={`text-sm font-medium ${regRole === 'artisan' ? 'text-brand-600' : 'text-muted-foreground'}`}>Artisan</span>
                     </button>
                   </div>
                 </div>
@@ -347,7 +347,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                     </Select>
                   </div>
                 </div>
-                <Button type="submit" className="w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0 h-11" disabled={isLoading}>
+                <Button type="submit" className="w-full bg-gradient-to-r from-brand-500 to-brand-600 text-white border-0 h-11" disabled={isLoading}>
                   {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
                   Créer mon compte
                 </Button>
@@ -360,7 +360,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
       {/* ====== DIALOGUE MOT DE PASSE OUBLIÉ ====== */}
       <Dialog open={showForgotPassword} onOpenChange={(open) => { setShowForgotPassword(open); if (!open) { setForgotSuccess(false); setForgotError('') } }}>
         <DialogContent className="sm:max-w-[440px] p-0 gap-0 overflow-hidden">
-          <div className="relative bg-gradient-to-r from-amber-500 to-orange-600 p-6 pb-8">
+          <div className="relative bg-gradient-to-r from-brand-500 to-brand-600 p-6 pb-8">
             <DialogHeader>
               <DialogTitle className="text-white text-xl">Mot de passe oublié</DialogTitle>
             </DialogHeader>
@@ -370,7 +370,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
               <div className="text-center py-4">
                 <h3 className="text-lg font-semibold mb-2">Email envoyé !</h3>
                 <p className="text-sm text-muted-foreground mb-4">Si un compte existe avec l&apos;adresse <strong>{forgotEmail}</strong>, vous recevrez un code pour réinitialiser votre mot de passe.</p>
-                <Button onClick={() => { setShowForgotPassword(false); setForgotSuccess(false); setShowResetPassword(true) }} className="bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0">
+                <Button onClick={() => { setShowForgotPassword(false); setForgotSuccess(false); setShowResetPassword(true) }} className="bg-gradient-to-r from-brand-500 to-brand-600 text-white border-0">
                   J&apos;ai mon code, je réinitialise
                 </Button>
               </div>
@@ -381,7 +381,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                   <Label htmlFor="forgot-email">Adresse email</Label>
                   <Input id="forgot-email" type="email" placeholder="votre@email.com" value={forgotEmail} onChange={e => setForgotEmail(e.target.value)} required />
                 </div>
-                <Button type="submit" className="w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0 h-11" disabled={forgotLoading}>
+                <Button type="submit" className="w-full bg-gradient-to-r from-brand-500 to-brand-600 text-white border-0 h-11" disabled={forgotLoading}>
                   {forgotLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
                   Envoyer le code
                 </Button>
@@ -394,7 +394,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
       {/* ====== DIALOGUE RÉINITIALISATION MOT DE PASSE ====== */}
       <Dialog open={showResetPassword} onOpenChange={(open) => { setShowResetPassword(open); if (!open) { setResetSuccess(false); setResetError('') } }}>
         <DialogContent className="sm:max-w-[440px] p-0 gap-0 overflow-hidden">
-          <div className="relative bg-gradient-to-r from-amber-500 to-orange-600 p-6 pb-8">
+          <div className="relative bg-gradient-to-r from-brand-500 to-brand-600 p-6 pb-8">
             <DialogHeader>
               <DialogTitle className="text-white text-xl">Nouveau mot de passe</DialogTitle>
             </DialogHeader>
@@ -404,7 +404,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
               <div className="text-center py-4">
                 <h3 className="text-lg font-semibold mb-2">Mot de passe mis Ã  jour !</h3>
                 <p className="text-sm text-muted-foreground mb-4">Vous pouvez maintenant vous connecter.</p>
-                <Button onClick={() => { setShowResetPassword(false); setResetSuccess(false); setActiveTab('login'); onOpenChange(true) }} className="bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0">
+                <Button onClick={() => { setShowResetPassword(false); setResetSuccess(false); setActiveTab('login'); onOpenChange(true) }} className="bg-gradient-to-r from-brand-500 to-brand-600 text-white border-0">
                   Se connecter
                 </Button>
               </div>
@@ -423,7 +423,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                   <Label htmlFor="confirm-new-password">Confirmer</Label>
                   <Input id="confirm-new-password" type="password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" value={confirmNewPassword} onChange={e => setConfirmNewPassword(e.target.value)} required />
                 </div>
-                <Button type="submit" className="w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0 h-11" disabled={resetLoading}>
+                <Button type="submit" className="w-full bg-gradient-to-r from-brand-500 to-brand-600 text-white border-0 h-11" disabled={resetLoading}>
                   {resetLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
                   Réinitialiser
                 </Button>

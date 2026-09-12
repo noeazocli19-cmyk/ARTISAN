@@ -46,7 +46,7 @@ interface MapArtisan {
   isAvailable: boolean
 }
 
-const AVATAR_COLORS = ["bg-amber-500", "bg-emerald-500", "bg-orange-500", "bg-teal-500", "bg-cyan-500", "bg-violet-500", "bg-rose-500", "bg-indigo-500", "bg-pink-500", "bg-amber-600"]
+const AVATAR_COLORS = ["bg-fuchsia-500", "bg-emerald-500", "bg-lime-500", "bg-teal-500", "bg-cyan-500", "bg-violet-500", "bg-rose-500", "bg-indigo-500", "bg-pink-500", "bg-slate-500"]
 
 const categories = [
   "Toutes",
@@ -61,7 +61,7 @@ const categories = [
 ]
 
 const badgeColorMap: Record<string, string> = {
-  "Élite": "bg-amber-500 text-white",
+  "Élite": "bg-brand-500 text-white",
   "Top": "bg-emerald-500 text-white",
   "Vérifié": "bg-teal-500 text-white",
 }
@@ -263,7 +263,7 @@ export function ArtisanMap({ onViewArtisan, onBack }: ArtisanMapProps) {
             {/* Sidebar Header */}
             <div className="p-4 pb-3 border-b border-border/30">
               <div className="flex items-center gap-2 mb-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-600">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-brand-500 to-brand-600">
                   <Navigation className="h-5 w-5 text-white" />
                 </div>
                 <div>
@@ -321,7 +321,7 @@ export function ArtisanMap({ onViewArtisan, onBack }: ArtisanMapProps) {
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-muted-foreground">Rayon de recherche</span>
-                  <span className="text-xs font-semibold text-amber-600 dark:text-amber-400">{radius[0]} km</span>
+                  <span className="text-xs font-semibold text-brand-600 dark:text-brand-400">{radius[0]} km</span>
                 </div>
                 <Slider
                   value={radius}
@@ -329,7 +329,7 @@ export function ArtisanMap({ onViewArtisan, onBack }: ArtisanMapProps) {
                   min={50}
                   max={2000}
                   step={50}
-                  className="w-full [&_[data-slot=slider-range]]:bg-gradient-to-r [&_[data-slot=slider-range]]:from-amber-500 [&_[data-slot=slider-range]]:to-orange-500 [&_[data-slot=slider-thumb]]:border-amber-500"
+                  className="w-full [&_[data-slot=slider-range]]:bg-gradient-to-r [&_[data-slot=slider-range]]:from-brand-500 [&_[data-slot=slider-range]]:to-brand-500 [&_[data-slot=slider-thumb]]:border-brand-500"
                 />
               </div>
             </div>
@@ -337,14 +337,14 @@ export function ArtisanMap({ onViewArtisan, onBack }: ArtisanMapProps) {
             {/* Results Count */}
             <div className="px-4 py-2 flex items-center justify-between border-b border-border/20">
               <div className="flex items-center gap-1.5">
-                <Users className="h-3.5 w-3.5 text-amber-500" />
+                <Users className="h-3.5 w-3.5 text-brand-500" />
                 <span className="text-xs font-medium">{filteredArtisans.length} artisan{filteredArtisans.length !== 1 ? 's' : ''} trouvé{filteredArtisans.length !== 1 ? 's' : ''}</span>
               </div>
               {(searchQuery || selectedCategory !== "Toutes" || availableOnly) && (
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-6 text-xs text-amber-600 hover:text-amber-700 px-2"
+                  className="h-6 text-xs text-brand-600 hover:text-brand-700 px-2"
                   onClick={() => {
                     setSearchQuery("")
                     setSelectedCategory("Toutes")
@@ -375,8 +375,8 @@ export function ArtisanMap({ onViewArtisan, onBack }: ArtisanMapProps) {
                     transition={{ duration: 0.2 }}
                   >
                     <Card
-                      className={`cursor-pointer border-border/40 transition-all hover:shadow-md hover:border-amber-300 dark:hover:border-amber-700 ${
-                        selectedArtisanId === artisan.id ? "ring-2 ring-amber-500/50 border-amber-400" : ""
+                      className={`cursor-pointer border-border/40 transition-all hover:shadow-md hover:border-brand-300 dark:hover:border-brand-700 ${
+                        selectedArtisanId === artisan.id ? "ring-2 ring-brand-500/50 border-brand-400" : ""
                       }`}
                       onClick={() => {
                         setSelectedArtisanId(artisan.id)
@@ -403,14 +403,14 @@ export function ArtisanMap({ onViewArtisan, onBack }: ArtisanMapProps) {
                         </div>
                         <div className="mt-2 flex items-center justify-between">
                           <div className="flex items-center gap-1">
-                            <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                            <Star className="h-3.5 w-3.5 fill-brand-400 text-brand-400" />
                             <span className="font-semibold text-xs">{artisan.rating}</span>
                             <span className="text-[10px] text-muted-foreground">({artisan.reviews})</span>
                           </div>
-                          <span className="font-semibold text-xs text-amber-600 dark:text-amber-400">{artisan.price}</span>
+                          <span className="font-semibold text-xs text-brand-600 dark:text-brand-400">{artisan.price}</span>
                         </div>
                         <Button
-                          className="w-full mt-2 h-7 text-xs bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0"
+                          className="w-full mt-2 h-7 text-xs bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0"
                           onClick={(e) => {
                             e.stopPropagation()
                             onViewArtisan(artisan.id)
@@ -450,8 +450,8 @@ export function ArtisanMap({ onViewArtisan, onBack }: ArtisanMapProps) {
       <div className="w-full h-full">
         {mounted && leafletComponents ? (
           <leafletComponents.MapContainer
-            center={[6.5, -2.5]}
-            zoom={5}
+            center={[6.3703, 2.3912]}
+            zoom={12}
             scrollWheelZoom={true}
             className="w-full h-full z-0"
             style={{ background: "#f5f0e8" }}
@@ -491,15 +491,15 @@ export function ArtisanMap({ onViewArtisan, onBack }: ArtisanMapProps) {
                     </div>
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-1">
-                        <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                        <Star className="h-3.5 w-3.5 fill-brand-400 text-brand-400" />
                         <span className="font-semibold text-xs">{artisan.rating}</span>
                         <span className="text-[10px] text-muted-foreground">({artisan.reviews} avis)</span>
                       </div>
-                      <span className="font-semibold text-xs text-amber-600">{artisan.price}</span>
+                      <span className="font-semibold text-xs text-brand-600">{artisan.price}</span>
                     </div>
                     <button
                       onClick={() => onViewArtisan(artisan.id)}
-                      className="w-full h-8 rounded-md text-xs font-medium text-white bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 transition-colors flex items-center justify-center gap-1"
+                      className="w-full h-8 rounded-md text-xs font-medium text-white bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 transition-colors flex items-center justify-center gap-1"
                     >
                       Voir le profil
                       <ChevronRight className="h-3 w-3" />
@@ -511,19 +511,19 @@ export function ArtisanMap({ onViewArtisan, onBack }: ArtisanMapProps) {
           </leafletComponents.MapContainer>
         ) : (
           /* Loading skeleton */
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-amber-50 to-orange-50 dark:from-neutral-900 dark:to-neutral-800">
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-brand-50 to-brand-50 dark:from-neutral-900 dark:to-neutral-800">
             <div className="flex flex-col items-center gap-4">
               <div className="relative">
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 shadow-lg animate-pulse">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-600 shadow-lg animate-pulse">
                   <Navigation className="h-8 w-8 text-white" />
                 </div>
               </div>
               <div className="text-center">
                 <p className="font-semibold text-sm">Chargement de la carte...</p>
-                <p className="text-xs text-muted-foreground mt-1">Géolocalisation des artisans en Afrique de l&apos;Ouest</p>
+                <p className="text-xs text-muted-foreground mt-1">Géolocalisation des artisans à Cotonou et ses environs</p>
               </div>
               <div className="h-1 w-32 overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700">
-                <div className="h-full bg-gradient-to-r from-amber-500 to-orange-500 animate-[shimmer_1.5s_ease-in-out_infinite]" />
+                <div className="h-full bg-gradient-to-r from-brand-500 to-brand-500 animate-[shimmer_1.5s_ease-in-out_infinite]" />
               </div>
             </div>
           </div>
@@ -535,12 +535,12 @@ export function ArtisanMap({ onViewArtisan, onBack }: ArtisanMapProps) {
         <div className="absolute bottom-4 right-4 z-[1000] hidden md:flex flex-col gap-2">
           <Card className="bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md border-border/30 shadow-lg">
             <CardContent className="p-3 flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-600">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-brand-500 to-brand-600">
                 <Users className="h-4 w-4 text-white" />
               </div>
               <div>
                 <p className="text-xs font-bold">{filteredArtisans.length} artisans</p>
-                <p className="text-[10px] text-muted-foreground">Afrique de l&apos;Ouest</p>
+                <p className="text-[10px] text-muted-foreground">Cotonou et environs</p>
               </div>
             </CardContent>
           </Card>
@@ -554,10 +554,10 @@ export function ArtisanMap({ onViewArtisan, onBack }: ArtisanMapProps) {
 
 function getAvatarBgColor(twClass: string): string {
   const colorMap: Record<string, string> = {
-    "bg-amber-500": "#f59e0b",
-    "bg-amber-600": "#d97706",
+    "bg-fuchsia-500": "#d946ef",
+    "bg-slate-500": "#64748b",
     "bg-emerald-500": "#10b981",
-    "bg-orange-500": "#f97316",
+    "bg-lime-500": "#84cc16",
     "bg-teal-500": "#14b8a6",
     "bg-cyan-500": "#06b6d4",
     "bg-violet-500": "#8b5cf6",
@@ -565,5 +565,5 @@ function getAvatarBgColor(twClass: string): string {
     "bg-indigo-500": "#6366f1",
     "bg-pink-500": "#ec4899",
   }
-  return colorMap[twClass] || "#f59e0b"
+  return colorMap[twClass] || "#2596BE"
 }
