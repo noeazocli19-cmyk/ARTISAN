@@ -319,6 +319,18 @@ export function ClientDashboard() {
 
         {/* Overview Tab */}
         <TabsContent value="overview" className="space-y-6">
+          <Link
+            href="/become-artisan"
+            className="flex items-center justify-between rounded-2xl p-4 text-white shadow-sm hover:opacity-90 transition-opacity"
+            style={{ backgroundColor: '#2596BE' }}
+          >
+            <div>
+              <p className="font-bold">Je veux devenir artisan</p>
+              <p className="text-sm text-white/85">Garde ton compte, complète ton profil pro et commence à recevoir des missions.</p>
+            </div>
+            <span className="text-xl">→</span>
+          </Link>
+
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <motion.div variants={fadeInUp} initial="hidden" animate="visible">
               <Card className="border-border/50 hover:shadow-md transition-shadow">
