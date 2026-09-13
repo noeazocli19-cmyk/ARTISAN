@@ -3,13 +3,28 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { authClient } from "@/lib/auth-client"
-import { Search, MapPin, User, DollarSign, Plus, Tag, Clock, Loader2, Inbox } from "lucide-react"
+import { Search, MapPin, User, DollarSign, Plus, Tag, Clock, Loader2, Inbox, Wrench, Zap, Hammer, Paintbrush, KeyRound, BrickWall, Wind, Sparkles, UtensilsCrossed, TreePine, Car, ClipboardList } from "lucide-react"
 
 const CATEGORIES = [
   "Plomberie", "Électricité", "Menuiserie", "Peinture",
   "Serrurerie", "Maçonnerie", "Climatisation", "Nettoyage",
   "Cuisine", "Jardinage", "Réparation auto", "Autre"
 ]
+
+const ICON_BY_CATEGORY: Record<string, any> = {
+  Plomberie: Wrench,
+  Électricité: Zap,
+  Menuiserie: Hammer,
+  Peinture: Paintbrush,
+  Serrurerie: KeyRound,
+  Maçonnerie: BrickWall,
+  Climatisation: Wind,
+  Nettoyage: Sparkles,
+  Cuisine: UtensilsCrossed,
+  Jardinage: TreePine,
+  "Réparation auto": Car,
+  Autre: ClipboardList,
+}
 
 const STATUS_COLORS: Record<string, string> = {
   ouverte: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
@@ -153,7 +168,10 @@ export default function MissionsPage() {
 
                 <div className="flex items-center flex-wrap gap-3 text-sm text-gray-500 dark:text-gray-400">
                   <span className="flex items-center gap-1 bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-400 px-2.5 py-1 rounded-full text-xs font-medium">
-                    <Tag className="w-3 h-3" />
+                    {(() => {
+                      const Icon = ICON_BY_CATEGORY[mission.category] || Tag
+                      return <Icon className="w-3 h-3" />
+                    })()}
                     {mission.category}
                   </span>
                   {mission.budget > 0 && (

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { sendWebPushToUser } from '@/lib/push';
 import { auth } from '@/lib/better-auth';
 
 async function requireAdmin(request: NextRequest) {
@@ -53,6 +54,16 @@ export async function PATCH(request: NextRequest) {
       type: decision === 'approuve' ? 'success' : 'warning',
     },
   });
+
+  try {
+    await sendWebPushToUser(artisan.userId, {
+      title: decision === 'approuve' ? 'Identité vérifiée' : 'Vérification refusée',
+      body: decision === 'approuve' ? 'Votre pièce d\'identité a été vérifiée.' : 'Votre pièce d\'identité n\'a pas pu être validée.',
+      url: '/dashboard',
+    })
+  } catch (e) {
+    console.error('Erreur envoi push verification (non bloquant):', e)
+  }
 
   return NextResponse.json({ success: true, identityStatus: artisan.identityStatus });
 }

@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useAppStore } from '@/lib/store';
 import { PremiumCard } from '@/components/premium-card';
 import { IdentityVerificationCard } from '@/components/identity-verification-card';
 import {
@@ -16,6 +17,7 @@ import {
   ClipboardList, MessageSquare, TrendingUp, Settings, Wrench, Hand,
   LayoutGrid, ArrowLeftCircle, Loader2, User as UserIcon, Search, Clock3, CalendarCheck,
 } from 'lucide-react';
+import NotificationPanel from '@/components/notification-panel';
 
 interface ArtisanProfile {
   id: string;
@@ -91,6 +93,7 @@ function initialsOf(name?: string | null) {
 export function ArtisanDashboard() {
   const { data: session } = authClient.useSession();
   const userId = session?.user?.id;
+  const storeUser = useAppStore((s) => s.user);
 
   const [artisanProfile, setArtisanProfile] = useState<ArtisanProfile | null>(null);
   const [loading, setLoading] = useState(true);
@@ -446,7 +449,17 @@ export function ArtisanDashboard() {
         <div className="absolute -right-2 bottom-[-2rem] h-20 w-20 rounded-full bg-white/10" />
         <div className="relative flex items-center gap-4">
           <Avatar className="h-14 w-14 shrink-0 ring-2 ring-white/40 backdrop-blur">
-            <AvatarImage src={session?.user?.image || undefined} alt={session?.user?.name || 'Artisan'} />
+            {
+              (() => {
+                // Prefer store avatar (set after upload), then session image, then artisan portfolio first image
+                const portfolioFirst = Array.isArray(artisanProfile?.portfolio)
+                  ? artisanProfile?.portfolio[0]
+                  : undefined;
+                const portfolioUrl = typeof portfolioFirst === 'string' ? portfolioFirst : (portfolioFirst?.imageUrl ?? undefined);
+                const src = storeUser?.avatar || session?.user?.image || portfolioUrl || undefined;
+                return <AvatarImage src={src} alt={session?.user?.name || 'Artisan'} />;
+              })()
+            }
             <AvatarFallback className="bg-white/20 text-lg font-bold text-white">
               {initialsOf(session?.user?.name)}
             </AvatarFallback>
@@ -585,6 +598,8 @@ export function ArtisanDashboard() {
               });
             }}
           />
+
+          <NotificationPanel />
 
           <IdentityVerificationCard
             identityStatus={artisanProfile?.identityStatus || 'non_soumis'}

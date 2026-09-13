@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { auth } from '@/lib/better-auth';
+import { sendWebPushToUser } from '@/lib/push';
 
 export async function GET(request: NextRequest) {
   try {
@@ -28,8 +29,8 @@ export async function GET(request: NextRequest) {
     const messages = await db.message.findMany({
       where,
       include: {
-        sender: { select: { id: true, name: true, image: true } },
-        receiver: { select: { id: true, name: true, image: true } },
+        sender: { select: { id: true, name: true, image: true, artisan: { select: { profession: true } } } },
+        receiver: { select: { id: true, name: true, image: true, artisan: { select: { profession: true } } } },
       },
       orderBy: { createdAt: 'asc' },
       take: 100,
@@ -62,8 +63,8 @@ export async function POST(request: NextRequest) {
     const message = await db.message.create({
       data: { content, type: messageType, senderId: session.user.id, receiverId, missionId: missionId || null },
       include: {
-        sender: { select: { id: true, name: true, image: true } },
-        receiver: { select: { id: true, name: true, image: true } },
+        sender: { select: { id: true, name: true, image: true, artisan: { select: { profession: true } } } },
+        receiver: { select: { id: true, name: true, image: true, artisan: { select: { profession: true } } } },
       },
     });
 
@@ -80,6 +81,17 @@ export async function POST(request: NextRequest) {
         link: missionId ? `/missions/${missionId}` : null,
       },
     });
+
+    // Try to send web push to receiver (best-effort)
+    try {
+      await sendWebPushToUser(receiverId, {
+        title: 'Nouveau message',
+        body: messageType === 'audio' ? `${session.user.name} a envoyé un message vocal` : messageType === 'image' ? `${session.user.name} a envoyé une photo` : `${session.user.name} : ${content}`,
+        url: missionId ? `/missions/${missionId}` : `/messages?userId=${session.user.id}`,
+      })
+    } catch (e) {
+      console.error('Erreur envoi push message (non bloquant):', e)
+    }
 
     return NextResponse.json({ message }, { status: 201 });
   } catch (error) {

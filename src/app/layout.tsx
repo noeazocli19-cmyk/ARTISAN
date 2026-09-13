@@ -1,7 +1,7 @@
 ﻿import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "next-themes";
-import { PageTransitionOverlay } from "@/components/page-transition-overlay";
+// Page transition overlay removed to eliminate loading-artisan image
 import { PresenceHeartbeat } from "@/components/presence-heartbeat";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
@@ -45,8 +45,8 @@ export const metadata: Metadata = {
   authors: [{ name: "FINDA" }],
   manifest: "/manifest.json",
   icons: {
-    icon: "/icons/icon.svg",
-    apple: "/icons/icon.svg",
+    icon: "/icons/finda.png",
+    apple: "/icons/finda.png",
   },
   appleWebApp: {
     capable: true,
@@ -82,12 +82,12 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="FINDA" />
-        <link rel="apple-touch-icon" href="/icons/icon.svg" />
+        <link rel="apple-touch-icon" href="/icons/finda.png" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
-        <PageTransitionOverlay />
+        {/* Page transition overlay removed */}
         <PresenceHeartbeat />
         <ThemeProvider
           attribute="class"

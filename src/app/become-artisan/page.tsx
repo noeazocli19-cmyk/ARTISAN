@@ -21,6 +21,8 @@ export default function BecomeArtisanPage() {
     phone: '',
     location: '',
     bio: '',
+    diploma: '',
+    qualification: '',
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -48,6 +50,7 @@ export default function BecomeArtisanPage() {
           address: form.location,
           bio: form.bio,
           skills: [form.profession],
+          certifications: [form.diploma, form.qualification].filter(Boolean),
         }),
       })
       if (!profileRes.ok) {
@@ -125,6 +128,26 @@ export default function BecomeArtisanPage() {
             <input
               type="text" name="location" value={form.location} onChange={handleChange} required
               placeholder="ex: Fidjrossè, Cotonou"
+              className="w-full rounded-lg border px-3 py-2 text-sm bg-transparent"
+              style={{ borderColor: 'var(--border)' }}
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-medium block mb-1.5">Diplôme</label>
+            <input
+              type="text" name="diploma" value={form.diploma} onChange={handleChange}
+              placeholder="ex: CAP Plomberie, Bac Pro Électrotechnique..."
+              className="w-full rounded-lg border px-3 py-2 text-sm bg-transparent"
+              style={{ borderColor: 'var(--border)' }}
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-medium block mb-1.5">Qualification / Certification</label>
+            <input
+              type="text" name="qualification" value={form.qualification} onChange={handleChange}
+              placeholder="ex: Habilitation électrique, Certificat de soudure..."
               className="w-full rounded-lg border px-3 py-2 text-sm bg-transparent"
               style={{ borderColor: 'var(--border)' }}
             />

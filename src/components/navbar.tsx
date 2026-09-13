@@ -58,6 +58,7 @@ export function Navbar({ onOpenAuth, onSearch }: NavbarProps) {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [logoLoaded, setLogoLoaded] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchLocation, setSearchLocation] = useState('')
 
@@ -101,11 +102,20 @@ export function Navbar({ onOpenAuth, onSearch }: NavbarProps) {
       className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl"
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Logo */}
+        {/* Logo - prefer image at /public/images/finda-logo.png, fallback to icon+text */}
         <button onClick={handleLogoClick} className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg" style={{ backgroundColor: '#2596BE' }}>
-            <Wrench className="h-5 w-5 text-white" />
-          </div>
+          <img
+            src="/images/finda-logo.png"
+            alt="FINDA"
+            className="h-9 w-9 rounded-lg object-contain"
+            onError={() => setLogoLoaded(false)}
+            onLoad={() => setLogoLoaded(true)}
+          />
+          {!logoLoaded && (
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg" style={{ backgroundColor: '#2596BE' }}>
+              <Wrench className="h-5 w-5 text-white" />
+            </div>
+          )}
           <span className="text-lg font-bold" style={{ fontFamily: 'Foodpacker, sans-serif', color: '#2596BE' }}>
             FINDA
           </span>

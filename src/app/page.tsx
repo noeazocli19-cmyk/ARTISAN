@@ -790,42 +790,10 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
 
       {/* ────────── HOW IT WORKS ────────── */}
       <section id="comment-ca-marche" className="relative py-20 sm:py-28 bg-muted/30 overflow-hidden">
-        {/* Illustrations décoratives */}
-        <div className="hidden lg:block absolute -top-6 -right-6 w-64 xl:w-80 opacity-90 pointer-events-none select-none rotate-3">
-          <Image
-            src="/how-it-works-1.jpg"
-            alt=""
-            width={600}
-            height={600}
-            className="w-full h-auto rounded-3xl shadow-2xl"
-          />
-        </div>
-        <div className="hidden lg:block absolute -bottom-10 -left-8 w-56 xl:w-72 opacity-90 pointer-events-none select-none -rotate-2">
-          <Image
-            src="/how-it-works-2.jpg"
-            alt=""
-            width={600}
-            height={600}
-            className="w-full h-auto rounded-3xl shadow-2xl"
-          />
-        </div>
-        <div className="hidden lg:block absolute -bottom-10 -right-4 w-56 xl:w-72 opacity-90 pointer-events-none select-none rotate-2">
-          <Image
-            src="/how-it-works-3.jpg"
-            alt=""
-            width={600}
-            height={600}
-            className="w-full h-auto rounded-3xl shadow-2xl"
-          />
-        </div>
+        {/* Decorative images removed for mobile-first PWA */}
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          {/* Version mobile : rangée compacte des 3 images */}
-          <div className="flex lg:hidden justify-center gap-3 mb-8">
-            <Image src="/how-it-works-1.jpg" alt="" width={200} height={200} className="w-1/3 h-24 sm:h-28 object-cover rounded-2xl shadow-md" />
-            <Image src="/how-it-works-2.jpg" alt="" width={200} height={200} className="w-1/3 h-24 sm:h-28 object-cover rounded-2xl shadow-md" />
-            <Image src="/how-it-works-3.jpg" alt="" width={200} height={200} className="w-1/3 h-24 sm:h-28 object-cover rounded-2xl shadow-md" />
-          </div>
+          {/* Mobile images removed to optimize mobile-first PWA */}
 
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="text-center mb-14">
             <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold">

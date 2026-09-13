@@ -4,7 +4,8 @@ import { Suspense } from "react"
 import { useState, useEffect, useRef } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { authClient } from "@/lib/auth-client"
-import { MessageCircle, Send, Loader2, MessagesSquare, ArrowLeft, Mic, Square, Trash2, Play, Pause, ImagePlus, X } from "lucide-react"
+import { MessageCircle, Send, Loader2, MessagesSquare, ArrowLeft, Mic, Trash2, Play, Pause, ImagePlus, X } from "lucide-react"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 
 function AudioBubble({ src, isMe }: { src: string; isMe: boolean }) {
   const audioRef = useRef<HTMLAudioElement>(null)
@@ -320,15 +321,34 @@ function MessagesPageContent() {
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-brand-400 to-brand-500 rounded-full flex items-center justify-center font-bold text-white text-sm shadow-sm">
-                    {conv.partner?.name?.charAt(0)?.toUpperCase() || "?"}
+                  <div className="w-10 h-10">
+                    <Avatar className="w-10 h-10">
+                      {conv.partner?.image ? (
+                        <AvatarImage src={conv.partner.image} alt={conv.partner?.name || 'avatar'} />
+                      ) : (
+                        <AvatarFallback className="text-sm font-bold">
+                          {conv.partner?.name?.charAt(0)?.toUpperCase() || "?"}
+                        </AvatarFallback>
+                      )}
+                    </Avatar>
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-gray-900 dark:text-white truncate text-sm">
                       {conv.partner?.name || "Utilisateur"}
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                      {conv.lastMessage?.type === "audio" ? "🎤 Message vocal" : conv.lastMessage?.type === "image" ? "📷 Photo" : conv.lastMessage?.content}
+                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate flex items-center gap-1">
+                      {conv.partner?.artisan?.profession && (
+                        <span className="text-[11px] text-gray-400">{conv.partner.artisan.profession}</span>
+                      )}
+                      <span className="truncate">
+                        {conv.lastMessage?.type === "audio" ? (
+                          <><Mic className="w-3 h-3 inline-block mr-1" /> Message vocal</>
+                        ) : conv.lastMessage?.type === "image" ? (
+                          <><ImagePlus className="w-3 h-3 inline-block mr-1" /> Photo</>
+                        ) : (
+                          conv.lastMessage?.content
+                        )}
+                      </span>
                     </p>
                   </div>
                   {conv.unreadCount > 0 && (
@@ -349,13 +369,22 @@ function MessagesPageContent() {
           <>
             {/* Header */}
             <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex items-center gap-3">
-              <div className="w-9 h-9 bg-gradient-to-br from-brand-400 to-brand-500 rounded-full flex items-center justify-center font-bold text-white text-sm">
-                {activePartnerInfo?.name?.charAt(0)?.toUpperCase() || "?"}
+              <div className="w-9 h-9">
+                <Avatar className="w-9 h-9">
+                  {activePartnerInfo?.image ? (
+                    <AvatarImage src={activePartnerInfo.image} alt={activePartnerInfo?.name || 'avatar'} />
+                  ) : (
+                    <AvatarFallback className="text-sm font-bold">{activePartnerInfo?.name?.charAt(0)?.toUpperCase() || "?"}</AvatarFallback>
+                  )}
+                </Avatar>
               </div>
               <div>
                 <p className="font-semibold text-gray-900 dark:text-white">
                   {activePartnerInfo?.name || "Utilisateur"}
                 </p>
+                {activePartnerInfo?.artisan?.profession && (
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{activePartnerInfo.artisan.profession}</p>
+                )}
                 {missionIdFromUrl && (
                   <p className="text-xs text-brand-600 dark:text-brand-400 flex items-center gap-1">
                     <MessageCircle className="w-3 h-3" />

@@ -1,6 +1,7 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { auth } from '@/lib/better-auth';
+import { sendWebPushToUser } from '@/lib/push';
 
 export async function GET(request: NextRequest) {
   try {
@@ -100,6 +101,15 @@ export async function POST(request: NextRequest) {
             link: '/dashboard/artisan',
           },
         });
+        try {
+          await sendWebPushToUser(booking.artisan.userId, {
+            title: 'Nouvelle réservation',
+            body: `${session.user.name} a réservé : ${service}`,
+            url: `/dashboard/artisan`,
+          })
+        } catch (e) {
+          console.error('Erreur envoi push reservation (non bloquant):', e)
+        }
       } else {
         const searchCategory = category || service;
         // Recherche flexible : on regarde si le metier de l'artisan et la
@@ -127,6 +137,17 @@ export async function POST(request: NextRequest) {
               link: '/dashboard/artisan',
             })),
           });
+          try {
+            for (const a of matchingArtisans) {
+              await sendWebPushToUser(a.userId, {
+                title: 'Nouvelle réservation',
+                body: `Une reservation "${service}" correspond a votre metier`,
+                url: `/dashboard/artisan`,
+              })
+            }
+          } catch (e) {
+            console.error('Erreur envoi push reservation (non bloquant):', e)
+          }
         }
       }
     } catch (notifError) {

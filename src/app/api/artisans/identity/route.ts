@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { sendWebPushToUser } from '@/lib/push';
 import { auth } from '@/lib/better-auth';
 
 // POST: l'artisan soumet sa pièce d'identité
@@ -36,6 +37,17 @@ export async function POST(request: NextRequest) {
           link: '/admin/verifications',
         })),
       });
+      try {
+        for (const a of admins) {
+          await sendWebPushToUser(a.id, {
+            title: 'Nouvelle demande de vérification',
+            body: `${session.user.name} a soumis une pièce d'identité pour vérification.`,
+            url: '/admin/verifications',
+          })
+        }
+      } catch (e) {
+        console.error('Erreur envoi push nouvelle demande verification (non bloquant):', e)
+      }
     }
 
     return NextResponse.json({ success: true, identityStatus: updated.identityStatus });

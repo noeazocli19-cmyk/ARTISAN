@@ -1,6 +1,7 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { auth } from '@/lib/better-auth';
+import { sendWebPushToUser } from '@/lib/push';
 
 export async function PATCH(
   request: NextRequest,
@@ -59,6 +60,15 @@ export async function PATCH(
             link: '/dashboard/client',
           },
         });
+        try {
+          await sendWebPushToUser(booking.clientId, {
+            title: 'Mise à jour de réservation',
+            body: `Votre réservation "${booking.service}" est maintenant ${statusLabels[updateData.status]}`,
+            url: `/dashboard/client`,
+          })
+        } catch (e) {
+          console.error('Erreur envoi push maj reservation (non bloquant):', e)
+        }
       }
     } catch (notifError) {
       console.error('Erreur notification (non bloquant):', notifError);

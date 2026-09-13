@@ -6,7 +6,7 @@ const OFFLINE_URL = '/offline.html';
 const APP_SHELL = [
   '/',
   '/manifest.json',
-  '/icons/icon.svg',
+  '/icons/finda.png',
 ];
 
 // Install event - cache app shell
@@ -22,6 +22,42 @@ self.addEventListener('install', (event) => {
   // Activate immediately without waiting
   self.skipWaiting();
 });
+
+// Push event
+self.addEventListener('push', function (event) {
+  let data = {}
+  try {
+    data = event.data ? event.data.json() : {}
+  } catch (e) {
+    data = { title: 'Notification', body: event.data ? event.data.text() : '' }
+  }
+
+  const title = data.title || 'Notification'
+  const options = {
+    body: data.body || '',
+    icon: data.icon || '/icons/finda.png',
+    badge: data.badge || '/icons/icon-72.png',
+    data: { url: data.url || '/' },
+    vibrate: [100, 50, 100],
+  }
+
+  event.waitUntil(self.registration.showNotification(title, options))
+})
+
+self.addEventListener('notificationclick', function (event) {
+  event.notification.close()
+  const url = event.notification.data?.url || '/'
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (clientList) {
+      for (const client of clientList) {
+        if ('focus' in client) {
+          if ((client as any).url === url) return (client as any).focus()
+        }
+      }
+      if (self.clients.openWindow) return self.clients.openWindow(url)
+    })
+  )
+})
 
 // Activate event - clean up old caches
 self.addEventListener('activate', (event) => {

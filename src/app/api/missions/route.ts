@@ -1,6 +1,7 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { auth } from '@/lib/better-auth';
+import { sendWebPushToUser } from '@/lib/push';
 
 export async function POST(request: NextRequest) {
   try {
@@ -53,6 +54,17 @@ export async function POST(request: NextRequest) {
             link: `/dashboard/artisan`,
           })),
         });
+        try {
+          for (const a of matchingArtisans) {
+            await sendWebPushToUser(a.userId, {
+              title: 'Nouvelle mission disponible',
+              body: `Une mission "${title}" correspond a votre metier`,
+              url: `/dashboard/artisan`,
+            })
+          }
+        } catch (e) {
+          console.error('Erreur envoi push mission (non bloquant):', e)
+        }
       }
     } catch (notifError) {
       console.error("Erreur notification nouvelle mission (non bloquant):", notifError);

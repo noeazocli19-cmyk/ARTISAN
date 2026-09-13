@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { auth } from '@/lib/better-auth';
+import { sendWebPushToUser } from '@/lib/push';
 import { computeArtisanBadge } from '@/lib/badges';
 
 export async function GET(
@@ -102,6 +103,15 @@ export async function PATCH(
             link: `/missions/${id}`,
           },
         });
+        try {
+          await sendWebPushToUser(mission.artisan.userId, {
+            title: 'Mission confirmée',
+            body: `Le client a confirmé la fin de "${mission.title}".`,
+            url: `/missions/${id}`,
+          })
+        } catch (e) {
+          console.error('Erreur envoi push mission terminee (non bloquant):', e)
+        }
       }
 
       return NextResponse.json({ mission });
@@ -156,6 +166,15 @@ export async function PATCH(
             link: `/missions/${id}`,
           },
         });
+        try {
+          await sendWebPushToUser(otherPartyUserId, {
+            title: 'Litige signalé',
+            body: `Un litige a été signalé sur "${mission.title}".`,
+            url: `/missions/${id}`,
+          })
+        } catch (e) {
+          console.error('Erreur envoi push litige (non bloquant):', e)
+        }
       }
 
       // Notify any admin so it can be reviewed
@@ -170,6 +189,17 @@ export async function PATCH(
             link: `/missions/${id}`,
           })),
         });
+        try {
+          for (const admin of admins) {
+            await sendWebPushToUser(admin.id, {
+              title: 'Nouveau litige',
+              body: `Litige sur "${mission.title}" : ${disputeReason.trim()}`,
+              url: `/missions/${id}`,
+            })
+          }
+        } catch (e) {
+          console.error('Erreur envoi push admin litige (non bloquant):', e)
+        }
       }
 
       return NextResponse.json({ mission });
@@ -220,6 +250,15 @@ export async function PATCH(
           link: `/missions/${id}`,
         },
       });
+      try {
+        await sendWebPushToUser(mission.clientId, {
+          title: 'Mission acceptée',
+          body: `Un artisan a accepté votre mission "${mission.title}"`,
+          url: `/missions/${id}`,
+        })
+      } catch (e) {
+        console.error('Erreur envoi push mission accepte (non bloquant):', e)
+      }
     }
 
     if (status === 'terminee_artisan') {
@@ -232,6 +271,15 @@ export async function PATCH(
           link: `/missions/${id}`,
         },
       });
+      try {
+        await sendWebPushToUser(mission.clientId, {
+          title: 'Mission terminée par l\'artisan',
+          body: `L'artisan indique avoir terminé la mission "${mission.title}".`,
+          url: `/missions/${id}`,
+        })
+      } catch (e) {
+        console.error('Erreur envoi push mission terminee_artisan (non bloquant):', e)
+      }
     }
 
     return NextResponse.json({ mission });

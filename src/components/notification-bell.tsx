@@ -28,6 +28,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import PushSubscribe from '@/components/push-subscribe';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -276,6 +277,9 @@ export function NotificationBell() {
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2">
             <h4 className="text-sm font-semibold text-foreground">Notifications</h4>
+            <div className="ml-2">
+              <PushSubscribe />
+            </div>
             {unreadCount > 0 && (
               <Badge
                 variant="secondary"

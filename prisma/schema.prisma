@@ -43,6 +43,7 @@ model User {
   sentMessages  Message[]  @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")
   notifications Notification[]
+  pushSubscriptions PushSubscription[]
   payments      Payment[]
   favorites     Favorite[]
 
@@ -266,6 +267,24 @@ model Notification {
 
   @@index([userId])
   @@index([isRead])
+}
+
+// ============================================
+// WEB PUSH SUBSCRIPTIONS
+// ============================================
+
+model PushSubscription {
+  id         String   @id @default(cuid())
+  userId     String
+  endpoint   String   @unique
+  p256dh     String
+  auth       String
+  ua         String?  // user agent / device info
+  createdAt  DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 // ============================================

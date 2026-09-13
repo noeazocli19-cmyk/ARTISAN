@@ -1,5 +1,6 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { sendWebPushToUser } from '@/lib/push';
 import { auth } from '@/lib/better-auth';
 import crypto from 'crypto';
 
@@ -108,6 +109,15 @@ export async function POST(request: NextRequest) {
           type: 'system',
         },
       });
+      try {
+        await sendWebPushToUser(referrer.id, {
+          title: 'Nouveau filleul',
+          body: "Quelqu'un vient de s'inscrire grâce à votre lien de parrainage. +500 FCFA de crédit !",
+          url: '/dashboard',
+        })
+      } catch (e) {
+        console.error('Erreur envoi push parrainage (non bloquant):', e)
+      }
     } catch (notifError) {
       console.error('Erreur notification parrainage (non bloquant):', notifError);
     }

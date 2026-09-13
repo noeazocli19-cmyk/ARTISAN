@@ -1,6 +1,7 @@
 ﻿'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeftCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
@@ -76,6 +77,7 @@ const fadeInUp = {
 
 export function ClientDashboard() {
   const { user, token, favoriteIds } = useAppStore()
+  const router = useRouter()
   const [missions, setMissions] = useState<Mission[]>([])
   const [reviews, setReviews] = useState<Review[]>([])
   const [loadingMissions, setLoadingMissions] = useState(true)
@@ -248,63 +250,10 @@ export function ClientDashboard() {
           </h1>
           <p className="text-muted-foreground mt-1">Bienvenue sur votre espace client</p>
         </div>
-        <Dialog open={newMissionOpen} onOpenChange={setNewMissionOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0">
-              <Plus className="h-4 w-4 mr-2" />
-              Nouvelle Mission
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[500px]">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <Briefcase className="h-5 w-5 text-brand-500" />
-                Créer une mission
-              </DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleCreateMission} className="space-y-4 mt-4">
-              {missionError && (
-                <div className="flex items-center gap-2 rounded-lg bg-red-50 dark:bg-red-950/30 p-3 text-sm text-red-600 dark:text-red-400">
-                  <AlertCircle className="h-4 w-4 shrink-0" />
-                  {missionError}
-                </div>
-              )}
-              <div className="space-y-2">
-                <Label htmlFor="m-title">Titre</Label>
-                <Input id="m-title" placeholder="Réparation fuite robinet" value={mTitle} onChange={e => setMTitle(e.target.value)} required />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="m-desc">Description</Label>
-                <Textarea id="m-desc" placeholder="Décrivez votre besoin en détail..." value={mDesc} onChange={e => setMDesc(e.target.value)} rows={4} required />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-2">
-                  <Label>Catégorie</Label>
-                  <Select value={mCategory} onValueChange={setMCategory}>
-                    <SelectTrigger><SelectValue placeholder="Choisir" /></SelectTrigger>
-                    <SelectContent>
-                      {CATEGORY_OPTIONS.map(c => (
-                        <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="m-budget">Budget (FCFA)</Label>
-                  <Input id="m-budget" type="number" placeholder="50 000" value={mBudget} onChange={e => setMBudget(e.target.value)} />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="m-location">Localisation</Label>
-                <Input id="m-location" placeholder="Dakar, Sénégal" value={mLocation} onChange={e => setMLocation(e.target.value)} />
-              </div>
-              <Button type="submit" className="w-full bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0" disabled={submitting}>
-                {submitting && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-                Publier la mission
-              </Button>
-            </form>
-          </DialogContent>
-        </Dialog>
+        <Button className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0" onClick={() => router.push('/missions/create')}>
+          <Plus className="h-4 w-4 mr-2" />
+          Nouvelle Mission
+        </Button>
       </div>
 
       <Tabs defaultValue="overview" className="space-y-6">
@@ -429,7 +378,7 @@ export function ClientDashboard() {
         <TabsContent value="missions" className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">Toutes mes missions</h2>
-            <Button size="sm" className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0" onClick={() => setNewMissionOpen(true)}>
+            <Button size="sm" className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0" onClick={() => router.push('/missions/create')}>
               <Plus className="h-3 w-3 mr-1" />
               Nouvelle
             </Button>
@@ -443,7 +392,7 @@ export function ClientDashboard() {
               <CardContent className="py-12 text-center text-muted-foreground">
                 <Briefcase className="h-12 w-12 mx-auto mb-3 opacity-30" />
                 <p>Aucune mission créée</p>
-                <Button variant="outline" className="mt-4" onClick={() => setNewMissionOpen(true)}>
+                <Button variant="outline" className="mt-4" onClick={() => router.push('/missions/create')}>
                   <Plus className="h-4 w-4 mr-2" />
                   Créer une mission
                 </Button>

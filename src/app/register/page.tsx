@@ -16,27 +16,15 @@ const CATEGORIES = [
   "BTP", "Bois", "Metal", "Textile", "Beaute", "Alimentation", "Electromenager", "Autre"
 ];
 
-const COUNTRIES = [
-  "Cote d'Ivoire", "Benin", "Senegal", "Mali", "Burkina Faso", "Togo", "Guinee", "Cameroun", "Niger", "Autre"
-];
+const COUNTRIES = ["Benin"];
 
 const CITIES: Record<string, string[]> = {
-  "Cote d'Ivoire": ["Abidjan", "Bouake", "Daloa", "Yamoussoukro", "Korhogo", "San Pedro", "Man", "Gagnoa"],
-  "Benin": ["Cotonou", "Porto-Novo", "Parakou", "Abomey", "Natitingou", "Bohicon"],
-  "Senegal": ["Dakar", "Saint-Louis", "Thies", "Kaolack", "Ziguinchor", "Tambacounda"],
-  "Mali": ["Bamako", "Sikasso", "Kayes", "Mopti", "Gao", "Tombouctou"],
-  "Burkina Faso": ["Ouagadougou", "Bobo-Dioulasso", "Koudougou", "Banfora", "Fada N'Gourma"],
-  "Togo": ["Lome", "Sokode", "Kara", "Atakpame", "Dapaong"],
-  "Guinee": ["Conakry", "Kankan", "Nzerekore", "Labe", "Kindia"],
-  "Cameroun": ["Douala", "Yaounde", "Bafoussam", "Garoua", "Maroua"],
-  "Niger": ["Niamey", "Zinder", "Maradi", "Agadez", "Tahoua"],
-  "Autre": [],
+  "Benin": ["Cotonou", "Porto-Novo", "Abomey-Calavi", "Parakou", "Abomey", "Natitingou", "Bohicon", "Ouidah"],
 };
 
 export default function RegisterPage() {
   const router = useRouter();
   const [showForm, setShowForm] = useState(true);
-  const [role, setRole] = useState<"client" | "artisan">("artisan");
   const [isLogin, setIsLogin] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -45,7 +33,7 @@ export default function RegisterPage() {
   const [form, setForm] = useState({
     firstName: "", lastName: "", email: "", phone: "",
     password: "", confirmPassword: "",
-    country: "Cote d'Ivoire", city: "", neighborhood: "",
+    country: "Benin", city: "Cotonou", neighborhood: "",
     profession: "", category: "", experience: "", skills: "", bio: "",
   });
 
@@ -82,9 +70,6 @@ export default function RegisterPage() {
     if (!form.firstName || !form.lastName || !form.email || !form.phone) {
       setError("Veuillez remplir tous les champs obligatoires."); return;
     }
-    if (role === "artisan" && !form.profession) {
-      setError("Le metier est obligatoire pour un artisan."); return;
-    }
 
     setLoading(true);
     try {
@@ -95,7 +80,6 @@ export default function RegisterPage() {
           email: form.email,
           password: form.password,
           name: form.firstName + " " + form.lastName,
-          role: role,
         }),
       });
 
@@ -104,40 +88,8 @@ export default function RegisterPage() {
         throw new Error(errData.message || "Erreur lors de la creation du compte.");
       }
 
-      if (role === "artisan") {
-        const skillsArray = form.skills.split(",").map((s) => s.trim()).filter(Boolean);
-        const location = [form.neighborhood, form.city, form.country].filter(Boolean).join(", ");
-
-        const profileRes = await fetch("/api/artisans/profile", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            firstName: form.firstName,
-            lastName: form.lastName,
-            email: form.email,
-            phone: form.phone,
-            profession: form.profession,
-            specialties: [form.profession],
-            category: form.category,
-            experience: parseInt(form.experience) || 0,
-            country: form.country,
-            city: form.city,
-            location: location,
-            address: location,
-            bio: form.bio,
-            skills: skillsArray.length > 0 ? skillsArray : [form.profession],
-            certifications: [],
-          }),
-        });
-
-        if (!profileRes.ok) {
-          const errData = await profileRes.json().catch(() => ({}));
-          console.warn("Profile warning:", errData);
-        }
-      }
-
       setSuccess("Compte cree avec succes ! Redirection...");
-      setTimeout(() => router.push(role === "artisan" ? "/dashboard/artisan" : "/dashboard/client"), 1500);
+      setTimeout(() => router.push("/choose-role"), 1200);
     } catch (err: any) {
       setError(err.message || "Une erreur est survenue.");
     } finally {
@@ -158,7 +110,7 @@ export default function RegisterPage() {
         const errData = await res.json().catch(() => ({}));
         throw new Error(errData.message || "Email ou mot de passe incorrect.");
       }
-      router.push(role === "artisan" ? "/dashboard/artisan" : "/dashboard/client");
+      router.push("/dashboard/client");
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -176,7 +128,7 @@ export default function RegisterPage() {
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
           <span className="font-medium">Retour</span>
         </button>
-        <h1 className="text-lg font-bold text-brand-600">FINDA</h1>
+        <h1 className="text-lg font-bold text-brand-600">Artisan Connect</h1>
         <div className="w-20" />
       </div>
 
@@ -201,20 +153,6 @@ export default function RegisterPage() {
                 {!isLogin && (
                   <form onSubmit={handleRegister} className="space-y-5">
 
-                    <div>
-                      <p className={labelCls}>Je suis :</p>
-                      <div className="flex gap-3">
-                        <button type="button" onClick={() => setRole("client")}
-                          className={"flex-1 py-3 rounded-lg font-semibold border-2 transition " + (role === "client" ? "border-brand-500 bg-brand-50 text-brand-700" : "border-gray-200 bg-white text-gray-500 hover:border-brand-200")}>
-                          Client
-                        </button>
-                        <button type="button" onClick={() => setRole("artisan")}
-                          className={"flex-1 py-3 rounded-lg font-semibold border-2 transition " + (role === "artisan" ? "border-brand-500 bg-brand-50 text-brand-700" : "border-gray-200 bg-white text-gray-500 hover:border-brand-200")}>
-                          Artisan
-                        </button>
-                      </div>
-                    </div>
-
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className={labelCls}>Prenom *</label>
@@ -233,7 +171,7 @@ export default function RegisterPage() {
                       </div>
                       <div>
                         <label className={labelCls}>Telephone *</label>
-                        <input name="phone" type="tel" value={form.phone} onChange={handleChange} required className={inputCls} placeholder="+225 07 00 00 00" />
+                        <input name="phone" type="tel" value={form.phone} onChange={handleChange} required className={inputCls} placeholder="+229 90 00 00 00" />
                       </div>
                     </div>
 
@@ -283,48 +221,8 @@ export default function RegisterPage() {
                       <input name="neighborhood" value={form.neighborhood} onChange={handleChange} className={inputCls} placeholder="Cocody, Plateau, etc." />
                     </div>
 
-                    {role === "artisan" && (
-                      <>
-                        <hr className="border-brand-100" />
-                        <p className="text-sm font-semibold text-brand-600">Informations professionnelles</p>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <div>
-                            <label className={labelCls}>Metier *</label>
-                            <select name="profession" value={form.profession} onChange={handleChange} required className={inputCls + " bg-white"}>
-                              <option value="">-- Choisir --</option>
-                              {PROFESSIONS.map((p) => <option key={p} value={p}>{p}</option>)}
-                            </select>
-                          </div>
-                          <div>
-                            <label className={labelCls}>Categorie / Domaine</label>
-                            <select name="category" value={form.category} onChange={handleChange} className={inputCls + " bg-white"}>
-                              <option value="">-- Choisir --</option>
-                              {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
-                            </select>
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <div>
-                            <label className={labelCls}>Annees d&apos;experience</label>
-                            <input name="experience" type="number" min="0" value={form.experience} onChange={handleChange} className={inputCls} placeholder="5" />
-                          </div>
-                          <div>
-                            <label className={labelCls}>Competences (separees par virgules)</label>
-                            <input name="skills" value={form.skills} onChange={handleChange} className={inputCls} placeholder="Soudure, Lecture de plans" />
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className={labelCls}>Description de votre activite</label>
-                          <textarea name="bio" value={form.bio} onChange={handleChange} rows={3} className={inputCls + " resize-none"} placeholder="Decrivez votre activite et vos services..." />
-                        </div>
-                      </>
-                    )}
-
                     <button type="submit" disabled={loading} className="w-full py-3 bg-brand-500 hover:bg-brand-600 disabled:bg-brand-300 text-white font-semibold rounded-lg transition-all shadow-md">
-                      {loading ? "Creation en cours..." : (role === "artisan" ? "Creer mon compte artisan" : "Creer mon compte client")}
+                      {loading ? "Creation en cours..." : "Creer mon compte"}
                     </button>
                   </form>
                 )}
