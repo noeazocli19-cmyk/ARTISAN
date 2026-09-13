@@ -67,18 +67,18 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  /* Palette de marque FINDA — générée à partir de #2596BE (brand-500 = couleur exacte demandée) */
-  --color-brand-50: #EEF8FC;
-  --color-brand-100: #D9EFF8;
-  --color-brand-200: #B6E2F1;
-  --color-brand-300: #83CDE7;
-  --color-brand-400: #4CB6DC;
-  --color-brand-500: #2596BE;
-  --color-brand-600: #1F7EA0;
-  --color-brand-700: #196580;
-  --color-brand-800: #144F64;
-  --color-brand-900: #0F3B4B;
-  --color-brand-950: #08222B;
+  /* Palette de marque FINDA — verte (mode principal) */
+  --color-brand-50: #F0FDF4;
+  --color-brand-100: #DCFCE7;
+  --color-brand-200: #BBF7D0;
+  --color-brand-300: #86EFAC;
+  --color-brand-400: #4ADE80;
+  --color-brand-500: #22C55E; /* primary green */
+  --color-brand-600: #16A34A;
+  --color-brand-700: #15803D;
+  --color-brand-800: #166534;
+  --color-brand-900: #14532D;
+  --color-brand-950: #052E16;
 }
 
 :root {
@@ -89,8 +89,8 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.62 0.12 220);
-  --primary-foreground: oklch(1 0 0);
+  --primary: 142 47% 36%;
+  --primary-foreground: 0 0% 100%;
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -123,14 +123,14 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.19 0.012 240);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.62 0.12 220);
-  --primary-foreground: oklch(1 0 0);
+  --primary: 142 47% 36%;
+  --primary-foreground: 0 0% 100%;
   --secondary: oklch(0.24 0.012 240);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.24 0.012 240);
   --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.27 0.02 220);
-  --accent-foreground: oklch(0.985 0 0);
+  --accent: 142 47% 36%;
+  --accent-foreground: 0 0% 100%;
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
