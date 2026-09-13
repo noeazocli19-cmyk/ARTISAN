@@ -116,7 +116,7 @@ export function Navbar({ onOpenAuth, onSearch }: NavbarProps) {
               <Wrench className="h-5 w-5 text-white" />
             </div>
           )}
-          <span className="text-lg font-bold" style={{ fontFamily: 'Foodpacker, sans-serif', color: '#2596BE' }}>
+          <span className="text-lg font-bold bg-clip-text text-transparent" style={{ fontFamily: 'Foodpacker, sans-serif', backgroundImage: 'linear-gradient(90deg, #000000 0%, #6b7280 35%, #ffffff 65%, var(--color-brand-500) 100%)' }}>
             FINDA
           </span>
         </button>

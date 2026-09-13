@@ -557,16 +557,11 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
     <>
       {/* ────────── HERO ────────── */}
       <section className="relative pt-28 pb-10 sm:pt-36 sm:pb-16 overflow-hidden">
-        {/* Video background */}
-        <div className="absolute inset-0 w-full h-full overflow-hidden">
-          <video
-            src="/artisan-connect-v2.mp4"
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-full object-cover opacity-45"
-          />
+        {/* Static background image (video removed for better PWA/mobile) */}
+        <div
+          className="absolute inset-0 w-full h-full overflow-hidden bg-center bg-cover opacity-90"
+          style={{ backgroundImage: "url('/images/hero-family.png')" }}
+        >
           <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/75 to-background" />
         </div>
 
