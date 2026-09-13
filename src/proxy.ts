@@ -12,6 +12,6 @@ export function proxy(request: NextRequest) {
   return NextResponse.next()
 }
 
-export const config = {
-  matcher: ["/test-better-auth/:path*"],
-}
+// Note: do not export `config` from this file to avoid Next treating it as
+// a middleware module. Middleware must be implemented in `middleware.js` or
+// `middleware.ts` at the project root. Keep this helper for use elsewhere.
