@@ -4,7 +4,7 @@ import { Suspense } from "react"
 import { useState, useEffect, useRef } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { authClient } from "@/lib/auth-client"
-import { MessageCircle, Send, Loader2, MessagesSquare, ArrowLeft, Mic, Trash2, Play, Pause, ImagePlus, X } from "lucide-react"
+import { MessageCircle, Send, Loader2, MessagesSquare, ArrowLeft, Mic, Trash2, Play, Pause, ImagePlus, X, Phone } from "lucide-react"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 
 function AudioBubble({ src, isMe }: { src: string; isMe: boolean }) {
@@ -384,7 +384,7 @@ function MessagesPageContent() {
                   )}
                 </Avatar>
               </div>
-              <div>
+              <div className="flex-1">
                 <p className="font-semibold text-gray-900 dark:text-white">
                   {activePartnerInfo?.name || "Utilisateur"}
                 </p>
@@ -398,6 +398,15 @@ function MessagesPageContent() {
                   </p>
                 )}
               </div>
+              {activePartnerInfo?.phone && (
+                <a
+                  href={`tel:${activePartnerInfo.phone}`}
+                  className="ml-auto shrink-0 h-10 w-10 rounded-full bg-green-500 hover:bg-green-600 text-white flex items-center justify-center transition-all shadow-sm"
+                  title="Appeler"
+                >
+                  <Phone className="h-5 w-5" />
+                </a>
+              )}
             </div>
 
             {/* Messages */}
