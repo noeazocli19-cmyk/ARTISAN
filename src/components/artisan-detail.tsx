@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
@@ -31,6 +31,7 @@ import {
   CheckCircle2,
   Briefcase,
   Heart,
+  Phone,
 } from 'lucide-react'
 
 const BADGE_STYLES: Record<string, { color: string; icon: typeof Award }> = {
@@ -82,6 +83,7 @@ interface ArtisanData {
     avatar?: string
     location?: string
     country?: string
+    phone?: string
     bio?: string
     isVerified: boolean
     createdAt: string
@@ -196,6 +198,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
   const location = artisan.user?.location || ''
   const country = artisan.user?.country || ''
   const bio = artisan.user?.bio || ''
+  const phone = artisan.user?.phone || ''
   const specialties = parseJSON(artisan.specialties)
   const skills = parseJSON(artisan.skills)
   const certifications = parseJSON(artisan.certifications)
@@ -275,6 +278,16 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
                   <MessageSquare className="h-4 w-4" />
                   Contacter
                 </Button>
+                {phone && (
+                  <Button
+                    variant="outline"
+                    className="gap-1"
+                    onClick={() => window.location.href = `tel:${phone}`}
+                  >
+                    <Phone className="h-4 w-4" />
+                    Appeler
+                  </Button>
+                )}
                 <Button
                   className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 gap-1"
                   onClick={() => setDevisOpen(true)}
@@ -452,6 +465,16 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
                   <MessageSquare className="h-4 w-4 mr-2" />
                   Contacter
                 </Button>
+                {phone && (
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => window.location.href = `tel:${phone}`}
+                >
+                  <Phone className="h-4 w-4 mr-2" />
+                  Appeler
+                </Button>
+                )}
               </CardContent>
             </Card>
           </motion.div>
