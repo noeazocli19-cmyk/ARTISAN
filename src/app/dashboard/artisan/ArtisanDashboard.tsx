@@ -487,8 +487,24 @@ export function ArtisanDashboard() {
         </div>
       </div>
 
-      {/* Barre d'onglets */}
-      <div className="flex gap-1 overflow-x-auto rounded-xl bg-gray-100 p-1">
+      {/* Menu déroulant - Mobile uniquement */}
+      <div className="sm:hidden">
+        <select
+          value={activeTab}
+          onChange={(e) => setActiveTab(e.target.value as TabId)}
+          className="w-full rounded-xl border border-gray-200 bg-gray-100 px-3.5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500"
+        >
+          {TABS.map((tab) => (
+            <option key={tab.id} value={tab.id}>
+              {tab.label}
+              {tab.id === 'messages' && totalUnread > 0 ? ` (${totalUnread})` : ''}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Barre d'onglets - Desktop uniquement */}
+      <div className="hidden sm:flex gap-1 overflow-x-auto rounded-xl bg-gray-100 p-1">
         {TABS.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;

@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 import { Suspense } from "react"
 
 import { useState, useEffect, useRef } from "react"
@@ -290,9 +290,9 @@ function MessagesPageContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col md:flex-row">
       {/* Sidebar */}
-      <div className="w-80 border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex flex-col">
+      <div className={`w-full md:w-80 border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex-col ${activePartner ? "hidden md:flex" : "flex"}`}>
         <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center gap-2">
           <MessagesSquare className="w-5 h-5 text-brand-500" />
           <h2 className="text-lg font-bold text-gray-900 dark:text-white">Messages</h2>
@@ -364,11 +364,17 @@ function MessagesPageContent() {
       </div>
 
       {/* Chat area */}
-      <div className="flex-1 flex flex-col">
+      <div className={`flex-1 flex-col ${activePartner ? "flex" : "hidden md:flex"}`}>
         {activePartner ? (
           <>
             {/* Header */}
             <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex items-center gap-3">
+              <button
+                onClick={() => setActivePartner(null)}
+                className="md:hidden shrink-0 h-9 w-9 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </button>
               <div className="w-9 h-9">
                 <Avatar className="w-9 h-9">
                   {activePartnerInfo?.image ? (

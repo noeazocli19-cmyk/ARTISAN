@@ -78,7 +78,8 @@ const fadeInUp = {
 export function ClientDashboard() {
   const { user, token, favoriteIds } = useAppStore()
   const router = useRouter()
-  const [missions, setMissions] = useState<Mission[]>([])
+  const [missions, setMissions] = useState<Mission[]>([]) 
+  const [activeTab, setActiveTab] = useState('overview')
   const [reviews, setReviews] = useState<Review[]>([])
   const [loadingMissions, setLoadingMissions] = useState(true)
   const [loadingReviews, setLoadingReviews] = useState(true)
@@ -256,8 +257,25 @@ export function ClientDashboard() {
         </Button>
       </div>
 
-      <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="h-11 bg-muted/50 p-1">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        {/* Menu déroulant - Mobile uniquement */}
+        <div className="sm:hidden">
+          <select
+            value={activeTab}
+            onChange={(e) => setActiveTab(e.target.value)}
+            className="w-full rounded-xl border border-gray-200 bg-muted/50 px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500"
+          >
+            <option value="overview">Aperçu</option>
+            <option value="missions">Mes Missions</option>
+            <option value="messages">Messages</option>
+            <option value="favorites">Favoris</option>
+            <option value="reviews">Avis</option>
+            <option value="profile">Profil</option>
+          </select>
+        </div>
+
+        {/* Barre d'onglets - Desktop uniquement */}
+        <TabsList className="hidden sm:flex h-11 bg-muted/50 p-1">
           <TabsTrigger value="overview" className="text-sm">Aperçu</TabsTrigger>
           <TabsTrigger value="missions" className="text-sm">Mes Missions</TabsTrigger>
           <TabsTrigger value="messages" className="text-sm">Messages</TabsTrigger>
