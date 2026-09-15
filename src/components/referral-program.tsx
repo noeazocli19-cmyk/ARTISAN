@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -345,8 +345,8 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
     setShowConfetti(true)
     setTimeout(() => setShowConfetti(false), 3000)
 
-    const shareText = `Rejoignez Artisan Connect avec mon code de parrainage : ${stats.code}. Trouvez les meilleurs artisans en Afrique !`
-    const shareUrl = `https://artisan-connecte.com/ref/${stats.code}`
+    const shareText = `Rejoignez Finda avec mon code de parrainage : ${stats.code}. Trouvez les meilleurs artisans en Afrique !`
+    const shareUrl = `https://artisan-nine-sigma.vercel.app/ref/${stats.code}`
 
     switch (method) {
       case 'whatsapp': {
@@ -360,7 +360,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
         break
       }
       case 'email': {
-        const subject = encodeURIComponent('Rejoignez Artisan Connect !')
+        const subject = encodeURIComponent('Rejoignez Finda !')
         const body = encodeURIComponent(shareText + '\n\n' + shareUrl)
         window.open(`mailto:?subject=${subject}&body=${body}`, '_blank')
         break
@@ -599,8 +599,8 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                     label: 'Invitations envoyées',
                     value: stats.totalInvites,
                     icon: Send,
-                    color: 'text-blue-600 dark:text-blue-400',
-                    bg: 'bg-blue-100 dark:bg-blue-950/50',
+                    color: 'text-brand-600 dark:text-brand-400',
+                    bg: 'bg-brand-100 dark:bg-brand-950/50',
                     format: false,
                   },
                   {
@@ -789,7 +789,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                   ?
                 </h2>
                 <p className="text-muted-foreground text-base max-w-2xl mx-auto">
-                  Gagnez des crédits en invitant vos amis Ã  rejoindre Artisan Connect. C&apos;est simple, rapide et gratifiant !
+                  Gagnez des crédits en invitant vos amis à rejoindre Finda. C&apos;est simple, rapide et gratifiant !
                 </p>
               </motion.div>
 
@@ -800,7 +800,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                     step: 1,
                     emoji: 'ðŸ“¤',
                     title: 'Partagez votre code',
-                    description: 'Envoyez votre code unique Ã  vos amis via WhatsApp, SMS, email ou en copiant le lien.',
+                    description: 'Envoyez votre code unique à vos amis via WhatsApp, SMS, email ou en copiant le lien.',
                     icon: Share2,
                     gradient: 'from-brand-400 to-brand-600',
                     bg: 'from-brand-50 to-brand-50 dark:from-brand-950/30 dark:to-brand-950/30',
@@ -808,9 +808,9 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                   },
                   {
                     step: 2,
-                    emoji: 'ðŸ‘¥',
+                    emoji: '👥',
                     title: 'Ils s\'inscrivent',
-                    description: 'Vos amis créent un compte sur Artisan Connect en utilisant votre code de parrainage.',
+                    description: 'Vos amis créent un compte sur Finda en utilisant votre code de parrainage.',
                     icon: UserPlus,
                     gradient: 'from-brand-400 to-brand-600',
                     bg: 'from-brand-50 to-brand-50 dark:from-brand-950/30 dark:to-brand-950/30',
@@ -968,7 +968,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                                   +{new Intl.NumberFormat('fr-FR').format(invite.creditsEarned)} FCFA
                                 </span>
                               ) : (
-                                <span className="text-muted-foreground text-sm">â€”</span>
+                                <span className="text-muted-foreground text-sm">—</span>
                               )}
                             </div>
                             <div className="col-span-2 text-right text-sm text-muted-foreground">
@@ -1026,7 +1026,7 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
                       </motion.div>
                       <h3 className="text-lg font-bold mb-2">Aucune invitation pour le moment</h3>
                       <p className="text-muted-foreground text-sm mb-6 max-w-sm mx-auto">
-                        Commencez Ã  partager votre code de parrainage avec vos amis pour gagner des crédits !
+                        Commencez à partager votre code de parrainage avec vos amis pour gagner des crédits !
                       </p>
                       <Button
                         className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 font-semibold"
@@ -1216,4 +1216,3 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
     </div>
   )
 }
-
