@@ -240,7 +240,7 @@ export function ClientDashboard() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-      <Link href="/search" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-brand-700 transition mb-4">
+      <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-brand-700 transition mb-4">
         <ArrowLeftCircle className="h-4 w-4" />
         Retour au site
       </Link>
