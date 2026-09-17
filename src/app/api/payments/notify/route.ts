@@ -103,6 +103,14 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
+    const existingPayment = await db.payment.findUnique({ where: { id: paymentId } });
+    if (!existingPayment || existingPayment.clientId !== session.user.id) {
+      return NextResponse.json(
+        { error: 'Paiement introuvable ou acces refuse' },
+        { status: 403 }
+      );
+    }
+
     const payment = await db.payment.update({
       where: { id: paymentId },
       data: {
