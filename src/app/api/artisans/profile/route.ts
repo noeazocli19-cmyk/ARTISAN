@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { auth } from "@/lib/better-auth";
 
@@ -162,6 +162,7 @@ export async function PATCH(request: NextRequest) {
     if (body.location !== undefined) updateData.location = body.location;
     if (body.country !== undefined) updateData.country = body.country;
     if (body.bio !== undefined) updateData.bio = body.bio;
+    if (body.isAvailable !== undefined) updateData.isAvailable = Boolean(body.isAvailable);
 
     if (body.address !== undefined) {
       updateData.address = body.address;

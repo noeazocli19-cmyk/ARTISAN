@@ -411,7 +411,23 @@ export function ArtisanDashboard() {
     }
   };
 
+  const toggleAvailability = async () => {
+    if (!artisanProfile) return;
+    const newValue = !artisanProfile.isAvailable;
+    setArtisanProfile({ ...artisanProfile, isAvailable: newValue });
+    try {
+      await fetch("/api/artisans/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isAvailable: newValue }),
+      });
+    } catch {
+      setArtisanProfile({ ...artisanProfile, isAvailable: !newValue });
+    }
+  };
+
   if (loading) {
+
     return (
       <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
         <Skeleton className="h-24 w-full rounded-2xl" />
@@ -485,6 +501,17 @@ export function ArtisanDashboard() {
             {artisanProfile?.rating ? `★ ${artisanProfile.rating.toFixed(1)}` : 'Nouveau'}
           </Badge>
         </div>
+      <button
+        onClick={toggleAvailability}
+        className={`w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold transition ${
+          artisanProfile?.isAvailable
+            ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+            : "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
+        }`}
+      >
+        <span className={`h-2 w-2 rounded-full ${artisanProfile?.isAvailable ? "bg-green-500" : "bg-gray-400"}`} />
+        {artisanProfile?.isAvailable ? "Disponible maintenant" : "Indisponible"}
+      </button>
       </div>
 
       {/* Menu déroulant - Mobile uniquement */}
