@@ -52,6 +52,8 @@ export async function POST(request: NextRequest) {
       recipientId,
       recipientName,
       type = 'payment',
+      missionId,
+      artisanId,
     } = body
 
     if (!amount || amount < 500) {
@@ -92,6 +94,8 @@ export async function POST(request: NextRequest) {
     const payment = await db.payment.create({
       data: {
         clientId: payload.userId,
+        missionId: missionId || null,
+        artisanId: artisanId || null,
         amount: totalToCharge,
         netAmount,
         commission: commission?.commission || 0,

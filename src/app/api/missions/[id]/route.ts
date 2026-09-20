@@ -15,6 +15,7 @@ export async function GET(
       include: {
         client: { select: { id: true, name: true, image: true, location: true, phone: true, country: true, email: true } },
         artisan: { include: { user: { select: { id: true, name: true, image: true, phone: true } } } },
+        payments: true,
         messages: {
           include: {
             sender: { select: { id: true, name: true, image: true } },

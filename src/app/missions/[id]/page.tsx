@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { authClient } from "@/lib/auth-client"
+import { DepositButton } from "@/components/deposit-button"
 import { ArrowLeft, MapPin, Phone, Globe, Clock, Tag, DollarSign, CheckCircle, MessageCircle, User, Wrench, Loader2, CalendarDays } from "lucide-react"
 
 export default function MissionDetailPage() {
@@ -119,6 +120,38 @@ export default function MissionDetailPage() {
               </span>
             )}
           </div>
+          {mission.budget > 0 && mission.artisanId && mission.status !== "ouverte" && (() => {
+            const depositAmount = Math.round(mission.budget * 0.2)
+            const balanceAmount = mission.budget - depositAmount
+            const paidPayments = (mission.payments || []).filter((p: any) => p.status === "completed")
+            const totalPaid = paidPayments.reduce((sum: number, p: any) => sum + p.amount, 0)
+            const depositPaid = totalPaid >= depositAmount
+            const balancePaid = totalPaid >= mission.budget
+            return (
+              <div className="mt-4 p-4 rounded-xl bg-brand-50 dark:bg-brand-950/20 space-y-3">
+                <p className="text-sm font-semibold text-gray-900 dark:text-white">Paiement de la mission</p>
+                {balancePaid ? (
+                  <p className="text-sm text-green-600 dark:text-green-400">Mission entierement payee.</p>
+                ) : depositPaid ? (
+                  <DepositButton
+                    missionId={mission.id}
+                    artisanId={mission.artisanId}
+                    amount={balanceAmount}
+                    label="Payer le solde"
+                    onPaid={() => window.location.reload()}
+                  />
+                ) : (
+                  <DepositButton
+                    missionId={mission.id}
+                    artisanId={mission.artisanId}
+                    amount={depositAmount}
+                    label="Payer l'acompte (20%)"
+                    onPaid={() => window.location.reload()}
+                  />
+                )}
+              </div>
+            )
+          })()}
 
           <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed mb-4">
             {mission.description}
