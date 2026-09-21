@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
 import { useAppStore } from '@/lib/store'
+import { getOnlineStatus } from '@/lib/online-status'
 import {
   MapPin,
   Star,
@@ -84,6 +85,7 @@ interface ArtisanData {
     location?: string
     country?: string
     phone?: string
+    lastActiveAt?: string
     bio?: string
     isVerified: boolean
     createdAt: string
@@ -195,6 +197,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
   }
 
   const name = artisan.user?.name || 'Artisan'
+  const onlineStatus = getOnlineStatus(artisan.user?.lastActiveAt)
   const location = artisan.user?.location || ''
   const country = artisan.user?.country || ''
   const bio = artisan.user?.bio || ''
@@ -232,6 +235,10 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-3 flex-wrap">
                   <h1 className="text-2xl font-bold">{name}</h1>
+                  <span className={`flex items-center gap-1.5 text-xs font-medium px-2 py-1 rounded-full ${onlineStatus.online ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" : "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400"}`}>
+                    <span className={`h-1.5 w-1.5 rounded-full ${onlineStatus.online ? "bg-green-500" : "bg-gray-400"}`} />
+                    {onlineStatus.label}
+                  </span>
                   <Badge className={`${badgeInfo.color} border-0 gap-1`}>
                     <BadgeIcon className="h-3 w-3" />
                     {artisan.badge}
