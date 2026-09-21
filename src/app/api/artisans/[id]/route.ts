@@ -58,7 +58,17 @@ export async function GET(
         { status: 404 }
       )
     }
-    return NextResponse.json({ artisan })
+    const missionsTermineesCount = await db.mission.count({
+      where: { artisanId: artisan.id, status: { in: ['terminee', 'terminee_artisan'] } },
+    })
+    const missionsAssigneesCount = await db.mission.count({
+      where: { artisanId: artisan.id, status: { not: 'ouverte' } },
+    })
+    const successRate = missionsAssigneesCount > 0
+      ? Math.round((missionsTermineesCount / missionsAssigneesCount) * 100)
+      : null
+
+    return NextResponse.json({ artisan: { ...artisan, successRate } })
   } catch (error) {
     console.error('Get artisan error:', error)
     return NextResponse.json(

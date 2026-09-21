@@ -78,6 +78,7 @@ interface ArtisanData {
   certifications: string
   portfolio: string
   identityStatus?: string
+  successRate?: number | null
   user?: {
     id: string
     name: string
@@ -239,6 +240,11 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
                     <span className={`h-1.5 w-1.5 rounded-full ${onlineStatus.online ? "bg-green-500" : "bg-gray-400"}`} />
                     {onlineStatus.label}
                   </span>
+                  {artisan.successRate !== null && artisan.successRate !== undefined && (
+                    <span className="flex items-center gap-1.5 text-xs font-medium px-2 py-1 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                      {artisan.successRate}% de missions reussies
+                    </span>
+                  )}
                   <Badge className={`${badgeInfo.color} border-0 gap-1`}>
                     <BadgeIcon className="h-3 w-3" />
                     {artisan.badge}
