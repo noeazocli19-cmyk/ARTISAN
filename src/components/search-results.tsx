@@ -28,14 +28,14 @@ import {
 } from 'lucide-react'
 
 const CATEGORY_FILTERS = [
-  'Plomberie', 'Ã‰lectricitÃ©', 'Menuiserie', 'Peinture',
-  'Serrurerie', 'MaÃ§onnerie', 'Climatisation', 'Nettoyage',
+  'Plomberie', 'Électricité', 'Menuiserie', 'Peinture',
+  'Serrurerie', 'Maçonnerie', 'Climatisation', 'Nettoyage',
 ]
 
 const BADGE_STYLES: Record<string, string> = {
-  'Ã‰lite': 'bg-brand-500 text-white',
+  'Élite': 'bg-brand-500 text-white',
   'Top': 'bg-emerald-500 text-white',
-  'VÃ©rifiÃ©': 'bg-teal-500 text-white',
+  'Vérifié': 'bg-teal-500 text-white',
   'Nouveau': 'bg-neutral-500 text-white',
 }
 
@@ -131,7 +131,7 @@ export function SearchResults({ onViewArtisan }: SearchResultsProps) {
       <div className="mb-8">
         <h1 className="text-2xl sm:text-3xl font-bold mb-4">
           {searchQuery ? (
-            <>RÃ©sultats pour &laquo; <span className="bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">{searchQuery}</span> &raquo;</>
+            <>Résultats pour &laquo; <span className="bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">{searchQuery}</span> &raquo;</>
           ) : (
             <>Trouvez votre <span className="bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">artisan</span></>
           )}
@@ -191,7 +191,7 @@ export function SearchResults({ onViewArtisan }: SearchResultsProps) {
 
             {/* Categories */}
             <div className="space-y-3">
-              <h4 className="text-sm font-medium">CatÃ©gories</h4>
+              <h4 className="text-sm font-medium">Catégories</h4>
               <div className="space-y-2">
                 {CATEGORY_FILTERS.map(cat => (
                   <label key={cat} className="flex items-center gap-2 cursor-pointer">
@@ -234,9 +234,9 @@ export function SearchResults({ onViewArtisan }: SearchResultsProps) {
                   <SelectValue placeholder="Toutes les notes" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="4">4+ Ã©toiles</SelectItem>
-                  <SelectItem value="3">3+ Ã©toiles</SelectItem>
-                  <SelectItem value="2">2+ Ã©toiles</SelectItem>
+                  <SelectItem value="4">4+ étoiles</SelectItem>
+                  <SelectItem value="3">3+ étoiles</SelectItem>
+                  <SelectItem value="2">2+ étoiles</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -252,7 +252,7 @@ export function SearchResults({ onViewArtisan }: SearchResultsProps) {
           {/* Sort & count */}
           <div className="flex items-center justify-between mb-4">
             <p className="text-sm text-muted-foreground">
-              {isLoading ? 'Recherche en cours...' : `${searchResults.length} artisan${searchResults.length !== 1 ? 's' : ''} trouvÃ©${searchResults.length !== 1 ? 's' : ''}`}
+              {isLoading ? 'Recherche en cours...' : `${searchResults.length} artisan${searchResults.length !== 1 ? 's' : ''} trouvé${searchResults.length !== 1 ? 's' : ''}`}
             </p>
             <Select value={sortBy} onValueChange={setSortBy}>
               <SelectTrigger className="w-40 h-9 text-sm">
@@ -293,8 +293,8 @@ export function SearchResults({ onViewArtisan }: SearchResultsProps) {
             <Card className="border-dashed">
               <CardContent className="py-16 text-center text-muted-foreground">
                 <Search className="h-16 w-16 mx-auto mb-4 opacity-20" />
-                <p className="text-lg font-medium">Aucun artisan trouvÃ©</p>
-                <p className="text-sm mt-1">Essayez de modifier vos critÃ¨res de recherche</p>
+                <p className="text-lg font-medium">Aucun artisan trouvé</p>
+                <p className="text-sm mt-1">Essayez de modifier vos critères de recherche</p>
                 <Button variant="outline" className="mt-4" onClick={clearFilters}>
                   Effacer les filtres
                 </Button>

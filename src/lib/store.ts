@@ -1,5 +1,5 @@
 // =============================================================================
-// Finda â€” Global Application Store (Zustand v5 + persist)
+// Finda — Global Application Store (Zustand v5 + persist)
 // =============================================================================
 
 import { create } from "zustand";

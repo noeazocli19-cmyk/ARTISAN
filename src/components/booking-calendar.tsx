@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -273,7 +273,7 @@ function generateTimeSlots(date: Date, bookings: Booking[]): TimeSlot[] {
 }
 
 // =============================================================================
-// Availability map for a month â€” which days have at least one slot
+// Availability map for a month — which days have at least one slot
 // =============================================================================
 
 function getAvailabilityMap(year: number, month: number, bookings: Booking[]): Map<number, boolean> {
@@ -566,26 +566,26 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
   const serviceOptions = useMemo(() => {
     if (selectedArtisan) {
       return [
-        `${selectedArtisan.specialty} â€” Intervention standard`,
-        `${selectedArtisan.specialty} â€” Urgence`,
-        `${selectedArtisan.specialty} â€” Diagnostic`,
-        `${selectedArtisan.specialty} â€” Installation`,
-        `${selectedArtisan.specialty} â€” Réparation`,
+        `${selectedArtisan.specialty} — Intervention standard`,
+        `${selectedArtisan.specialty} — Urgence`,
+        `${selectedArtisan.specialty} — Diagnostic`,
+        `${selectedArtisan.specialty} — Installation`,
+        `${selectedArtisan.specialty} — Réparation`,
       ]
     }
     return [
-      'Plomberie â€” Intervention standard',
-      'Plomberie â€” Urgence',
-      'Électricité â€” Intervention standard',
-      'Électricité â€” Diagnostic',
-      'Menuiserie â€” Réparation',
-      'Menuiserie â€” Installation',
-      'Peinture â€” Décoration intérieure',
-      'Peinture â€” Peinture extérieure',
-      'Climatisation â€” Maintenance',
-      'Climatisation â€” Installation',
-      'Nettoyage â€” Standard',
-      'Nettoyage â€” Grand nettoyage',
+      'Plomberie — Intervention standard',
+      'Plomberie — Urgence',
+      'Électricité — Intervention standard',
+      'Électricité — Diagnostic',
+      'Menuiserie — Réparation',
+      'Menuiserie — Installation',
+      'Peinture — Décoration intérieure',
+      'Peinture — Peinture extérieure',
+      'Climatisation — Maintenance',
+      'Climatisation — Installation',
+      'Nettoyage — Standard',
+      'Nettoyage — Grand nettoyage',
     ]
   }, [selectedArtisan])
 
@@ -611,7 +611,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
             {selectedArtisan && (
               <p className="text-sm text-muted-foreground flex items-center gap-1 mt-0.5">
                 <User className="h-3 w-3" />
-                {selectedArtisan.name} â€” {selectedArtisan.specialty}
+                {selectedArtisan.name} — {selectedArtisan.specialty}
               </p>
             )}
           </div>
@@ -805,7 +805,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                                   <div className="flex items-center gap-2">
                                     <Clock className={`h-4 w-4 ${slot.available ? 'text-green-600 dark:text-green-400' : 'text-gray-400'}`} />
                                     <span className={`font-medium text-sm ${slot.available ? 'text-green-700 dark:text-green-300' : 'text-gray-500'}`}>
-                                      {startStr} â€” {endStr}
+                                      {startStr} — {endStr}
                                     </span>
                                   </div>
                                   {slot.available ? (
@@ -868,7 +868,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                               <Star className="h-3 w-3 fill-brand-400 text-brand-400" />
                               <span className="text-xs font-medium">{selectedArtisan.rating}</span>
                             </div>
-                            <span className="text-xs text-muted-foreground">â€¢</span>
+                            <span className="text-xs text-muted-foreground">–</span>
                             <span className="text-xs font-semibold text-brand-600 dark:text-brand-400">
                               {formatPrice(selectedArtisan.hourlyRate)}/h
                             </span>
@@ -1033,7 +1033,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                                         </div>
                                         <div className="flex items-center gap-1.5 text-muted-foreground">
                                           <Clock className="h-3 w-3" />
-                                          <span>{booking.startTime} â€” {booking.endTime}</span>
+                                          <span>{booking.startTime} — {booking.endTime}</span>
                                         </div>
                                         <div className="flex items-center gap-1.5 text-muted-foreground">
                                           <MapPin className="h-3 w-3" />
@@ -1162,7 +1162,7 @@ export function BookingCalendar({ onBack, onBookingComplete, artisanId }: Bookin
                         <div className="flex items-center gap-1.5">
                           <Clock className="h-3 w-3 text-brand-600 dark:text-brand-400" />
                           <span>
-                            {String(new Date(selectedSlot.start).getHours()).padStart(2, '0')}:00 â€” {String(new Date(selectedSlot.end).getHours()).padStart(2, '0')}:00
+                            {String(new Date(selectedSlot.start).getHours()).padStart(2, '0')}:00 — {String(new Date(selectedSlot.end).getHours()).padStart(2, '0')}:00
                           </span>
                         </div>
                       )}

@@ -25,7 +25,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "FINDA â€” Trouvez l'artisan parfait pour chaque projet",
+  title: "FINDA — Trouvez l'artisan parfait pour chaque projet",
   description:
     "Plateforme premium connectant les clients avec les meilleurs artisans Ã  travers l'Afrique. Plomberie, électricité, menuiserie, peinture et plus encore. Service vérifié, paiement sécurisé, satisfaction garantie.",
   keywords: [
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     title: "FINDA",
   },
   openGraph: {
-    title: "FINDA â€” Trouvez l'artisan parfait pour chaque projet",
+    title: "FINDA — Trouvez l'artisan parfait pour chaque projet",
     description:
       "Plateforme premium connectant les clients avec les meilleurs artisans Ã  travers l'Afrique.",
     siteName: "FINDA",
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "FINDA â€” Trouvez l'artisan parfait pour chaque projet",
+    title: "FINDA — Trouvez l'artisan parfait pour chaque projet",
     description:
       "Plateforme premium connectant les clients avec les meilleurs artisans Ã  travers l'Afrique.",
   },

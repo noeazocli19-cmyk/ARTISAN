@@ -193,7 +193,7 @@ function SearchPageContent() {
         <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 flex items-center gap-2">
           <Crosshair className="h-4 w-4 text-blue-600" />
           <span className="text-sm text-blue-700">
-            Géolocalisation active â€” résultats triés par proximité
+            Géolocalisation active — résultats triés par proximité
           </span>
         </div>
       )}

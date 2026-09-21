@@ -63,14 +63,7 @@ interface Conversation {
   unreadCount: number;
 }
 
-const AFRICAN_COUNTRIES = [
-  'Cameroun', 'Sénégal', 'Côte d\'Ivoire', 'Mali', 'Burkina Faso',
-  'Niger', 'Guinée', 'Bénin', 'Togo', 'Gabon',
-  'Congo', 'RD Congo', 'Tchad', 'Centrafrique', 'Madagascar',
-  'Nigeria', 'Ghana', 'Kenya', 'Tanzanie', 'Ouganda',
-  'Éthiopie', 'Rwanda', 'Burundi', 'Maroc', 'Algérie',
-  'Tunisie', 'Mauritanie', 'Cameroun',
-];
+const AFRICAN_COUNTRIES = ['Benin'];
 
 type TabId = 'apercu' | 'missions' | 'dispo' | 'reservations' | 'messages' | 'avis' | 'profil';
 

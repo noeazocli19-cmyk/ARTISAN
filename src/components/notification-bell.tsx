@@ -242,7 +242,7 @@ export function NotificationBell() {
           variant="ghost"
           size="icon"
           className="relative size-9 rounded-full hover:bg-brand-100 dark:hover:bg-brand-900/30"
-          aria-label={`Notifications${unreadCount > 0 ? ` â€“ ${unreadCount} non lue${unreadCount > 1 ? 's' : ''}` : ''}`}
+          aria-label={`Notifications${unreadCount > 0 ? ` "“ ${unreadCount} non lue${unreadCount > 1 ? 's' : ''}` : ''}`}
         >
           <Bell className="size-5 text-foreground" />
 

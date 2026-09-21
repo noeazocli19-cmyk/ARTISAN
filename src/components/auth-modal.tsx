@@ -260,7 +260,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                 <div className="space-y-2">
                   <Label htmlFor="login-password">Mot de passe</Label>
                   <div className="relative">
-                    <Input id="login-password" type={showLoginPassword ? 'text' : 'password'} placeholder="â€¢â€¢â€¢â€¢â€¢â€¢" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} className="pr-10" required />
+                    <Input id="login-password" type={showLoginPassword ? 'text' : 'password'} placeholder="••••••" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} className="pr-10" required />
                     <button type="button" onClick={() => setShowLoginPassword(!showLoginPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors">
                       {showLoginPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
@@ -312,7 +312,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                   <div className="space-y-2">
                     <Label htmlFor="reg-password">Mot de passe</Label>
                     <div className="relative">
-                      <Input id="reg-password" type={showRegPassword ? 'text' : 'password'} placeholder="â€¢â€¢â€¢â€¢â€¢â€¢" value={regPassword} onChange={e => setRegPassword(e.target.value)} className="pr-10" required />
+                      <Input id="reg-password" type={showRegPassword ? 'text' : 'password'} placeholder="••••••" value={regPassword} onChange={e => setRegPassword(e.target.value)} className="pr-10" required />
                       <button type="button" onClick={() => setShowRegPassword(!showRegPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors">
                         {showRegPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </button>
@@ -321,7 +321,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                   <div className="space-y-2">
                     <Label htmlFor="reg-confirm">Confirmer</Label>
                     <div className="relative">
-                      <Input id="reg-confirm" type={showRegConfirmPassword ? 'text' : 'password'} placeholder="â€¢â€¢â€¢â€¢â€¢â€¢" value={regConfirmPassword} onChange={e => setRegConfirmPassword(e.target.value)} className="pr-10" required />
+                      <Input id="reg-confirm" type={showRegConfirmPassword ? 'text' : 'password'} placeholder="••••••" value={regConfirmPassword} onChange={e => setRegConfirmPassword(e.target.value)} className="pr-10" required />
                       <button type="button" onClick={() => setShowRegConfirmPassword(!showRegConfirmPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors">
                         {showRegConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </button>
@@ -417,11 +417,11 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="new-password">Nouveau mot de passe</Label>
-                  <Input id="new-password" type="password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" value={newPassword} onChange={e => setNewPassword(e.target.value)} required />
+                  <Input id="new-password" type="password" placeholder="••••••" value={newPassword} onChange={e => setNewPassword(e.target.value)} required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="confirm-new-password">Confirmer</Label>
-                  <Input id="confirm-new-password" type="password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" value={confirmNewPassword} onChange={e => setConfirmNewPassword(e.target.value)} required />
+                  <Input id="confirm-new-password" type="password" placeholder="••••••" value={confirmNewPassword} onChange={e => setConfirmNewPassword(e.target.value)} required />
                 </div>
                 <Button type="submit" className="w-full bg-gradient-to-r from-brand-500 to-brand-600 text-white border-0 h-11" disabled={resetLoading}>
                   {resetLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}

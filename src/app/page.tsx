@@ -727,7 +727,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">en action</span>
             </motion.h2>
             <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground text-lg max-w-2xl mx-auto">
-              Découvrez nos artisans Ã  travers l&apos;Afrique â€” tous les métiers, tous les talents.
+              Découvrez nos artisans Ã  travers l&apos;Afrique — tous les métiers, tous les talents.
             </motion.p>
           </motion.div>
 
@@ -838,7 +838,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
             {[
               { icon: CalendarDays, title: "Réservation", desc: "Réservez un créneau en quelques clics", color: "from-brand-500 to-brand-500" },
-              { icon: CreditCard, title: "Mobile Money", desc: "Orange Money, MTN, Wave â€” paiement africain", color: "from-emerald-500 to-teal-500" },
+              { icon: CreditCard, title: "Mobile Money", desc: "Orange Money, MTN, Wave — paiement africain", color: "from-emerald-500 to-teal-500" },
               { icon: Trophy, title: "Badges & Niveaux", desc: "Gagnez des points et débloquez des récompenses", color: "from-yellow-500 to-brand-500" },
               { icon: ClipboardList, title: "Demande de devis", desc: "Comparez les devis de plusieurs artisans", color: "from-brand-500 to-red-500" },
               { icon: Siren, title: "Service d'urgence", desc: "Un artisan chez vous en moins de 30 min", color: "from-red-500 to-rose-500" },
