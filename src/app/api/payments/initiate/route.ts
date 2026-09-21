@@ -160,7 +160,7 @@ export async function POST(request: NextRequest) {
         transactionId: reference,
         amount: totalToCharge,
         currency: 'XOF',
-        description: description || `Paiement Artisan Connect - ${reference}`,
+        description: description || `Paiement Finda - ${reference}`,
         customerName: payload.email.split('@')[0],
         customerEmail: payload.email,
         customerPhoneNumber: phoneNumber,

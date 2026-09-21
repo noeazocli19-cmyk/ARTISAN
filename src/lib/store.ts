@@ -1,5 +1,5 @@
-﻿// =============================================================================
-// Artisan Connect â€” Global Application Store (Zustand v5 + persist)
+// =============================================================================
+// Finda â€” Global Application Store (Zustand v5 + persist)
 // =============================================================================
 
 import { create } from "zustand";
@@ -51,7 +51,7 @@ interface AppStoreActions {
 
 export type AppStore = AppStoreState & AppStoreActions;
 
-const AUTH_STORAGE_KEY = "artisan-connecte-auth";
+const AUTH_STORAGE_KEY = "findae-auth";
 
 async function apiRequest<T>(
   path: string,
@@ -339,7 +339,7 @@ export const useAppStore = create<AppStore>()(
       },
     }),
     {
-      name: "artisan-connecte-store",
+      name: "findae-store",
       partialize: (state) => ({
         user: state.user,
         token: state.token,

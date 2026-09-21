@@ -128,7 +128,7 @@ export default function RegisterPage() {
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
           <span className="font-medium">Retour</span>
         </button>
-        <h1 className="text-lg font-bold text-brand-600">Artisan Connect</h1>
+        <h1 className="text-lg font-bold text-brand-600">Finda</h1>
         <div className="w-20" />
       </div>
 

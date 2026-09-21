@@ -23,7 +23,7 @@ export default function MentionsLegalesPage() {
             La 1ère plateforme d'artisans en Afrique<br />
             Fondée en 2025<br />
             Fondateur : NOE AZOCLI EZECKIAS<br />
-            Email : support@artisan-connect.com<br />
+            Email : support@finda.com<br />
             Téléphone : +221 77 123 456
           </p>
 
@@ -85,7 +85,7 @@ export default function MentionsLegalesPage() {
             Pour toute question relative aux mentions légales, vous pouvez nous contacter :
           </p>
           <ul className="list-disc pl-6 mb-4 space-y-2">
-            <li>Email : support@artisan-connect.com</li>
+            <li>Email : support@finda.com</li>
             <li>Téléphone : +221 77 123 456</li>
             <li>Adresse : Dakar, Sénégal</li>
           </ul>

@@ -54,12 +54,12 @@ export async function POST(request: NextRequest) {
     }
 
     await resend.emails.send({
-      from: `Artisan Connect <${EMAIL_FROM}>`,
+      from: `Finda <${EMAIL_FROM}>`,
       to: email,
       subject: 'Votre code de réinitialisation',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #f59e0b;">Artisan Connect</h2>
+          <h2 style="color: #f59e0b;">Finda</h2>
           <p>Bonjour ${user.name},</p>
           <p>Voici votre code de réinitialisation de mot de passe :</p>
           <div style="background: #f3f4f6; border-radius: 8px; padding: 24px; text-align: center; margin: 24px 0;">

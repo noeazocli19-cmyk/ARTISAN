@@ -1,5 +1,5 @@
 // Artisan Connect - Service Worker
-const CACHE_NAME = 'artisan-connect-v2-rename';
+const CACHE_NAME = 'finda-v2-rename';
 const OFFLINE_URL = '/offline.html';
 
 // App shell resources to cache on install

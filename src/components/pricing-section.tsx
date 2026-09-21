@@ -124,7 +124,7 @@ export function PricingSection() {
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
             Démarrez gratuitement et évoluez à votre rythme. Tous les plans incluent
-            l&apos;accès à la plateforme Artisan Connect.
+            l&apos;accès à la plateforme Finda.
           </p>
         </motion.div>
 

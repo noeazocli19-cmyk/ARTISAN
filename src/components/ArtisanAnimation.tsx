@@ -222,7 +222,7 @@ export default function ArtisanAnimation({ onAnimationComplete }: ArtisanAnimati
         animate={{ opacity: 0.1 }}
         transition={{ delay: 1 }}
       >
-        <span className="text-5xl font-bold text-brand-600 tracking-tight">Artisan Connect</span>
+        <span className="text-5xl font-bold text-brand-600 tracking-tight">Finda</span>
       </motion.div>
     </div>
   );

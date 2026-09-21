@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
@@ -96,7 +96,7 @@ export function WelcomeScreen({ onContinue, userName }: WelcomeScreenProps) {
           >
             Bienvenue{userName ? `, ${userName}` : ''} sur{' '}
             <span className="bg-gradient-to-r from-brand-500 via-brand-500 to-brand-600 bg-clip-text text-transparent">
-              Artisan Connect
+              Finda
             </span>{' '}
             !
           </motion.h2>

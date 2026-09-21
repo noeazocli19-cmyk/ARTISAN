@@ -73,8 +73,8 @@ export default function ContactPage() {
                     <p className="text-sm text-muted-foreground mb-2">
                       Pour toute question
                     </p>
-                    <a href="mailto:support@artisan-connect.com" className="text-sm font-medium text-brand-600 hover:underline">
-                      support@artisan-connect.com
+                    <a href="mailto:support@finda.com" className="text-sm font-medium text-brand-600 hover:underline">
+                      support@finda.com
                     </a>
                   </div>
                 </div>

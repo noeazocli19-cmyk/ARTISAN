@@ -1217,11 +1217,11 @@ function SettingsTab() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="text-sm font-medium">Nom de la plateforme</label>
-              <Input defaultValue="Artisan Connect" />
+              <Input defaultValue="Finda" />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Email de contact</label>
-              <Input defaultValue="admin@artisanconnecte.com" />
+              <Input defaultValue="admin@finda.com" />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Commission plateforme (%)</label>

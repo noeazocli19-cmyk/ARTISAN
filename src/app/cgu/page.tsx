@@ -110,7 +110,7 @@ export default function CGUPage() {
 
           <h2 className="text-xl font-semibold mt-8 mb-4">Article 14 : Contact</h2>
           <p className="mb-4">
-            Pour toute question relative aux CGU, vous pouvez contacter FINDA à l'adresse : support@artisan-connect.com
+            Pour toute question relative aux CGU, vous pouvez contacter FINDA à l'adresse : support@finda.com
           </p>
 
           <div className="mt-12 p-6 bg-brand-50 dark:bg-brand-950/30 rounded-xl">

@@ -19,7 +19,7 @@ export default function ConfidentialitePage() {
 
           <h2 className="text-xl font-semibold mt-8 mb-4">1. Responsable du traitement</h2>
           <p className="mb-4">
-            Le responsable du traitement des données personnelles est FINDA, représenté par son fondateur. Pour toute question relative à vos données personnelles, vous pouvez contacter : support@artisan-connect.com
+            Le responsable du traitement des données personnelles est FINDA, représenté par son fondateur. Pour toute question relative à vos données personnelles, vous pouvez contacter : support@finda.com
           </p>
 
           <h2 className="text-xl font-semibold mt-8 mb-4">2. Données collectées</h2>
@@ -79,7 +79,7 @@ export default function ConfidentialitePage() {
             <li><strong>Droit de limitation</strong> : limiter certains traitements</li>
           </ul>
           <p className="mb-4">
-            Pour exercer ces droits, contactez-nous : support@artisan-connect.com
+            Pour exercer ces droits, contactez-nous : support@finda.com
           </p>
 
           <h2 className="text-xl font-semibold mt-8 mb-4">8. Sécurité</h2>

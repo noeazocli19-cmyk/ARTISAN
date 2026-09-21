@@ -11,7 +11,7 @@
 import jwt from 'jsonwebtoken'
 import type { StringValue } from 'ms'
 
-const JWT_SECRET = process.env.JWT_SECRET || 'artisan-connecte-secret-key-2024'
+const JWT_SECRET = process.env.JWT_SECRET || 'findae-secret-key-2024'
 
 interface JwtPayload {
   userId: string

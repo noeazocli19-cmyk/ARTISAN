@@ -1,4 +1,4 @@
-﻿import { betterAuth } from "better-auth"
+import { betterAuth } from "better-auth"
 import { prismaAdapter } from "better-auth/adapters/prisma"
 import { nextCookies } from "better-auth/next-js"
 import { db } from "@/lib/db"
@@ -34,10 +34,10 @@ export const auth = betterAuth({
         return
       }
       await resend.emails.send({
-        from: "Artisan Connect <" + EMAIL_FROM + ">",
+        from: "Finda <" + EMAIL_FROM + ">",
         to: user.email,
         subject: "Reinitialisation de votre mot de passe",
-        html: "<div style='font-family:Arial,sans-serif;max-width:600px;margin:0 auto;'><h2 style='color:#f59e0b;'>Artisan Connect</h2><p>Bonjour " + user.name + ",</p><p>Vous avez demande a reinitialiser votre mot de passe.</p><a href='" + url + "' style='background:linear-gradient(to right,#f59e0b,#ea580c);color:white;padding:12px 24px;border-radius:8px;text-decoration:none;display:inline-block;margin:16px 0;'>Reinitialiser mon mot de passe</a><p style='color:#6b7280;font-size:14px;'>Ce lien expire dans 1 heure.</p></div>",
+        html: "<div style='font-family:Arial,sans-serif;max-width:600px;margin:0 auto;'><h2 style='color:#f59e0b;'>Finda</h2><p>Bonjour " + user.name + ",</p><p>Vous avez demande a reinitialiser votre mot de passe.</p><a href='" + url + "' style='background:linear-gradient(to right,#f59e0b,#ea580c);color:white;padding:12px 24px;border-radius:8px;text-decoration:none;display:inline-block;margin:16px 0;'>Reinitialiser mon mot de passe</a><p style='color:#6b7280;font-size:14px;'>Ce lien expire dans 1 heure.</p></div>",
       })
     },
     resetPasswordTokenExpiresIn: 3600,

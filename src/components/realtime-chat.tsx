@@ -51,7 +51,7 @@ const DEFAULT_ROOMS: ChatRoom[] = [
     id: 'room-general',
     name: 'Salon général',
     participants: ['user-1', 'user-2'],
-    artisanName: 'Communauté Artisan Connect',
+    artisanName: 'Communauté Finda',
     artisanId: 'community',
     lastMessage: 'Bienvenue dans le chat !',
     lastMessageTime: Date.now(),

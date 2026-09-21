@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
     }
 
     const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1&addressdetails=1`;
-    const response = await fetch(url, { headers: { 'User-Agent': 'ArtisanConnect/1.0' } });
+    const response = await fetch(url, { headers: { 'User-Agent': 'Finda/1.0' } });
     if (!response.ok) throw new Error(`Erreur Nominatim: ${response.status}`);
 
     const data = await response.json();
@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
     }
 
     const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`;
-    const response = await fetch(url, { headers: { 'User-Agent': 'ArtisanConnect/1.0' } });
+    const response = await fetch(url, { headers: { 'User-Agent': 'Finda/1.0' } });
     if (!response.ok) throw new Error(`Erreur Nominatim: ${response.status}`);
 
     const data = await response.json();

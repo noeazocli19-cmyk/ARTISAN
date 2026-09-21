@@ -273,7 +273,7 @@ function StepWelcome({ onNext }: { onNext: () => void }) {
         >
           Bienvenue sur{' '}
           <span className="bg-gradient-to-r from-brand-500 via-brand-500 to-brand-600 bg-clip-text text-transparent">
-            Artisan Connect
+            Finda
           </span>{' '}
           !
         </motion.h2>
@@ -1107,7 +1107,7 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
                 <Wrench className="h-4 w-4 text-white" />
               </div>
               <span className="font-bold text-sm bg-gradient-to-r from-brand-600 to-brand-600 bg-clip-text text-transparent">
-                Artisan Connect
+                Finda
               </span>
             </div>
             <div className="flex items-center gap-2">

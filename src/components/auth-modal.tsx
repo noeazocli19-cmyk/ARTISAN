@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
@@ -229,7 +229,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                     <Sparkles className="h-4 w-4 text-yellow-200" />
                   </motion.div>
                 </div>
-                <DialogTitle className="text-white text-xl">Artisan Connect</DialogTitle>
+                <DialogTitle className="text-white text-xl">Finda</DialogTitle>
               </div>
               <p className="text-white/80 text-sm">Connectez-vous ou créez votre compte</p>
             </DialogHeader>

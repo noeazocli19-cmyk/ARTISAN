@@ -10,7 +10,7 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
 }
 
-const DISMISSAL_KEY = 'artisan-connecte-install-dismissed'
+const DISMISSAL_KEY = 'findae-install-dismissed'
 const DISMISSAL_DURATION = 7 * 24 * 60 * 60 * 1000 // 7 days in ms
 
 export function InstallPrompt() {
@@ -116,7 +116,7 @@ export function InstallPrompt() {
                 {/* Content */}
                 <div className="flex-1 min-w-0">
                   <h3 className="font-bold text-sm text-brand-900 dark:text-brand-100">
-                    Installer Artisan Connect
+                    Installer Finda
                   </h3>
                   <p className="mt-1 text-xs text-brand-700/80 dark:text-brand-300/80 leading-relaxed">
                     Accédez rapidement à nos artisans depuis votre écran d&apos;accueil. Fonctionne même hors connexion !

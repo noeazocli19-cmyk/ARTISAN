@@ -1,5 +1,5 @@
 /**
- * Artisan Connect — Payment Integration Layer
+ * Finda — Payment Integration Layer
  *
  * PRIMARY PROVIDER: Kkiapay (https://kkiapay.me)
  *   - Client-side widget (openKkiapayWidget)

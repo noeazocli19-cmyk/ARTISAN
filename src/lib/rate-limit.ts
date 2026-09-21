@@ -1,5 +1,5 @@
 /**
- * Rate Limiting Utility for Artisan Connect
+ * Rate Limiting Utility for Finda
  *
  * In-memory sliding window rate limiter that tracks requests by IP address.
  * Handles X-Forwarded-For header for proxied requests (Caddy gateway).
