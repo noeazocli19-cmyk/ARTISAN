@@ -14,7 +14,7 @@ import { PremiumCard } from '@/components/premium-card';
 import { IdentityVerificationCard } from '@/components/identity-verification-card';
 import {
   MapPin, Phone, Briefcase, Clock, Star, CheckCircle, AlertCircle, Crosshair,
-  ClipboardList, MessageSquare, TrendingUp, Settings, Wrench, Hand,
+  ClipboardList, MessageSquare, TrendingUp, Settings, Wrench, Hand, DollarSign,
   LayoutGrid, ArrowLeftCircle, Loader2, User as UserIcon, Search, Clock3, CalendarCheck,
 } from 'lucide-react';
 import NotificationPanel from '@/components/notification-panel';
@@ -108,6 +108,7 @@ export function ArtisanDashboard() {
   const [bookingsLoading, setBookingsLoading] = useState(true);
   const [respondingId, setRespondingId] = useState<string | null>(null);
   const [missionsLoading, setMissionsLoading] = useState(true);
+  const [stats, setStats] = useState<{ totalRevenue: number; missionsCompleted: number } | null>(null);
 
   const [reviews, setReviews] = useState<Review[]>([]);
   const [reviewsLoading, setReviewsLoading] = useState(true);
@@ -179,6 +180,11 @@ export function ArtisanDashboard() {
       .then((data) => setConversations(data.conversations || []))
       .catch(() => {})
       .finally(() => setConversationsLoading(false));
+
+    fetch('/api/artisans/stats')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => { if (data) setStats(data); })
+      .catch(() => {});
   }, []);
 
   const profileCompletion = () => {
@@ -432,8 +438,8 @@ export function ArtisanDashboard() {
       <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
         <Skeleton className="h-24 w-full rounded-2xl" />
         <Skeleton className="h-10 w-full rounded-xl" />
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-          {Array.from({ length: 4 }).map((_, i) => (
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4">
+          {Array.from({ length: 5 }).map((_, i) => (
             <Skeleton key={i} className="h-24 rounded-xl" />
           ))}
         </div>
@@ -589,7 +595,7 @@ export function ArtisanDashboard() {
             </div>
           )}
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4">
             <Card className="border-brand-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
               <div className="h-9 w-9 rounded-lg bg-brand-50 flex items-center justify-center mb-2">
                 <ClipboardList className="h-4.5 w-4.5 text-brand-600" />
@@ -629,6 +635,17 @@ export function ArtisanDashboard() {
                 <p className="text-2xl font-bold text-gray-900">{reviews.length}</p>
               )}
               <p className="text-xs text-muted-foreground">Avis reçus</p>
+            </Card>
+            <Card className="border-brand-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+              <div className="h-9 w-9 rounded-lg bg-emerald-50 flex items-center justify-center mb-2">
+                <DollarSign className="h-4.5 w-4.5 text-emerald-600" />
+              </div>
+              {stats === null ? (
+                <Skeleton className="h-7 w-14 mb-1" />
+              ) : (
+                <p className="text-xl font-bold text-gray-900">{stats.totalRevenue.toLocaleString('fr-FR')}</p>
+              )}
+              <p className="text-xs text-muted-foreground">Revenus (FCFA)</p>
             </Card>
           </div>
 
