@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useRef, useCallback, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
@@ -48,6 +48,7 @@ interface PortfolioItem {
   title: string
   description: string
   imageUrl: string
+  imageUrlAfter?: string
   category: string
 }
 
@@ -114,6 +115,7 @@ interface PortfolioUploadProps {
 export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
   // Gallery state
   const [portfolio, setPortfolio] = useState<PortfolioItem[]>([])
+  const [uploadingAfter, setUploadingAfter] = useState(false)
   const [realArtisanId, setRealArtisanId] = useState<string>("")
   const [loadingPortfolio, setLoadingPortfolio] = useState(true)
 
@@ -206,6 +208,40 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
     // Reset input so same file can be selected again
     if (fileInputRef.current) fileInputRef.current.value = ""
   }, [processFiles])
+
+  const handleAfterUpload = useCallback(async (file: File) => {
+    if (!lightboxItem) return
+    setUploadingAfter(true)
+    try {
+      const formData = new FormData()
+      formData.append("file", file)
+      const res = await fetch("/api/upload", { method: "POST", body: formData })
+      const data = await res.json()
+      if (!res.ok || !data.url) {
+        toast.error("Echec de l\u0027upload de la photo apres")
+        setUploadingAfter(false)
+        return
+      }
+      const updatedPortfolio = portfolio.map((p) =>
+        p.id === lightboxItem.id ? { ...p, imageUrlAfter: data.url } : p
+      )
+      const saveRes = await fetch("/api/artisans/profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ portfolio: updatedPortfolio }),
+      })
+      if (saveRes.ok) {
+        setPortfolio(updatedPortfolio)
+        toast.success("Photo apres ajoutee")
+      } else {
+        toast.error("Echec de la sauvegarde")
+      }
+    } catch {
+      toast.error("Erreur reseau")
+    } finally {
+      setUploadingAfter(false)
+    }
+  }, [lightboxItem, portfolio])
 
   const removeUploadItem = useCallback((id: string) => {
     setUploadItems((prev) => {
@@ -783,6 +819,32 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
                     )
                   })()}
                 </div>
+                {lightboxItem.imageUrlAfter ? (
+                  <div className="mt-4">
+                    <p className="text-xs font-semibold text-muted-foreground mb-2">Avant / Apres</p>
+                    <div className="grid grid-cols-2 gap-2">
+                      <img src={lightboxItem.imageUrl} alt="Avant" className="rounded-lg w-full h-32 object-cover" />
+                      <img src={lightboxItem.imageUrlAfter} alt="Apres" className="rounded-lg w-full h-32 object-cover" />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="mt-4">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      id="after-photo-input"
+                      onChange={(e) => { if (e.target.files?.[0]) handleAfterUpload(e.target.files[0]) }}
+                    />
+                    <label
+                      htmlFor="after-photo-input"
+                      className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-full bg-brand-50 text-brand-700 dark:bg-brand-950/30 dark:text-brand-400 cursor-pointer hover:bg-brand-100 transition"
+                    >
+                      {uploadingAfter ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
+                      {uploadingAfter ? "Envoi..." : "Ajouter une photo apres"}
+                    </label>
+                  </div>
+                )}
               </div>
             </div>
           )}
