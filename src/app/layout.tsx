@@ -6,6 +6,7 @@ import { PresenceHeartbeat } from "@/components/presence-heartbeat";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { PwaRegister } from "@/components/pwa-register";
+import { BottomNav } from "@/components/bottom-nav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -97,6 +98,7 @@ export default function RootLayout({
           {children}
           <Toaster />
           <PwaRegister />
+          <BottomNav />
         </ThemeProvider>
       </body>
     </html>
