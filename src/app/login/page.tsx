@@ -58,6 +58,9 @@ export default function LoginPage() {
           <button type="submit" disabled={loading} className="w-full py-3 bg-brand-500 hover:bg-brand-600 disabled:bg-brand-300 text-white font-semibold rounded-lg transition shadow-md">
             {loading ? "Connexion..." : "Se connecter"}
           </button>
+          <button type="button" onClick={() => router.push("/forgot-password")} className="w-full text-center text-sm text-brand-600 hover:text-brand-700 mt-2">
+            Mot de passe oublie ?
+          </button>
         </form>
         <p className="mt-6 text-center text-sm text-gray-500">
           Pas encore de compte ?{" "}

@@ -59,11 +59,11 @@ export async function POST(request: NextRequest) {
       subject: 'Votre code de réinitialisation',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #f59e0b;">Finda</h2>
+          <h2 style="color: #22C55E;">Finda</h2>
           <p>Bonjour ${user.name},</p>
           <p>Voici votre code de réinitialisation de mot de passe :</p>
           <div style="background: #f3f4f6; border-radius: 8px; padding: 24px; text-align: center; margin: 24px 0;">
-            <span style="font-size: 36px; font-weight: bold; letter-spacing: 8px; color: #f59e0b;">${code}</span>
+            <span style="font-size: 36px; font-weight: bold; letter-spacing: 8px; color: #22C55E;">${code}</span>
           </div>
           <p style="color: #6b7280; font-size: 14px;">Ce code expire dans <strong>15 minutes</strong>.</p>
           <p style="color: #6b7280; font-size: 14px;">Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.</p>
