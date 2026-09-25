@@ -7,6 +7,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { PwaRegister } from "@/components/pwa-register";
 import { BottomNav } from "@/components/bottom-nav";
+import { Footer } from "@/components/footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -96,6 +97,7 @@ export default function RootLayout({
                     disableTransitionOnChange
         >
           {children}
+          <Footer />
           <Toaster />
           <PwaRegister />
           <BottomNav />
