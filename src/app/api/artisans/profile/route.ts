@@ -163,6 +163,7 @@ export async function PATCH(request: NextRequest) {
     if (body.country !== undefined) updateData.country = body.country;
     if (body.bio !== undefined) updateData.bio = body.bio;
     if (body.isAvailable !== undefined) updateData.isAvailable = Boolean(body.isAvailable);
+    if (body.teamMembers !== undefined) updateData.teamMembers = safeStringify(body.teamMembers);
 
     if (body.address !== undefined) {
       updateData.address = body.address;

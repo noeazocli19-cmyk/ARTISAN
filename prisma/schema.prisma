@@ -131,6 +131,7 @@ model Artisan {
   isAvailable    Boolean  @default(true)
   portfolio      String   @default("[]")
   certifications String   @default("[]")
+  teamMembers    String   @default("[]")
   latitude       Float?
   longitude      Float?
   address        String?
