@@ -19,6 +19,10 @@ const CATEGORIES = [
 
 const COUNTRIES = ["Benin"];
 
+const NEIGHBORHOODS: Record<string, string[]> = {
+  "Cotonou": ["Cadjehoun", "Fidjrosse", "Akpakpa", "Gbegamey", "Zogbo", "Sainte-Rita", "Jericho", "Ganhi", "Vossa", "Missebo", "Dantokpa", "Agla", "Godomey", "Wologuede", "Menontin", "Saint Michel", "Houeyiho", "Aidjedo"],
+}
+
 const CITIES: Record<string, string[]> = {
   "Benin": ["Cotonou", "Porto-Novo", "Abomey-Calavi", "Parakou", "Abomey", "Natitingou", "Bohicon", "Ouidah"],
 };
@@ -44,6 +48,7 @@ export default function RegisterPage() {
   const [showLoginPassword, setShowLoginPassword] = useState(false);
 
   const availableCities = CITIES[form.country] || [];
+  const availableNeighborhoods = NEIGHBORHOODS[form.city] || [];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -219,7 +224,14 @@ export default function RegisterPage() {
 
                     <div>
                       <label className={labelCls}>Quartier</label>
-                      <input name="neighborhood" value={form.neighborhood} onChange={handleChange} className={inputCls} placeholder="Cocody, Plateau, etc." />
+                      {availableNeighborhoods.length > 0 ? (
+                        <select name="neighborhood" value={form.neighborhood} onChange={handleChange} className={inputCls + " bg-white"}>
+                          <option value="">-- Choisir --</option>
+                          {availableNeighborhoods.map((n) => <option key={n} value={n}>{n}</option>)}
+                        </select>
+                      ) : (
+                        <input name="neighborhood" value={form.neighborhood} onChange={handleChange} className={inputCls} placeholder="Cocody, Plateau, etc." />
+                      )}
                     </div>
 
                     <button type="submit" disabled={loading} className="w-full py-3 bg-brand-500 hover:bg-brand-600 disabled:bg-brand-300 text-white font-semibold rounded-lg transition-all shadow-md">
