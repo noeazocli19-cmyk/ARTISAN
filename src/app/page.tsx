@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -624,7 +624,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               </motion.div>
 
               {/* Quick category pills */}
-              <motion.div variants={fadeInUp} className="mt-4 flex flex-wrap gap-2">
+              <motion.div variants={fadeInUp} className="mt-4 flex flex-wrap justify-center gap-2">
                 {quickCategories.map((cat) => (
                   <Badge
                     key={cat}
@@ -637,7 +637,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               </motion.div>
 
               {/* CTA Buttons */}
-              <motion.div variants={fadeInUp} className="mt-4 flex flex-wrap gap-3">
+              <motion.div variants={fadeInUp} className="mt-4 flex flex-wrap justify-center gap-3">
                 <Button
                   variant="outline"
                   className="gap-2 border-brand-300 dark:border-brand-700 text-brand-700 dark:text-brand-300 hover:bg-brand-50 dark:hover:bg-brand-950/50"
