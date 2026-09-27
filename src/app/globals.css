@@ -165,3 +165,12 @@
     padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px));
   }
 }
+
+
+/* Corrections de lisibilite en mode sombre - override global */
+.dark .text-gray-900 { color: #f3f4f6 !important; }
+.dark .text-gray-800 { color: #e5e7eb !important; }
+.dark .text-gray-700 { color: #d1d5db !important; }
+.dark .bg-white { background-color: #1f2937 !important; }
+.dark .border-gray-300 { border-color: #4b5563 !important; }
+.dark .border-gray-200 { border-color: #374151 !important; }
