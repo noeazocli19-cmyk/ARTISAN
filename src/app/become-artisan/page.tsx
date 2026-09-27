@@ -97,7 +97,7 @@ export default function BecomeArtisanPage() {
               value={form.profession}
               onChange={handleChange}
               required
-              className="w-full rounded-lg border px-3 py-2 text-sm bg-transparent"
+              className="w-full rounded-lg border px-3 py-2 text-sm bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100"
               style={{ borderColor: 'var(--border)' }}
             >
               <option value="">Choisis ton métier</option>
@@ -109,7 +109,7 @@ export default function BecomeArtisanPage() {
             <label className="text-sm font-medium block mb-1.5">Années d'expérience</label>
             <input
               type="number" min="0" name="experience" value={form.experience} onChange={handleChange}
-              className="w-full rounded-lg border px-3 py-2 text-sm bg-transparent"
+              className="w-full rounded-lg border px-3 py-2 text-sm bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100"
               style={{ borderColor: 'var(--border)' }}
             />
           </div>
@@ -118,7 +118,7 @@ export default function BecomeArtisanPage() {
             <label className="text-sm font-medium block mb-1.5">Téléphone</label>
             <input
               type="tel" name="phone" value={form.phone} onChange={handleChange}
-              className="w-full rounded-lg border px-3 py-2 text-sm bg-transparent"
+              className="w-full rounded-lg border px-3 py-2 text-sm bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100"
               style={{ borderColor: 'var(--border)' }}
             />
           </div>
@@ -128,7 +128,7 @@ export default function BecomeArtisanPage() {
             <input
               type="text" name="location" value={form.location} onChange={handleChange} required
               placeholder="ex: Fidjrossè, Cotonou"
-              className="w-full rounded-lg border px-3 py-2 text-sm bg-transparent"
+              className="w-full rounded-lg border px-3 py-2 text-sm bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100"
               style={{ borderColor: 'var(--border)' }}
             />
           </div>
@@ -138,7 +138,7 @@ export default function BecomeArtisanPage() {
             <input
               type="text" name="diploma" value={form.diploma} onChange={handleChange}
               placeholder="ex: CAP Plomberie, Bac Pro Électrotechnique..."
-              className="w-full rounded-lg border px-3 py-2 text-sm bg-transparent"
+              className="w-full rounded-lg border px-3 py-2 text-sm bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100"
               style={{ borderColor: 'var(--border)' }}
             />
           </div>
@@ -148,7 +148,7 @@ export default function BecomeArtisanPage() {
             <input
               type="text" name="qualification" value={form.qualification} onChange={handleChange}
               placeholder="ex: Habilitation électrique, Certificat de soudure..."
-              className="w-full rounded-lg border px-3 py-2 text-sm bg-transparent"
+              className="w-full rounded-lg border px-3 py-2 text-sm bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100"
               style={{ borderColor: 'var(--border)' }}
             />
           </div>
@@ -157,7 +157,7 @@ export default function BecomeArtisanPage() {
             <label className="text-sm font-medium block mb-1.5">Présentation courte</label>
             <textarea
               name="bio" value={form.bio} onChange={handleChange} rows={3}
-              className="w-full rounded-lg border px-3 py-2 text-sm bg-transparent"
+              className="w-full rounded-lg border px-3 py-2 text-sm bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100"
               style={{ borderColor: 'var(--border)' }}
             />
           </div>
