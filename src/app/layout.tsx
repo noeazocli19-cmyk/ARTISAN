@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { PwaRegister } from "@/components/pwa-register";
 import { BottomNav } from "@/components/bottom-nav";
 import { Footer } from "@/components/footer";
+import { IosInstallHint } from "@/components/ios-install-hint";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -101,6 +102,7 @@ export default function RootLayout({
           <Toaster />
           <PwaRegister />
           <BottomNav />
+          <IosInstallHint />
         </ThemeProvider>
       </body>
     </html>
