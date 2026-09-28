@@ -99,7 +99,7 @@ export function Chatbot() {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setIsOpen(true)}
-            className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-lg hover:shadow-xl transition-shadow"
+            className="fixed bottom-[calc(1.5rem+env(safe-area-inset-bottom,0px))] right-6 pwa-bottom-offset z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-lg hover:shadow-xl transition-shadow"
             aria-label="Ouvrir le chat"
           >
             <MessageSquare className="h-6 w-6" />
@@ -119,7 +119,7 @@ export function Chatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-6 right-6 z-50 flex h-[500px] w-[380px] max-w-[calc(100vw-3rem)] flex-col rounded-2xl border border-border/50 bg-background shadow-2xl overflow-hidden"
+            className="fixed bottom-[calc(1.5rem+env(safe-area-inset-bottom,0px))] right-6 pwa-bottom-offset z-50 flex h-[500px] w-[380px] max-w-[calc(100vw-3rem)] flex-col rounded-2xl border border-border/50 bg-background shadow-2xl overflow-hidden"
           >
             {/* Header */}
             <div className="flex items-center justify-between bg-gradient-to-r from-brand-500 to-brand-600 p-4 text-white">

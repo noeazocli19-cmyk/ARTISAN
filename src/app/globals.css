@@ -174,3 +174,11 @@
 .dark .bg-white { background-color: #1f2937 !important; }
 .dark .border-gray-300 { border-color: #4b5563 !important; }
 .dark .border-gray-200 { border-color: #374151 !important; }
+
+
+/* Decale le chatbot au-dessus de la barre de navigation PWA */
+@media (display-mode: standalone) {
+  .pwa-bottom-offset {
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
