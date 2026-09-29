@@ -92,8 +92,8 @@ export default function ContactPage() {
                     <p className="text-sm text-muted-foreground mb-2">
                       Du lundi au samedi, 8h - 22h
                     </p>
-                    <a href="tel:+22177123456" className="text-sm font-medium text-brand-600 hover:underline">
-                      +221 77 123 456
+                    <a href="tel:+2290156161619" className="text-sm font-medium text-brand-600 hover:underline">
+                      +229 01 56 16 16 19
                     </a>
                   </div>
                 </div>
@@ -112,7 +112,7 @@ export default function ContactPage() {
                       Notre bureau
                     </p>
                     <p className="text-sm font-medium">
-                      Dakar, Sénégal
+                      Cotonou, Bénin
                     </p>
                   </div>
                 </div>

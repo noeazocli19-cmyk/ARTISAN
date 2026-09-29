@@ -14,12 +14,12 @@ export default function CGUPage() {
             Conditions Générales d'Utilisation
           </h1>
           <p className="text-sm text-muted-foreground mb-8">
-            Dernière mise à jour : Juin 2025
+            Dernière mise à jour : Septembre 2026
           </p>
 
           <h2 className="text-xl font-semibold mt-8 mb-4">Article 1 : Objet</h2>
           <p className="mb-4">
-            Les présentes Conditions Générales d'Utilisation (ci-après "CGU") régissent l'utilisation de la plateforme FINDA (ci-après "la Plateforme"), accessible à l'adresse https://artisan-nine-sigma.vercel.app. La Plateforme a pour objet la mise en relation entre des clients recherchant des services d'artisans et des artisans proposant leurs services en Afrique.
+            Les présentes Conditions Générales d'Utilisation (ci-après "CGU") régissent l'utilisation de la plateforme FINDA (ci-après "la Plateforme"), accessible à l'adresse https://artisan-nine-sigma.vercel.app. La Plateforme a pour objet la mise en relation entre des clients recherchant des services d'artisans et des artisans proposant leurs services au Bénin.
           </p>
 
           <h2 className="text-xl font-semibold mt-8 mb-4">Article 2 : Définitions</h2>
@@ -105,7 +105,7 @@ export default function CGUPage() {
 
           <h2 className="text-xl font-semibold mt-8 mb-4">Article 13 : Droit applicable</h2>
           <p className="mb-4">
-            Les présentes CGU sont régies par le droit sénégalais. Tout litige relatif à l'interprétation ou l'exécution des CGU sera soumis aux tribunaux compétents de Dakar.
+            Les présentes CGU sont régies par le droit béninois. Tout litige relatif à l'interprétation ou l'exécution des CGU sera soumis aux tribunaux compétents de Cotonou.
           </p>
 
           <h2 className="text-xl font-semibold mt-8 mb-4">Article 14 : Contact</h2>
@@ -115,7 +115,7 @@ export default function CGUPage() {
 
           <div className="mt-12 p-6 bg-brand-50 dark:bg-brand-950/30 rounded-xl">
             <p className="text-sm text-muted-foreground">
-              © 2025 FINDA - La 1ère plateforme d'artisans en Afrique. Tous droits réservés.
+              © 2025 FINDA - Plateforme de mise en relation avec des artisans au Bénin. Tous droits réservés.
             </p>
           </div>
         </div>

@@ -14,7 +14,7 @@ export default function ConfidentialitePage() {
             Politique de Confidentialité
           </h1>
           <p className="text-sm text-muted-foreground mb-8">
-            Dernière mise à jour : Juin 2025
+            Dernière mise à jour : Septembre 2026
           </p>
 
           <h2 className="text-xl font-semibold mt-8 mb-4">1. Responsable du traitement</h2>
@@ -69,7 +69,7 @@ export default function ConfidentialitePage() {
           </ul>
 
           <h2 className="text-xl font-semibold mt-8 mb-4">7. Vos droits</h2>
-          <p className="mb-4">Conformément au RGPD et à la loi sénégalaise, vous disposez de :</p>
+          <p className="mb-4">Conformément à la législation béninoise sur la protection des données à caractère personnel, vous disposez de :</p>
           <ul className="list-disc pl-6 mb-4 space-y-2">
             <li><strong>Droit d'accès</strong> : consulter vos données</li>
             <li><strong>Droit de rectification</strong> : corriger vos données</li>
@@ -94,7 +94,7 @@ export default function ConfidentialitePage() {
 
           <h2 className="text-xl font-semibold mt-8 mb-4">10. Transferts hors UE</h2>
           <p className="mb-4">
-            Certaines données peuvent être traitées hors de l'Union Européenne (États-Unis, Afrique). Nous nous assurons que ces transferts respectent les garanties appropriées.
+            Certaines données peuvent être traitées hors du Bénin (notamment aux États-Unis, chez nos hébergeurs). Nous nous assurons que ces transferts respectent les garanties appropriées.
           </p>
 
           <h2 className="text-xl font-semibold mt-8 mb-4">11. Réclamations</h2>
@@ -104,7 +104,7 @@ export default function ConfidentialitePage() {
 
           <div className="mt-12 p-6 bg-brand-50 dark:bg-brand-950/30 rounded-xl">
             <p className="text-sm text-muted-foreground">
-              © 2025 FINDA - La 1ère plateforme d'artisans en Afrique. Tous droits réservés.
+              © 2025 FINDA - Plateforme de mise en relation avec des artisans au Bénin. Tous droits réservés.
             </p>
           </div>
         </div>

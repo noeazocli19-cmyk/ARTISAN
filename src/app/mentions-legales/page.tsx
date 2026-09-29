@@ -14,17 +14,18 @@ export default function MentionsLegalesPage() {
             Mentions Légales
           </h1>
           <p className="text-sm text-muted-foreground mb-8">
-            Dernière mise à jour : Juin 2025
+            Dernière mise à jour : Septembre 2026
           </p>
 
           <h2 className="text-xl font-semibold mt-8 mb-4">1. Éditeur de la Plateforme</h2>
           <p className="mb-4">
             <strong>FINDA</strong><br />
-            La 1ère plateforme d'artisans en Afrique<br />
+            Plateforme de mise en relation avec des artisans au Bénin<br />
             Fondée en 2025<br />
-            Fondateur : NOE AZOCLI EZECKIAS<br />
-            Email : support@finda.com<br />
-            Téléphone : +221 77 123 456
+            Statut : Projet réalisé dans le cadre d'une formation<br />
+            Fondateur et directeur de la publication : NOE AZOCLI EZECKIAS<br />
+            Email : noeazocli19@gmail.com<br />
+            Téléphone : +229 01 56 16 16 19
           </p>
 
           <h2 className="text-xl font-semibold mt-8 mb-4">2. Hébergement</h2>
@@ -77,7 +78,7 @@ export default function MentionsLegalesPage() {
 
           <h2 className="text-xl font-semibold mt-8 mb-4">7. Droit applicable</h2>
           <p className="mb-4">
-            Les présentes mentions légales sont régies par le droit sénégalais. En cas de litige, les tribunaux sénégalais seront seuls compétents.
+            Les présentes mentions légales sont régies par le droit béninois. En cas de litige, les tribunaux béninois seront seuls compétents.
           </p>
 
           <h2 className="text-xl font-semibold mt-8 mb-4">8. Contact</h2>
@@ -85,14 +86,14 @@ export default function MentionsLegalesPage() {
             Pour toute question relative aux mentions légales, vous pouvez nous contacter :
           </p>
           <ul className="list-disc pl-6 mb-4 space-y-2">
-            <li>Email : support@finda.com</li>
-            <li>Téléphone : +221 77 123 456</li>
-            <li>Adresse : Dakar, Sénégal</li>
+            <li>Email : noeazocli19@gmail.com</li>
+            <li>Téléphone : +229 01 56 16 16 19</li>
+            <li>Adresse : Cotonou, Bénin</li>
           </ul>
 
           <div className="mt-12 p-6 bg-brand-50 dark:bg-brand-950/30 rounded-xl">
             <p className="text-sm text-muted-foreground">
-              © 2025 FINDA - La 1ère plateforme d'artisans en Afrique. Tous droits réservés.
+              © 2025 FINDA - Plateforme de mise en relation avec des artisans au Bénin. Tous droits réservés.
             </p>
           </div>
         </div>
