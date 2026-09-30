@@ -12,6 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAppStore } from '@/lib/store';
 import { PremiumCard } from '@/components/premium-card';
 import { IdentityVerificationCard } from '@/components/identity-verification-card';
+import { TeamMembersEditor } from '@/components/team-members-editor';
 import {
   MapPin, Phone, Briefcase, Clock, Star, CheckCircle, AlertCircle, Crosshair,
   ClipboardList, MessageSquare, TrendingUp, Settings, Wrench, Hand, DollarSign,
@@ -1262,6 +1263,8 @@ export function ArtisanDashboard() {
                 className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-brand-400 focus:border-brand-400 outline-none"
               />
             </div>
+
+            {artisanProfile && <TeamMembersEditor />}
 
             <button
               onClick={handleSave}

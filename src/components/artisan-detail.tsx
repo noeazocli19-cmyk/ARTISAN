@@ -33,6 +33,7 @@ import {
   Briefcase,
   Heart,
   Phone,
+  Users,
 } from 'lucide-react'
 
 const BADGE_STYLES: Record<string, { color: string; icon: typeof Award }> = {
@@ -77,6 +78,7 @@ interface ArtisanData {
   isAvailable: boolean
   certifications: string
   portfolio: string
+  teamMembers?: string
   identityStatus?: string
   successRate?: number | null
   user?: {
@@ -207,6 +209,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
   const skills = parseJSON(artisan.skills)
   const certifications = parseJSON(artisan.certifications)
   const portfolio = parseJSON(artisan.portfolio)
+  const teamMembers = parseJSON(artisan.teamMembers).filter((m) => typeof m === 'string' && m.trim())
   const badgeInfo = BADGE_STYLES[artisan.badge] || BADGE_STYLES['Nouveau']
   const BadgeIcon = badgeInfo.icon
   const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
@@ -381,6 +384,29 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
                       <div key={idx} className="rounded-lg bg-muted/50 p-4 text-sm text-muted-foreground">
                         {typeof item === 'string' ? item : JSON.stringify(item)}
                       </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
+
+          {/* Notre équipe */}
+          {teamMembers.length > 0 && (
+            <motion.div variants={fadeInUp} initial="hidden" animate="visible" transition={{ delay: 0.22 }}>
+              <Card className="border-border/50">
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Users className="h-5 w-5" />
+                    Notre équipe
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {teamMembers.map((member, idx) => (
+                      <Badge key={idx} variant="secondary" className="text-sm">
+                        {member}
+                      </Badge>
                     ))}
                   </div>
                 </CardContent>
