@@ -21,10 +21,11 @@ const geistMono = Geist_Mono({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#22C55E",
+  themeColor: "#06110f",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
+  viewportFit: "cover",
 };
 
 export const metadata: Metadata = {
@@ -49,11 +50,11 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   icons: {
     icon: "/icons/finda.png",
-    apple: "/icons/finda.png",
+    apple: "/icons/apple-touch-icon.png",
   },
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default",
+    statusBarStyle: "black-translucent",
     title: "FINDA",
   },
   openGraph: {
@@ -81,11 +82,10 @@ export default function RootLayout({
     <html lang="fr" suppressHydrationWarning>
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#22C55E" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="FINDA" />
-        <link rel="apple-touch-icon" href="/icons/finda.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}

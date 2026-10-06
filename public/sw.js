@@ -1,5 +1,5 @@
 // Artisan Connect - Service Worker
-const CACHE_NAME = 'finda-v2-rename';
+const CACHE_NAME = 'finda-v3-branded-icons';
 const OFFLINE_URL = '/offline.html';
 
 // App shell resources to cache on install
@@ -7,6 +7,9 @@ const APP_SHELL = [
   '/',
   '/manifest.json',
   '/icons/finda.png',
+  '/icons/icon-192.png',
+  '/icons/icon-512.png',
+  '/icons/apple-touch-icon.png',
 ];
 
 // Install event - cache app shell

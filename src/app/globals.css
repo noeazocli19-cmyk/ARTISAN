@@ -166,6 +166,16 @@
   }
 }
 
+body.ios-standalone {
+  padding-top: env(safe-area-inset-top, 0px);
+  background-color: #06110f;
+}
+
+.ios-app-nav {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
 
 /* Corrections de lisibilite en mode sombre - override global */
 .dark .text-gray-900 { color: #f3f4f6 !important; }
