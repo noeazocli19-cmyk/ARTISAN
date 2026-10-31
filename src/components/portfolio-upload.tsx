@@ -147,6 +147,7 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
   const filteredItems = activeCategory === "Tous"
     ? portfolio
     : portfolio.filter((item) => item.category === activeCategory)
+  const lightboxItem = lightboxIndex !== null ? filteredItems[lightboxIndex] : null
 
   // â”€â”€â”€ Lightbox navigation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
@@ -330,8 +331,6 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
   }, [uploadItems, portfolio, realArtisanId])
 
   // â”€â”€â”€ Render â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
-  const lightboxItem = lightboxIndex !== null ? filteredItems[lightboxIndex] : null
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-brand-50/50 via-white to-brand-50/50 dark:from-neutral-950 dark:via-neutral-950 dark:to-neutral-950">

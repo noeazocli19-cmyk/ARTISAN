@@ -74,7 +74,7 @@ export default function MissionsPage() {
       .catch(() => setLoading(false))
   }, [selectedCategory])
 
-  const isArtisan = session?.user?.role === "artisan"
+  const isArtisan = ((session?.user ?? {}) as { role?: string }).role === "artisan"
   const displayCategories = isArtisan && artisanCategories.length > 0 ? artisanCategories : CATEGORIES
 
   return (
@@ -94,7 +94,7 @@ export default function MissionsPage() {
               </p>
             </div>
           </div>
-          {session?.user?.role === "client" && (
+          {((session?.user ?? {}) as { role?: string }).role === "client" && (
             <button
               onClick={() => router.push("/missions/create")}
               className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-500 to-brand-600 text-white font-semibold hover:from-brand-600 hover:to-brand-700 transition-all shadow-md hover:shadow-lg"

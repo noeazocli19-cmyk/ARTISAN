@@ -36,7 +36,7 @@ export default function MissionDetailPage() {
       if (res.ok) {
         const data = await res.json()
         setMission(data.mission)
-        alert("Mission acceptée ! Le client a été notifié.")
+        alert("Mission acceptÃ©e ! Le client a Ã©tÃ© notifiÃ©.")
       }
     } catch {
       alert("Erreur")
@@ -52,7 +52,7 @@ export default function MissionDetailPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          content: `Bonjour, je suis intéressé par votre mission "${mission?.title}". Je suis disponible pour vous aider.`,
+          content: `Bonjour, je suis intÃ©ressÃ© par votre mission "${mission?.title}". Je suis disponible pour vous aider.`,
           receiverId: mission?.client?.id,
           missionId: mission?.id,
         }),
@@ -78,12 +78,12 @@ export default function MissionDetailPage() {
   if (!mission) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <p className="text-gray-500 dark:text-gray-400">Mission non trouvée</p>
+        <p className="text-gray-500 dark:text-gray-400">Mission non trouvÃ©e</p>
       </div>
     )
   }
 
-  const isArtisan = session?.user?.role === "artisan"
+  const isArtisan = ((session?.user ?? {}) as { role?: string }).role === "artisan"
   const isClient = session?.user?.id === mission.clientId
 
   return (
@@ -203,7 +203,7 @@ export default function MissionDetailPage() {
                     <Phone className="w-5 h-5 text-green-600 dark:text-green-400" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Téléphone</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">TÃ©lÃ©phone</p>
                     <p className="font-mono text-lg font-semibold text-gray-900 dark:text-white">
                       {mission.client.phone}
                     </p>
@@ -248,7 +248,7 @@ export default function MissionDetailPage() {
           <div className="bg-blue-50 dark:bg-blue-900/10 rounded-2xl border border-blue-200 dark:border-blue-800 p-6 mb-6">
             <h2 className="flex items-center gap-2 text-lg font-bold text-blue-800 dark:text-blue-300 mb-4">
               <Wrench className="w-5 h-5" />
-              Artisan assigné
+              Artisan assignÃ©
             </h2>
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center text-lg font-bold text-white shadow-md">

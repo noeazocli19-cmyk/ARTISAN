@@ -89,7 +89,7 @@ export async function GET(request: NextRequest) {
       const isOnline = artisan.user?.lastActiveAt
         ? (Date.now() - new Date(artisan.user.lastActiveAt).getTime()) < ONLINE_THRESHOLD_MS
         : false;
-      let distance = null;
+      let distance: number | null = null;
       let distanceText = '';
       if (userLat !== null && userLng !== null && artisan.latitude !== null && artisan.longitude !== null) {
         distance = haversineDistance(userLat, userLng, artisan.latitude, artisan.longitude);

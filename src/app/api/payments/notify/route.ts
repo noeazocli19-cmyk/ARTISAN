@@ -5,7 +5,7 @@ import { auth } from '@/lib/better-auth';
 // POST — Créer un paiement
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth();
+    const session = await auth.api.getSession({ headers: request.headers });
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
 // GET — Récupérer les paiements
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
+    const session = await auth.api.getSession({ headers: request.headers });
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
 // PATCH — Mettre à jour un paiement
 export async function PATCH(request: NextRequest) {
   try {
-    const session = await auth();
+    const session = await auth.api.getSession({ headers: request.headers });
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
