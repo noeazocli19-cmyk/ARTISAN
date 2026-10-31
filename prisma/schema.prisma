@@ -380,6 +380,7 @@ model SocialPost {
   comments  SocialComment[]
   reactions SocialReaction[]
   savedBy   SavedSocialPost[]
+  reports   ContentReport[]
 
   @@index([authorId])
   @@index([createdAt])
@@ -395,6 +396,7 @@ model SocialComment {
 
   post      SocialPost @relation(fields: [postId], references: [id], onDelete: Cascade)
   author    User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  reports   ContentReport[]
 
   @@index([postId])
   @@index([authorId])
@@ -484,6 +486,8 @@ model ContentReport {
 
   reporter    User  @relation("ReporterReports", fields: [reporterId], references: [id], onDelete: Cascade)
   moderator   User? @relation("ModeratorReports", fields: [moderatorId], references: [id], onDelete: SetNull)
+  post         SocialPost? @relation(fields: [postId], references: [id], onDelete: SetNull)
+  comment      SocialComment? @relation(fields: [commentId], references: [id], onDelete: SetNull)
 
   @@index([status])
   @@index([reporterId])

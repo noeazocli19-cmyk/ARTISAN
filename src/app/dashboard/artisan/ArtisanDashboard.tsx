@@ -18,6 +18,7 @@ import {
   MapPin, Phone, Briefcase, Clock, Star, CheckCircle, AlertCircle, Crosshair,
   ClipboardList, MessageSquare, TrendingUp, Settings, Wrench, Hand, DollarSign,
   LayoutGrid, ArrowLeftCircle, Loader2, User as UserIcon, Search, Clock3, CalendarCheck, Users,
+  CalendarDays, Images, LifeBuoy, FileText,
 } from 'lucide-react';
 import NotificationPanel from '@/components/notification-panel';
 
@@ -461,6 +462,10 @@ export function ArtisanDashboard() {
           <Users className="h-4 w-4" />
           Accéder au réseau social
         </Link>
+        <Link href="/devis" className="inline-flex min-h-11 items-center gap-2 rounded-lg border px-3 text-sm font-semibold"><FileText className="h-4 w-4" />Mes devis</Link>
+        <Link href="/agenda" className="inline-flex min-h-11 items-center gap-2 rounded-lg border px-3 text-sm font-semibold"><CalendarDays className="h-4 w-4" />Agenda</Link>
+        <Link href="/portfolio" className="inline-flex min-h-11 items-center gap-2 rounded-lg border px-3 text-sm font-semibold"><Images className="h-4 w-4" />Portfolio</Link>
+        <Link href="/support" className="inline-flex min-h-11 items-center gap-2 rounded-lg border px-3 text-sm font-semibold"><LifeBuoy className="h-4 w-4" />Support</Link>
         <Link
           href="/"
           className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-brand-700 transition"

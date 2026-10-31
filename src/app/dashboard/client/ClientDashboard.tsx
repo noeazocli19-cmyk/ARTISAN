@@ -45,6 +45,10 @@ import {
   AlertCircle,
   Heart,
   User,
+  CalendarDays,
+  Image,
+  LifeBuoy,
+  FileText,
 } from 'lucide-react'
 
 const CATEGORY_OPTIONS = [
@@ -245,6 +249,10 @@ export function ClientDashboard() {
           <Users className="h-4 w-4" />
           Accéder au réseau social
         </Link>
+        <Link href="/devis" className="inline-flex min-h-11 items-center gap-2 rounded-lg border px-3 text-sm font-semibold"><FileText className="h-4 w-4" />Mes devis</Link>
+        <Link href="/agenda" className="inline-flex min-h-11 items-center gap-2 rounded-lg border px-3 text-sm font-semibold"><CalendarDays className="h-4 w-4" />Agenda</Link>
+        <Link href="/portfolio" className="inline-flex min-h-11 items-center gap-2 rounded-lg border px-3 text-sm font-semibold"><Image className="h-4 w-4" />Portfolio</Link>
+        <Link href="/support" className="inline-flex min-h-11 items-center gap-2 rounded-lg border px-3 text-sm font-semibold"><LifeBuoy className="h-4 w-4" />Support</Link>
         <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-brand-700 transition">
           <ArrowLeftCircle className="h-4 w-4" />
           Retour au site

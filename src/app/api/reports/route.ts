@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
   const session = await auth.api.getSession({ headers: request.headers });
   const currentUser = session?.user?.id ? await db.user.findUnique({ where: { id: session.user.id }, select: { role: true } }) : null;
   if (currentUser?.role !== 'admin') return NextResponse.json({ error: 'Accès interdit' }, { status: 403 });
-  const reports = await db.contentReport.findMany({ include: { reporter: { select: { id: true, name: true, email: true } } }, orderBy: { createdAt: 'desc' } });
+  const reports = await db.contentReport.findMany({ include: { reporter: { select: { id: true, name: true, email: true } }, post: { select: { id: true, content: true, authorId: true } }, comment: { select: { id: true, content: true, authorId: true } } }, orderBy: { createdAt: 'desc' } });
   return NextResponse.json({ reports });
 }
 
@@ -28,6 +28,12 @@ export async function PATCH(request: NextRequest) {
   if (user?.role !== 'admin') return NextResponse.json({ error: 'Accès interdit' }, { status: 403 });
   const body = await request.json();
   if (typeof body.reportId !== 'string') return NextResponse.json({ error: 'Signalement requis' }, { status: 400 });
-  const report = await db.contentReport.update({ where: { id: body.reportId }, data: { status: typeof body.status === 'string' ? body.status : 'examine', moderatorId: session!.user.id, resolution: typeof body.resolution === 'string' ? body.resolution.slice(0, 2000) : null } });
-  return NextResponse.json({ report });
+  const report = await db.contentReport.findUnique({ where: { id: body.reportId } });
+  if (!report) return NextResponse.json({ error: 'Signalement introuvable' }, { status: 404 });
+  if (body.action === 'remove_post' && report.postId) await db.socialPost.delete({ where: { id: report.postId } });
+  if (body.action === 'remove_comment' && report.commentId) await db.socialComment.delete({ where: { id: report.commentId } });
+  if (body.action === 'suspend_author' && body.authorId) await db.user.update({ where: { id: body.authorId }, data: { role: 'suspended' } });
+  const status = body.action === 'dismiss' ? 'rejete' : body.action === 'resolve' || body.action === 'remove_post' || body.action === 'remove_comment' || body.action === 'suspend_author' ? 'resolu' : (typeof body.status === 'string' ? body.status : 'examine');
+  const updated = await db.contentReport.update({ where: { id: body.reportId }, data: { status, moderatorId: session!.user.id, resolution: typeof body.resolution === 'string' ? body.resolution.slice(0, 2000) : null } });
+  return NextResponse.json({ report: updated });
 }
