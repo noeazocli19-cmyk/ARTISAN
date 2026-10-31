@@ -255,6 +255,22 @@ function formatFCFA(amount: number): string {
   return amount.toLocaleString('fr-FR') + ' FCFA'
 }
 
+async function waitForFeexPayPayment(reference: string, token: string | null): Promise<'completed' | 'failed' | 'processing'> {
+  for (let attempt = 0; attempt < 24; attempt += 1) {
+    if (attempt > 0) await new Promise((resolve) => setTimeout(resolve, 5000))
+    const response = await fetch('/api/payments/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ reference }),
+    })
+    const result = await response.json()
+    if (!response.ok) throw new Error(result.error || 'Erreur de vérification du paiement')
+    if (result.status === 'completed' || result.success) return 'completed'
+    if (result.status === 'failed') return 'failed'
+  }
+  return 'processing'
+}
+
 function formatDate(iso: string): string {
   const d = new Date(iso)
   return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })
@@ -374,6 +390,8 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
   const [depositOpen, setDepositOpen] = useState(false)
   const [depositAmount, setDepositAmount] = useState('')
   const [depositMethod, setDepositMethod] = useState<PaymentMethod>('orange_money')
+  const [depositPhone, setDepositPhone] = useState('')
+  const [activePaymentProvider, setActivePaymentProvider] = useState('')
   const [depositProcessing, setDepositProcessing] = useState(false)
 
   // Withdraw dialog
@@ -404,6 +422,16 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
       setKkiapayLoaded(true)
     }
     document.head.appendChild(script)
+  }, [])
+
+  useEffect(() => {
+    fetch('/api/payments/initiate')
+      .then((response) => response.json())
+      .then((config) => {
+        setActivePaymentProvider(config.provider)
+        if (config.provider === 'feexpay') setDepositMethod('mtn_money')
+      })
+      .catch(() => setActivePaymentProvider(''))
   }, [])
 
   // ---- Fetch transactions from API ----
@@ -513,6 +541,16 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
         window.open(data.paymentUrl, '_blank')
       }
 
+      if (data.provider === 'feexpay') {
+        const finalStatus = await waitForFeexPayPayment(data.reference, token)
+        setIsProcessing(false)
+        fetchTransactions()
+        if (finalStatus === 'completed') setPaymentSuccess(true)
+        else if (finalStatus === 'failed') throw new Error('Le paiement FeexPay a échoué')
+        else alert('Paiement toujours en attente. Confirme la demande sur ton téléphone puis consulte ton historique.')
+        return
+      }
+
       setIsProcessing(false)
       setPaymentSuccess(true)
       fetchTransactions()
@@ -537,6 +575,10 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
   const handleDeposit = useCallback(async () => {
     const amt = Number(depositAmount)
     if (!amt || amt <= 0) return
+    if (activePaymentProvider === 'feexpay' && !depositPhone) {
+      alert('Le numéro de téléphone est requis pour FeexPay')
+      return
+    }
 
     setDepositProcessing(true)
     try {
@@ -551,11 +593,27 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
           amount: amt,
           method: depositMethod,
           type: 'deposit',
-          phoneNumber: undefined,
+          phoneNumber: depositPhone || undefined,
         }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Erreur dépôt')
+
+      if (data.provider === 'feexpay') {
+        const finalStatus = await waitForFeexPayPayment(data.reference, token)
+        setDepositProcessing(false)
+        fetchTransactions()
+        if (finalStatus === 'completed') {
+          setDepositOpen(false)
+          setDepositAmount('')
+          setDepositPhone('')
+        } else if (finalStatus === 'failed') {
+          throw new Error('Le paiement FeexPay a échoué')
+        } else {
+          alert('Paiement toujours en attente. Confirme la demande sur ton téléphone puis consulte ton historique.')
+        }
+        return
+      }
 
       if (data.provider === 'kkiapay' && kkiapayLoaded) {
         const w = window as unknown as {
@@ -598,7 +656,7 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
       setDepositProcessing(false)
       alert(err instanceof Error ? err.message : 'Erreur lors du dépôt')
     }
-  }, [depositAmount, depositMethod, kkiapayLoaded, fetchTransactions])
+  }, [depositAmount, depositMethod, depositPhone, activePaymentProvider, kkiapayLoaded, fetchTransactions])
 
   // ---- Withdraw handler ----
   const handleWithdraw = useCallback(async () => {
@@ -1385,7 +1443,7 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {PAYMENT_METHODS.filter(m => ['orange_money', 'mtn_money', 'wave', 'moov_money', 'card'].includes(m.id)).map((m) => (
+                  {PAYMENT_METHODS.filter(m => activePaymentProvider === 'feexpay' ? ['mtn_money', 'moov_money'].includes(m.id) : ['orange_money', 'mtn_money', 'wave', 'moov_money', 'card'].includes(m.id)).map((m) => (
                     <SelectItem key={m.id} value={m.id}>
                       {m.icon} {m.label}
                     </SelectItem>
@@ -1393,6 +1451,19 @@ export function PaymentWallet({ onBack, initialAmount, recipientId }: PaymentWal
                 </SelectContent>
               </Select>
             </div>
+            {activePaymentProvider === 'feexpay' && (
+              <div className="space-y-2">
+                <Label htmlFor="deposit-phone">Numéro Mobile Money</Label>
+                <Input
+                  id="deposit-phone"
+                  type="tel"
+                  value={depositPhone}
+                  onChange={(event) => setDepositPhone(event.target.value)}
+                  placeholder="Ex. 01 23 45 67 89"
+                  required
+                />
+              </div>
+            )}
             {Number(depositAmount) > 0 && (
               <div className="rounded-xl bg-muted/50 p-3 text-xs space-y-1">
                 <div className="flex justify-between">

@@ -1,19 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { auth } from '@/lib/better-auth'
 
 export async function PATCH(request: NextRequest) {
   try {
+    const session = await auth.api.getSession({ headers: request.headers })
+    if (!session?.user?.id) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
     const body = await request.json()
-    const { userId, avatar, name, phone, location, country, bio, role } = body
-
-    if (!userId) {
-      return NextResponse.json({ error: 'ID utilisateur requis' }, { status: 400 })
-    }
+    const { avatar, name, phone, location, country, bio, role } = body
+    const userId = session.user.id
 
     const updateData: Record<string, string> = {
       updatedAt: new Date().toISOString(),
     }
-    if (avatar !== undefined) updateData.avatar = avatar
+    if (avatar !== undefined) {
+      updateData.avatar = avatar
+      updateData.image = avatar
+    }
     if (name !== undefined) updateData.name = name
     if (phone !== undefined) updateData.phone = phone
     if (location !== undefined) updateData.location = location

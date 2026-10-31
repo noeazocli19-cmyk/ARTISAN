@@ -10,18 +10,18 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
+    const session = await auth.api.getSession({ headers: request.headers });
+    const artisan = session?.user?.id
+      ? await db.artisan.findUnique({
+          where: { userId: session.user.id },
+          select: { id: true },
+        })
+      : null;
     const mission = await db.mission.findUnique({
       where: { id },
       include: {
-        client: { select: { id: true, name: true, image: true, location: true, phone: true, country: true, email: true } },
-        artisan: { include: { user: { select: { id: true, name: true, image: true, phone: true } } } },
-        payments: true,
-        messages: {
-          include: {
-            sender: { select: { id: true, name: true, image: true } },
-          },
-          orderBy: { createdAt: 'asc' },
-        },
+        client: { select: { id: true, name: true, image: true, location: true, country: true, phone: true } },
+        artisan: { include: { user: { select: { id: true, name: true, image: true } } } },
       },
     });
 
@@ -29,7 +29,30 @@ export async function GET(
       return NextResponse.json({ error: 'Mission non trouvée' }, { status: 404 });
     }
 
-    return NextResponse.json({ mission });
+    const isClient = session?.user?.id === mission.clientId;
+    const isAssignedArtisan = artisan?.id === mission.artisanId;
+    const isParticipant = isClient || isAssignedArtisan;
+    if (mission.status !== 'ouverte' && !isParticipant) {
+      return NextResponse.json({ error: 'Mission non trouvée' }, { status: 404 });
+    }
+
+    const payments = isParticipant
+      ? await db.payment.findMany({
+          where: { missionId: id },
+          select: { id: true, amount: true, status: true },
+        })
+      : [];
+
+    return NextResponse.json({
+      mission: {
+        ...mission,
+        client: {
+          ...mission.client,
+          phone: isAssignedArtisan ? mission.client.phone : null,
+        },
+        payments,
+      },
+    });
   } catch (error) {
     console.error('Erreur détail mission:', error);
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });

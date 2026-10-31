@@ -58,6 +58,7 @@ export async function GET(request: NextRequest) {
                 id: true,
                 name: true,
                 avatar: true,
+                image: true,
                 location: true,
                 country: true,
                 email: true,

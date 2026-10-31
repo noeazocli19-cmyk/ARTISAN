@@ -7,6 +7,15 @@ export async function POST(request: NextRequest) {
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
+    if (type === 'avatars' && (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > 5 * 1024 * 1024)) {
+      return NextResponse.json({ error: 'La photo de profil doit être JPG, PNG ou WebP et peser moins de 5 Mo' }, { status: 400 })
+    }
+    if (type === 'social-video' && (!file.type.startsWith('video/') || file.size > 50 * 1024 * 1024)) {
+      return NextResponse.json({ error: 'La vidéo doit être au format MP4/WebM et peser moins de 50 Mo' }, { status: 400 })
+    }
+    if (type === 'portfolio' && (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > 10 * 1024 * 1024)) {
+      return NextResponse.json({ error: 'La photo doit être JPG, PNG ou WebP et peser moins de 10 Mo' }, { status: 400 })
+    }
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
     const base64Data = buffer.toString('base64')
@@ -21,8 +30,8 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       )
     }
-    const uploadFolder = type === 'avatars' ? 'artisan_avatars' : type === 'audio' ? 'artisan_voice_messages' : 'artisan_portfolio'
-    const resourceType = type === 'audio' ? 'video' : 'image'
+    const uploadFolder = type === 'avatars' ? 'artisan_avatars' : type === 'audio' ? 'artisan_voice_messages' : type === 'social-video' ? 'artisan_social_videos' : 'artisan_portfolio'
+    const resourceType = type === 'audio' || type === 'social-video' ? 'video' : 'image'
     const timestamp = Math.round(new Date().getTime() / 1000)
     const crypto = await import('crypto')
     const paramsToSign = `folder=${uploadFolder}&overwrite=true&timestamp=${timestamp}`

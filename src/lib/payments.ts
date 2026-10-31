@@ -1,7 +1,8 @@
 /**
  * Finda — Payment Integration Layer
  *
- * PRIMARY PROVIDER: Kkiapay (https://kkiapay.me)
+ * Supported providers: FeexPay, Kkiapay, and CinetPay.
+ * Select a provider explicitly with PAYMENT_PROVIDER.
  *   - Client-side widget (openKkiapayWidget)
  *   - Server-side verification via REST API
  *
@@ -9,6 +10,7 @@
  */
 
 import crypto from 'crypto'
+import { isFeexPayConfigured } from '@/lib/feexpay'
 
 // ============================================================
 // CONFIGURATION
@@ -316,11 +318,16 @@ export function isCinetPayConfigured(): boolean {
 
 /**
  * Returns the active payment provider name.
- * Priority: Kkiapay (primary) > CinetPay (legacy)
+ * Uses PAYMENT_PROVIDER when set; otherwise prefers configured Kkiapay, CinetPay, then FeexPay.
  */
-export function getActiveProvider(): 'kkiapay' | 'cinetpay' | 'demo' {
+export function getActiveProvider(): 'feexpay' | 'kkiapay' | 'cinetpay' | 'demo' {
+  const selectedProvider = process.env.PAYMENT_PROVIDER?.toLowerCase()
+  if (selectedProvider === 'feexpay' || selectedProvider === 'kkiapay' || selectedProvider === 'cinetpay') {
+    return selectedProvider
+  }
   if (isKkiapayConfigured()) return 'kkiapay'
   if (isCinetPayConfigured()) return 'cinetpay'
+  if (isFeexPayConfigured()) return 'feexpay'
   return 'demo'
 }
 
@@ -329,5 +336,9 @@ export function getActiveProvider(): 'kkiapay' | 'cinetpay' | 'demo' {
  * When false, the app runs in "demo mode" (payments auto-complete for testing).
  */
 export function isPaymentConfigured(): boolean {
-  return isKkiapayConfigured() || isCinetPayConfigured()
+  const provider = getActiveProvider()
+  if (provider === 'feexpay') return isFeexPayConfigured()
+  if (provider === 'kkiapay') return isKkiapayConfigured()
+  if (provider === 'cinetpay') return isCinetPayConfigured()
+  return false
 }

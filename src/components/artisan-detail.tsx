@@ -155,11 +155,43 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
   const handleSendDevis = async () => {
     if (!devisText.trim()) return
     setSending(true)
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    setSending(false)
-    setDevisOpen(false)
-    setDevisText('')
-    setDevisBudget('')
+    try {
+      const receiverId = artisan?.user?.id
+      if (!receiverId) {
+        alert("Impossible d'identifier l'artisan")
+        return
+      }
+
+      const budget = Number(devisBudget)
+      const content = [
+        `Demande de devis pour ${name}`,
+        devisBudget && Number.isFinite(budget) && budget > 0
+          ? `Budget indicatif : ${budget.toLocaleString('fr-FR')} FCFA`
+          : null,
+        '',
+        devisText.trim(),
+      ].filter((line) => line !== null).join('\n')
+
+      const response = await fetch('/api/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content, receiverId }),
+      })
+      if (!response.ok) {
+        const data = await response.json()
+        alert(data.error || "Erreur lors de l'envoi de la demande")
+        return
+      }
+
+      setDevisOpen(false)
+      setDevisText('')
+      setDevisBudget('')
+      alert("Votre demande a été envoyée à l'artisan")
+    } catch {
+      alert("Erreur réseau lors de l'envoi de la demande")
+    } finally {
+      setSending(false)
+    }
   }
 
   const parseJSON = (val: unknown): string[] => {

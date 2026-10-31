@@ -46,6 +46,9 @@ model User {
   pushSubscriptions PushSubscription[]
   payments      Payment[]
   favorites     Favorite[]
+  socialPosts   SocialPost[]
+  postComments  SocialComment[]
+  postReactions SocialReaction[]
 
   @@index([location])
   @@index([role])
@@ -349,6 +352,55 @@ model Favorite {
 // ============================================
 // RESERVATIONS (rendez-vous client <-> artisan)
 // ============================================
+
+model SocialPost {
+  id        String   @id @default(cuid())
+  authorId  String
+  content   String
+  title     String?
+  category  String?
+  location  String?
+  mediaUrls String[] @default([])
+  mediaTypes String[] @default([])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author    User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  comments  SocialComment[]
+  reactions SocialReaction[]
+
+  @@index([authorId])
+  @@index([createdAt])
+}
+
+model SocialComment {
+  id        String   @id @default(cuid())
+  postId    String
+  authorId  String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  post      SocialPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author    User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+  @@index([authorId])
+}
+
+model SocialReaction {
+  id        String   @id @default(cuid())
+  postId    String
+  userId    String
+  createdAt DateTime @default(now())
+
+  post      SocialPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@index([postId])
+  @@index([userId])
+}
 
 model Booking {
   id           String   @id @default(cuid())

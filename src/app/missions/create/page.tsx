@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { Suspense, useEffect, useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { authClient } from "@/lib/auth-client"
 import { ClipboardList, MapPin, Phone, DollarSign, FileText, Tag, Send, Loader2, Navigation, ArrowLeft, Wrench, Zap, Hammer, Paintbrush, KeyRound, BrickWall, Wind, Sparkles, UtensilsCrossed, TreePine, Car } from "lucide-react"
 import { getIssuesForCategory } from "@/lib/categories-map"
@@ -24,8 +24,11 @@ const CATEGORIES = [
   { name: "Autre", icon: ClipboardList },
 ]
 
-export default function CreateMissionPage() {
+function CreateMissionPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const requestedArtisanId = searchParams.get('artisanId') || undefined
+  const requestedArtisanName = searchParams.get('artisan') || undefined
   const { data: session } = authClient.useSession()
   const [step, setStep] = useState<"category" | "details">("category")
   const [loading, setLoading] = useState(false)
@@ -40,6 +43,22 @@ export default function CreateMissionPage() {
     location: "",
     phone: "",
   })
+
+  useEffect(() => {
+    if (!requestedArtisanId) return
+    void fetch(`/api/artisans/${requestedArtisanId}`)
+      .then((response) => response.ok ? response.json() : null)
+      .then((data) => {
+        const profession = String(data?.artisan?.profession || '').toLowerCase()
+        const aliases: Record<string, string> = { plomberie: 'Plomberie', electricien: 'Électricité', électricien: 'Électricité', menuisier: 'Menuiserie', menuiserie: 'Menuiserie', peintre: 'Peinture', serrurier: 'Serrurerie', macon: 'Maçonnerie', maçon: 'Maçonnerie', climatisation: 'Climatisation', nettoyage: 'Nettoyage', cuisine: 'Cuisine', jardinage: 'Jardinage', jardinier: 'Jardinage', mecanicien: 'Réparation auto', mécanicien: 'Réparation auto' }
+        const category = aliases[profession.normalize('NFD').replace(/\p{Diacritic}/gu, '')] || CATEGORIES.find((item) => profession.includes(item.name.toLowerCase()) || item.name.toLowerCase().includes(profession))?.name
+        if (category) {
+          setForm((current) => ({ ...current, category }))
+          setStep('details')
+        }
+      })
+      .catch(() => undefined)
+  }, [requestedArtisanId])
 
   const handleSelectCategory = (categoryName: string) => {
     setForm({ ...form, category: categoryName })
@@ -108,6 +127,7 @@ export default function CreateMissionPage() {
           latitude: coords?.latitude ?? null,
           longitude: coords?.longitude ?? null,
           phone: form.phone,
+          artisanId: requestedArtisanId,
         }),
       })
 
@@ -146,6 +166,12 @@ export default function CreateMissionPage() {
             </p>
           </div>
         </div>
+
+        {requestedArtisanName && (
+          <div className="mt-4 rounded-xl border border-brand-200 bg-brand-50 px-4 py-3 text-sm font-medium text-brand-800">
+            Demande personnalisée pour {requestedArtisanName}
+          </div>
+        )}
 
         {/* ─── ÉTAPE 1 : choix du métier / service recherché ─── */}
         {step === "category" && (
@@ -336,5 +362,13 @@ export default function CreateMissionPage() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function CreateMissionPageWithSuspense() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-50" />}>
+      <CreateMissionPage />
+    </Suspense>
   )
 }

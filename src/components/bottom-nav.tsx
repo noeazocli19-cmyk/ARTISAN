@@ -3,12 +3,13 @@
 import { useEffect, useSyncExternalStore } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, Search, MessageSquare, LayoutDashboard, User } from 'lucide-react'
+import { Home, Search, MessageSquare, LayoutDashboard, Users } from 'lucide-react'
 
 const NAV_ITEMS = [
   { href: '/', label: 'Accueil', icon: Home },
   { href: '/search', label: 'Recherche', icon: Search },
   { href: '/messages', label: 'Messages', icon: MessageSquare },
+  { href: '/social', label: 'Social', icon: Users },
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
 ]
 

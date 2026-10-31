@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Wrench, Loader2 } from 'lucide-react'
+import { Camera, ImageIcon, Loader2, UserRound, Wrench } from 'lucide-react'
+import Image from 'next/image'
 
 const PROFESSIONS = [
   'Plombier', 'Electricien', 'Menuisier', 'Peintre', 'Serrurier', 'Macon',
@@ -14,6 +15,9 @@ const PROFESSIONS = [
 export default function BecomeArtisanPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [uploadingPhoto, setUploadingPhoto] = useState(false)
+  const [avatar, setAvatar] = useState('')
+  const [avatarPreview, setAvatarPreview] = useState('')
   const [error, setError] = useState('')
   const [form, setForm] = useState({
     profession: '',
@@ -27,6 +31,36 @@ export default function BecomeArtisanPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+  }
+
+  const handleAvatar = async (file?: File) => {
+    if (!file) return
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      setError('Choisis une photo JPG, PNG ou WebP.')
+      return
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setError('La photo ne doit pas dépasser 5 Mo.')
+      return
+    }
+
+    setError('')
+    setUploadingPhoto(true)
+    setAvatarPreview(URL.createObjectURL(file))
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('type', 'avatars')
+      const upload = await fetch('/api/upload', { method: 'POST', body: formData })
+      const uploaded = await upload.json()
+      if (!upload.ok || !uploaded.url) throw new Error(uploaded.error || 'Téléversement impossible')
+      setAvatar(uploaded.url)
+    } catch (uploadError: any) {
+      setAvatarPreview('')
+      setError(uploadError.message || 'Impossible de téléverser la photo.')
+    } finally {
+      setUploadingPhoto(false)
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -64,7 +98,18 @@ export default function BecomeArtisanPage() {
         return
       }
 
-      router.push('/dashboard/artisan')
+      if (avatar) {
+        const avatarResponse = await fetch('/api/user/profile', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ avatar }),
+        })
+        if (!avatarResponse.ok) {
+          setError('Votre profil artisan est créé, mais la photo n’a pas pu être enregistrée. Vous pourrez la reprendre depuis votre tableau de bord.')
+        }
+      }
+
+      if (!error) router.push('/dashboard/artisan')
     } catch {
       setError('Erreur réseau, réessaie.')
     } finally {
@@ -90,6 +135,22 @@ export default function BecomeArtisanPage() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="flex flex-col items-center rounded-xl border border-dashed p-4" style={{ borderColor: 'var(--border)' }}>
+            <div className="relative mb-3 flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800">
+              {avatarPreview ? (
+                <Image src={avatarPreview} alt="Photo de profil" fill className="object-cover" sizes="96px" />
+              ) : (
+                <UserRound className="h-10 w-10 text-gray-400" />
+              )}
+              {uploadingPhoto && <div className="absolute inset-0 flex items-center justify-center bg-black/40"><Loader2 className="h-6 w-6 animate-spin text-white" /></div>}
+            </div>
+            <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold hover:bg-gray-50 dark:hover:bg-gray-800">
+              {avatarPreview ? <Camera className="h-4 w-4" /> : <ImageIcon className="h-4 w-4" />}
+              {avatarPreview ? 'Changer ma photo' : 'Ajouter une photo de profil'}
+              <input className="hidden" type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => void handleAvatar(event.target.files?.[0])} />
+            </label>
+            <p className="mt-2 text-center text-xs text-gray-500">Une photo claire inspire confiance. Facultative.</p>
+          </div>
           <div>
             <label className="text-sm font-medium block mb-1.5">Métier *</label>
             <select
@@ -164,7 +225,7 @@ export default function BecomeArtisanPage() {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || uploadingPhoto}
             className="w-full flex items-center justify-center gap-2 text-white font-semibold rounded-full py-2.5 text-sm disabled:opacity-60"
             style={{ backgroundColor: '#2596BE' }}
           >

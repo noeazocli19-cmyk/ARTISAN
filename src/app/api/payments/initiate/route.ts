@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { auth } from '@/lib/better-auth'
 import { headers } from 'next/headers'
+import { initiateFeexPayPayment, isFeexPayConfigured, isFeexPaySandbox } from '@/lib/feexpay'
 import {
   initiateCinetPayPayment,
   verifyKkiapayTransaction,
@@ -21,7 +22,7 @@ export const dynamic = 'force-dynamic'
 /**
  * POST /api/payments/initiate
  *
- * Initiates a payment. Supports Kkiapay (primary) and CinetPay (legacy).
+ * Initiates a payment using the configured provider.
  * In demo mode (no provider configured), payments auto-complete after 3s.
  *
  * Body:
@@ -71,15 +72,22 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const provider = getActiveProvider()
     const momoMethods = ['orange_money', 'mtn_money', 'wave', 'moov_money', 'airtel_money', 'm_pesa']
     // Phone number is required for Mobile Money ONLY when using CinetPay (server-side flow).
     // For Kkiapay, the widget collects the phone number client-side.
     // For demo mode, phone is optional.
-    if (momoMethods.includes(method) && !phoneNumber && isCinetPayConfigured() && !isKkiapayConfigured()) {
+    if (momoMethods.includes(method) && !phoneNumber && (provider === 'cinetpay' || provider === 'feexpay')) {
       return NextResponse.json(
         { error: 'Le numéro de téléphone est requis pour Mobile Money' },
         { status: 400 }
       )
+    }
+    if (provider === 'feexpay' && !isFeexPayConfigured()) {
+      return NextResponse.json({ error: 'FeexPay n\'est pas configuré' }, { status: 503 })
+    }
+    if (provider === 'feexpay' && method !== 'cash' && method !== 'mtn_money' && method !== 'moov_money') {
+      return NextResponse.json({ error: 'FeexPay prend en charge MTN Money et Moov Money uniquement' }, { status: 400 })
     }
 
     // ---- Calculate commission (for deposits/transfers, client pays commission) ----
@@ -114,13 +122,48 @@ export async function POST(request: NextRequest) {
           customerEmail: payload.email,
           originalAmount: amount,
           commission: commission?.commission || 0,
-          provider: getActiveProvider(),
+          provider,
           initiatedAt: new Date().toISOString(),
         }),
       },
     })
 
-    const provider = getActiveProvider()
+    // ---- FEEXPAY flow ----
+    if (provider === 'feexpay' && method !== 'cash') {
+      try {
+        const result = await initiateFeexPayPayment({
+          network: method === 'mtn_money' ? 'mtn' : 'moov',
+          phoneNumber,
+          amount: totalToCharge,
+          description: description || `Paiement Finda - ${reference}`,
+        })
+        await db.payment.update({
+          where: { id: payment.id },
+          data: {
+            status: 'processing',
+            metadata: JSON.stringify({
+              ...JSON.parse(payment.metadata || '{}'),
+              provider: 'feexpay',
+              feexpayReference: result.reference,
+              feexpayTransref: result.transref,
+              feexpaySandbox: isFeexPaySandbox(),
+            }),
+          },
+        })
+
+        return NextResponse.json({
+          paymentId: payment.id,
+          reference,
+          status: 'processing',
+          provider: 'feexpay',
+          sandbox: isFeexPaySandbox(),
+          message: 'Demande envoyée. Confirme le paiement sur ton téléphone.',
+        })
+      } catch (error) {
+        await db.payment.update({ where: { id: payment.id }, data: { status: 'failed' } })
+        throw error
+      }
+    }
 
     // ---- KKIAPAY flow (primary) ----
     if (provider === 'kkiapay' && method !== 'cash') {
@@ -267,6 +310,10 @@ export async function GET() {
     },
     cinetpay: {
       configured: isCinetPayConfigured(),
+    },
+    feexpay: {
+      configured: isFeexPayConfigured(),
+      sandbox: isFeexPaySandbox(),
     },
   })
 }

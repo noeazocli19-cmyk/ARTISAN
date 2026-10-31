@@ -12,11 +12,12 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAppStore } from '@/lib/store';
 import { PremiumCard } from '@/components/premium-card';
 import { IdentityVerificationCard } from '@/components/identity-verification-card';
+import { PhotoUploader } from '@/components/photo-uploader';
 import { TeamMembersEditor } from '@/components/team-members-editor';
 import {
   MapPin, Phone, Briefcase, Clock, Star, CheckCircle, AlertCircle, Crosshair,
   ClipboardList, MessageSquare, TrendingUp, Settings, Wrench, Hand, DollarSign,
-  LayoutGrid, ArrowLeftCircle, Loader2, User as UserIcon, Search, Clock3, CalendarCheck,
+  LayoutGrid, ArrowLeftCircle, Loader2, User as UserIcon, Search, Clock3, CalendarCheck, Users,
 } from 'lucide-react';
 import NotificationPanel from '@/components/notification-panel';
 
@@ -32,7 +33,8 @@ interface ArtisanProfile {
   phone: string | null;
   bio: string | null;
   skills: string[];
-  portfolio: string[];
+  portfolio: Array<string | { imageUrl?: string }>;
+  isAvailable: boolean;
   rating?: number | null;
   reviewCount?: number | null;
   isPremium?: boolean;
@@ -199,7 +201,7 @@ export function ArtisanDashboard() {
 
   const missingFields = () => {
     if (!artisanProfile) return [];
-    const missing = [];
+    const missing: string[] = [];
     if (!artisanProfile.profession) missing.push('Métier');
     if (!artisanProfile.experience) missing.push('Expérience');
     if (!artisanProfile.location) missing.push('Localisation');
@@ -450,14 +452,33 @@ export function ArtisanDashboard() {
 
   return (
     <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
-      {/* Bouton retour au site */}
-      <Link
-        href="/"
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-brand-700 transition"
-      >
-        <ArrowLeftCircle className="h-4 w-4" />
-        Retour au site
-      </Link>
+      {/* Accès visible à l'espace social */}
+      <div className="flex flex-wrap items-center gap-3">
+        <Link
+          href="/social"
+          className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700"
+        >
+          <Users className="h-4 w-4" />
+          Accéder au réseau social
+        </Link>
+        <Link
+          href="/"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-brand-700 transition"
+        >
+          <ArrowLeftCircle className="h-4 w-4" />
+          Retour au site
+        </Link>
+      </div>
+
+      <div className="flex items-center justify-end">
+        <PhotoUploader
+          currentAvatar={storeUser?.avatar || session?.user?.image}
+          userName={session?.user?.name || undefined}
+          type="avatars"
+          size="md"
+          onUploadComplete={() => toast.success('Photo de profil mise à jour')}
+        />
+      </div>
 
       {/* Bandeau d'en-tête — signature de marque (dégradé ambre → orange) */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand-500 via-brand-500 to-brand-600 p-6 shadow-lg">

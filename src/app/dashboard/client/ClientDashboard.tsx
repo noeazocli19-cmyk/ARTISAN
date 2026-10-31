@@ -240,10 +240,16 @@ export function ClientDashboard() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-      <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-brand-700 transition mb-4">
-        <ArrowLeftCircle className="h-4 w-4" />
-        Retour au site
-      </Link>
+      <div className="mb-4 flex flex-wrap items-center gap-3">
+        <Link href="/social" className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700">
+          <Users className="h-4 w-4" />
+          Accéder au réseau social
+        </Link>
+        <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-brand-700 transition">
+          <ArrowLeftCircle className="h-4 w-4" />
+          Retour au site
+        </Link>
+      </div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold">

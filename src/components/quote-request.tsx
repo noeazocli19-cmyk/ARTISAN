@@ -709,7 +709,6 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
   const [formBudgetMin, setFormBudgetMin] = useState('')
   const [formBudgetMax, setFormBudgetMax] = useState('')
   const [formUrgency, setFormUrgency] = useState<'low' | 'medium' | 'high'>('medium')
-  const [formPhotos, setFormPhotos] = useState<string[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
 
@@ -739,11 +738,45 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
   }, [selectedRequest])
 
   // Handlers
-  const handleCreateSubmit = () => {
+  const handleCreateSubmit = async () => {
     if (!formTitle.trim() || !formDescription.trim() || !formCategory || !formLocation.trim()) return
 
+    const budgetMin = formBudgetMin ? Number(formBudgetMin) : null
+    const budgetMax = formBudgetMax ? Number(formBudgetMax) : null
+    if (
+      (budgetMin !== null && (!Number.isInteger(budgetMin) || budgetMin < 0)) ||
+      (budgetMax !== null && (!Number.isInteger(budgetMax) || budgetMax < 0)) ||
+      (budgetMin !== null && budgetMax !== null && budgetMin > budgetMax)
+    ) {
+      alert('Vérifiez la fourchette de budget saisie.')
+      return
+    }
+
     setIsSubmitting(true)
-    setTimeout(() => {
+    try {
+      const details = [
+        formDescription.trim(),
+        budgetMin !== null || budgetMax !== null
+          ? `Budget indicatif : ${budgetMin?.toLocaleString('fr-FR') ?? 'non précisé'} à ${budgetMax?.toLocaleString('fr-FR') ?? 'non précisé'} FCFA`
+          : null,
+        `Urgence déclarée : ${formUrgency}`,
+      ].filter(Boolean).join('\n\n')
+      const response = await fetch('/api/missions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: formTitle.trim(),
+          description: details,
+          category: formCategory,
+          budget: budgetMax ?? budgetMin ?? 0,
+          location: formLocation.trim(),
+        }),
+      })
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        throw new Error(data.error || "Erreur lors de la publication de la demande")
+      }
+
       setIsSubmitting(false)
       setShowSuccess(true)
       setTimeout(() => {
@@ -751,7 +784,11 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
         setCreateDialogOpen(false)
         resetForm()
       }, 3000)
-    }, 2000)
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "Erreur lors de la publication de la demande")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const resetForm = () => {
@@ -762,7 +799,6 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
     setFormBudgetMin('')
     setFormBudgetMax('')
     setFormUrgency('medium')
-    setFormPhotos([])
   }
 
   const handleAccept = (quote: Quote) => {
@@ -1239,11 +1275,7 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
                 <CheckCircle2 className="h-10 w-10 text-white" />
               </div>
               <h3 className="text-xl font-bold mb-2">Demande envoyée !</h3>
-              <p className="text-muted-foreground mb-2">Votre demande de devis a été publiée avec succès.</p>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-100 dark:bg-brand-950/50 text-brand-700 dark:text-brand-300 font-medium text-sm">
-                <Sparkles className="h-4 w-4" />
-                3 artisans ont été notifiés !
-              </div>
+              <p className="text-muted-foreground">Votre demande est enregistrée et consultable par les artisans correspondants.</p>
             </motion.div>
           ) : (
             <>
@@ -1379,39 +1411,6 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
                   </RadioGroup>
                 </div>
 
-                {/* Photo upload (simulated) */}
-                <div className="space-y-2">
-                  <Label>Photos (optionnel)</Label>
-                  <div
-                    className="border-2 border-dashed border-border/60 rounded-lg p-6 text-center cursor-pointer hover:border-brand-400/60 hover:bg-brand-50/50 dark:hover:bg-brand-950/20 transition-colors"
-                    onClick={() => {
-                      if (formPhotos.length < 5) {
-                        setFormPhotos(prev => [...prev, `photo-${prev.length + 1}`])
-                      }
-                    }}
-                  >
-                    <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
-                    <p className="text-sm font-medium">Glissez vos photos ici</p>
-                    <p className="text-xs text-muted-foreground mt-1">ou cliquez pour sélectionner (max 5)</p>
-                  </div>
-                  {formPhotos.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      {formPhotos.map((photo, idx) => (
-                        <div key={photo} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-brand-50 dark:bg-brand-950/30 border border-brand-200/50 dark:border-brand-800/50">
-                          <Camera className="h-3.5 w-3.5 text-brand-600 dark:text-brand-400" />
-                          <span className="text-xs">Photo {idx + 1}</span>
-                          <button
-                            type="button"
-                            className="ml-1 text-neutral-400 hover:text-red-500 transition-colors"
-                            onClick={() => setFormPhotos(prev => prev.filter((_, i) => i !== idx))}
-                          >
-                            <XCircle className="h-3.5 w-3.5" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
               </div>
 
               <DialogFooter>

@@ -151,13 +151,18 @@ export function PhotoUploader({
         onDragLeave={handleDragLeave}
       >
         {preview ? (
-          <Image
-            src={preview}
-            alt={userName || 'Photo de profil'}
-            fill
-            className="object-cover"
-            sizes={size === 'sm' ? '40px' : size === 'md' ? '64px' : size === 'lg' ? '96px' : '128px'}
-          />
+          preview.startsWith('blob:') ? (
+            <img src={preview} alt={userName || 'Photo de profil'} className="h-full w-full object-cover" />
+          ) : (
+            <Image
+              src={preview}
+              alt={userName || 'Photo de profil'}
+              fill
+              className="object-cover"
+              sizes={size === 'sm' ? '40px' : size === 'md' ? '64px' : size === 'lg' ? '96px' : '128px'}
+              unoptimized={preview.startsWith('data:')}
+            />
+          )
         ) : (
           <div className="flex items-center justify-center h-full w-full text-white font-bold">
             {size === 'sm' ? (

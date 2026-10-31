@@ -7,6 +7,7 @@ import {
   isKkiapayConfigured,
 } from '@/lib/payments'
 import { computeArtisanBadge } from '@/lib/badges'
+import { checkFeexPayStatus, isFeexPayConfigured, normalizeFeexPayStatus } from '@/lib/feexpay'
 
 export const dynamic = 'force-dynamic'
 
@@ -50,7 +51,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Référence manquante' }, { status: 400 })
     }
 
-    const payment = await db.payment.findUnique({
+    const payment = await db.payment.findFirst({
       where: { reference },
     })
 
@@ -68,8 +69,18 @@ export async function GET(request: NextRequest) {
       metadata = {}
     }
 
+    // ---- FeexPay verification ----
+    if (metadata.provider === 'feexpay' && isFeexPayConfigured() && typeof metadata.feexpayReference === 'string') {
+      const verification = await checkFeexPayStatus(metadata.feexpayReference)
+      newStatus = normalizeFeexPayStatus(verification.status)
+      success = newStatus === 'completed'
+      metadata.verifiedAt = new Date().toISOString()
+      metadata.feexpayStatus = verification.status
+      await db.payment.update({ where: { id: payment.id }, data: { status: newStatus, metadata: JSON.stringify(metadata) } })
+      if (success) await activatePremiumIfNeeded(payment)
+    }
     // ---- Kkiapay verification ----
-    if (isKkiapayConfigured() && transactionId) {
+    else if (isKkiapayConfigured() && transactionId) {
       const verification = await verifyKkiapayTransaction(transactionId)
 
       if (verification.success) {
@@ -132,8 +143,9 @@ export async function GET(request: NextRequest) {
     // ---- Response ----
     if (redirect) {
       const baseUrl = process.env.NEXT_PUBLIC_APP_URL || '/'
+      const paymentResult = success ? 'success' : newStatus === 'processing' ? 'pending' : 'failed'
       return NextResponse.redirect(
-        new URL(`/?payment=${success ? 'success' : 'failed'}&ref=${reference}`, baseUrl)
+        new URL(`/?payment=${paymentResult}&ref=${reference}`, baseUrl)
       )
     }
 
@@ -165,7 +177,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Référence manquante' }, { status: 400 })
     }
 
-    const payment = await db.payment.findUnique({
+    const payment = await db.payment.findFirst({
       where: { reference },
     })
 
@@ -183,8 +195,18 @@ export async function POST(request: NextRequest) {
       metadata = {}
     }
 
+    // ---- FeexPay verification ----
+    if (metadata.provider === 'feexpay' && isFeexPayConfigured() && typeof metadata.feexpayReference === 'string') {
+      const verification = await checkFeexPayStatus(metadata.feexpayReference)
+      newStatus = normalizeFeexPayStatus(verification.status)
+      success = newStatus === 'completed'
+      metadata.verifiedAt = new Date().toISOString()
+      metadata.feexpayStatus = verification.status
+      await db.payment.update({ where: { id: payment.id }, data: { status: newStatus, metadata: JSON.stringify(metadata) } })
+      if (success) await activatePremiumIfNeeded(payment)
+    }
     // ---- Kkiapay verification ----
-    if (isKkiapayConfigured() && transactionId) {
+    else if (isKkiapayConfigured() && transactionId) {
       const verification = await verifyKkiapayTransaction(transactionId)
 
       if (verification.success) {

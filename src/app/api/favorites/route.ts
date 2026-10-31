@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
 
     const favorites = await db.favorite.findMany({
       where: { clientId: session.user.id },
-      include: { artisan: { include: { user: { select: { id: true, name: true, image: true } } } } },
+      include: { artisan: { include: { user: { select: { id: true, name: true, image: true, avatar: true } } } } },
       orderBy: { createdAt: 'desc' },
     });
 

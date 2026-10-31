@@ -1,10 +1,18 @@
 // Integration FeexPay - Mobile Money Benin (MTN, Moov)
 // Documentation officielle : https://docs.feexpay.me/api_rest.html
 
-const FEEXPAY_BASE_URL = "https://api.feexpay.me/api/transactions/public"
+const FEEXPAY_BASE_URL = (process.env.FEEXPAY_BASE_URL || "https://api.feexpay.me/api/transactions/public").replace(/\/$/, "")
+
+export function isFeexPaySandbox(): boolean {
+  return process.env.FEEXPAY_SANDBOX === "true"
+}
 
 export function isFeexPayConfigured(): boolean {
-  return Boolean(process.env.FEEXPAY_API_KEY && process.env.FEEXPAY_SHOP_ID)
+  return Boolean(
+    process.env.FEEXPAY_API_KEY &&
+    process.env.FEEXPAY_SHOP_ID &&
+    (!isFeexPaySandbox() || process.env.FEEXPAY_BASE_URL)
+  )
 }
 
 function feexpayHeaders() {
@@ -59,5 +67,12 @@ export async function checkFeexPayStatus(reference: string) {
   if (!res.ok) {
     throw new Error(data?.message || "Erreur FeexPay lors de la verification du statut")
   }
-  return data as { status: "PENDING" | "SUCCESSFUL" | "FAILED"; reference: string }
+  return data as { status: string; reference: string }
+}
+
+export function normalizeFeexPayStatus(status: string): "completed" | "failed" | "processing" {
+  const normalizedStatus = status.toUpperCase()
+  if (["SUCCESS", "SUCCESSFUL", "COMPLETED"].includes(normalizedStatus)) return "completed"
+  if (["FAILED", "FAILURE", "CANCELLED", "EXPIRED"].includes(normalizedStatus)) return "failed"
+  return "processing"
 }
