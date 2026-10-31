@@ -92,20 +92,20 @@ export default function SocialPage() {
   }, [session?.user?.id]);
 
   useEffect(() => {
-    queueMicrotask(() => {
-      try { setSavedPostIds(new Set(JSON.parse(localStorage.getItem('finda-saved-posts') || '[]'))); }
-      catch { setSavedPostIds(new Set()); }
-    });
-  }, []);
+    if (!session?.user?.id) return;
+    fetch('/api/social/saved', { cache: 'no-store', credentials: 'include' })
+      .then((response) => response.ok ? response.json() : { postIds: [] })
+      .then((data) => setSavedPostIds(new Set(data.postIds || [])))
+      .catch(() => setSavedPostIds(new Set()));
+  }, [session?.user?.id]);
 
-  function toggleSavedPost(postId: string) {
-    setSavedPostIds((current) => {
-      const next = new Set(current);
-      if (next.has(postId)) next.delete(postId); else next.add(postId);
-      localStorage.setItem('finda-saved-posts', JSON.stringify([...next]));
-      toast.success(next.has(postId) ? 'Publication enregistrée' : 'Publication retirée des favoris');
-      return next;
-    });
+  async function toggleSavedPost(postId: string) {
+    if (!session?.user?.id) return toast.info('Connectez-vous pour enregistrer une publication');
+    const remove = savedPostIds.has(postId);
+    const response = await fetch(remove ? `/api/social/saved?postId=${encodeURIComponent(postId)}` : '/api/social/saved', { method: remove ? 'DELETE' : 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, ...(remove ? {} : { body: JSON.stringify({ postId }) }) });
+    if (!response.ok) return toast.error('Impossible de modifier cette publication enregistrée');
+    setSavedPostIds((current) => { const next = new Set(current); if (remove) next.delete(postId); else next.add(postId); return next; });
+    toast.success(remove ? 'Publication retirée des favoris' : 'Publication enregistrée');
   }
 
   async function toggleFavorite(artisanId: string) {

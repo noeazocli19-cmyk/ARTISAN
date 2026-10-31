@@ -49,6 +49,11 @@ model User {
   socialPosts   SocialPost[]
   postComments  SocialComment[]
   postReactions SocialReaction[]
+  savedPosts    SavedSocialPost[]
+  stories       SocialStory[]
+  reports       ContentReport[] @relation("ReporterReports")
+  moderatedReports ContentReport[] @relation("ModeratorReports")
+  quotesRequested Quote[] @relation("ClientQuotes")
 
   @@index([location])
   @@index([role])
@@ -152,6 +157,8 @@ model Artisan {
   bookings       Booking[]
   favorites      Favorite[] 
    payments       Payment[]  
+   quotes         Quote[]
+   stories        SocialStory[]
 
   @@index([latitude])
   @@index([longitude])
@@ -199,6 +206,7 @@ model Mission {
   reviews     Review[]
   payments    Payment[]
   messages    Message[]
+  quote       Quote?
 
   @@index([status])
   @@index([clientId])
@@ -368,6 +376,7 @@ model SocialPost {
   author    User @relation(fields: [authorId], references: [id], onDelete: Cascade)
   comments  SocialComment[]
   reactions SocialReaction[]
+  savedBy   SavedSocialPost[]
 
   @@index([authorId])
   @@index([createdAt])
@@ -400,6 +409,82 @@ model SocialReaction {
   @@unique([postId, userId])
   @@index([postId])
   @@index([userId])
+}
+
+model Quote {
+  id          String   @id @default(cuid())
+  missionId   String?  @unique
+  clientId    String
+  artisanId   String
+  title       String
+  description String?
+  amount      Int      @default(0)
+  currency    String   @default("XAF")
+  status      String   @default("en_attente") // en_attente | accepte | refuse | expire
+  validUntil  DateTime?
+  artisanNote String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  mission     Mission? @relation(fields: [missionId], references: [id], onDelete: SetNull)
+  client      User     @relation("ClientQuotes", fields: [clientId], references: [id], onDelete: Cascade)
+  artisan     Artisan  @relation(fields: [artisanId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
+  @@index([artisanId])
+  @@index([status])
+}
+
+model SavedSocialPost {
+  id        String   @id @default(cuid())
+  userId    String
+  postId    String
+  createdAt DateTime @default(now())
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      SocialPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+  @@index([userId])
+  @@index([postId])
+}
+
+model SocialStory {
+  id        String   @id @default(cuid())
+  authorId  String
+  artisanId String
+  mediaUrl  String
+  mediaType String   @default("image")
+  caption   String?
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  author    User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  artisan   Artisan @relation(fields: [artisanId], references: [id], onDelete: Cascade)
+
+  @@index([artisanId])
+  @@index([expiresAt])
+}
+
+model ContentReport {
+  id          String   @id @default(cuid())
+  reporterId  String
+  postId      String?
+  commentId   String?
+  reason      String
+  details     String?
+  status      String   @default("ouvert") // ouvert | examine | resolu | rejete
+  moderatorId String?
+  resolution  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  reporter    User  @relation("ReporterReports", fields: [reporterId], references: [id], onDelete: Cascade)
+  moderator   User? @relation("ModeratorReports", fields: [moderatorId], references: [id], onDelete: SetNull)
+
+  @@index([status])
+  @@index([reporterId])
+  @@index([postId])
 }
 
 model Booking {
