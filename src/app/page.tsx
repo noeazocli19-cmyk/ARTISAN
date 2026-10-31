@@ -536,6 +536,14 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
   const [searchQuery, setSearchQuery] = useState("")
   const [searchLocation, setSearchLocation] = useState("")
   const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>({})
+  const [registeredArtisans, setRegisteredArtisans] = useState<any[]>([])
+
+  useEffect(() => {
+    fetch('/api/artisans?location=Cotonou&limit=10')
+      .then((r) => r.json())
+      .then((data) => setRegisteredArtisans(Array.isArray(data.artisans) ? data.artisans : []))
+      .catch(() => setRegisteredArtisans([]))
+  }, [])
 
   useEffect(() => {
     fetch('/api/categories/counts')
@@ -727,54 +735,44 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">en action</span>
             </motion.h2>
             <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground text-lg max-w-2xl mx-auto">
-              Découvrez nos artisans Ã  travers l&apos;Afrique — tous les métiers, tous les talents.
+              Découvrez les artisans réellement inscrits à Cotonou et dans ses environs.
             </motion.p>
           </motion.div>
 
           <motion.div variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }}>
             <Carousel opts={{ align: "start", loop: true }} className="w-full">
               <CarouselContent className="-ml-4">
-                {artisans.map((artisan) => (
-                  <CarouselItem key={artisan.name} className="pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5">
-                    <Card className="group hover:border-brand-300 dark:hover:border-brand-700 transition-all hover:shadow-xl overflow-hidden h-full">
-                      {/* Full image card */}
-                      <div className={`relative h-72 overflow-hidden bg-gradient-to-br ${artisan.avatarColor.replace('bg-', 'from-').replace('-500', '-400')} to-brand-600`}>
-                        <Image
-                          src={artisan.image}
-                          alt={`${artisan.name} - ${artisan.skill}`}
-                          fill
-                          className="object-cover transition-transform duration-500 group-hover:scale-110"
-                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-                        <Badge className={`absolute top-3 right-3 text-[10px] px-2.5 py-0.5 ${artisan.badgeColor} border-0 shadow-md`}>{artisan.badge}</Badge>
-                        {/* Name & skill overlay at bottom */}
-                        <div className="absolute bottom-0 left-0 right-0 p-4">
-                          <div className="flex items-center gap-2 mb-2">
-                            <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white font-bold text-xs ${artisan.avatarColor} border-2 border-white/30 shadow-md`}>
-                              {artisan.avatar}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <h3 className="font-bold text-sm text-white truncate">{artisan.name}</h3>
-                              <p className="text-xs text-white/80 truncate">{artisan.skill}</p>
-                            </div>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-1 text-xs text-white/70">
-                              <MapPin className="h-3 w-3" />
-                              <span className="truncate">{artisan.location}</span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <Star className="h-3.5 w-3.5 fill-brand-400 text-brand-400" />
-                              <span className="font-bold text-xs text-white">{artisan.rating}</span>
-                              <span className="text-[10px] text-white/60">({artisan.reviews})</span>
+                {registeredArtisans.map((artisan: any, index: number) => {
+                  const name = artisan.user?.name || 'Artisan Finda'
+                  const initials = name.split(' ').map((part: string) => part[0]).join('').slice(0, 2).toUpperCase()
+                  const skill = artisan.profession || artisan.specialties || 'Artisan'
+                  const location = artisan.user?.location || 'Cotonou, Bénin'
+                  const photo = artisan.user?.avatar || artisan.user?.image
+                  return (
+                    <CarouselItem key={artisan.id || name} className="pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5">
+                      <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.08, duration: 0.45 }} className="h-full">
+                        <Card className="group hover:border-brand-300 dark:hover:border-brand-700 transition-all hover:shadow-xl overflow-hidden h-full">
+                          <div className="relative h-72 overflow-hidden bg-gradient-to-br from-brand-500 to-emerald-600">
+                            {photo ? <Image src={photo} alt={`${name} — ${skill}`} fill className="object-cover transition-transform duration-700 group-hover:scale-110" /> : null}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+                            {(artisan.user?.isVerified || artisan.isPremium) && <Badge className="absolute top-3 right-3 border-0 bg-teal-500 text-white shadow-md">Vérifié</Badge>}
+                            <div className="absolute bottom-0 left-0 right-0 p-4">
+                              <div className="flex items-center gap-2 mb-2">
+                                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-white/30 bg-brand-500 text-xs font-bold text-white shadow-md">{initials}</div>
+                                <div className="min-w-0 flex-1"><h3 className="truncate text-sm font-bold text-white">{name}</h3><p className="truncate text-xs text-white/80">{skill}</p></div>
+                              </div>
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-1 text-xs text-white/70"><MapPin className="h-3 w-3" /><span className="truncate">{location}</span></div>
+                                <div className="flex items-center gap-1"><Star className="h-3.5 w-3.5 fill-brand-400 text-brand-400" /><span className="text-xs font-bold text-white">{Number(artisan.rating || 0).toFixed(1)}</span></div>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </div>
-                    </Card>
-                  </CarouselItem>
-                ))}
+                        </Card>
+                      </motion.div>
+                    </CarouselItem>
+                  )
+                })}
+                {registeredArtisans.length === 0 && <CarouselItem className="pl-4 basis-full"><div className="rounded-2xl border border-dashed p-10 text-center text-muted-foreground">Aucun artisan enregistré à Cotonou pour le moment.</div></CarouselItem>}
               </CarouselContent>
               <CarouselPrevious className="hidden sm:flex -left-12" />
               <CarouselNext className="hidden sm:flex -right-12" />

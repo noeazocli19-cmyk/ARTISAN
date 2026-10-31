@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, type Variants } from "framer-motion";
+import { useRouter } from "next/navigation";
 import {
   Check,
   Star,
@@ -92,6 +93,16 @@ const headerVariants: Variants = {
 };
 
 export function PricingSection() {
+  const router = useRouter();
+
+  const handlePlanChoice = (plan: PricingPlan) => {
+    if (plan.price === "0") {
+      router.push("/register");
+      return;
+    }
+    router.push("/dashboard/artisan?premium=1");
+  };
+
   return (
     <section
       id="tarifs"
@@ -253,6 +264,8 @@ export function PricingSection() {
                   {/* CTA */}
                   <div className="mt-auto pt-2">
                     <Button
+                      type="button"
+                      onClick={() => handlePlanChoice(plan)}
                       className={cn(
                         "w-full",
                         plan.popular
