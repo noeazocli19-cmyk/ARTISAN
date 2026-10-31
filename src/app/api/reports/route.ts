@@ -21,3 +21,13 @@ export async function GET(request: NextRequest) {
   const reports = await db.contentReport.findMany({ include: { reporter: { select: { id: true, name: true, email: true } } }, orderBy: { createdAt: 'desc' } });
   return NextResponse.json({ reports });
 }
+
+export async function PATCH(request: NextRequest) {
+  const session = await auth.api.getSession({ headers: request.headers });
+  const user = session?.user?.id ? await db.user.findUnique({ where: { id: session.user.id }, select: { role: true } }) : null;
+  if (user?.role !== 'admin') return NextResponse.json({ error: 'Accès interdit' }, { status: 403 });
+  const body = await request.json();
+  if (typeof body.reportId !== 'string') return NextResponse.json({ error: 'Signalement requis' }, { status: 400 });
+  const report = await db.contentReport.update({ where: { id: body.reportId }, data: { status: typeof body.status === 'string' ? body.status : 'examine', moderatorId: session!.user.id, resolution: typeof body.resolution === 'string' ? body.resolution.slice(0, 2000) : null } });
+  return NextResponse.json({ report });
+}
