@@ -40,6 +40,8 @@ export default function SocialPage() {
   const [search, setSearch] = useState('');
   const [savedOnly, setSavedOnly] = useState(false);
   const [suggestedArtisans, setSuggestedArtisans] = useState<any[]>([]);
+  const [artisanResults, setArtisanResults] = useState<any[]>([]);
+  const [searchingArtisans, setSearchingArtisans] = useState(false);
   const [favoriteArtisanIds, setFavoriteArtisanIds] = useState<Set<string>>(new Set());
   const [savedPostIds, setSavedPostIds] = useState<Set<string>>(new Set());
 
@@ -62,6 +64,24 @@ export default function SocialPage() {
     fetch('/api/artisans/profile').then((r) => r.ok ? r.json() : { artisan: null })
       .then((data) => setIsArtisan(Boolean(data.artisan))).catch(() => setIsArtisan(false));
   }, [session?.user?.id]);
+
+  useEffect(() => {
+    if (!search.trim()) {
+      setArtisanResults([]);
+      setSearchingArtisans(false);
+      return;
+    }
+    const timer = window.setTimeout(async () => {
+      setSearchingArtisans(true);
+      try {
+        const response = await fetch(`/api/artisans/search?q=${encodeURIComponent(search.trim())}`, { cache: 'no-store' });
+        const data = await response.json();
+        setArtisanResults(response.ok ? data.artisans || [] : []);
+      } catch { setArtisanResults([]); }
+      finally { setSearchingArtisans(false); }
+    }, 300);
+    return () => window.clearTimeout(timer);
+  }, [search]);
 
   useEffect(() => {
     fetch('/api/artisans?limit=5', { cache: 'no-store' })
@@ -214,6 +234,29 @@ export default function SocialPage() {
                 <Button type="submit" disabled={publishing || uploading} className="ml-auto bg-brand-600 hover:bg-brand-700">{publishing ? 'Publication…' : 'Publier'}</Button>
               </div>
             </form>
+          </Card>
+        )}
+
+        {search.trim() && (
+          <Card className="mb-4 overflow-hidden rounded-2xl border-brand-100 p-4 shadow-sm">
+            <div className="flex items-center justify-between gap-3">
+              <div className="font-semibold text-slate-900">Artisans trouvés</div>
+              <Link href={`/search?q=${encodeURIComponent(search.trim())}`} className="text-xs font-semibold text-brand-700 hover:underline">Recherche complète</Link>
+            </div>
+            {searchingArtisans ? <p className="mt-3 text-sm text-slate-500">Recherche des artisans…</p> : artisanResults.length === 0 ? <p className="mt-3 text-sm text-slate-500">Aucun artisan ne correspond à cette recherche.</p> : (
+              <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                {artisanResults.slice(0, 6).map((artisan) => (
+                  <div key={artisan.id} className="flex items-center gap-3 rounded-xl border border-slate-100 bg-white p-3">
+                    <Avatar className="h-11 w-11 shrink-0"><AvatarImage src={artisan.user?.avatar || artisan.user?.image || undefined} /><AvatarFallback>{initials({ id: artisan.id, name: artisan.user?.name })}</AvatarFallback></Avatar>
+                    <Link href={`/artisan/${artisan.id}`} className="min-w-0 flex-1">
+                      <span className="block truncate text-sm font-semibold text-slate-900">{artisan.user?.name || 'Artisan'}</span>
+                      <span className="block truncate text-xs text-slate-500">{artisan.profession || 'Artisan professionnel'} · {artisan.location || 'Localisation indisponible'}</span>
+                    </Link>
+                    <button type="button" onClick={() => void toggleFavorite(artisan.id)} className={`shrink-0 rounded-full px-2.5 py-1.5 text-xs font-semibold ${favoriteArtisanIds.has(artisan.id) ? 'bg-slate-100 text-slate-600' : 'bg-brand-600 text-white'}`}>{favoriteArtisanIds.has(artisan.id) ? 'Suivi' : 'Suivre'}</button>
+                  </div>
+                ))}
+              </div>
+            )}
           </Card>
         )}
 

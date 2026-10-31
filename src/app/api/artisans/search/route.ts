@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
 
     const artisans = await db.artisan.findMany({
       where,
-      include: { user: { select: { id: true, name: true, email: true, image: true, phone: true, lastActiveAt: true } } },
+      include: { user: { select: { id: true, name: true, email: true, image: true, avatar: true, phone: true, lastActiveAt: true } } },
     });
 
     const ONLINE_THRESHOLD_MS = 5 * 60 * 1000;
