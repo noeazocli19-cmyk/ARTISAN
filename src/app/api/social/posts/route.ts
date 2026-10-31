@@ -49,9 +49,6 @@ export async function POST(request: NextRequest) {
     const session = await auth.api.getSession({ headers: request.headers });
     if (!session?.user?.id) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
 
-    const artisan = await db.artisan.findUnique({ where: { userId: session.user.id }, select: { id: true } });
-    if (!artisan) return NextResponse.json({ error: 'Seuls les artisans peuvent publier une réalisation' }, { status: 403 });
-
     const body = await request.json();
     const content = typeof body.content === 'string' ? body.content.trim() : '';
     const title = typeof body.title === 'string' ? body.title.trim().slice(0, 120) : null;

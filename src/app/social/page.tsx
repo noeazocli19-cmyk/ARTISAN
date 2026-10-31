@@ -27,7 +27,6 @@ export default function SocialPage() {
   const { data: session } = authClient.useSession();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isArtisan, setIsArtisan] = useState(false);
   const [composer, setComposer] = useState(false);
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('');
@@ -59,12 +58,6 @@ export default function SocialPage() {
   }
 
   useEffect(() => { const timer = window.setTimeout(() => void loadPosts(search), 250); return () => window.clearTimeout(timer); }, [search]);
-  useEffect(() => {
-    if (!session?.user?.id) return;
-    fetch('/api/artisans/profile').then((r) => r.ok ? r.json() : { artisan: null })
-      .then((data) => setIsArtisan(Boolean(data.artisan))).catch(() => setIsArtisan(false));
-  }, [session?.user?.id]);
-
   useEffect(() => {
     if (!search.trim()) {
       setArtisanResults([]);
@@ -146,12 +139,14 @@ export default function SocialPage() {
 
   async function publish(event: FormEvent) {
     event.preventDefault();
+    if (!session?.user?.id) return toast.error('Connectez-vous pour publier');
     if (!content.trim() && media.length === 0) return toast.error('Ajoutez du texte ou une photo');
     setPublishing(true);
     try {
-      const response = await fetch('/api/social/posts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ content, title, category, location, mediaUrls: media, mediaTypes }) });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error);
+      const response = await fetch('/api/social/posts', { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ content, title, category, location, mediaUrls: media, mediaTypes }) });
+      const data = await response.json().catch(() => null);
+      if (!response.ok) throw new Error(data?.error || 'Publication impossible. Veuillez réessayer.');
+      if (!data?.post) throw new Error('La publication n’a pas été enregistrée');
       setPosts((items) => [data.post, ...items]);
       setContent(''); setTitle(''); setCategory(''); setLocation(''); setMedia([]); setMediaTypes([]); setComposer(false);
       toast.success('Publication ajoutée');
@@ -205,7 +200,7 @@ export default function SocialPage() {
 
         {posts.length > 0 && <div className="mb-4 flex gap-3 overflow-x-auto pb-2">{posts.slice(0, 8).map((post) => <button key={post.id} onClick={() => document.getElementById(`post-${post.id}`)?.scrollIntoView({ behavior: 'smooth' })} className="shrink-0 text-center"><span className="mx-auto block h-16 w-16 rounded-full bg-gradient-to-br from-brand-400 via-orange-400 to-pink-500 p-[3px]"><span className="block h-full w-full rounded-full border-2 border-white bg-white p-[2px] overflow-hidden"><Avatar className="h-full w-full"><AvatarImage src={post.author.image || post.author.avatar || undefined} /><AvatarFallback>{initials(post.author)}</AvatarFallback></Avatar></span></span><span className="mt-1 block max-w-16 truncate text-[11px] font-medium">{nameOf(post.author)}</span></button>)}</div>}
 
-        {isArtisan && !composer && (
+        {session?.user?.id && !composer && (
           <Card className="mb-4 rounded-2xl border-brand-100 p-3 shadow-sm sm:p-4">
             <button className="flex w-full items-center gap-3 text-left" onClick={() => setComposer(true)}>
               <Avatar className="h-11 w-11 shrink-0"><AvatarImage src={session?.user?.image || undefined} /><AvatarFallback>{initials({ id: session?.user?.id || '', name: session?.user?.name })}</AvatarFallback></Avatar>
@@ -269,7 +264,7 @@ export default function SocialPage() {
           <Card className="p-10 text-center">
             <Bookmark className="mx-auto mb-3 h-10 w-10 text-brand-300" />
             <h1 className="text-xl font-bold text-slate-900">{savedOnly ? 'Aucune publication enregistrée' : 'Aucune réalisation publiée'}</h1>
-            <p className="mt-2 text-sm text-slate-500">{savedOnly ? 'Touchez l’icône Enregistrer sous une publication pour la retrouver ici.' : isArtisan ? 'Soyez le premier à partager votre savoir-faire.' : 'Les réalisations des artisans apparaîtront ici.'}</p>
+            <p className="mt-2 text-sm text-slate-500">{savedOnly ? 'Touchez l’icône Enregistrer sous une publication pour la retrouver ici.' : 'Partagez votre savoir-faire et les réalisations de la communauté.'}</p>
           </Card>
         ) : visiblePosts.map((post) => <div key={post.id} id={`post-${post.id}`}><PostCard post={post} currentUserId={session?.user?.id} saved={savedPostIds.has(post.id)} onSave={toggleSavedPost} onReact={toggleReaction} onComment={addComment} onDelete={deletePost} onUpdate={(updated) => setPosts((items) => items.map((item) => item.id === updated.id ? { ...item, ...updated } : item))} /></div>)}
                 </div>
