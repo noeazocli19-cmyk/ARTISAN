@@ -333,6 +333,7 @@ model Payment {
   client        User     @relation(fields: [clientId], references: [id], onDelete: Cascade)
   artisan       Artisan? @relation(fields: [artisanId], references: [id])
   mission       Mission? @relation(fields: [missionId], references: [id], onDelete: SetNull)
+  milestoneId   String?
 
   @@index([clientId])
   @@index([artisanId])

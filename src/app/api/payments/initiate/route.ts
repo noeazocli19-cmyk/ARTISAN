@@ -55,6 +55,7 @@ export async function POST(request: NextRequest) {
       type = 'payment',
       missionId,
       artisanId,
+      milestoneId,
     } = body
 
     if (!amount || amount < 500) {
@@ -103,6 +104,7 @@ export async function POST(request: NextRequest) {
       data: {
         clientId: payload.userId,
         missionId: missionId || null,
+        milestoneId: milestoneId || null,
         artisanId: artisanId || null,
         amount: totalToCharge,
         netAmount,
