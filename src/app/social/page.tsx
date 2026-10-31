@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { SocialNavigation } from '@/components/social-navigation';
-import { Bookmark, Briefcase, ClipboardCheck, Heart, ImagePlus, MapPin, MessageCircle, Pencil, Send, Share2, Trash2, Users } from 'lucide-react';
+import { Bookmark, Briefcase, ClipboardCheck, Heart, ImagePlus, MapPin, MessageCircle, Pencil, Send, Share2, Sparkles, Trash2, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import { authClient } from '@/lib/auth-client';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -43,6 +43,7 @@ export default function SocialPage() {
   const [searchingArtisans, setSearchingArtisans] = useState(false);
   const [favoriteArtisanIds, setFavoriteArtisanIds] = useState<Set<string>>(new Set());
   const [savedPostIds, setSavedPostIds] = useState<Set<string>>(new Set());
+  const [selectedCategory, setSelectedCategory] = useState('Toutes');
 
   async function loadPosts(query = '') {
     setLoading(true);
@@ -178,7 +179,8 @@ export default function SocialPage() {
     toast.success('Publication supprimée');
   }
 
-  const visiblePosts = savedOnly ? posts.filter((post) => savedPostIds.has(post.id)) : posts;
+  const categories = ['Toutes', ...Array.from(new Set(posts.map((post) => post.category).filter((category): category is string => Boolean(category))))].slice(0, 8);
+  const visiblePosts = posts.filter((post) => (!savedOnly || savedPostIds.has(post.id)) && (selectedCategory === 'Toutes' || post.category === selectedCategory));
 
   return (
     <main className="min-h-screen bg-[#fffaf4] dark:bg-slate-950">
@@ -255,10 +257,18 @@ export default function SocialPage() {
           </Card>
         )}
 
-        <div className="mb-3 flex items-center gap-2">
-          <button type="button" onClick={() => setSavedOnly(false)} className={`rounded-full px-3.5 py-2 text-xs font-semibold transition ${!savedOnly ? 'bg-brand-600 text-white shadow-sm' : 'border bg-white text-slate-600 hover:bg-slate-50'}`}>Toutes les publications</button>
-          <button type="button" onClick={() => setSavedOnly(true)} className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold transition ${savedOnly ? 'bg-brand-600 text-white shadow-sm' : 'border bg-white text-slate-600 hover:bg-slate-50'}`}><Bookmark className="h-3.5 w-3.5" /> Enregistrées <span className="rounded-full bg-white/20 px-1.5">{savedPostIds.size}</span></button>
+        <Card className="mb-3 overflow-hidden rounded-2xl border-0 bg-gradient-to-r from-brand-700 via-brand-600 to-emerald-500 text-white shadow-lg">
+          <div className="flex items-center gap-3 p-4 sm:p-5">
+            <div className="rounded-full bg-white/15 p-2.5"><Sparkles className="h-5 w-5" /></div>
+            <div className="min-w-0 flex-1"><p className="text-sm font-bold sm:text-base">Votre savoir-faire mérite d’être vu</p><p className="mt-0.5 text-xs text-white/80 sm:text-sm">Avant/après, conseils et réalisations peuvent inspirer toute la communauté.</p></div>
+            <Button type="button" onClick={() => setComposer(true)} variant="secondary" className="shrink-0 bg-white text-brand-700 hover:bg-white/90">Partager</Button>
+          </div>
+        </Card>
+        <div className="mb-3 flex items-center gap-2 overflow-x-auto pb-1">
+          <button type="button" onClick={() => setSavedOnly(false)} className={`shrink-0 rounded-full px-3.5 py-2 text-xs font-semibold transition ${!savedOnly ? 'bg-brand-600 text-white shadow-sm' : 'border bg-white text-slate-600 hover:bg-slate-50'}`}>Toutes les publications</button>
+          <button type="button" onClick={() => setSavedOnly(true)} className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold transition ${savedOnly ? 'bg-brand-600 text-white shadow-sm' : 'border bg-white text-slate-600 hover:bg-slate-50'}`}><Bookmark className="h-3.5 w-3.5" /> Enregistrées <span className="rounded-full bg-white/20 px-1.5">{savedPostIds.size}</span></button>
         </div>
+        {!savedOnly && <div className="mb-4 flex gap-2 overflow-x-auto pb-1" aria-label="Filtrer par métier">{categories.map((categoryName) => <button key={categoryName} type="button" onClick={() => setSelectedCategory(categoryName)} className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-semibold transition ${selectedCategory === categoryName ? 'border-brand-600 bg-brand-50 text-brand-700' : 'bg-white text-slate-500 hover:border-brand-200'}`}>{categoryName}</button>)}</div>}
 
         {loading ? <div className="space-y-4">{[1,2].map((value) => <Card key={value} className="h-52 animate-pulse bg-slate-100" />)}</div> : visiblePosts.length === 0 ? (
           <Card className="p-10 text-center">
