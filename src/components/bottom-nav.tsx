@@ -42,7 +42,7 @@ export function BottomNav() {
     return () => document.body.classList.remove('ios-standalone')
   }, [isIos])
 
-  if (!isStandalone) return null
+  if (typeof window !== 'undefined' && window.innerWidth >= 768 && !isStandalone) return null
 
   return (
     <nav
