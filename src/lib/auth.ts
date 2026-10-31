@@ -9,7 +9,7 @@
 // =============================================================================
 
 import jwt from 'jsonwebtoken'
-import type { StringValue } from 'ms'
+type StringValue = `${number}${'ms' | 's' | 'm' | 'h' | 'd' | 'w' | 'y'}` | number
 
 const JWT_SECRET = process.env.JWT_SECRET || 'findae-secret-key-2024'
 

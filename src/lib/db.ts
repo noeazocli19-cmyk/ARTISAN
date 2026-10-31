@@ -13,7 +13,7 @@ const logConfig = process.env.NODE_ENV === 'production'
 export const db =
   globalForPrisma.prisma ??
   new PrismaClient({
-    log: logConfig,
+    log: [...logConfig],
     // Connection pool optimization for handling 1000+ users
     datasources: {
       db: {

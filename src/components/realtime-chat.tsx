@@ -196,19 +196,21 @@ export function RealtimeChat({ onBack, onCallArtisan }: RealtimeChatProps) {
 
     socketInstance.on('user_typing', (data: { roomId: string; userId?: string; userName?: string }) => {
       if (data.roomId === activeRoomIdRef.current && data.userId && data.userId !== CURRENT_USER_ID) {
+        if (!data.userId) return
+        const typingUserId = data.userId
         setTypingUsers((prev) => {
           const next = new Map(prev)
-          next.set(data.userId!, data.userName || 'Utilisateur')
+          next.set(typingUserId, data.userName || 'Utilisateur')
           return next
         })
-        const existing = typingTimeoutRef.current.get(data.userId)
+        const existing = typingTimeoutRef.current.get(typingUserId)
         if (existing) clearTimeout(existing)
         typingTimeoutRef.current.set(
-          data.userId,
+          typingUserId,
           setTimeout(() => {
             setTypingUsers((prev) => {
               const next = new Map(prev)
-              next.delete(data.userId)
+              next.delete(typingUserId)
               return next
             })
           }, 3000)

@@ -224,7 +224,7 @@ const heartbeatKeyframes = {
 const heartbeatTransition = {
   duration: 1.2,
   repeat: Infinity,
-  ease: 'easeInOut',
+  ease: 'easeInOut' as const,
 };
 
 const pulseBorderKeyframes = {
@@ -238,7 +238,7 @@ const pulseBorderKeyframes = {
 const pulseBorderTransition = {
   duration: 1.5,
   repeat: Infinity,
-  ease: 'easeOut',
+  ease: 'easeOut' as const,
 };
 
 // ---------------------------------------------------------------------------

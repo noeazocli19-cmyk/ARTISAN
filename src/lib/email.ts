@@ -59,7 +59,7 @@ export async function sendEmail({ to, subject, html }: SendEmailOptions): Promis
       return {
         success: true,
         message: 'Email de test envoyé',
-        previewUrl: nodemailer.getTestMessageUrl(info),
+        previewUrl: nodemailer.getTestMessageUrl(info) || undefined,
       }
     } catch (error) {
       console.error('Failed to send test email:', error)

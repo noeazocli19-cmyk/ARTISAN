@@ -46,6 +46,7 @@ export interface ArtisanProfile {
   reviewCount: number;
   missionCount: number;
   isAvailable: boolean;
+  isOnline?: boolean;
   certifications: string[];
   user?: User;
 }

@@ -109,7 +109,7 @@ function getClientIp(request: NextRequest): string {
   // Last resort – NextRequest.ip may be populated in some deployments
   // but is often undefined in serverless. Fallback to a fixed key so
   // we never crash; in production the proxy headers should be set.
-  return request.ip ?? 'unknown'
+  return 'unknown'
 }
 
 /**

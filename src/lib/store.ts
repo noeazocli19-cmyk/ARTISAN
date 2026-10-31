@@ -121,7 +121,7 @@ export const useAppStore = create<AppStore>()(
               token: null,
               isAuthenticated: true,
               isLoading: false,
-              currentView: "home",
+              currentView: "landing",
             });
           }
         } catch (error) {
