@@ -125,12 +125,12 @@ const quickCategories = [
   "Coiffure",
 ]
 
-const stats = [
-  { value: "10 000+", label: "Artisans", icon: Users },
-  { value: "50 000+", label: "Missions", icon: Briefcase },
-  { value: "4.8/5", label: "Satisfaction", icon: Heart },
-  { value: "15+", label: "Pays", icon: Globe },
-]
+const statsTemplate = [
+  { key: "artisans", label: "Artisans inscrits", icon: Users },
+  { key: "missions", label: "Missions créées", icon: Briefcase },
+  { key: "rating", label: "Note moyenne", icon: Heart },
+  { key: "countries", label: "Pays représentés", icon: Globe },
+] as const
 
 const categories = [
   { name: "Plomberie", icon: Droplets, count: "1 250 artisans", color: "bg-blue-100 text-blue-600 dark:bg-blue-950 dark:text-blue-400" },
@@ -485,26 +485,26 @@ const footerLinks = {
     { label: "Centre d'aide", href: "/support" },
   ],
   services: [
-    { label: "Plomberie", href: "#" },
-    { label: "Électricité", href: "#" },
-    { label: "Menuiserie", href: "#" },
-    { label: "Peinture", href: "#" },
-    { label: "Climatisation", href: "#" },
-    { label: "Nettoyage", href: "#" },
-    { label: "Soudure", href: "#" },
-    { label: "Carrelage", href: "#" },
-    { label: "Couture", href: "#" },
-    { label: "Mécanique", href: "#" },
-    { label: "Coiffure", href: "#" },
-    { label: "Pâtisserie", href: "#" },
-    { label: "Paysagisme", href: "#" },
-    { label: "Photographie", href: "#" },
+    { label: "Plomberie", href: "/search?category=Plomberie" },
+    { label: "Électricité", href: "/search?category=Électricité" },
+    { label: "Menuiserie", href: "/search?category=Menuiserie" },
+    { label: "Peinture", href: "/search?category=Peinture" },
+    { label: "Climatisation", href: "/search?category=Climatisation" },
+    { label: "Nettoyage", href: "/search?category=Nettoyage" },
+    { label: "Soudure", href: "/search?category=Soudure" },
+    { label: "Carrelage", href: "/search?category=Carrelage" },
+    { label: "Couture", href: "/search?category=Couture" },
+    { label: "Mécanique", href: "/search?category=Mécanique" },
+    { label: "Coiffure", href: "/search?category=Coiffure" },
+    { label: "Pâtisserie", href: "/search?category=Pâtisserie" },
+    { label: "Paysagisme", href: "/search?category=Paysagisme" },
+    { label: "Photographie", href: "/search?category=Photographie" },
   ],
   company: [
-    { label: "À propos", href: "#" },
-    { label: "Carrières", href: "#" },
-    { label: "Blog", href: "#" },
-    { label: "Presse", href: "#" },
+    { label: "À propos", href: "/informations" },
+    { label: "Devenir artisan", href: "/become-artisan" },
+    { label: "Nous contacter", href: "/contact" },
+    { label: "Support", href: "/support" },
   ],
   legal: [
     { label: "Conditions d'utilisation", href: "/cgu" },
@@ -542,6 +542,8 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
   const [userCoordinates, setUserCoordinates] = useState<{ latitude: number; longitude: number } | null>(null)
   const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>({})
   const [registeredArtisans, setRegisteredArtisans] = useState<any[]>([])
+  const [isSearching, setIsSearching] = useState(false)
+  const [platformStats, setPlatformStats] = useState({ artisans: 0, missions: 0, rating: 0, countries: 0 })
 
   useEffect(() => {
     fetch('/api/artisans?location=Cotonou&limit=10')
@@ -557,13 +559,24 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
         if (data.counts) setCategoryCounts(data.counts)
       })
       .catch(() => {})
+
+    fetch('/api/stats')
+      .then((r) => r.json())
+      .then((data) => setPlatformStats({
+        artisans: Number(data.artisans?.total || 0),
+        missions: Number(data.missions?.total || 0),
+        rating: Number(data.averageRating || 0),
+        countries: Number(data.countries?.total || 0),
+      }))
+      .catch(() => {})
   }, [])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    if (searchQuery.trim()) {
-      onSearch(searchQuery.trim(), searchLocation.trim())
-    }
+    if (!searchQuery.trim()) return
+    setIsSearching(true)
+    onSearch(searchQuery.trim(), searchLocation.trim())
+    window.setTimeout(() => setIsSearching(false), 700)
   }
 
   const locateUser = () => {
@@ -640,7 +653,11 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                           className="pl-10 h-12 border-0 bg-muted/50 focus-visible:ring-1"
                           value={searchQuery}
                           onChange={e => setSearchQuery(e.target.value)}
+                          list="finda-service-suggestions"
                         />
+                        <datalist id="finda-service-suggestions">
+                          {quickCategories.map((category) => <option key={category} value={category} />)}
+                        </datalist>
                       </div>
                       <div className="flex-1 relative">
                         <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -664,9 +681,9 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                           {isLocating ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Crosshair className="h-4 w-4" />}
                         </button>
                       </div>
-                      <Button type="submit" className="h-12 px-8 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0">
-                        <Search className="h-4 w-4 mr-2" />
-                        Rechercher
+                      <Button type="submit" disabled={isSearching || !searchQuery.trim()} className="h-12 px-8 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 disabled:opacity-70">
+                        {isSearching ? <LoaderCircle className="h-4 w-4 mr-2 animate-spin" /> : <Search className="h-4 w-4 mr-2" />}
+                        {isSearching ? 'Recherche...' : 'Rechercher'}
                       </Button>
                     </div>
                   </form>
@@ -702,21 +719,34 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                   <Navigation className="h-4 w-4" />
                   Voir la carte des artisans
                 </Button>
+                <Button
+                  variant="ghost"
+                  className="gap-2 text-brand-700 dark:text-brand-300 hover:bg-brand-50"
+                  onClick={() => router.push('/missions/create')}
+                >
+                  <Siren className="h-4 w-4" />
+                  Publier une demande urgente
+                </Button>
               </motion.div>
             </motion.div>
           </div>
 
           {/* Stats */}
           <motion.div initial="hidden" animate="visible" variants={staggerContainer} className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
-            {stats.map((stat) => (
-              <motion.div key={stat.label} variants={fadeInUp} className="flex flex-col items-center gap-2">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-100 dark:bg-brand-950/50">
-                  <stat.icon className="h-5 w-5 text-brand-600 dark:text-brand-400" />
-                </div>
-                <span className="text-2xl sm:text-3xl font-bold">{stat.value}</span>
-                <span className="text-sm text-muted-foreground">{stat.label}</span>
-              </motion.div>
-            ))}
+            {statsTemplate.map((stat) => {
+              const value = stat.key === 'rating'
+                ? (platformStats.rating ? `${platformStats.rating.toFixed(1)}/5` : '—')
+                : platformStats[stat.key].toLocaleString('fr-FR')
+              return (
+                <motion.div key={stat.label} variants={fadeInUp} className="flex flex-col items-center gap-2">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-100 dark:bg-brand-950/50">
+                    <stat.icon className="h-5 w-5 text-brand-600 dark:text-brand-400" />
+                  </div>
+                  <span className="text-2xl sm:text-3xl font-bold">{value}</span>
+                  <span className="text-sm text-muted-foreground">{stat.label}</span>
+                </motion.div>
+              )
+            })}
           </motion.div>
         </div>
       </section>
@@ -969,7 +999,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               </p>
               <div className="flex gap-3">
                 {[Facebook, Twitter, Instagram, Linkedin].map((Icon, idx) => (
-                  <a key={idx} href="#" className="flex h-9 w-9 items-center justify-center rounded-lg bg-neutral-800 hover:bg-brand-500 transition-colors text-neutral-400 hover:text-white">
+                  <a key={idx} href="/contact" aria-label="Contacter FINDA" title="Contacter FINDA" className="flex h-9 w-9 items-center justify-center rounded-lg bg-neutral-800 hover:bg-brand-500 transition-colors text-neutral-400 hover:text-white">
                     <Icon className="h-4 w-4" />
                   </a>
                 ))}
@@ -1005,7 +1035,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
           </div>
 
           <div className="mt-12 pt-8 border-t border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-neutral-500">&copy; 2025 FINDA. Tous droits réservés.</p>
+            <p className="text-sm text-neutral-500">&copy; {new Date().getFullYear()} FINDA. Tous droits réservés.</p>
             <div className="flex items-center gap-4 text-sm text-neutral-500">
               <a href="/cgu" className="hover:text-brand-400 transition-colors">Conditions</a>
               <a href="/confidentialite" className="hover:text-brand-400 transition-colors">Confidentialité</a>

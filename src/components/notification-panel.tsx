@@ -6,6 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Button } from '@/components/ui/button'
 import { formatDistanceToNow } from 'date-fns'
 import { fr } from 'date-fns/locale'
+import Link from 'next/link'
 
 export default function NotificationPanel() {
   const [notifications, setNotifications] = useState<any[]>([])
@@ -34,13 +35,23 @@ export default function NotificationPanel() {
           {notifications.length === 0 && <li className="text-sm text-muted-foreground">Aucune notification</li>}
           {notifications.slice(0,6).map((n) => (
             <li key={n.id} className={`p-2 rounded-md ${!n.isRead ? 'bg-brand-50' : ''}`}>
-              <a href={n.link || '#'} className="flex items-start justify-between gap-3">
-                <div>
-                  <div className="text-sm font-medium">{n.title}</div>
-                  <div className="text-xs text-muted-foreground">{n.message}</div>
+              {n.link ? (
+                <Link href={n.link} className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="text-sm font-medium">{n.title}</div>
+                    <div className="text-xs text-muted-foreground">{n.message}</div>
+                  </div>
+                  <div className="text-xs text-muted-foreground">{formatDistanceToNow(new Date(n.createdAt), { addSuffix: true, locale: fr })}</div>
+                </Link>
+              ) : (
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="text-sm font-medium">{n.title}</div>
+                    <div className="text-xs text-muted-foreground">{n.message}</div>
+                  </div>
+                  <div className="text-xs text-muted-foreground">{formatDistanceToNow(new Date(n.createdAt), { addSuffix: true, locale: fr })}</div>
                 </div>
-                <div className="text-xs text-muted-foreground">{formatDistanceToNow(new Date(n.createdAt), { addSuffix: true, locale: fr })}</div>
-              </a>
+              )}
             </li>
           ))}
         </ul>

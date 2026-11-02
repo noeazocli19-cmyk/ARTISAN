@@ -39,7 +39,14 @@ export async function GET() {
         _avg: { rating: true },
       })
 
+      const countries = await db.user.findMany({
+        where: { country: { not: null } },
+        select: { country: true },
+      })
+      const representedCountries = new Set(countries.map((item) => item.country?.trim()).filter(Boolean))
+
       return {
+        countries: { total: representedCountries.size },
         users: { total: totalUsers, verified: verifiedUsers },
         artisans: { total: totalArtisans, elite: eliteArtisans, top: topArtisans },
         missions: { total: totalMissions, open: openMissions, completed: completedMissions },
