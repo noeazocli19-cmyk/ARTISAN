@@ -78,6 +78,8 @@ import {
   Siren,
   Gift,
   Rocket,
+  Crosshair,
+  LoaderCircle,
 } from "lucide-react"
 
 // Import our new components
@@ -535,6 +537,9 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState("")
   const [searchLocation, setSearchLocation] = useState("")
+  const [isLocating, setIsLocating] = useState(false)
+  const [locationError, setLocationError] = useState("")
+  const [userCoordinates, setUserCoordinates] = useState<{ latitude: number; longitude: number } | null>(null)
   const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>({})
   const [registeredArtisans, setRegisteredArtisans] = useState<any[]>([])
 
@@ -559,6 +564,30 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
     if (searchQuery.trim()) {
       onSearch(searchQuery.trim(), searchLocation.trim())
     }
+  }
+
+  const locateUser = () => {
+    setLocationError("")
+    if (!navigator.geolocation) {
+      setLocationError("La géolocalisation n’est pas disponible sur cet appareil.")
+      return
+    }
+
+    setIsLocating(true)
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        setUserCoordinates({ latitude: coords.latitude, longitude: coords.longitude })
+        setSearchLocation(`${coords.latitude.toFixed(6)}, ${coords.longitude.toFixed(6)}`)
+        setIsLocating(false)
+      },
+      (error) => {
+        setIsLocating(false)
+        setLocationError(error.code === error.PERMISSION_DENIED
+          ? "Autorisez la localisation pour trouver les artisans près de vous."
+          : "Impossible de déterminer votre position pour le moment.")
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 }
+    )
   }
 
   return (
@@ -616,11 +645,24 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                       <div className="flex-1 relative">
                         <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
-                          placeholder="Votre localisation"
-                          className="pl-10 h-12 border-0 bg-muted/50 focus-visible:ring-1"
+                          placeholder="Ville ou position GPS"
+                          className="pl-10 pr-12 h-12 border-0 bg-muted/50 focus-visible:ring-1"
                           value={searchLocation}
-                          onChange={e => setSearchLocation(e.target.value)}
+                          onChange={e => {
+                            setSearchLocation(e.target.value)
+                            setUserCoordinates(null)
+                          }}
                         />
+                        <button
+                          type="button"
+                          onClick={locateUser}
+                          disabled={isLocating}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-md text-brand-600 hover:bg-brand-50 disabled:opacity-50 dark:hover:bg-brand-950"
+                          aria-label="Utiliser ma position précise"
+                          title="Utiliser ma position précise"
+                        >
+                          {isLocating ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Crosshair className="h-4 w-4" />}
+                        </button>
                       </div>
                       <Button type="submit" className="h-12 px-8 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0">
                         <Search className="h-4 w-4 mr-2" />
@@ -630,6 +672,11 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                   </form>
                 </Card>
               </motion.div>
+              {(locationError || userCoordinates) && (
+                <p className={`mt-2 text-xs ${locationError ? "text-red-600" : "text-brand-600"}`} role="status">
+                  {locationError || `Position détectée avec précision (${userCoordinates?.latitude.toFixed(6)}, ${userCoordinates?.longitude.toFixed(6)}).`}
+                </p>
+              )}
 
               {/* Quick category pills */}
               <motion.div variants={fadeInUp} className="mt-4 flex flex-wrap justify-center gap-2">
@@ -726,6 +773,8 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
         </div>
       </section>
 
+      <section className="py-10"><div className="mx-auto max-w-7xl px-4 text-center"><Button size="lg" variant="outline" className="gap-2" onClick={() => router.push("/informations") }><span>Voir plus d’informations</span><ArrowRight className="h-4 w-4" /></Button></div></section>
+
       {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ POPULAR ARTISANS CAROUSEL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section id="artisans" className="py-20 sm:py-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -820,46 +869,6 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
         </div>
       </section>
 
-      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ PLATFORM FEATURES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <section className="py-20 sm:py-28">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="text-center mb-14">
-            <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold">
-              Des fonctionnalités{" "}
-              <span className="bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">complètes</span>
-            </motion.h2>
-            <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground text-lg max-w-2xl mx-auto">
-              Tout ce dont vous avez besoin pour trouver un artisan, réserver, payer et gérer vos projets.
-            </motion.p>
-          </motion.div>
-
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-            {[
-              { icon: CalendarDays, title: "Réservation", desc: "Réservez un créneau en quelques clics", color: "from-brand-500 to-brand-500" },
-              { icon: CreditCard, title: "Mobile Money", desc: "Orange Money, MTN, Wave — paiement africain", color: "from-emerald-500 to-teal-500" },
-              { icon: Trophy, title: "Badges & Niveaux", desc: "Gagnez des points et débloquez des récompenses", color: "from-yellow-500 to-brand-500" },
-              { icon: ClipboardList, title: "Demande de devis", desc: "Comparez les devis de plusieurs artisans", color: "from-brand-500 to-red-500" },
-              { icon: Siren, title: "Service d'urgence", desc: "Un artisan chez vous en moins de 30 min", color: "from-red-500 to-rose-500" },
-              { icon: Gift, title: "Parrainage", desc: "Invitez vos amis et gagnez des crédits", color: "from-violet-500 to-purple-500" },
-              { icon: MapPin, title: "Géolocalisation", desc: "Trouvez les artisans proches de chez vous", color: "from-cyan-500 to-blue-500" },
-              { icon: MessageSquare, title: "Messagerie", desc: "Chat en temps réel avec les artisans", color: "from-teal-500 to-emerald-500" },
-            ].map((feat) => (
-              <motion.div key={feat.title} variants={fadeInUp}>
-                <Card className="group cursor-pointer border-border/50 hover:border-brand-300 dark:hover:border-brand-700 transition-all hover:shadow-lg hover:-translate-y-1 h-full">
-                  <CardContent className="p-5 flex flex-col items-center text-center gap-3">
-                    <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${feat.color} shadow-md`}>
-                      <feat.icon className="h-6 w-6 text-white" />
-                    </div>
-                    <h3 className="font-semibold text-sm">{feat.title}</h3>
-                    <p className="text-xs text-muted-foreground leading-relaxed">{feat.desc}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
       {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ TESTIMONIALS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section id="temoignages" className="py-20 sm:py-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -901,185 +910,6 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               <CarouselPrevious className="hidden sm:flex -left-12" />
               <CarouselNext className="hidden sm:flex -right-12" />
             </Carousel>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ TRUST SECTION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <section className="py-20 sm:py-28 bg-muted/30">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="text-center mb-14">
-            <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold">
-              Pourquoi nous{" "}
-              <span className="bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">faire confiance</span>
-            </motion.h2>
-            <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground text-lg max-w-2xl mx-auto">
-              Votre sécurité et satisfaction sont au cÅ“ur de tout ce que nous faisons.
-            </motion.p>
-          </motion.div>
-
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {trustFeatures.map((feat) => (
-              <motion.div key={feat.title} variants={fadeInUp}>
-                <Card className="h-full border-border/50 hover:shadow-lg transition-shadow">
-                  <CardContent className="p-6">
-                    <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${feat.bg} mb-4`}>
-                      <feat.icon className={`h-6 w-6 ${feat.color}`} />
-                    </div>
-                    <h3 className="font-semibold text-lg mb-2">{feat.title}</h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed">{feat.description}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ SCALABILITY / INFRASTRUCTURE SECTION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <section className="py-20 sm:py-28">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="text-center mb-14">
-            <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold">
-              Une plateforme{" "}
-              <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">ultra-résistante</span>
-            </motion.h2>
-            <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground text-lg max-w-2xl mx-auto">
-              Conçue pour supporter des milliers d&apos;utilisateurs simultanés sans jamais faiblir.
-            </motion.p>
-          </motion.div>
-
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                icon: Shield,
-                title: "5 000+ Utilisateurs Simultanés",
-                description: "Notre architecture supporte plus de 5 000 utilisateurs connectés en même temps, sans ralentissement ni interruption.",
-                color: "text-emerald-500",
-                bg: "bg-emerald-50 dark:bg-emerald-950/30",
-                stat: "5 000+",
-                statLabel: "utilisateurs en ligne",
-              },
-              {
-                icon: Zap,
-                title: "Réponse en < 100ms",
-                description: "Grâce au cache serveur et aux index de base de données optimisés, chaque requête est traitée en moins de 100 millisecondes.",
-                color: "text-brand-500",
-                bg: "bg-brand-50 dark:bg-brand-950/30",
-                stat: "< 100ms",
-                statLabel: "temps de réponse",
-              },
-              {
-                icon: Globe,
-                title: "Disponibilité 99.9%",
-                description: "Infrastructure redondante avec surveillance automatique. La plateforme reste disponible même en cas de pic de trafic.",
-                color: "text-teal-500",
-                bg: "bg-teal-50 dark:bg-teal-950/30",
-                stat: "99.9%",
-                statLabel: "disponibilité",
-              },
-              {
-                icon: CreditCard,
-                title: "Paiement Sécurisé",
-                description: "Transactions chiffrées de bout en bout avec Mobile Money, cartes bancaires et virements. Protection anti-fraude intégrée.",
-                color: "text-brand-500",
-                bg: "bg-brand-50 dark:bg-brand-950/30",
-                stat: "256-bit",
-                statLabel: "chiffrement SSL",
-              },
-              {
-                icon: MessageSquare,
-                title: "Messagerie Temps Réel",
-                description: "Communication instantanée entre clients et artisans via WebSocket. Notifications push en moins de 2 secondes.",
-                color: "text-cyan-500",
-                bg: "bg-cyan-50 dark:bg-cyan-950/30",
-                stat: "< 2s",
-                statLabel: "latence message",
-              },
-              {
-                icon: Shield,
-                title: "Protection Anti-Surcharge",
-                description: "Système de rate limiting intelligent qui protège contre les attaques et assure un accès équitable pour tous les utilisateurs.",
-                color: "text-rose-500",
-                bg: "bg-rose-50 dark:bg-rose-950/30",
-                stat: "Auto",
-                statLabel: "rate limiting",
-              },
-            ].map((item) => (
-              <motion.div key={item.title} variants={fadeInUp}>
-                <Card className="h-full border-border/50 hover:shadow-lg transition-all hover:-translate-y-1">
-                  <CardContent className="p-6">
-                    <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${item.bg} mb-4`}>
-                      <item.icon className={`h-6 w-6 ${item.color}`} />
-                    </div>
-                    <h3 className="font-semibold text-lg mb-2">{item.title}</h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed mb-4">{item.description}</p>
-                    <div className="flex items-baseline gap-2 pt-2 border-t border-border/50">
-                      <span className={`text-2xl font-bold ${item.color}`}>{item.stat}</span>
-                      <span className="text-xs text-muted-foreground">{item.statLabel}</span>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {/* Live server status indicator */}
-          <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="mt-12">
-            <Card className="border-emerald-200 dark:border-emerald-800 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/30">
-              <CardContent className="p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-3 w-3 relative">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500" />
-                  </div>
-                  <span className="font-semibold text-emerald-700 dark:text-emerald-300">Serveur en ligne</span>
-                </div>
-                <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <Zap className="h-4 w-4 text-brand-500" />
-                    <span>Latence: <strong className="text-foreground">42ms</strong></span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Users className="h-4 w-4 text-emerald-500" />
-                    <span>En ligne: <strong className="text-foreground">1 247</strong></span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Shield className="h-4 w-4 text-teal-500" />
-                    <span>Uptime: <strong className="text-foreground">99.97%</strong></span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ PRICING â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <PricingSection />
-
-      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ FAQ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <section id="faq" className="py-20 sm:py-28">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="text-center mb-14">
-            <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold">
-              Questions{" "}
-              <span className="bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">fréquentes</span>
-            </motion.h2>
-            <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground text-lg">
-              Tout ce que vous devez savoir sur FINDA.
-            </motion.p>
-          </motion.div>
-
-          <motion.div variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }}>
-            <Accordion type="single" collapsible className="w-full">
-              {faqItems.map((item, idx) => (
-                <AccordionItem key={idx} value={`faq-${idx}`}>
-                  <AccordionTrigger className="text-left text-base">{item.question}</AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground leading-relaxed">{item.answer}</AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
           </motion.div>
         </div>
       </section>

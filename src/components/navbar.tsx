@@ -50,8 +50,7 @@ const navLinks = [
   { label: 'Artisans', href: '#artisans' },
   { label: 'Carte', href: '#', view: 'map' as const },
   { label: 'Comment ça marche', href: '#comment-ca-marche' },
-  { label: 'Témoignages', href: '#temoignages' },
-  { label: 'FAQ', href: '#faq' },
+  { label: 'Plus d’informations', href: '/informations' },
 ]
 
 export function Navbar({ onOpenAuth, onSearch }: NavbarProps) {
