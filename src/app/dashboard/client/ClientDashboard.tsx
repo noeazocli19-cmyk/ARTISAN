@@ -381,8 +381,12 @@ export function ClientDashboard() {
               ) : missions.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
                   <Briefcase className="h-12 w-12 mx-auto mb-3 opacity-30" />
-                  <p>Aucune mission pour le moment</p>
-                  <p className="text-sm mt-1">Créez votre première mission pour trouver un artisan</p>
+                  <p className="font-medium text-foreground">Aucune mission pour le moment</p>
+                  <p className="text-sm mt-1">Créez votre première demande et soyez contacté par un artisan disponible.</p>
+                  <Button className="mt-4" onClick={() => router.push('/missions/create')}>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Créer une mission
+                  </Button>
                 </div>
               ) : (
                 <div className="space-y-3 max-h-96 overflow-y-auto">

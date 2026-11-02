@@ -81,6 +81,16 @@ const TABS: { id: TabId; label: string; icon: any }[] = [
   { id: 'profil', label: 'Profil', icon: UserIcon },
 ];
 
+const MISSION_STATUS: Record<string, { label: string; className: string }> = {
+  ouverte: { label: 'Ouverte', className: 'bg-blue-50 text-blue-700' },
+  assignee: { label: 'Assignée', className: 'bg-violet-50 text-violet-700' },
+  en_cours: { label: 'En cours', className: 'bg-brand-50 text-brand-700' },
+  terminee_artisan: { label: 'À confirmer', className: 'bg-sky-50 text-sky-700' },
+  terminee: { label: 'Terminée', className: 'bg-green-50 text-green-700' },
+  litige: { label: 'Litige', className: 'bg-red-50 text-red-700' },
+  annulee: { label: 'Annulée', className: 'bg-gray-100 text-gray-600' },
+};
+
 function initialsOf(name?: string | null) {
   if (!name) return 'AR';
   const parts = name.trim().split(/\s+/);
@@ -711,10 +721,16 @@ export function ArtisanDashboard() {
                 <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-brand-50">
                   <TrendingUp className="h-6 w-6 text-brand-500" />
                 </div>
-                <p className="text-sm font-medium text-gray-700">Aucune mission pour le moment.</p>
-                <p className="text-xs mt-1">
-                  Complétez votre profil pour apparaître dans les recherches clients.
+                <p className="font-semibold text-gray-800 dark:text-gray-200">Aucune mission pour le moment.</p>
+                <p className="mt-1 text-xs">
+                  Explorez les demandes disponibles ou complétez votre profil pour apparaître dans les recherches clients.
                 </p>
+                <button
+                  onClick={() => setActiveTab('dispo')}
+                  className="mt-4 rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700"
+                >
+                  Voir les missions disponibles
+                </button>
               </div>
             ) : (
               <ul className="divide-y">
@@ -726,14 +742,8 @@ export function ArtisanDashboard() {
                         {m.client?.name || 'Client'} · {m.budget} FCFA
                       </p>
                     </div>
-                    <span
-                      className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
-                        m.status === 'terminee'
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-brand-100 text-brand-700'
-                      }`}
-                    >
-                      {m.status}
+                    <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${MISSION_STATUS[m.status]?.className || 'bg-brand-50 text-brand-700'}`}>
+                      {MISSION_STATUS[m.status]?.label || m.status}
                     </span>
                   </li>
                 ))}
