@@ -683,10 +683,11 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                 {quickCategories.map((cat) => (
                   <Badge
                     key={cat}
+                    asChild
                     variant="outline"
                     className="cursor-pointer px-4 py-1.5 text-sm hover:bg-brand-50 dark:hover:bg-brand-950/50 hover:border-brand-300 dark:hover:border-brand-700 transition-colors"
                   >
-                    {cat}
+                    <button type="button" onClick={() => onSearch(cat, searchLocation)}>{cat}</button>
                   </Badge>
                 ))}
               </motion.div>
@@ -913,6 +914,9 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
           </motion.div>
         </div>
       </section>
+
+      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ TARIFS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      <PricingSection />
 
       {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ CTA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section className="py-20 sm:py-28 bg-gradient-to-r from-brand-500 to-brand-600 relative overflow-hidden">

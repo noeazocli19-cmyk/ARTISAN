@@ -100,7 +100,7 @@ export function PricingSection() {
       router.push("/register");
       return;
     }
-    router.push("/dashboard/artisan?premium=1");
+    router.push("/dashboard/artisan?tab=overview&premium=1");
   };
 
   return (

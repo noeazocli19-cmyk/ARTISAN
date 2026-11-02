@@ -20,7 +20,9 @@ export function PremiumCard({ isPremium, premiumUntil, onActivated }: PremiumCar
 
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get('premium') === '1') {
-      requestAnimationFrame(() => document.getElementById('artisan-premium-payment')?.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+      window.setTimeout(() => {
+        document.getElementById('artisan-premium-payment')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 350);
     }
     fetch('/api/payments/initiate')
       .then((response) => response.json())

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import Image from 'next/image'
 import { Camera, Upload, X, Loader2, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -17,13 +17,15 @@ interface PhotoUploaderProps {
   size?: 'sm' | 'md' | 'lg' | 'xl'
   /** Called after successful upload */
   onUploadComplete?: (url: string) => void
+  /** Called after the photo is removed */
+  onRemove?: () => void
 }
 
 const sizeClasses = {
   sm: 'h-10 w-10',
   md: 'h-16 w-16',
   lg: 'h-24 w-24',
-  xl: 'h-32 w-132',
+  xl: 'h-32 w-32',
 }
 
 const iconSizes = {
@@ -39,6 +41,7 @@ export function PhotoUploader({
   type = 'avatars',
   size = 'lg',
   onUploadComplete,
+  onRemove,
 }: PhotoUploaderProps) {
   const [preview, setPreview] = useState<string | null>(currentAvatar || null)
   const [isUploading, setIsUploading] = useState(false)
@@ -47,6 +50,10 @@ export function PhotoUploader({
   const fileInputRef = useRef<HTMLInputElement>(null)
   const cameraInputRef = useRef<HTMLInputElement>(null)
   const { updateAvatar } = useAppStore()
+
+  useEffect(() => {
+    setPreview(currentAvatar || null)
+  }, [currentAvatar])
 
   const getInitials = (name?: string) => {
     if (!name) return '?'
@@ -101,6 +108,9 @@ export function PhotoUploader({
         await updateAvatar(data.url)
       }
 
+      URL.revokeObjectURL(localPreview)
+      setPreview(data.url)
+
       // Call the callback
       onUploadComplete?.(data.url)
     } catch (err) {
@@ -134,10 +144,15 @@ export function PhotoUploader({
     setIsDragOver(false)
   }, [])
 
-  const handleRemove = useCallback(() => {
+  const handleRemove = useCallback(async () => {
+    if (isUploading) return
     setPreview(null)
     setError(null)
-  }, [])
+    if (type === 'avatars') {
+      await updateAvatar('')
+    }
+    onRemove?.()
+  }, [isUploading, type, updateAvatar, onRemove])
 
   return (
     <div className="flex flex-col items-center gap-3">
@@ -174,17 +189,25 @@ export function PhotoUploader({
         )}
 
         {/* Hover overlay */}
-        <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={isUploading}
+          aria-label="Modifier la photo de profil"
+          className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity cursor-pointer"
+        >
           {isUploading ? (
             <Loader2 className={`${iconSizes[size]} text-white animate-spin`} />
           ) : (
             <Camera className={`${iconSizes[size]} text-white`} />
           )}
-        </div>
+        </button>
 
         {/* Remove button */}
         {preview && !isUploading && (
           <button
+            type="button"
+            aria-label="Supprimer la photo de profil"
             onClick={handleRemove}
             className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-md"
           >

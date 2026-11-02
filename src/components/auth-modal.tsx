@@ -294,7 +294,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
                   </div>
                 )}
                 <div className="flex flex-col items-center py-2">
-                  <PhotoUploader currentAvatar={regAvatarUrl} userName={regName || undefined} size="lg" type="avatars" onUploadComplete={(url) => setRegAvatarUrl(url)} />
+                  <PhotoUploader currentAvatar={regAvatarUrl} userName={regName || undefined} size="lg" type="avatars" onUploadComplete={(url) => setRegAvatarUrl(url)} onRemove={() => setRegAvatarUrl('')} />
                 </div>
                 <div className="space-y-2">
                   <Label>Vous êtes</Label>
