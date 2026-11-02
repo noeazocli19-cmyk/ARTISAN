@@ -310,7 +310,7 @@ export function SearchResults({ onViewArtisan }: SearchResultsProps) {
                   const badgeStyle = BADGE_STYLES[artisan.badge] || BADGE_STYLES['Nouveau']
                   const avatarColor = AVATAR_COLORS[idx % AVATAR_COLORS.length]
 
-                  // Parse specialties (peut Ãªtre un string JSON ou un tableau)
+                  // Parse specialties (peut être un string JSON ou un tableau)
                   let specialtiesDisplay = ''
                   if (Array.isArray(artisan.specialties)) {
                     specialtiesDisplay = artisan.specialties.join(', ')

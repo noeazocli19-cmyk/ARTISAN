@@ -630,7 +630,7 @@ export function ArtisanDetail({ artisanId, onBack }: ArtisanDetailProps) {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <FileText className="h-5 w-5 text-brand-500" />
-              Demander un devis Ã  {name}
+              Demander un devis à {name}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 mt-4">

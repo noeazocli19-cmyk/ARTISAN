@@ -112,6 +112,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
         phone: regPhone || undefined,
         location: regLocation || undefined,
         country: regCountry || undefined,
+        avatar: regAvatarUrl || undefined,
       })
       onOpenChange(false)
       setRegName('')
@@ -419,7 +420,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = 'login' }: AuthModa
           <div className="p-6">
             {resetSuccess ? (
               <div className="text-center py-4">
-                <h3 className="text-lg font-semibold mb-2">Mot de passe mis Ã  jour !</h3>
+                <h3 className="text-lg font-semibold mb-2">Mot de passe mis à jour !</h3>
                 <p className="text-sm text-muted-foreground mb-4">Vous pouvez maintenant vous connecter.</p>
                 <Button onClick={() => { setShowResetPassword(false); setResetSuccess(false); setActiveTab('login'); onOpenChange(true) }} className="bg-gradient-to-r from-brand-500 to-brand-600 text-white border-0">
                   Se connecter

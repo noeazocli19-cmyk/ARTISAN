@@ -44,6 +44,10 @@ export async function POST(request: NextRequest) {
     })
 
     const provider = getActiveProvider()
+    if (provider !== 'feexpay' || !isFeexPayConfigured()) {
+      await db.payment.update({ where: { id: payment.id }, data: { status: 'failed' } })
+      return NextResponse.json({ error: 'FeexPay doit être configuré pour activer le statut Vérifié' }, { status: 503 })
+    }
     if (provider === 'feexpay') {
       if (!isFeexPayConfigured()) {
         return NextResponse.json({ error: 'FeexPay n’est pas configuré' }, { status: 503 })

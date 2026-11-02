@@ -69,7 +69,7 @@ const DEMO_NOTIFICATIONS: Omit<Notification, 'userId'>[] = [
   {
     id: 'demo-mission-1',
     title: 'Nouvelle mission',
-    message: 'Un client recherche un plombier Ã  Dakar',
+    message: 'Un client recherche un plombier à Dakar',
     type: 'mission',
     isRead: false,
     createdAt: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
@@ -170,7 +170,7 @@ function EmptyState() {
         <BellOff className="size-6 text-muted-foreground" />
       </div>
       <p className="text-sm font-medium text-muted-foreground">Aucune notification</p>
-      <p className="text-xs text-muted-foreground/70">Vous êtes Ã  jour !</p>
+      <p className="text-xs text-muted-foreground/70">Vous êtes à jour !</p>
     </motion.div>
   );
 }

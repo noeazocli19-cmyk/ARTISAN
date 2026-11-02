@@ -89,39 +89,10 @@ export function PremiumCard({ isPremium, premiumUntil, onActivated }: PremiumCar
         return;
       }
 
-      if (data.demoMode) {
-        // Pas de Kkiapay configuré : on simule le succès pour la démo
-        const verifyRes = await fetch(`/api/payments/verify?reference=${data.reference}&redirect=false`);
-        await verifyRes.json();
-        toast.success('Abonnement Premium activé (mode démo) !');
-        onActivated();
+      if (data.demoMode || data.provider !== 'feexpay') {
+        toast.error('FeexPay n’est pas encore configuré. Contactez l’administrateur.');
         setProcessing(false);
         return;
-      }
-
-      const w = window as any;
-      if (loaded && typeof w.openKkiapayWidget === 'function') {
-        w.openKkiapayWidget({
-          amount: data.amount,
-          key: data.kkiapayPublicKey,
-          sandbox: data.sandbox,
-          data: { reference: data.reference },
-        });
-        w.addSuccessListener?.(({ transactionId }: { transactionId: string }) => {
-          fetch(`/api/payments/verify?reference=${data.reference}&transactionId=${transactionId}&redirect=false`)
-            .then(() => {
-              toast.success('Abonnement Premium activé !');
-              onActivated();
-            })
-            .finally(() => setProcessing(false));
-        });
-        w.addFailedListener?.(() => {
-          toast.error('Paiement échoué');
-          setProcessing(false);
-        });
-      } else {
-        toast.error('Le module de paiement n\'a pas pu se charger, réessaie.');
-        setProcessing(false);
       }
     } catch {
       toast.error('Erreur réseau');

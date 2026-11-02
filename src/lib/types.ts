@@ -295,6 +295,7 @@ export interface RegisterData {
   phone?: string;
   location?: string;
   country?: string;
+  avatar?: string;
 }
 
 // ---------------------------------------------------------------------------

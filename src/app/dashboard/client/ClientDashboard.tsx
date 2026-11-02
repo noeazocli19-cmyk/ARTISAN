@@ -602,7 +602,7 @@ export function ClientDashboard() {
               <CardContent className="py-12 text-center text-muted-foreground">
                 <Heart className="h-12 w-12 mx-auto mb-3 opacity-30" />
                 <p>Aucun artisan favori</p>
-                <p className="text-sm mt-1">Ajoutez des artisans Ã  vos favoris en cliquant sur le cÅ“ur</p>
+                <p className="text-sm mt-1">Ajoutez des artisans à vos favoris en cliquant sur le cÅ“ur</p>
               </CardContent>
             </Card>
           ) : (

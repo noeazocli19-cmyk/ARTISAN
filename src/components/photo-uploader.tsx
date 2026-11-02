@@ -67,9 +67,9 @@ export function PhotoUploader({
 
   const uploadFile = useCallback(async (file: File) => {
     // Validate
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp']
     if (!allowedTypes.includes(file.type)) {
-      setError('Format non supporté. Utilisez JPG, PNG, WebP ou GIF.')
+      setError('Format non supporté. Utilisez JPG, PNG ou WebP.')
       return
     }
     if (file.size > 5 * 1024 * 1024) {
@@ -149,7 +149,13 @@ export function PhotoUploader({
     setPreview(null)
     setError(null)
     if (type === 'avatars') {
-      await updateAvatar('')
+      try {
+        await updateAvatar('')
+      } catch {
+        setPreview(currentAvatar || null)
+        setError('Impossible de supprimer la photo. Réessayez.')
+        return
+      }
     }
     onRemove?.()
   }, [isUploading, type, updateAvatar, onRemove])
@@ -246,14 +252,14 @@ export function PhotoUploader({
       <input
         ref={fileInputRef}
         type="file"
-        accept="image/jpeg,image/png,image/webp,image/gif"
+        accept="image/jpeg,image/png,image/webp"
         className="hidden"
         onChange={handleFileChange}
       />
       <input
         ref={cameraInputRef}
         type="file"
-        accept="image/jpeg,image/png,image/webp,image/gif"
+        accept="image/jpeg,image/png,image/webp"
         capture="environment"
         className="hidden"
         onChange={handleFileChange}
@@ -266,7 +272,7 @@ export function PhotoUploader({
 
       {/* Helper text */}
       <p className="text-[10px] text-muted-foreground text-center">
-        JPG, PNG, WebP ou GIF — 5 Mo max
+        JPG, PNG ou WebP — 5 Mo max
       </p>
     </div>
   )

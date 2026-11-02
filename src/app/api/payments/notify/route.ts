@@ -94,7 +94,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { paymentId, status, reference } = body;
+    const { paymentId, status } = body;
 
     if (!paymentId || !status) {
       return NextResponse.json(
@@ -111,12 +111,16 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
+    const allowedStatuses = ['en_attente', 'processing', 'pending', 'failed', 'cancelled'];
+    if (!allowedStatuses.includes(status)) {
+      return NextResponse.json({ error: 'Statut de paiement invalide' }, { status: 400 });
+    }
+
     const payment = await db.payment.update({
       where: { id: paymentId },
       data: {
         status,
-        reference: reference || undefined,
-        paidAt: status === 'payé' ? new Date() : undefined,
+        paidAt: undefined,
       },
     });
 

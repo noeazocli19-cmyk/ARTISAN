@@ -298,7 +298,7 @@ export function PricingSection() {
           <br />
           Besoin d&apos;un plan sur mesure ?{" "}
           <a
-            href="#"
+            href="/contact"
             className="font-medium text-brand-600 underline underline-offset-4 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300"
           >
             Contactez-nous

@@ -365,7 +365,7 @@ const howItWorks = [
 const testimonials = [
   {
     name: "Ousmane Ba",
-    role: "Propriétaire Ã  Dakar",
+    role: "Propriétaire à Dakar",
     text: "FINDA m'a permis de trouver un plombier exceptionnel en moins de 30 minutes. Le service était rapide, professionnel et le prix très raisonnable. Je recommande vivement !",
     rating: 5,
     avatar: "OB",
@@ -373,7 +373,7 @@ const testimonials = [
   },
   {
     name: "Aminata Koné",
-    role: "Gérante d'hôtel Ã  Abidjan",
+    role: "Gérante d'hôtel à Abidjan",
     text: "Nous utilisons FINDA pour tous nos besoins en maintenance. La qualité des artisans est constante et le support est toujours disponible. Un partenaire de confiance.",
     rating: 5,
     avatar: "AK",
@@ -381,7 +381,7 @@ const testimonials = [
   },
   {
     name: "Jean-Pierre Aka",
-    role: "Architecte Ã  Lomé",
+    role: "Architecte à Lomé",
     text: "En tant qu'architecte, j'ai besoin d'artisans fiables pour mes projets. FINDA m'offre un vivier de professionnels vérifiés avec des avis authentiques. Indispensable !",
     rating: 5,
     avatar: "JA",
@@ -389,15 +389,15 @@ const testimonials = [
   },
   {
     name: "Mariam Doumbia",
-    role: "Restauratrice Ã  Bamako",
-    text: "Mon restaurant avait un problème électrique urgent un dimanche soir. Grâce Ã  FINDA, un électricien est arrivé en 45 minutes. Service au top, je suis cliente pour la vie !",
+    role: "Restauratrice à Bamako",
+    text: "Mon restaurant avait un problème électrique urgent un dimanche soir. Grâce à FINDA, un électricien est arrivé en 45 minutes. Service au top, je suis cliente pour la vie !",
     rating: 4,
     avatar: "MD",
     avatarColor: "bg-teal-500",
   },
   {
     name: "Ibrahim Diarra",
-    role: "Entrepreneur Ã  Conakry",
+    role: "Entrepreneur à Conakry",
     text: "La plateforme m'a permis de développer mon réseau d'artisans partenaires. La géolocalisation et les avis vérifiés me font gagner un temps précieux sur chaque chantier.",
     rating: 5,
     avatar: "ID",
@@ -423,28 +423,28 @@ const trustFeatures = [
   {
     icon: CreditCard,
     title: "Paiement Sécurisé",
-    description: "Vos transactions sont protégées par un système de paiement sécurisé avec retention jusqu'Ã  validation du travail.",
+    description: "Vos transactions sont protégées par un système de paiement sécurisé avec retention jusqu'à validation du travail.",
     color: "text-brand-500",
     bg: "bg-brand-50 dark:bg-brand-950/30",
   },
   {
     icon: Headphones,
     title: "Support 24/7",
-    description: "Notre équipe est disponible Ã  tout moment pour vous accompagner et résoudre tout problème éventuel.",
+    description: "Notre équipe est disponible à tout moment pour vous accompagner et résoudre tout problème éventuel.",
     color: "text-teal-500",
     bg: "bg-teal-50 dark:bg-teal-950/30",
   },
   {
     icon: ThumbsUp,
     title: "Satisfaction Garantie",
-    description: "Si le travail ne correspond pas Ã  la description, nous vous remboursons. Votre satisfaction est notre priorité.",
+    description: "Si le travail ne correspond pas à la description, nous vous remboursons. Votre satisfaction est notre priorité.",
     color: "text-rose-500",
     bg: "bg-rose-50 dark:bg-rose-950/30",
   },
   {
     icon: Navigation,
     title: "Géolocalisation",
-    description: "Trouvez les artisans les plus proches de vous grâce Ã  notre système de géolocalisation en temps réel.",
+    description: "Trouvez les artisans les plus proches de vous grâce à notre système de géolocalisation en temps réel.",
     color: "text-cyan-500",
     bg: "bg-cyan-50 dark:bg-cyan-950/30",
   },
@@ -453,7 +453,7 @@ const trustFeatures = [
 const faqItems = [
   {
     question: "Comment fonctionne FINDA ?",
-    answer: "FINDA est une plateforme qui met en relation les clients avec des artisans qualifiés et vérifiés Ã  travers l'Afrique. Il vous suffit de décrire votre besoin, de recevoir des propositions d'artisans, et de choisir celui qui vous convient le mieux. Le processus est simple, rapide et sécurisé.",
+    answer: "FINDA est une plateforme qui met en relation les clients avec des artisans qualifiés et vérifiés à travers l'Afrique. Il vous suffit de décrire votre besoin, de recevoir des propositions d'artisans, et de choisir celui qui vous convient le mieux. Le processus est simple, rapide et sécurisé.",
   },
   {
     question: "Comment les artisans sont-ils vérifiés ?",
@@ -465,7 +465,7 @@ const faqItems = [
   },
   {
     question: "Que se passe-t-il si je ne suis pas satisfait du travail ?",
-    answer: "Votre satisfaction est notre priorité. Si le travail ne correspond pas Ã  la description initiale, vous pouvez signaler un litige dans les 48 heures. Notre équipe de médiation examinera votre dossier et vous pourrez bénéficier d'un remboursement partiel ou total selon le cas.",
+    answer: "Votre satisfaction est notre priorité. Si le travail ne correspond pas à la description initiale, vous pouvez signaler un litige dans les 48 heures. Notre équipe de médiation examinera votre dossier et vous pourrez bénéficier d'un remboursement partiel ou total selon le cas.",
   },
   {
     question: "Dans quels pays FINDA est-il disponible ?",
@@ -480,9 +480,9 @@ const faqItems = [
 const footerLinks = {
   platform: [
     { label: "Comment ça marche", href: "#comment-ca-marche" },
-    { label: "Tarification", href: "#" },
-    { label: "Devenir artisan", href: "#" },
-    { label: "Centre d'aide", href: "#" },
+    { label: "Tarification", href: "#tarifs" },
+    { label: "Devenir artisan", href: "/become-artisan" },
+    { label: "Centre d'aide", href: "/support" },
   ],
   services: [
     { label: "Plomberie", href: "#" },
@@ -507,10 +507,10 @@ const footerLinks = {
     { label: "Presse", href: "#" },
   ],
   legal: [
-    { label: "Conditions d'utilisation", href: "#" },
-    { label: "Politique de confidentialité", href: "#" },
-    { label: "Mentions légales", href: "#" },
-    { label: "Cookies", href: "#" },
+    { label: "Conditions d'utilisation", href: "/cgu" },
+    { label: "Politique de confidentialité", href: "/confidentialite" },
+    { label: "Mentions légales", href: "/mentions-legales" },
+    { label: "Cookies", href: "/confidentialite#cookies" },
   ],
 }
 
@@ -624,7 +624,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               </motion.h1>
 
               <motion.p variants={fadeInUp} className="mt-6 text-lg sm:text-xl text-muted-foreground">
-                Connectez-vous avec des artisans qualifiés et vérifiés Ã  travers l&apos;Afrique.
+                Connectez-vous avec des artisans qualifiés et vérifiés à travers l&apos;Afrique.
                 Service rapide, prix transparent, satisfaction garantie.
               </motion.p>
 
@@ -733,7 +733,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               <span className="bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">catégories</span>
             </motion.h2>
             <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground text-lg max-w-2xl mx-auto">
-              Des milliers d&apos;artisans spécialisés dans tous les corps de métier, prêts Ã  intervenir près de chez vous.
+              Des milliers d&apos;artisans spécialisés dans tous les corps de métier, prêts à intervenir près de chez vous.
             </motion.p>
           </motion.div>
 
@@ -879,7 +879,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">clients</span>{" "}disent
             </motion.h2>
             <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground text-lg max-w-2xl mx-auto">
-              Des milliers de clients satisfaits font confiance Ã  FINDA chaque jour.
+              Des milliers de clients satisfaits font confiance à FINDA chaque jour.
             </motion.p>
           </motion.div>
 
@@ -925,7 +925,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={staggerContainer}>
             <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
-              Prêt Ã  trouver l&apos;artisan idéal ?
+              Prêt à trouver l&apos;artisan idéal ?
             </motion.h2>
             <motion.p variants={fadeInUp} className="mt-4 text-lg text-white/80 max-w-2xl mx-auto">
               Rejoignez des milliers de clients satisfaits et trouvez l&apos;artisan parfait pour votre projet.
@@ -1007,9 +1007,9 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
           <div className="mt-12 pt-8 border-t border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-sm text-neutral-500">&copy; 2025 FINDA. Tous droits réservés.</p>
             <div className="flex items-center gap-4 text-sm text-neutral-500">
-              <a href="#" className="hover:text-brand-400 transition-colors">Conditions</a>
-              <a href="#" className="hover:text-brand-400 transition-colors">Confidentialité</a>
-              <a href="#" className="hover:text-brand-400 transition-colors">Cookies</a>
+              <a href="/cgu" className="hover:text-brand-400 transition-colors">Conditions</a>
+              <a href="/confidentialite" className="hover:text-brand-400 transition-colors">Confidentialité</a>
+              <a href="/confidentialite#cookies" className="hover:text-brand-400 transition-colors">Cookies</a>
             </div>
           </div>
         </div>

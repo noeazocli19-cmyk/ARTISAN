@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { auth } from '@/lib/better-auth'
 import {
   verifyCinetPayPayment,
   verifyKkiapayTransaction,
@@ -58,6 +59,10 @@ export async function GET(request: NextRequest) {
     if (!payment) {
       return NextResponse.json({ error: 'Paiement non trouvé' }, { status: 404 })
     }
+    const session = await auth.api.getSession({ headers: request.headers })
+    if (!session?.user?.id || payment.clientId !== session.user.id) {
+      return NextResponse.json({ error: 'Accès refusé' }, { status: 403 })
+    }
 
     let success = false
     let newStatus: string = payment.status
@@ -72,8 +77,14 @@ export async function GET(request: NextRequest) {
     // ---- FeexPay verification ----
     if (metadata.provider === 'feexpay' && isFeexPayConfigured() && typeof metadata.feexpayReference === 'string') {
       const verification = await checkFeexPayStatus(metadata.feexpayReference)
+      const verifiedAmount = Number((verification as { amount?: number | string }).amount)
+      const amountMatches = !verifiedAmount || verifiedAmount === payment.amount
       newStatus = normalizeFeexPayStatus(verification.status)
-      success = newStatus === 'completed'
+      success = newStatus === 'completed' && amountMatches
+      if (!amountMatches) {
+        newStatus = 'failed'
+        metadata.amountMismatch = true
+      }
       metadata.verifiedAt = new Date().toISOString()
       metadata.feexpayStatus = verification.status
       await db.payment.update({ where: { id: payment.id }, data: { status: newStatus, metadata: JSON.stringify(metadata) } })
@@ -184,6 +195,10 @@ export async function POST(request: NextRequest) {
     if (!payment) {
       return NextResponse.json({ error: 'Paiement non trouvé' }, { status: 404 })
     }
+    const session = await auth.api.getSession({ headers: request.headers })
+    if (!session?.user?.id || payment.clientId !== session.user.id) {
+      return NextResponse.json({ error: 'Accès refusé' }, { status: 403 })
+    }
 
     let success = false
     let newStatus: string = payment.status
@@ -198,8 +213,14 @@ export async function POST(request: NextRequest) {
     // ---- FeexPay verification ----
     if (metadata.provider === 'feexpay' && isFeexPayConfigured() && typeof metadata.feexpayReference === 'string') {
       const verification = await checkFeexPayStatus(metadata.feexpayReference)
+      const verifiedAmount = Number((verification as { amount?: number | string }).amount)
+      const amountMatches = !verifiedAmount || verifiedAmount === payment.amount
       newStatus = normalizeFeexPayStatus(verification.status)
-      success = newStatus === 'completed'
+      success = newStatus === 'completed' && amountMatches
+      if (!amountMatches) {
+        newStatus = 'failed'
+        metadata.amountMismatch = true
+      }
       metadata.verifiedAt = new Date().toISOString()
       metadata.feexpayStatus = verification.status
       await db.payment.update({ where: { id: payment.id }, data: { status: newStatus, metadata: JSON.stringify(metadata) } })

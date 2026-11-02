@@ -167,6 +167,8 @@ export const useAppStore = create<AppStore>()(
                   location: data.location ?? null,
                   country: data.country ?? null,
                   role: (data as any).role ?? null,
+                  avatar: data.avatar || null,
+                  image: data.avatar || null,
                 }),
               });
             } catch {
@@ -299,15 +301,14 @@ export const useAppStore = create<AppStore>()(
 
       updateAvatar: async (avatarUrl: string) => {
         const { user } = get();
-        if (!user) return;
+        if (!user) throw new Error("Utilisateur introuvable");
         const res = await apiRequest<{ user: User }>(
           "/api/user/profile",
           { method: "PATCH", body: JSON.stringify({ userId: user.id, avatar: avatarUrl }) },
           null
         );
-        if (res.success) {
-          set({ user: { ...user, avatar: avatarUrl } as User });
-        }
+        if (!res.success) throw new Error(res.error || "Impossible de mettre à jour la photo");
+        set({ user: { ...user, avatar: avatarUrl, image: avatarUrl } as User });
       },
 
       updateProfile: async (data: Partial<User>) => {

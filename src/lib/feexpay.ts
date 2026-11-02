@@ -8,20 +8,18 @@ export function isFeexPaySandbox(): boolean {
 }
 
 export function isFeexPayConfigured(): boolean {
-  return Boolean(
-    process.env.FEEXPAY_API_KEY &&
-    process.env.FEEXPAY_SHOP_ID &&
-    (!isFeexPaySandbox() || process.env.FEEXPAY_BASE_URL)
-  )
+  const apiKey = process.env.FEEXPAY_API_KEY?.trim()
+  const shopId = process.env.FEEXPAY_SHOP_ID?.trim()
+  const hasRealCredentials = Boolean(apiKey && shopId && apiKey !== 'ta_cle_api_feexpay' && shopId !== 'ton_shop_id')
+  return hasRealCredentials && (!isFeexPaySandbox() || Boolean(process.env.FEEXPAY_BASE_URL))
 }
 
 function feexpayHeaders() {
   return {
-    "Content-Type": "application/json",
-    "Authorization": `Bearer ${process.env.FEEXPAY_API_KEY}`,
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer ' + process.env.FEEXPAY_API_KEY,
   }
 }
-
 type FeexPayNetwork = "mtn" | "moov"
 
 interface FeexPayInitiateParams {
@@ -67,7 +65,7 @@ export async function checkFeexPayStatus(reference: string) {
   if (!res.ok) {
     throw new Error(data?.message || "Erreur FeexPay lors de la verification du statut")
   }
-  return data as { status: string; reference: string }
+  return data as { status: string; reference: string; amount?: number | string }
 }
 
 export function normalizeFeexPayStatus(status: string): "completed" | "failed" | "processing" {

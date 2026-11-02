@@ -25,10 +25,10 @@ export default function QuotesPage() {
   }
   useEffect(() => { if (session?.user?.id) void load() }, [session?.user?.id])
   async function updateQuote(id: string, status: string) {
-    try { const response = await fetch(`/api/quotes/${id}`, { method: 'PATCH', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status, amount: amounts[id] ? Number(amounts[id]) : undefined, note: notes[id] || undefined }) }); const data = await response.json(); if (!response.ok) throw new Error(data.error); toast.success(status === 'accepte' ? 'Devis acceptÃƒÂ©, mission crÃƒÂ©ÃƒÂ©e' : 'Statut du devis mis ÃƒÂ  jour'); await load() }
+    try { const response = await fetch(`/api/quotes/${id}`, { method: 'PATCH', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status, amount: amounts[id] ? Number(amounts[id]) : undefined, note: notes[id] || undefined }) }); const data = await response.json(); if (!response.ok) throw new Error(data.error); toast.success(status === 'accepte' ? 'Devis accepté, mission créée' : 'Statut du devis mis à jour'); await load() }
     catch (error: any) { toast.error(error.message || 'Action impossible') }
   }
-  const statusLabel: Record<string, string> = { en_attente: 'En attente', accepte: 'AcceptÃƒÂ©', refuse: 'RefusÃƒÂ©', expire: 'AnnulÃƒÂ©' }
+  const statusLabel: Record<string, string> = { en_attente: 'En attente', accepte: 'Accepté', refuse: 'Refusé', expire: 'Annulé' }
   return (
     <main className="min-h-screen bg-[#f7f8f6] pb-24 dark:bg-slate-950 md:pb-8">
       <div className="mx-auto max-w-3xl px-4 py-5 sm:py-8">
@@ -38,7 +38,7 @@ export default function QuotesPage() {
             <div className="flex items-start justify-between gap-3"><div className="min-w-0"><p className="font-bold text-slate-900 dark:text-white">{quote.title}</p><p className="mt-1 text-xs text-slate-500">{quote.client?.name ? `Client : ${quote.client.name}` : quote.artisan?.user?.name ? `Artisan : ${quote.artisan.user.name}` : ''}</p></div><span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-700"><Clock3 className="h-3 w-3" />{statusLabel[quote.status] || quote.status}</span></div>
             {quote.description && <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">{quote.description}</p>}
             {quote.artisanNote && <p className="mt-3 rounded-xl bg-slate-50 p-3 text-sm">{quote.artisanNote}</p>}
-            <div className="mt-3 flex items-center gap-2 text-sm font-semibold"><Banknote className="h-4 w-4 text-brand-600" />{quote.amount ? `${quote.amount.toLocaleString('fr-FR')} XAF` : 'Montant ÃƒÂ  proposer'}</div>
+            <div className="mt-3 flex items-center gap-2 text-sm font-semibold"><Banknote className="h-4 w-4 text-brand-600" />{quote.amount ? `${quote.amount.toLocaleString('fr-FR')} XAF` : 'Montant à proposer'}</div>
             {quote.status === 'en_attente' && (session.user as typeof session.user & { role?: string }).role === 'artisan' && <div className="mt-4 grid gap-2 sm:grid-cols-[140px_1fr]"><Input type="number" min="0" value={amounts[quote.id] || ''} onChange={(event) => setAmounts((current) => ({ ...current, [quote.id]: event.target.value }))} placeholder="Montant XAF" /><Textarea rows={2} value={notes[quote.id] || ''} onChange={(event) => setNotes((current) => ({ ...current, [quote.id]: event.target.value }))} placeholder="Note pour le client" /></div>}
             {quote.status === 'en_attente' && (session.user as typeof session.user & { role?: string }).role === 'artisan' && <div className="mt-3 flex gap-2"><Button className="flex-1" onClick={() => void updateQuote(quote.id, 'accepte')}><BadgeCheck className="mr-2 h-4 w-4" />Proposer et accepter</Button><Button variant="outline" onClick={() => void updateQuote(quote.id, 'refuse')}>Refuser</Button></div>}
             {quote.status === 'accepte' && quote.mission && <Button variant="outline" className="mt-4 w-full" asChild><a href={`/missions/${quote.mission.id}`}>Voir la mission {quote.mission.status.replace('_', ' ')}</a></Button>}

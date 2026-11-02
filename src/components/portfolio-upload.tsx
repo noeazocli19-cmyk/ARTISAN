@@ -738,7 +738,7 @@ export function PortfolioUpload({ onBack }: PortfolioUploadProps) {
                   className="text-center py-8"
                 >
                   <p className="text-muted-foreground text-sm">
-                    Sélectionnez des images ci-dessus pour commencer Ã  créer votre portfolio
+                    Sélectionnez des images ci-dessus pour commencer à créer votre portfolio
                   </p>
                 </motion.div>
               )}
