@@ -5,7 +5,7 @@ import { Navbar } from '@/components/navbar'
 import { PricingSection } from '@/components/pricing-section'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Card, CardContent } from '@/components/ui/card'
-import { Shield, CreditCard, Navigation, MessageSquare, Headphones, ThumbsUp, Zap, Globe, ArrowLeft } from 'lucide-react'
+import { Shield, CreditCard, Navigation, MessageSquare, Headphones, ThumbsUp, Globe, ArrowLeft } from 'lucide-react'
 
 const trustFeatures = [
   { icon: Shield, title: 'Identité vérifiée', description: 'Chaque artisan passe par un processus rigoureux de vérification avant de rejoindre FINDA.' },
@@ -51,8 +51,8 @@ export default function InformationsPage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold mb-7">Une plateforme disponible et performante</h2>
             <div className="grid gap-5 md:grid-cols-3">
-              {[['< 100 ms', 'Temps de réponse ciblé', Zap], ['99,9 %', 'Disponibilité prévue', Shield], ['Afrique', 'Recherche de proximité GPS', Globe]].map(([stat, label, Icon]) => {
-                const StatusIcon = Icon as typeof Zap
+              {[['GPS', 'Recherche autour de votre position', Navigation], ['Sécurisé', 'Accès aux données protégé', Shield], ['Afrique', 'Réseau de services en expansion', Globe]].map(([stat, label, Icon]) => {
+                const StatusIcon = Icon as typeof Navigation
                 return <Card key={String(stat)}><CardContent className="p-6"><StatusIcon className="h-6 w-6 text-brand-600 mb-4" /><p className="text-3xl font-bold">{String(stat)}</p><p className="mt-1 text-sm text-muted-foreground">{String(label)}</p></CardContent></Card>
               })}
             </div>

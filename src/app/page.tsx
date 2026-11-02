@@ -1049,10 +1049,20 @@ export default function Home() {
   }, [])
 
   const handleSearch = useCallback((query: string, location: string) => {
+    const gpsMatch = location.match(/^(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)$/)
+    if (gpsMatch) {
+      const params = new URLSearchParams()
+      if (query.trim()) params.set('q', query.trim())
+      params.set('lat', gpsMatch[1])
+      params.set('lng', gpsMatch[2])
+      router.push(`/search?${params.toString()}`)
+      return
+    }
+
     const filters: Record<string, string> = {}
     if (location) filters.location = location
     search(query, filters)
-  }, [search])
+  }, [search, router])
 
   const handleViewArtisan = useCallback((id: string) => {
     setSelectedArtisan(id)

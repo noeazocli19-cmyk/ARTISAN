@@ -99,7 +99,7 @@ export async function GET(request: NextRequest) {
     });
 
     if (userLat !== null && userLng !== null && maxRadius > 0) {
-      results = results.filter((r) => r.distance === null || r.distance <= maxRadius);
+      results = results.filter((r) => r.distance !== null && r.distance <= maxRadius);
     }
 
     if (userLat !== null && userLng !== null) {

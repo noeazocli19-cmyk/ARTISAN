@@ -25,6 +25,7 @@ interface ArtisanResult {
 }
 
 const RADIUS_OPTIONS = [
+  { label: '5 km', value: '5' },
   { label: '10 km', value: '10' },
   { label: '25 km', value: '25' },
   { label: '50 km', value: '50' },
@@ -45,11 +46,25 @@ function SearchPageContent() {
   const [userLat, setUserLat] = useState<number | null>(null);
   const [userLng, setUserLng] = useState<number | null>(null);
   const [showFilters, setShowFilters] = useState(false);
+  const [locationError, setLocationError] = useState('');
 
-  // Lit la catégorie passée par l'URL (ex: /search?category=Plomberie)
+  // Restore searches and geolocation shared from the home page.
   useEffect(() => {
+    const q = searchParams.get('q');
+    const locationParam = searchParams.get('location');
+    const countryParam = searchParams.get('country');
     const cat = searchParams.get('category');
+    const lat = searchParams.get('lat');
+    const lng = searchParams.get('lng');
+    const radiusParam = searchParams.get('radius');
+
+    if (q) setQuery(q);
+    if (locationParam) setLocation(locationParam);
+    if (countryParam) setCountry(countryParam);
     if (cat) setCategory(cat);
+    if (lat && Number.isFinite(Number(lat))) setUserLat(Number(lat));
+    if (lng && Number.isFinite(Number(lng))) setUserLng(Number(lng));
+    if (radiusParam && RADIUS_OPTIONS.some((option) => option.value === radiusParam)) setRadius(radiusParam);
   }, [searchParams]);
 
   const clearCategory = () => {
@@ -59,8 +74,9 @@ function SearchPageContent() {
 
   // Géolocalisation navigateur
   const geolocateMe = () => {
+    setLocationError('');
     if (!navigator.geolocation) {
-      alert('Géolocalisation non supportée par votre navigateur');
+      setLocationError('La géolocalisation n’est pas prise en charge par cet appareil.');
       return;
     }
     navigator.geolocation.getCurrentPosition(
@@ -68,9 +84,12 @@ function SearchPageContent() {
         setUserLat(pos.coords.latitude);
         setUserLng(pos.coords.longitude);
       },
-      () => {
-        alert('Impossible de récupérer votre position');
-      }
+      (error) => {
+        setLocationError(error.code === error.PERMISSION_DENIED
+          ? 'Autorisez l’accès à votre position pour rechercher les artisans proches.'
+          : 'Impossible de déterminer votre position pour le moment.');
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 }
     );
   };
 
@@ -104,6 +123,16 @@ function SearchPageContent() {
   useEffect(() => {
     const timer = setTimeout(() => {
       searchArtisans();
+      const recentValue = query.trim() || location.trim() || category.trim();
+      if (recentValue) {
+        try {
+          const saved = JSON.parse(localStorage.getItem('findaRecentSearches') || '[]') as string[];
+          const next = [recentValue, ...saved.filter((value) => value !== recentValue)].slice(0, 5);
+          localStorage.setItem('findaRecentSearches', JSON.stringify(next));
+        } catch {
+          localStorage.setItem('findaRecentSearches', JSON.stringify([recentValue]));
+        }
+      }
     }, 500);
     return () => clearTimeout(timer);
   }, [searchArtisans]);
@@ -154,6 +183,16 @@ function SearchPageContent() {
           <SlidersHorizontal className="h-5 w-5" />
         </button>
       </div>
+
+      {locationError && (
+        <p className="text-sm text-red-600" role="alert">{locationError}</p>
+      )}
+      {userLat !== null && userLng !== null && !locationError && (
+        <p className="flex items-center gap-2 text-sm text-blue-700" role="status">
+          <Crosshair className="h-4 w-4" />
+          Résultats autour de votre position GPS ({userLat.toFixed(5)}, {userLng.toFixed(5)}) dans un rayon de {radius === '0' ? 'partout' : `${radius} km`}.
+        </p>
+      )}
 
       {/* Filtres */}
       {showFilters && (
@@ -272,13 +311,23 @@ function SearchPageContent() {
                   ))}
                 </div>
               )}
-              <Link
-                href={`/artisan/${artisan.id}`}
-                className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-brand-600 hover:text-brand-700"
-              >
-                Voir le profil
-                <span aria-hidden>&rarr;</span>
-              </Link>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <Link
+                  href={`/artisan/${artisan.id}`}
+                  className="inline-flex items-center gap-1 rounded-lg border border-brand-200 px-3 py-2 text-sm font-semibold text-brand-700 hover:bg-brand-50"
+                >
+                  Voir le profil
+                  <span aria-hidden>&rarr;</span>
+                </Link>
+                {artisan.phone && (
+                  <a
+                    href={`tel:${artisan.phone}`}
+                    className="inline-flex rounded-lg bg-brand-600 px-3 py-2 text-sm font-semibold text-white hover:bg-brand-700"
+                  >
+                    Appeler
+                  </a>
+                )}
+              </div>
             </div>
           ))}
         </div>
