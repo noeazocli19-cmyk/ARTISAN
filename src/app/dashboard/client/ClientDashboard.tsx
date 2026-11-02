@@ -243,32 +243,38 @@ export function ClientDashboard() {
   }, [])
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-4 flex flex-wrap items-center gap-3">
-        <Link href="/social" className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700">
+    <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-b from-brand-50/60 via-background to-background py-8 dark:from-brand-950/20">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mb-5 flex flex-wrap items-center gap-2 rounded-2xl border border-border/60 bg-background/80 p-2.5 shadow-sm backdrop-blur">
+        <Link href="/social" className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-brand-700">
           <Users className="h-4 w-4" />
           Accéder au réseau social
         </Link>
-        <Link href="/devis" className="inline-flex min-h-11 items-center gap-2 rounded-lg border px-3 text-sm font-semibold"><FileText className="h-4 w-4" />Mes devis</Link>
-        <Link href="/agenda" className="inline-flex min-h-11 items-center gap-2 rounded-lg border px-3 text-sm font-semibold"><CalendarDays className="h-4 w-4" />Agenda</Link>
-        <Link href="/portfolio" className="inline-flex min-h-11 items-center gap-2 rounded-lg border px-3 text-sm font-semibold"><Image className="h-4 w-4" />Portfolio</Link>
-        <Link href="/support" className="inline-flex min-h-11 items-center gap-2 rounded-lg border px-3 text-sm font-semibold"><LifeBuoy className="h-4 w-4" />Support</Link>
-        <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-brand-700 transition">
+        <Link href="/devis" className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-transparent px-3 text-sm font-semibold transition hover:border-border hover:bg-muted"><FileText className="h-4 w-4" />Mes devis</Link>
+        <Link href="/agenda" className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-transparent px-3 text-sm font-semibold transition hover:border-border hover:bg-muted"><CalendarDays className="h-4 w-4" />Agenda</Link>
+        <Link href="/portfolio" className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-transparent px-3 text-sm font-semibold transition hover:border-border hover:bg-muted"><Image className="h-4 w-4" />Portfolio</Link>
+        <Link href="/support" className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-transparent px-3 text-sm font-semibold transition hover:border-border hover:bg-muted"><LifeBuoy className="h-4 w-4" />Support</Link>
+        <Link href="/" className="ml-auto inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-medium text-muted-foreground transition hover:bg-muted hover:text-brand-700">
           <ArrowLeftCircle className="h-4 w-4" />
           Retour au site
         </Link>
       </div>
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold">
-            Bonjour, <span className="bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">{user?.name}</span>
-          </h1>
-          <p className="text-muted-foreground mt-1">Bienvenue sur votre espace client</p>
+      <div className="relative mb-8 overflow-hidden rounded-3xl border border-brand-200/60 bg-gradient-to-br from-brand-600 via-brand-500 to-sky-500 p-6 text-white shadow-xl shadow-brand-500/10 sm:p-8">
+        <div className="absolute -right-10 -top-16 h-48 w-48 rounded-full bg-white/10" />
+        <div className="absolute bottom-[-4rem] right-24 h-32 w-32 rounded-full bg-white/5" />
+        <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="mb-1 text-sm font-medium text-brand-50/90">Votre espace client</p>
+            <h1 className="text-2xl font-bold sm:text-3xl">
+              Bonjour, {user?.name}
+            </h1>
+            <p className="mt-2 max-w-xl text-sm text-brand-50/90">Suivez vos missions, trouvez un artisan de confiance et gérez vos demandes au même endroit.</p>
+          </div>
+          <Button size="lg" className="shrink-0 bg-white text-brand-700 shadow-md hover:bg-brand-50" onClick={() => router.push('/missions/create')}>
+            <Plus className="h-4 w-4 mr-2" />
+            Nouvelle Mission
+          </Button>
         </div>
-        <Button className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0" onClick={() => router.push('/missions/create')}>
-          <Plus className="h-4 w-4 mr-2" />
-          Nouvelle Mission
-        </Button>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
@@ -289,7 +295,7 @@ export function ClientDashboard() {
         </div>
 
         {/* Barre d'onglets - Desktop uniquement */}
-        <TabsList className="hidden sm:flex h-11 bg-muted/50 p-1">
+        <TabsList className="hidden h-12 w-full justify-start overflow-x-auto rounded-2xl border border-border/60 bg-background/80 p-1.5 shadow-sm sm:flex">
           <TabsTrigger value="overview" className="text-sm">Aperçu</TabsTrigger>
           <TabsTrigger value="missions" className="text-sm">Mes Missions</TabsTrigger>
           <TabsTrigger value="messages" className="text-sm">Messages</TabsTrigger>
@@ -720,6 +726,7 @@ export function ClientDashboard() {
           onSubmit={handleSubmitReview}
         />
       )}
+      </div>
     </div>
   )
 }

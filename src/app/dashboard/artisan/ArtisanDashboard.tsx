@@ -452,23 +452,24 @@ export function ArtisanDashboard() {
   const totalUnread = conversations.reduce((sum, c) => sum + (c.unreadCount || 0), 0);
 
   return (
-    <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
+    <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-b from-brand-50/60 via-background to-background dark:from-brand-950/20">
+      <div className="mx-auto max-w-4xl space-y-6 p-4 sm:p-6">
       {/* Accès visible à l'espace social */}
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-border/60 bg-background/80 p-2.5 shadow-sm backdrop-blur">
         <Link
           href="/social"
-          className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700"
+          className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-brand-700"
         >
           <Users className="h-4 w-4" />
           Accéder au réseau social
         </Link>
-        <Link href="/devis" className="inline-flex min-h-11 items-center gap-2 rounded-lg border px-3 text-sm font-semibold"><FileText className="h-4 w-4" />Mes devis</Link>
-        <Link href="/agenda" className="inline-flex min-h-11 items-center gap-2 rounded-lg border px-3 text-sm font-semibold"><CalendarDays className="h-4 w-4" />Agenda</Link>
-        <Link href="/portfolio" className="inline-flex min-h-11 items-center gap-2 rounded-lg border px-3 text-sm font-semibold"><Images className="h-4 w-4" />Portfolio</Link>
-        <Link href="/support" className="inline-flex min-h-11 items-center gap-2 rounded-lg border px-3 text-sm font-semibold"><LifeBuoy className="h-4 w-4" />Support</Link>
+        <Link href="/devis" className="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold transition hover:bg-muted"><FileText className="h-4 w-4" />Mes devis</Link>
+        <Link href="/agenda" className="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold transition hover:bg-muted"><CalendarDays className="h-4 w-4" />Agenda</Link>
+        <Link href="/portfolio" className="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold transition hover:bg-muted"><Images className="h-4 w-4" />Portfolio</Link>
+        <Link href="/support" className="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold transition hover:bg-muted"><LifeBuoy className="h-4 w-4" />Support</Link>
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-brand-700 transition"
+          className="ml-auto inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-medium text-muted-foreground transition hover:bg-muted hover:text-brand-700"
         >
           <ArrowLeftCircle className="h-4 w-4" />
           Retour au site
@@ -486,7 +487,7 @@ export function ArtisanDashboard() {
       </div>
 
       {/* Bandeau d'en-tête — signature de marque (dégradé ambre → orange) */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand-500 via-brand-500 to-brand-600 p-6 shadow-lg">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-600 via-brand-500 to-sky-500 p-6 shadow-xl shadow-brand-500/10">
         <div className="absolute -right-6 -top-6 h-32 w-32 rounded-full bg-white/10" />
         <div className="absolute -right-2 bottom-[-2rem] h-20 w-20 rounded-full bg-white/10" />
         <div className="relative flex items-center gap-4">
@@ -529,7 +530,7 @@ export function ArtisanDashboard() {
         </div>
       <button
         onClick={toggleAvailability}
-        className={`w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold transition ${
+        className={`mt-5 w-full flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/90 py-2.5 text-sm font-semibold text-gray-800 shadow-sm backdrop-blur transition hover:bg-white ${
           artisanProfile?.isAvailable
             ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
             : "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
@@ -557,7 +558,7 @@ export function ArtisanDashboard() {
       </div>
 
       {/* Barre d'onglets - Desktop uniquement */}
-      <div className="hidden sm:flex gap-1 overflow-x-auto rounded-xl bg-gray-100 p-1">
+      <div className="hidden sm:flex gap-1 overflow-x-auto rounded-2xl border border-border/60 bg-background/80 p-1.5 shadow-sm">
         {TABS.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -1302,6 +1303,7 @@ export function ArtisanDashboard() {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }
