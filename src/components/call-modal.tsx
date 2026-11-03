@@ -48,15 +48,7 @@ export function CallModal({
         setFinalDuration(0)
       }, 0)
 
-      // Auto-connect after 3 seconds
-      connectTimerRef.current = setTimeout(() => {
-        setCallState('connected')
-      }, 3000)
-
-      return () => {
-        clearTimeout(resetTimer)
-        if (connectTimerRef.current) clearTimeout(connectTimerRef.current)
-      }
+      return () => clearTimeout(resetTimer)
     }
 
     prevIsOpenRef.current = isOpen
@@ -84,15 +76,8 @@ export function CallModal({
   }, [duration])
 
   const handleCallback = useCallback(() => {
-    setCallState('ringing')
-    setDuration(0)
-    setIsMuted(false)
-    setIsSpeaker(false)
-
-    setTimeout(() => {
-      setCallState('connected')
-    }, 3000)
-  }, [])
+    onClose()
+  }, [onClose])
 
   const handleClose = useCallback(() => {
     setCallState('ringing')
@@ -212,7 +197,7 @@ export function CallModal({
                       animate={{ opacity: [1, 0.4, 1] }}
                       transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
                     >
-                      Appel en cours...
+                      Appel audio indisponible pour le moment
                     </motion.p>
                   </motion.div>
                 )}
@@ -394,7 +379,7 @@ export function CallModal({
                       whileTap={{ scale: 0.95 }}
                     >
                       <Phone className="w-4 h-4" />
-                      Rappeler
+                      Fermer
                     </motion.button>
 
                     {/* Close Button */}

@@ -372,11 +372,20 @@ export function ReferralProgram({ onBack }: ReferralProgramProps) {
     }
   }, [stats.code])
 
-  const handleSendInvite = useCallback(() => {
-    if (inviteEmail.trim()) {
+  const handleSendInvite = useCallback(async () => {
+    if (!inviteEmail.trim()) return
+    try {
+      const response = await fetch('/api/referral', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'invite', email: inviteEmail.trim() }),
+      })
+      if (!response.ok) throw new Error('Invitation refusée')
       setInviteSent(true)
       setInviteEmail('')
       setTimeout(() => setInviteSent(false), 3000)
+    } catch (error) {
+      console.error('Erreur invitation parrainage:', error)
     }
   }, [inviteEmail])
 

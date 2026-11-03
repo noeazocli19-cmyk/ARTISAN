@@ -74,6 +74,12 @@ export async function POST(request: NextRequest) {
     }
 
     const provider = getActiveProvider()
+    if (provider === 'demo' && process.env.NODE_ENV === 'production' && process.env.ENABLE_DEMO_PAYMENTS !== 'true') {
+      return NextResponse.json({
+        error: 'Les paiements sont temporairement indisponibles. Aucun fournisseur de paiement n’est configuré.',
+        code: 'PAYMENT_PROVIDER_NOT_CONFIGURED',
+      }, { status: 503 })
+    }
     const momoMethods = ['orange_money', 'mtn_money', 'wave', 'moov_money', 'airtel_money', 'm_pesa']
     // Phone number is required for Mobile Money ONLY when using CinetPay (server-side flow).
     // For Kkiapay, the widget collects the phone number client-side.

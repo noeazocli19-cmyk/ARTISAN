@@ -3,6 +3,7 @@ import { db } from '@/lib/db';
 import { sendWebPushToUser } from '@/lib/push';
 import { auth } from '@/lib/better-auth';
 import crypto from 'crypto';
+import { sendEmail } from '@/lib/email';
 
 function generateCode(name: string) {
   const base = (name || 'ARTISAN').toUpperCase().replace(/[^A-Z]/g, '').slice(0, 8) || 'ARTISAN';
@@ -72,6 +73,25 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+    const { action, email, code: referralCode } = body;
+
+    if (action === 'invite') {
+      const session = await auth.api.getSession({ headers: request.headers });
+      if (!session?.user?.id) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+      const inviter = await db.user.findUnique({ where: { id: session.user.id }, select: { name: true, referralCode: true } });
+      const normalizedEmail = String(email || '').trim().toLowerCase();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) return NextResponse.json({ error: 'Adresse email invalide' }, { status: 400 });
+      if (!inviter?.referralCode) return NextResponse.json({ error: 'Impossible de générer le lien de parrainage' }, { status: 400 });
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+      const result = await sendEmail({
+        to: normalizedEmail,
+        subject: `${inviter.name || 'Un proche'} vous invite sur Finda`,
+        html: `<p>Découvrez Finda et trouvez des artisans qualifiés.</p><p><a href="${baseUrl}/register?ref=${encodeURIComponent(inviter.referralCode)}">Rejoindre Finda</a></p>`,
+      });
+      if (!result.success) return NextResponse.json({ error: 'L’invitation par email n’a pas pu être envoyée' }, { status: 502 });
+      return NextResponse.json({ success: true });
+    }
+
     const { code, newUserId } = body;
 
     if (!code || !newUserId) {

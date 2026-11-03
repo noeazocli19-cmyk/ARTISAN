@@ -38,6 +38,12 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    if (getActiveProvider() === 'demo' && process.env.NODE_ENV === 'production' && process.env.ENABLE_DEMO_PAYMENTS !== 'true') {
+      return NextResponse.json({
+        error: 'Les retraits sont temporairement indisponibles. Aucun fournisseur de paiement n’est configuré.',
+        code: 'PAYOUT_PROVIDER_NOT_CONFIGURED',
+      }, { status: 503 })
+    }
     const validMethods = ['orange_money', 'mtn_money', 'wave', 'moov_money']
     if (!method || !validMethods.includes(method)) {
       return NextResponse.json(

@@ -601,9 +601,7 @@ export function EmergencyService({ onBack }: EmergencyServiceProps) {
   const [urgencyLevel, setUrgencyLevel] = useState(50);
 
   // Tracking state
-  const [activeEmergency, setActiveEmergency] = useState<EmergencyRequest | null>(
-    MOCK_ACTIVE_EMERGENCY
-  );
+  const [activeEmergency, setActiveEmergency] = useState<EmergencyRequest | null>(null);
   const [etaCountdown, setEtaCountdown] = useState(12);
   const [showCancelDialog, setShowCancelDialog] = useState(false);
 
@@ -611,7 +609,7 @@ export function EmergencyService({ onBack }: EmergencyServiceProps) {
   const [isDispatching, setIsDispatching] = useState(false);
 
   // History
-  const [pastEmergencies] = useState<EmergencyRequest[]>(MOCK_PAST_EMERGENCIES);
+  const [pastEmergencies] = useState<EmergencyRequest[]>([]);
 
   // Active tab within tracking view
   const [trackingTab, setTrackingTab] = useState<'tracking' | 'history'>('tracking');
@@ -677,28 +675,8 @@ export function EmergencyService({ onBack }: EmergencyServiceProps) {
 
   // Handle form submission
   const handleSubmit = useCallback(() => {
-    if (!selectedType || !description.trim() || !location.trim() || !phone.trim()) return;
-
-    setIsDispatching(true);
-
-    const newEmergency: EmergencyRequest = {
-      id: `em-${Date.now()}`,
-      type: selectedType,
-      description: description.trim(),
-      location: location.trim(),
-      clientName: user?.name ?? 'Utilisateur',
-      clientPhone: phone.trim(),
-      status: 'dispatching',
-      createdAt: new Date().toISOString(),
-    };
-
-    setActiveEmergency(newEmergency);
-
-    // After dispatch animation, switch to tracking
-    setTimeout(() => {
-      setPhase('tracking');
-    }, 5500);
-  }, [selectedType, description, location, phone, user]);
+    window.alert('Le dispatch d’urgence n’est pas encore activé. Pour une situation dangereuse, contactez immédiatement les services locaux d’urgence.');
+  }, []);
 
   // Handle GPS location
   const handleUseGPS = useCallback(() => {

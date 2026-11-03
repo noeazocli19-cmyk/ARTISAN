@@ -694,8 +694,37 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
   const { user } = useAppStore()
 
   // State
-  const [quoteRequests] = useState<QuoteRequest[]>(MOCK_QUOTE_REQUESTS)
+  const [quoteRequests, setQuoteRequests] = useState<QuoteRequest[]>([])
+  const [quotesLoading, setQuotesLoading] = useState(true)
   const [selectedRequest, setSelectedRequest] = useState<QuoteRequest | null>(null)
+
+  useEffect(() => {
+    fetch('/api/quotes')
+      .then(async (response) => response.ok ? response.json() : { quotes: [] })
+      .then((data) => {
+        const realRequests: QuoteRequest[] = (data.quotes || []).map((quote: any) => ({
+          id: quote.id,
+          clientName: quote.client?.name || 'Client',
+          clientAvatar: quote.client?.image || '',
+          clientLocation: 'Localisation non renseignée',
+          clientPhone: '',
+          title: quote.title || 'Demande de devis',
+          description: quote.description || '',
+          category: 'Général',
+          budgetMin: quote.amount || 0,
+          budgetMax: quote.amount || 0,
+          location: 'Localisation non renseignée',
+          preferredDate: new Date(quote.createdAt).toLocaleDateString('fr-FR'),
+          urgency: 'normal',
+          status: quote.status === 'accepte' ? 'accepted' : quote.status === 'refuse' ? 'rejected' : 'open',
+          responses: [],
+          createdAt: quote.createdAt,
+        }))
+        setQuoteRequests(realRequests)
+      })
+      .catch(() => setQuoteRequests([]))
+      .finally(() => setQuotesLoading(false))
+  }, [])
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
   const [acceptDialogOpen, setAcceptDialogOpen] = useState(false)
   const [selectedQuote, setSelectedQuote] = useState<Quote | null>(null)
@@ -811,12 +840,20 @@ export function QuoteRequestSystem({ onBack }: QuoteRequestSystemProps) {
     setDeclineDialogOpen(true)
   }
 
-  const confirmAccept = () => {
+  const confirmAccept = async () => {
+    if (!selectedQuote) return
+    await fetch(`/api/quotes/${selectedQuote.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'accepte', amount: selectedQuote.totalAmount, note: selectedQuote.notes }) })
+      .then((response) => response.ok ? fetch('/api/quotes') : null)
+      .then(async (response) => response && response.ok ? response.json() : null)
+      .catch(() => null)
     setAcceptDialogOpen(false)
     setSelectedQuote(null)
   }
 
-  const confirmDecline = () => {
+  const confirmDecline = async () => {
+    if (!selectedQuote) return
+    await fetch(`/api/quotes/${selectedQuote.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'refuse' }) }).catch(() => null)
+    setAcceptDialogOpen(false)
     setDeclineDialogOpen(false)
     setSelectedQuote(null)
   }
