@@ -192,3 +192,67 @@ body.ios-standalone {
     bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important;
   }
 }
+
+.hero-glow {
+  animation: hero-glow-breathe 4.8s ease-in-out infinite;
+}
+
+.hero-particle {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(74, 222, 128, 0.8);
+  box-shadow: 0 0 14px rgba(74, 222, 128, 0.75);
+  animation: hero-particle-rise 9s linear infinite;
+}
+.hero-particle-1 { left: 8%; top: 68%; animation-delay: -1s; }
+.hero-particle-2 { left: 18%; top: 82%; animation-delay: -6s; }
+.hero-particle-3 { left: 32%; top: 72%; animation-delay: -3s; }
+.hero-particle-4 { left: 44%; top: 88%; animation-delay: -7s; }
+.hero-particle-5 { left: 58%; top: 78%; animation-delay: -2s; }
+.hero-particle-6 { left: 72%; top: 92%; animation-delay: -5s; }
+.hero-particle-7 { left: 84%; top: 66%; animation-delay: -8s; }
+.hero-particle-8 { left: 94%; top: 84%; animation-delay: -4s; }
+
+.hero-search-button {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.hero-search-button::after {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  background: linear-gradient(115deg, transparent 42%, rgba(255,255,255,.55) 50%, transparent 58%);
+  transform: translateX(-65%);
+  animation: hero-button-shine 3.5s ease-in-out infinite;
+}
+
+@keyframes hero-glow-breathe {
+  0%, 100% { opacity: .45; transform: translate(-50%, 0) scale(.85); }
+  50% { opacity: .85; transform: translate(-50%, 0) scale(1.12); }
+}
+@keyframes hero-particle-rise {
+  0% { opacity: 0; transform: translateY(35px) scale(.5); }
+  15% { opacity: .8; }
+  75% { opacity: .35; }
+  100% { opacity: 0; transform: translateY(-220px) scale(1.2); }
+}
+@keyframes hero-button-shine {
+  0%, 68% { transform: translateX(-65%); }
+  100% { transform: translateX(65%); }
+}
+
+@media (max-width: 640px) {
+  .hero-particle:nth-child(n+6) { display: none; }
+  .hero-glow { width: 12rem; height: 12rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-glow,
+  .hero-particle,
+  .hero-search-button::after {
+    animation: none !important;
+  }
+}

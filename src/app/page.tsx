@@ -80,6 +80,7 @@ import {
   Rocket,
   Crosshair,
   LoaderCircle,
+  ArrowDown,
 } from "lucide-react"
 
 // Import our new components
@@ -531,6 +532,32 @@ const staggerContainer = {
   visible: { transition: { staggerChildren: 0.1 } },
 }
 
+function AnimatedNumber({ value, decimals = 0 }: { value: number; decimals?: number }) {
+  const [displayValue, setDisplayValue] = useState(0)
+
+  useEffect(() => {
+    if (value <= 0) return
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduceMotion) {
+      setDisplayValue(value)
+      return
+    }
+
+    let frame = 0
+    const startedAt = performance.now()
+    const duration = 900
+    const tick = (now: number) => {
+      const progress = Math.min((now - startedAt) / duration, 1)
+      setDisplayValue(value * (1 - Math.pow(1 - progress, 3)))
+      if (progress < 1) frame = requestAnimationFrame(tick)
+    }
+    frame = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(frame)
+  }, [value])
+
+  return <>{decimals ? displayValue.toFixed(decimals) : Math.round(displayValue).toLocaleString('fr-FR')}</>
+}
+
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Landing Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: 'login' | 'register') => void; onSearch: (query: string, location: string) => void; onViewMap: () => void }) {
@@ -608,11 +635,18 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
       {/* ────────── HERO ────────── */}
       <section className="relative pt-28 pb-10 sm:pt-36 sm:pb-16 overflow-hidden">
         {/* Static background image (video removed for better PWA/mobile) */}
-        <div
+        <motion.div
           className="absolute inset-0 w-full h-full overflow-hidden bg-center bg-cover opacity-90"
           style={{ backgroundImage: "url('/images/hero-family.png')" }}
+          initial={{ scale: 1.05 }}
+          animate={{ scale: 1, x: [0, 4, 0] }}
+          transition={{ scale: { duration: 1.2 }, x: { duration: 12, repeat: Infinity, ease: 'easeInOut' } }}
         >
           <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/75 to-background" />
+        </motion.div>
+        <div className="hero-glow absolute left-1/2 top-24 h-72 w-72 -translate-x-1/2 rounded-full bg-brand-500/20 blur-3xl" />
+        <div className="hero-particles absolute inset-x-0 top-0 h-[75%] overflow-hidden pointer-events-none" aria-hidden="true">
+          {Array.from({ length: 8 }).map((_, index) => <span key={index} className={`hero-particle hero-particle-${index + 1}`} />)}
         </div>
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -629,11 +663,11 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               </motion.div>
 
               <motion.h1 variants={fadeInUp} className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight">
-                Trouvez l&apos;artisan{" "}
-                <span className="bg-gradient-to-r from-brand-500 via-brand-500 to-brand-600 bg-clip-text text-transparent">
-                  parfait
-                </span>{" "}
-                pour chaque projet
+                {['Trouvez', 'l\'artisan'].map((word, index) => (
+                  <motion.span key={word} className="inline-block mr-[0.24em]" initial={{ opacity: 0, y: 24, rotateX: -35 }} animate={{ opacity: 1, y: 0, rotateX: 0 }} transition={{ delay: 0.2 + index * 0.09, duration: 0.55 }}>{word}</motion.span>
+                ))}
+                <motion.span className="inline-block mr-[0.24em] bg-gradient-to-r from-brand-500 via-brand-500 to-brand-600 bg-clip-text text-transparent" initial={{ opacity: 0, y: 24, rotateX: -35 }} animate={{ opacity: 1, y: 0, rotateX: 0 }} transition={{ delay: 0.38, duration: 0.55 }}>parfait</motion.span>
+                {' '}pour chaque projet
               </motion.h1>
 
               <motion.p variants={fadeInUp} className="mt-6 text-lg sm:text-xl text-muted-foreground">
@@ -681,7 +715,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                           {isLocating ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Crosshair className="h-4 w-4" />}
                         </button>
                       </div>
-                      <Button type="submit" disabled={isSearching || !searchQuery.trim()} className="h-12 px-8 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 disabled:opacity-70">
+                      <Button type="submit" disabled={isSearching || !searchQuery.trim()} className="hero-search-button h-12 px-8 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white border-0 disabled:opacity-70">
                         {isSearching ? <LoaderCircle className="h-4 w-4 mr-2 animate-spin" /> : <Search className="h-4 w-4 mr-2" />}
                         {isSearching ? 'Recherche...' : 'Rechercher'}
                       </Button>
@@ -734,20 +768,30 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
           {/* Stats */}
           <motion.div initial="hidden" animate="visible" variants={staggerContainer} className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
             {statsTemplate.map((stat) => {
-              const value = stat.key === 'rating'
-                ? (platformStats.rating ? `${platformStats.rating.toFixed(1)}/5` : '—')
-                : platformStats[stat.key].toLocaleString('fr-FR')
+              const rawValue = platformStats[stat.key]
               return (
                 <motion.div key={stat.label} variants={fadeInUp} className="flex flex-col items-center gap-2">
                   <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-100 dark:bg-brand-950/50">
                     <stat.icon className="h-5 w-5 text-brand-600 dark:text-brand-400" />
                   </div>
-                  <span className="text-2xl sm:text-3xl font-bold">{value}</span>
+                  <span className="text-2xl sm:text-3xl font-bold">
+                    <AnimatedNumber value={rawValue} decimals={stat.key === 'rating' ? 1 : 0} />
+                    {stat.key === 'rating' ? '/5' : ''}
+                  </span>
                   <span className="text-sm text-muted-foreground">{stat.label}</span>
                 </motion.div>
               )
             })}
           </motion.div>
+          <motion.a
+            href="#categories"
+            aria-label="Découvrir les catégories"
+            className="mx-auto mt-10 flex h-9 w-9 items-center justify-center rounded-full border border-brand-300/60 text-brand-600 dark:text-brand-300"
+            animate={{ y: [0, 7, 0] }}
+            transition={{ duration: 1.7, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <ArrowDown className="h-4 w-4" />
+          </motion.a>
         </div>
       </section>
 
@@ -831,6 +875,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                   return (
                     <CarouselItem key={artisan.id || name} className="pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5">
                       <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.08, duration: 0.45 }} className="h-full">
+                        <motion.div whileHover={{ y: -8, rotateX: 2 }} transition={{ type: 'spring', stiffness: 260, damping: 20 }} className="h-full">
                         <Card className="group hover:border-brand-300 dark:hover:border-brand-700 transition-all hover:shadow-xl overflow-hidden h-full">
                           <div className="relative h-72 overflow-hidden bg-gradient-to-br from-brand-500 to-emerald-600">
                             {photo ? <Image src={photo} alt={`${name} — ${skill}`} fill className="object-cover transition-transform duration-700 group-hover:scale-110" /> : null}
@@ -848,6 +893,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                             </div>
                           </div>
                         </Card>
+                        </motion.div>
                       </motion.div>
                     </CarouselItem>
                   )
