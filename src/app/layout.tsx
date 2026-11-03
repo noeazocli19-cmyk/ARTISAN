@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Albert_Sans, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 // Page transition overlay removed to eliminate loading-artisan image
 import { PresenceHeartbeat } from "@/components/presence-heartbeat";
@@ -10,7 +10,7 @@ import { BottomNav } from "@/components/bottom-nav";
 import { Footer } from "@/components/footer";
 import { IosInstallHint } from "@/components/ios-install-hint";
 
-const geistSans = Geist({
+const albertSans = Albert_Sans({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
@@ -88,7 +88,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
+        className={`${albertSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
         {/* Page transition overlay removed */}
         <PresenceHeartbeat />

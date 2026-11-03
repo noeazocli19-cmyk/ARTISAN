@@ -22,7 +22,7 @@
     font-family: 'Foodpacker', sans-serif;
   }
   body, p, span, a, button, input, textarea, select, label, li {
-    font-family: 'Satoshi', sans-serif;
+    font-family: var(--font-geist-sans), sans-serif;
   }
 }
 
