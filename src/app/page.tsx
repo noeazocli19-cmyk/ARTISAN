@@ -650,6 +650,22 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
         </div>
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0, y: [0, -7, 0] }}
+            transition={{ opacity: { delay: .8, duration: .5 }, x: { delay: .8, duration: .5 }, y: { delay: 1.3, duration: 4, repeat: Infinity, ease: 'easeInOut' } }}
+            className="hidden xl:flex absolute right-0 top-36 w-60 items-center gap-3 rounded-2xl border border-white/20 bg-white/90 p-3 shadow-2xl backdrop-blur dark:bg-neutral-950/90"
+          >
+            <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-emerald-600 font-bold text-white">
+              AD
+              <span className="absolute -right-1 -top-1 h-3 w-3 rounded-full border-2 border-white bg-emerald-400 shadow-[0_0_10px_rgba(74,222,128,.9)]" />
+            </div>
+            <div className="min-w-0 text-left">
+              <p className="truncate text-sm font-bold">Amadou Diallo</p>
+              <p className="text-xs text-muted-foreground">Disponible près de vous</p>
+              <p className="mt-1 flex items-center gap-1 text-xs font-semibold text-brand-600"><Star className="h-3 w-3 fill-brand-400 text-brand-400" /> 4.9 · Intervention rapide</p>
+            </div>
+          </motion.div>
           <div className="grid grid-cols-1 gap-10 items-center max-w-3xl mx-auto text-center">
             {/* Left: Text content */}
             <motion.div initial="hidden" animate="visible" variants={staggerContainer}>
@@ -687,11 +703,21 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                           className="pl-10 h-12 border-0 bg-muted/50 focus-visible:ring-1"
                           value={searchQuery}
                           onChange={e => setSearchQuery(e.target.value)}
-                          list="finda-service-suggestions"
+                          onFocus={() => setSearchQuery(searchQuery)}
+                          autoComplete="off"
                         />
-                        <datalist id="finda-service-suggestions">
-                          {quickCategories.map((category) => <option key={category} value={category} />)}
-                        </datalist>
+                        {searchQuery.trim() && (
+                          <div className="absolute z-30 left-0 right-0 top-[calc(100%+0.5rem)] max-h-52 overflow-auto rounded-xl border bg-background p-1 shadow-2xl">
+                            {quickCategories.filter(category => category.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 6).map(category => (
+                              <button key={category} type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm hover:bg-brand-50 dark:hover:bg-brand-950/40" onClick={() => setSearchQuery(category)}>
+                                <Search className="h-3.5 w-3.5 text-brand-500" />{category}
+                              </button>
+                            ))}
+                            {quickCategories.filter(category => category.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 && (
+                              <p className="px-3 py-2 text-sm text-muted-foreground">Appuyez sur Entrée pour lancer la recherche.</p>
+                            )}
+                          </div>
+                        )}
                       </div>
                       <div className="flex-1 relative">
                         <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -795,6 +821,23 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
         </div>
       </section>
 
+      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ TRUST SIGNALS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      <motion.section initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="border-y border-border/60 bg-background/80 py-5 backdrop-blur">
+        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-4 px-4 md:grid-cols-4 sm:px-6 lg:px-8">
+          {[
+            { Icon: Shield, label: 'Artisans vérifiés' },
+            { Icon: Star, label: 'Avis authentiques' },
+            { Icon: CreditCard, label: 'Paiement sécurisé' },
+            { Icon: Headphones, label: 'Assistance disponible' },
+          ].map(({ Icon, label }, index) => (
+            <motion.div key={label} initial={{ opacity: 0, scale: .92 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: index * .08 }} className="flex items-center justify-center gap-2 text-sm font-semibold text-muted-foreground">
+              <Icon className="h-5 w-5 text-brand-500" />
+              <span>{label}</span>
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
+
       {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ ANIMATED STATS & CHARTS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <AnimatedStats />
 
@@ -813,7 +856,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
 
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
             {categories.map((cat) => (
-              <motion.div key={cat.name} variants={fadeInUp}>
+              <motion.div key={cat.name} variants={fadeInUp} whileHover={{ y: -7, rotateY: 3, scale: 1.025 }} transition={{ type: 'spring', stiffness: 280, damping: 18 }} style={{ transformPerspective: 800 }}>
                 <Card
                   className="group cursor-pointer border-border/50 hover:border-brand-300 dark:hover:border-brand-700 transition-all hover:shadow-lg hover:-translate-y-1"
                   onClick={() => router.push(`/search?category=${encodeURIComponent(cat.name)}`)}
@@ -926,7 +969,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
 
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             {howItWorks.map((step, idx) => (
-              <motion.div key={step.step} variants={fadeInUp} className="relative">
+              <motion.div key={step.step} variants={fadeInUp} whileHover={{ y: -8 }} transition={{ type: 'spring', stiffness: 260, damping: 18 }} className="relative">
                 {idx < howItWorks.length - 1 && (
                   <div className="hidden md:block absolute top-16 left-[calc(50%+60px)] w-[calc(100%-120px)] h-0.5 bg-gradient-to-r from-brand-300 to-brand-300 dark:from-brand-700 dark:to-brand-700" />
                 )}

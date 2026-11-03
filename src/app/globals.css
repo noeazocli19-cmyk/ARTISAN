@@ -193,6 +193,16 @@ body.ios-standalone {
   }
 }
 
+section.bg-gradient-to-r.from-brand-500.to-brand-600::before {
+  content: '';
+  position: absolute;
+  inset: -40%;
+  opacity: .4;
+  background: radial-gradient(circle at 30% 40%, rgba(255,255,255,.42), transparent 18%), radial-gradient(circle at 70% 60%, rgba(16,185,129,.55), transparent 22%);
+  animation: cta-light-flow 8s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
 .hero-glow {
   animation: hero-glow-breathe 4.8s ease-in-out infinite;
 }
@@ -229,6 +239,10 @@ body.ios-standalone {
   animation: hero-button-shine 3.5s ease-in-out infinite;
 }
 
+@keyframes cta-light-flow {
+  from { transform: translate3d(-3%, -2%, 0) rotate(-4deg); }
+  to { transform: translate3d(4%, 3%, 0) rotate(4deg); }
+}
 @keyframes hero-glow-breathe {
   0%, 100% { opacity: .45; transform: translate(-50%, 0) scale(.85); }
   50% { opacity: .85; transform: translate(-50%, 0) scale(1.12); }
@@ -252,6 +266,7 @@ body.ios-standalone {
 @media (prefers-reduced-motion: reduce) {
   .hero-glow,
   .hero-particle,
+  section.bg-gradient-to-r.from-brand-500.to-brand-600::before,
   .hero-search-button::after {
     animation: none !important;
   }
