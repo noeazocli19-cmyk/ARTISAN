@@ -81,6 +81,11 @@ import {
   Crosshair,
   LoaderCircle,
   ArrowDown,
+  Download,
+  Smartphone,
+  BadgeCheck,
+  Clock3,
+  TicketPercent,
 } from "lucide-react"
 
 // Import our new components
@@ -363,6 +368,19 @@ const howItWorks = [
   },
 ]
 
+const recentMissions = [
+  { service: "Réparation de plomberie", city: "Cotonou", time: "Il y a 12 min", status: "Artisan assigné", icon: Droplets, color: "bg-blue-100 text-blue-600" },
+  { service: "Installation électrique", city: "Abomey-Calavi", time: "Il y a 34 min", status: "Devis reçu", icon: Zap, color: "bg-brand-100 text-brand-600" },
+  { service: "Peinture intérieure", city: "Porto-Novo", time: "Il y a 1 h", status: "Mission terminée", icon: Paintbrush, color: "bg-emerald-100 text-emerald-600" },
+  { service: "Réparation climatisation", city: "Parakou", time: "Il y a 2 h", status: "Artisan en route", icon: Wind, color: "bg-cyan-100 text-cyan-600" },
+]
+
+const localOffers = [
+  { city: "Cotonou", title: "Devis gratuits sur le domicile", offer: "0 F de frais de demande", color: "from-brand-500 to-brand-600" },
+  { city: "Abomey-Calavi", title: "Urgence dépannage 24/7", offer: "Intervention prioritaire", color: "from-emerald-500 to-teal-600" },
+  { city: "Porto-Novo", title: "Petits travaux à domicile", offer: "Artisans disponibles", color: "from-violet-500 to-fuchsia-600" },
+]
+
 const testimonials = [
   {
     name: "Ousmane Ba",
@@ -633,7 +651,7 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
   return (
     <>
       {/* ────────── HERO ────────── */}
-      <section className="relative pt-28 pb-10 sm:pt-36 sm:pb-16 overflow-hidden">
+      <section id="top-search" className="relative pt-28 pb-10 sm:pt-36 sm:pb-16 overflow-hidden">
         {/* Static background image (video removed for better PWA/mobile) */}
         <motion.div
           className="absolute inset-0 w-full h-full overflow-hidden bg-center bg-cover opacity-90"
@@ -755,8 +773,23 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                 </p>
               )}
 
+              {/* Popular cities */}
+              <motion.div variants={fadeInUp} className="mt-4 flex flex-wrap items-center justify-center gap-2">
+                <span className="mr-1 text-xs font-semibold text-muted-foreground">Populaire :</span>
+                {["Cotonou", "Abomey-Calavi", "Porto-Novo", "Parakou"].map((city) => (
+                  <Badge
+                    key={city}
+                    variant="outline"
+                    className="cursor-pointer px-3 py-1 hover:border-brand-300 hover:bg-brand-50 dark:hover:bg-brand-950/40"
+                    asChild
+                  >
+                    <button type="button" onClick={() => setSearchLocation(city)}>{city}</button>
+                  </Badge>
+                ))}
+              </motion.div>
+
               {/* Quick category pills */}
-              <motion.div variants={fadeInUp} className="mt-4 flex flex-wrap justify-center gap-2">
+              <motion.div variants={fadeInUp} className="mt-3 flex flex-wrap justify-center gap-2">
                 {quickCategories.map((cat) => (
                   <Badge
                     key={cat}
@@ -989,6 +1022,70 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
         </div>
       </section>
 
+      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ RECENT MISSIONS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      <section className="py-20 sm:py-28 bg-muted/30">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={staggerContainer} className="mb-10 text-center">
+            <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold">Dernières missions <span className="text-brand-600">près de chez vous</span></motion.h2>
+            <motion.p variants={fadeInUp} className="mt-4 text-lg text-muted-foreground">Suivez l’activité locale et trouvez rapidement un professionnel disponible.</motion.p>
+          </motion.div>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {recentMissions.map((mission) => (
+              <Card key={`${mission.city}-${mission.service}`} className="border-border/50 hover:-translate-y-1 hover:shadow-lg transition-all">
+                <CardContent className="p-5">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${mission.color}`}><mission.icon className="h-5 w-5" /></div>
+                    <span className="flex items-center gap-1 text-xs text-muted-foreground"><Clock3 className="h-3 w-3" />{mission.time}</span>
+                  </div>
+                  <h3 className="mt-4 font-semibold">{mission.service}</h3>
+                  <p className="mt-1 flex items-center gap-1 text-sm text-muted-foreground"><MapPin className="h-3.5 w-3.5" />{mission.city}</p>
+                  <Badge variant="secondary" className="mt-4 bg-brand-50 text-brand-700 dark:bg-brand-950/40 dark:text-brand-300">{mission.status}</Badge>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          <div className="mt-8 text-center"><Button variant="outline" onClick={() => router.push('/missions/create')}>Publier ma demande<ArrowRight className="ml-2 h-4 w-4" /></Button></div>
+        </div>
+      </section>
+
+      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ GUARANTEES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      <section className="py-20 sm:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={staggerContainer} className="mb-12 text-center">
+            <motion.h2 variants={fadeInUp} className="text-3xl sm:text-4xl font-bold">Réservez en toute <span className="text-brand-600">confiance</span></motion.h2>
+            <motion.p variants={fadeInUp} className="mt-4 text-lg text-muted-foreground">Des protections simples pour sécuriser chaque intervention.</motion.p>
+          </motion.div>
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+            {[
+              [BadgeCheck, "Profils vérifiés", "Identité, compétences et références contrôlées."],
+              [CreditCard, "Paiement protégé", "Vos fonds restent sécurisés jusqu’à la validation."],
+              [MessageSquare, "Médiation rapide", "Notre équipe accompagne le client et l’artisan."],
+              [ThumbsUp, "Garantie satisfaction", "Ouvrez un litige et obtenez une solution adaptée."],
+            ].map(([Icon, title, description]) => {
+              const GuaranteeIcon = Icon as typeof Shield
+              return <Card key={String(title)} className="h-full"><CardContent className="p-6"><div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-50 text-brand-600 dark:bg-brand-950/30"><GuaranteeIcon className="h-6 w-6" /></div><h3 className="mt-5 font-bold">{String(title)}</h3><p className="mt-2 text-sm leading-relaxed text-muted-foreground">{String(description)}</p></CardContent></Card>
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ LOCAL OFFERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      <section className="pb-20 sm:pb-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-5 lg:grid-cols-[1.3fr_1fr_1fr]">
+            <Card className="overflow-hidden border-0 bg-gradient-to-br from-brand-500 to-brand-700 text-white lg:row-span-2">
+              <CardContent className="flex h-full flex-col justify-between p-7 sm:p-8">
+                <div><div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/15"><TicketPercent className="h-6 w-6" /></div><p className="mt-6 text-sm font-semibold text-white/75">BONS PLANS LOCAUX</p><h2 className="mt-2 text-3xl font-bold">Plus de services, près de chez vous.</h2><p className="mt-4 text-white/80">Comparez les artisans disponibles et profitez des avantages proposés dans votre ville.</p></div>
+                <Button className="mt-8 w-fit bg-white text-brand-700 hover:bg-white/90" onClick={() => router.push('/search')}>Voir les offres<ArrowRight className="ml-2 h-4 w-4" /></Button>
+              </CardContent>
+            </Card>
+            {localOffers.map((offer) => (
+              <Card key={offer.city} className="overflow-hidden border-border/50"><div className={`h-1.5 bg-gradient-to-r ${offer.color}`} /><CardContent className="p-6"><Badge variant="outline" className="text-brand-600"><MapPin className="mr-1 h-3 w-3" />{offer.city}</Badge><h3 className="mt-4 text-lg font-bold">{offer.title}</h3><p className="mt-2 text-sm text-muted-foreground">{offer.offer}</p><Button variant="link" className="mt-3 h-auto p-0 text-brand-600" onClick={() => { setSearchLocation(offer.city); document.getElementById('top-search')?.scrollIntoView({ behavior: 'smooth' }) }}>Rechercher dans cette ville<ChevronRight className="ml-1 h-4 w-4" /></Button></CardContent></Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ TESTIMONIALS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section id="temoignages" className="py-20 sm:py-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -1036,6 +1133,46 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
 
       {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ TARIFS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <PricingSection />
+
+      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ ARTISAN RECRUITMENT & PWA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      <section className="py-20 sm:py-28 bg-muted/30">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-6 lg:grid-cols-2">
+            <Card className="overflow-hidden border-0 bg-neutral-950 text-white">
+              <CardContent className="p-7 sm:p-9">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-500"><Briefcase className="h-6 w-6" /></div>
+                <Badge className="mt-6 bg-brand-500 text-white">Pour les artisans</Badge>
+                <h2 className="mt-4 text-3xl font-bold">Développez votre activité avec FINDA.</h2>
+                <p className="mt-4 max-w-xl text-neutral-300">Recevez des missions qualifiées près de chez vous, gérez vos demandes et construisez une réputation durable.</p>
+                <div className="mt-6 grid gap-3 sm:grid-cols-3"><div><strong className="text-2xl text-brand-400">+40%</strong><p className="mt-1 text-xs text-neutral-400">de visibilité moyenne</p></div><div><strong className="text-2xl text-brand-400">24/7</strong><p className="mt-1 text-xs text-neutral-400">accès à vos demandes</p></div><div><strong className="text-2xl text-brand-400">0 F</strong><p className="mt-1 text-xs text-neutral-400">pour créer votre profil</p></div></div>
+                <Button className="mt-7 bg-brand-500 text-white hover:bg-brand-600" onClick={() => window.location.href='/become-artisan'}>Créer mon profil artisan<ArrowRight className="ml-2 h-4 w-4" /></Button>
+              </CardContent>
+            </Card>
+            <Card className="overflow-hidden border-brand-200 bg-gradient-to-br from-white to-brand-50 dark:border-brand-900 dark:from-neutral-950 dark:to-brand-950/30">
+              <CardContent className="flex h-full flex-col justify-center p-7 sm:p-9">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-500 text-white shadow-lg"><Smartphone className="h-7 w-7" /></div>
+                <Badge variant="secondary" className="mt-6 w-fit bg-brand-100 text-brand-700 dark:bg-brand-950 dark:text-brand-300">Application FINDA</Badge>
+                <h2 className="mt-4 text-3xl font-bold">FINDA dans votre poche.</h2>
+                <p className="mt-4 text-muted-foreground">Installez l’application pour accéder plus rapidement aux missions, recevoir les notifications et garder vos échanges à portée de main.</p>
+                <ul className="mt-5 space-y-3 text-sm"><li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-brand-600" />Accès rapide depuis l’écran d’accueil</li><li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-brand-600" />Notifications de nouvelles demandes</li><li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-brand-600" />Interface optimisée pour mobile</li></ul>
+                <Button variant="outline" className="mt-7 w-fit border-brand-300 text-brand-700" onClick={() => document.querySelector<HTMLElement>('[aria-label="Installer FINDA"]')?.click()}><Download className="mr-2 h-4 w-4" />Installer FINDA</Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ FAQ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      <section className="py-20 sm:py-28">
+        <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:px-8">
+          <div><Badge variant="secondary" className="bg-brand-50 text-brand-700 dark:bg-brand-950/40 dark:text-brand-300">Centre d’aide</Badge><h2 className="mt-4 text-3xl font-bold sm:text-4xl">Questions fréquentes</h2><p className="mt-4 text-muted-foreground">Tout ce qu’il faut savoir avant de publier une demande ou de réserver un artisan.</p><Button variant="outline" className="mt-6" onClick={() => router.push('/support')}>Consulter le centre d’aide<ArrowRight className="ml-2 h-4 w-4" /></Button></div>
+          <Accordion type="single" collapsible className="rounded-2xl border px-5 sm:px-7">
+            {faqItems.slice(0, 5).map((item, index) => (
+              <AccordionItem key={item.question} value={`home-faq-${index}`}><AccordionTrigger className="text-left font-semibold">{item.question}</AccordionTrigger><AccordionContent className="pb-5 leading-relaxed text-muted-foreground">{item.answer}</AccordionContent></AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </section>
 
       {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ CTA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section className="py-20 sm:py-28 bg-gradient-to-r from-brand-500 to-brand-600 relative overflow-hidden">
