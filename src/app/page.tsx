@@ -86,6 +86,10 @@ import {
   BadgeCheck,
   Clock3,
   TicketPercent,
+  Mic,
+  Calculator,
+  Bell,
+  Camera,
 } from "lucide-react"
 
 // Import our new components
@@ -589,6 +593,9 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
   const [registeredArtisans, setRegisteredArtisans] = useState<any[]>([])
   const [isSearching, setIsSearching] = useState(false)
   const [platformStats, setPlatformStats] = useState({ artisans: 0, missions: 0, rating: 0, countries: 0 })
+  const [estimateService, setEstimateService] = useState("Plomberie")
+  const [estimateSize, setEstimateSize] = useState(1)
+  const [recentSearches, setRecentSearches] = useState<string[]>([])
 
   useEffect(() => {
     fetch('/api/artisans?location=Cotonou&limit=10')
@@ -620,8 +627,34 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
     e.preventDefault()
     if (!searchQuery.trim()) return
     setIsSearching(true)
+    setRecentSearches((current) => [searchQuery.trim(), ...current.filter((item) => item !== searchQuery.trim())].slice(0, 4))
     onSearch(searchQuery.trim(), searchLocation.trim())
     window.setTimeout(() => setIsSearching(false), 700)
+  }
+
+  const startVoiceSearch = () => {
+    const SpeechRecognition = (window as typeof window & { SpeechRecognition?: new () => any; webkitSpeechRecognition?: new () => any }).SpeechRecognition || (window as typeof window & { webkitSpeechRecognition?: new () => any }).webkitSpeechRecognition
+    if (!SpeechRecognition) {
+      setLocationError("La recherche vocale n’est pas disponible sur ce navigateur.")
+      return
+    }
+    const recognition = new SpeechRecognition()
+    recognition.lang = "fr-FR"
+    recognition.interimResults = false
+    recognition.onresult = (event: any) => setSearchQuery(event.results[0][0].transcript)
+    recognition.onerror = () => setLocationError("Impossible de reconnaître votre demande. Réessayez ou saisissez-la.")
+    recognition.start()
+  }
+
+  const enableMissionNotifications = async () => {
+    if (!("Notification" in window)) {
+      setLocationError("Les notifications ne sont pas prises en charge sur cet appareil.")
+      return
+    }
+    const permission = await Notification.requestPermission()
+    if (permission === "granted") {
+      new Notification("FINDA", { body: "Les missions proches de vous seront bientôt affichées ici." })
+    }
   }
 
   const locateUser = () => {
@@ -724,6 +757,13 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                           onFocus={() => setSearchQuery(searchQuery)}
                           autoComplete="off"
                         />
+                        <button
+                          type="button"
+                          onClick={startVoiceSearch}
+                          className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-md text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-950"
+                          aria-label="Recherche vocale"
+                          title="Recherche vocale"
+                        ><Mic className="h-4 w-4" /></button>
                         {searchQuery.trim() && (
                           <div className="absolute z-30 left-0 right-0 top-[calc(100%+0.5rem)] max-h-52 overflow-auto rounded-xl border bg-background p-1 shadow-2xl">
                             {quickCategories.filter(category => category.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 6).map(category => (
@@ -1128,6 +1168,43 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
               <CarouselNext className="hidden sm:flex -right-12" />
             </Carousel>
           </motion.div>
+        </div>
+      </section>
+
+      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ ESTIMATEUR & NOTIFICATIONS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      <section className="py-20 sm:py-28 bg-gradient-to-br from-brand-50/60 via-background to-emerald-50/40 dark:from-brand-950/20 dark:to-emerald-950/10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid items-center gap-10 lg:grid-cols-[0.85fr_1.15fr]">
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={staggerContainer}>
+              <motion.div variants={fadeInUp}><Badge variant="secondary" className="bg-brand-100 text-brand-700 dark:bg-brand-950 dark:text-brand-300"><Calculator className="mr-1 h-3 w-3" />Estimation gratuite</Badge></motion.div>
+              <motion.h2 variants={fadeInUp} className="mt-4 text-3xl font-bold sm:text-4xl">Obtenez une idée du budget avant de commencer.</motion.h2>
+              <motion.p variants={fadeInUp} className="mt-4 text-lg text-muted-foreground">Sélectionnez un service et estimez rapidement l’enveloppe à prévoir. Le tarif final reste validé avec l’artisan.</motion.p>
+              {recentSearches.length > 0 && <motion.div variants={fadeInUp} className="mt-5 flex flex-wrap gap-2"><span className="text-sm font-medium text-muted-foreground">Recherches récentes :</span>{recentSearches.map((item) => <Badge key={item} variant="outline" className="cursor-pointer" onClick={() => setSearchQuery(item)}>{item}</Badge>)}</motion.div>}
+            </motion.div>
+            <Card className="shadow-xl"><CardContent className="p-6 sm:p-8">
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div><label className="text-sm font-semibold">Type de service</label><select className="mt-2 h-11 w-full rounded-md border bg-background px-3" value={estimateService} onChange={(event) => setEstimateService(event.target.value)}><option>Plomberie</option><option>Électricité</option><option>Peinture</option><option>Menuiserie</option><option>Climatisation</option><option>Nettoyage</option></select></div>
+                <div><label className="text-sm font-semibold">Nombre de pièces / points</label><Input className="mt-2 h-11" type="number" min={1} max={20} value={estimateSize} onChange={(event) => setEstimateSize(Math.max(1, Number(event.target.value) || 1))} /></div>
+              </div>
+              {(() => {
+                const prices: Record<string, number> = { Plomberie: 8500, Électricité: 12000, Peinture: 6500, Menuiserie: 15000, Climatisation: 18000, Nettoyage: 5500 }
+                const low = prices[estimateService] * estimateSize
+                return <div className="mt-7 rounded-2xl border border-brand-200 bg-brand-50/70 p-5 dark:border-brand-900 dark:bg-brand-950/30"><p className="text-sm text-muted-foreground">Estimation indicative</p><p className="mt-1 text-3xl font-bold text-brand-700 dark:text-brand-300">{low.toLocaleString('fr-FR')} – {(low * 1.55).toLocaleString('fr-FR')} F CFA</p><Button className="mt-5" onClick={() => router.push(`/missions/create?category=${encodeURIComponent(estimateService)}`)}>Obtenir un devis précis<ArrowRight className="ml-2 h-4 w-4" /></Button></div>
+              })()}
+            </CardContent></Card>
+          </div>
+          <Card className="mt-6 border-brand-200/70"><CardContent className="flex flex-col items-start justify-between gap-4 p-5 sm:flex-row sm:items-center"><div className="flex items-center gap-3"><div className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-100 text-brand-600"><Bell className="h-5 w-5" /></div><div><p className="font-semibold">Recevoir les missions près de chez vous</p><p className="text-sm text-muted-foreground">Activez les notifications sur cet appareil.</p></div></div><Button variant="outline" onClick={enableMissionNotifications}>Activer les notifications</Button></CardContent></Card>
+        </div>
+      </section>
+
+      {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ VERIFIED PHOTO REVIEWS & PARTNERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      <section className="py-20 sm:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-10 text-center"><Badge variant="outline"><Camera className="mr-1 h-3 w-3" />Preuves vérifiées</Badge><h2 className="mt-4 text-3xl font-bold sm:text-4xl">Des avis, mais surtout des réalisations.</h2><p className="mt-4 text-lg text-muted-foreground">Découvrez les retours accompagnés de photos de travaux vérifiées.</p></div>
+          <div className="grid gap-5 md:grid-cols-3">
+            {[{ service: "Salle de bain rénovée", name: "Awa S.", note: "Très professionnel, propre et ponctuel." }, { service: "Installation de climatisation", name: "Marc T.", note: "Conseils utiles et installation impeccable." }, { service: "Portail en menuiserie métallique", name: "Grâce A.", note: "Résultat fidèle au devis initial." }].map((review, index) => <Card key={review.service} className="overflow-hidden"><div className={`relative h-44 bg-gradient-to-br ${index === 0 ? "from-blue-100 to-cyan-200" : index === 1 ? "from-brand-100 to-emerald-200" : "from-violet-100 to-brand-200"}`}><div className="absolute inset-0 flex items-center justify-center"><Hammer className="h-12 w-12 text-neutral-700/40" /></div><Badge className="absolute left-4 top-4 bg-white text-emerald-700"><BadgeCheck className="mr-1 h-3 w-3" />Travail vérifié</Badge></div><CardContent className="p-5"><div className="flex items-center gap-1">{[1,2,3,4,5].map((star) => <Star key={star} className="h-4 w-4 fill-brand-400 text-brand-400" />)}</div><h3 className="mt-3 font-bold">{review.service}</h3><p className="mt-2 text-sm text-muted-foreground">« {review.note} »</p><p className="mt-4 text-xs font-semibold">{review.name} · Client FINDA</p></CardContent></Card>)}
+          </div>
+          <div className="mt-14 border-t pt-10"><p className="text-center text-sm font-semibold uppercase tracking-wider text-muted-foreground">Solutions disponibles avec des partenaires locaux</p><div className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-4">{["Orange Money", "MTN MoMo", "Wave", "Assurances partenaires"].map((partner) => <div key={partner} className="flex h-16 items-center justify-center rounded-xl border bg-background px-3 text-center text-sm font-bold text-muted-foreground">{partner}</div>)}</div></div>
         </div>
       </section>
 
