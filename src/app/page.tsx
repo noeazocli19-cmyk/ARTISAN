@@ -1040,6 +1040,24 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
             </motion.p>
           </motion.div>
 
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={fadeInUp}
+            className="mx-auto mb-14 max-w-4xl overflow-hidden rounded-3xl border border-border/50 bg-black shadow-2xl"
+          >
+            <video
+              controls
+              playsInline
+              preload="metadata"
+              poster="/images/hero-family.png"
+              className="aspect-video w-full bg-black object-contain"
+            >
+              <source src="/finda_promo_video_16x9.mp4" type="video/mp4" />
+            </video>
+          </motion.div>
+
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             {howItWorks.map((step, idx) => (
               <motion.div key={step.step} variants={fadeInUp} whileHover={{ y: -8 }} transition={{ type: 'spring', stiffness: 260, damping: 18 }} className="relative">
