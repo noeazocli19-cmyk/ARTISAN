@@ -44,6 +44,9 @@ export default function SocialPage() {
   const [favoriteArtisanIds, setFavoriteArtisanIds] = useState<Set<string>>(new Set());
   const [savedPostIds, setSavedPostIds] = useState<Set<string>>(new Set());
   const [selectedCategory, setSelectedCategory] = useState('Toutes');
+  const [isRealization, setIsRealization] = useState(false);
+  const [serviceType, setServiceType] = useState('');
+  const [completedAt, setCompletedAt] = useState('');
 
   async function loadPosts(query = '') {
     setLoading(true);
@@ -61,9 +64,11 @@ export default function SocialPage() {
   useEffect(() => { const timer = window.setTimeout(() => void loadPosts(search), 250); return () => window.clearTimeout(timer); }, [search]);
   useEffect(() => {
     if (!search.trim()) {
-      setArtisanResults([]);
-      setSearchingArtisans(false);
-      return;
+      const resetFrame = window.requestAnimationFrame(() => {
+        setArtisanResults([]);
+        setSearchingArtisans(false);
+      });
+      return () => window.cancelAnimationFrame(resetFrame);
     }
     const timer = window.setTimeout(async () => {
       setSearchingArtisans(true);
@@ -144,7 +149,7 @@ export default function SocialPage() {
     if (!content.trim() && media.length === 0) return toast.error('Ajoutez du texte ou une photo');
     setPublishing(true);
     try {
-      const response = await fetch('/api/social/posts', { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ content, title, category, location, mediaUrls: media, mediaTypes }) });
+      const response = await fetch('/api/social/posts', { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ content, title, category, location, mediaUrls: media, mediaTypes, isRealization, serviceType: serviceType || null, completedAt: completedAt || null }) });
       const data = await response.json().catch(() => null);
       if (!response.ok) throw new Error(data?.error || 'Publication impossible. Veuillez réessayer.');
       if (!data?.post) throw new Error('La publication n’a pas été enregistrée');
@@ -217,9 +222,14 @@ export default function SocialPage() {
             <form onSubmit={publish} className="space-y-3">
               <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Titre de la réalisation (optionnel)" maxLength={120} />
               <Textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder="Décrivez le travail réalisé, les matériaux ou le résultat…" rows={4} maxLength={5000} />
+              <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-brand-100 bg-brand-50/50 p-3 text-sm">
+                <input type="checkbox" checked={isRealization} onChange={(event) => setIsRealization(event.target.checked)} className="mt-0.5 h-4 w-4 accent-brand-600" />
+                <span><strong>Publier comme preuve de réalisation</strong><span className="mt-1 block text-xs text-slate-500">Réservé aux artisans. Au moins une photo est requise.</span></span>
+              </label>
               <div className="grid gap-3 sm:grid-cols-2">
                 <Input value={category} onChange={(e) => setCategory(e.target.value)} placeholder="Métier / prestation" maxLength={80} />
                 <Input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Zone d'intervention" maxLength={120} />
+                {isRealization && <><Input value={serviceType} onChange={(e) => setServiceType(e.target.value)} placeholder="Type de prestation (optionnel)" maxLength={100} /><Input type="date" value={completedAt} onChange={(e) => setCompletedAt(e.target.value)} max={new Date().toISOString().slice(0, 10)} aria-label="Date de réalisation" /></>}
               </div>
               {media.length > 0 && <div className="grid grid-cols-2 gap-2">{media.map((url, index) => mediaTypes[index] === 'video' ? <video key={url} src={url} controls className="h-36 w-full rounded-xl bg-black object-cover" /> : <img key={url} src={url} alt="Publication" className="h-36 w-full rounded-xl object-cover" />)}</div>}
               <div className="flex flex-wrap items-center gap-2">

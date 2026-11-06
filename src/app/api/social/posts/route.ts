@@ -7,15 +7,20 @@ export async function GET(request: NextRequest) {
     const session = await auth.api.getSession({ headers: request.headers });
     const searchParams = new URL(request.url).searchParams;
     const limit = Math.min(50, Math.max(1, Number(searchParams.get('limit')) || 20));
+    const realizationsOnly = searchParams.get('realizations') === '1';
     const query = searchParams.get('q')?.trim().slice(0, 100) || '';
-    const where = query ? { OR: [
-      { title: { contains: query, mode: 'insensitive' as const } },
-      { content: { contains: query, mode: 'insensitive' as const } },
-      { category: { contains: query, mode: 'insensitive' as const } },
-      { location: { contains: query, mode: 'insensitive' as const } },
-      { author: { name: { contains: query, mode: 'insensitive' as const } } },
-      { author: { artisan: { profession: { contains: query, mode: 'insensitive' as const } } } },
-    ] } : undefined;
+    const where: any = realizationsOnly ? { isRealization: true, realizationStatus: 'approved' } : {};
+    if (realizationsOnly) Object.assign(where, { isRealization: true, realizationStatus: 'approved' });
+    if (query) {
+      where.OR = [
+        { title: { contains: query, mode: 'insensitive' as const } },
+        { content: { contains: query, mode: 'insensitive' as const } },
+        { category: { contains: query, mode: 'insensitive' as const } },
+        { location: { contains: query, mode: 'insensitive' as const } },
+        { author: { name: { contains: query, mode: 'insensitive' as const } } },
+        { author: { artisan: { profession: { contains: query, mode: 'insensitive' as const } } } },
+      ]
+    }
     const posts = await db.socialPost.findMany({
       where,
       orderBy: { createdAt: 'desc' },
@@ -56,14 +61,26 @@ export async function POST(request: NextRequest) {
     const location = typeof body.location === 'string' ? body.location.trim().slice(0, 120) : null;
     const mediaUrls = Array.isArray(body.mediaUrls) ? body.mediaUrls.filter((url: unknown) => typeof url === 'string').slice(0, 4) : [];
     const mediaTypes = Array.isArray(body.mediaTypes) ? body.mediaTypes.slice(0, 4) : [];
+    const isRealization = body.isRealization === true;
+    const serviceType = typeof body.serviceType === 'string' ? body.serviceType.trim().slice(0, 100) : null;
+    const completedAt = typeof body.completedAt === 'string' && !Number.isNaN(Date.parse(body.completedAt)) ? new Date(body.completedAt) : null;
 
     if (!content && mediaUrls.length === 0) {
       return NextResponse.json({ error: 'Ajoutez du texte ou une photo à votre publication' }, { status: 400 });
     }
     if (content.length > 5000) return NextResponse.json({ error: 'La publication est trop longue' }, { status: 400 });
+    let realizationStatus = 'ordinary';
+    if (isRealization) {
+      const artisan = await db.artisan.findUnique({ where: { userId: session.user.id }, select: { id: true } });
+      if (!artisan) return NextResponse.json({ error: 'Seul un artisan peut publier une réalisation' }, { status: 403 });
+      if (!mediaUrls.some((url) => typeof url === 'string' && !mediaTypes[mediaUrls.indexOf(url)]?.includes('video'))) {
+        return NextResponse.json({ error: 'Une réalisation doit contenir au moins une photo' }, { status: 400 });
+      }
+      realizationStatus = 'approved';
+    }
 
     const post = await db.socialPost.create({
-      data: { authorId: session.user.id, content, title, category, location, mediaUrls, mediaTypes },
+      data: { authorId: session.user.id, content, title, category, location, mediaUrls, mediaTypes, isRealization, realizationStatus, serviceType, completedAt },
       include: {
         author: { select: { id: true, name: true, image: true, avatar: true, location: true, artisan: { select: { id: true, profession: true } } } },
         comments: { include: { author: { select: { id: true, name: true, image: true, avatar: true } } } },

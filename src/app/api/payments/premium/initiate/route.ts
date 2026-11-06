@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
         amount: PREMIUM_PRICE_FCFA,
         netAmount: PREMIUM_PRICE_FCFA,
         commission: 0,
-        currency: 'XAF',
+        currency: 'FCFA',
         status: 'en_attente',
         type: 'premium_subscription',
         description: 'Abonnement Artisan Vérifié - 30 jours',

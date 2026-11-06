@@ -561,8 +561,8 @@ function AnimatedNumber({ value, decimals = 0 }: { value: number; decimals?: num
     if (value <= 0) return
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (reduceMotion) {
-      setDisplayValue(value)
-      return
+      const frame = requestAnimationFrame(() => setDisplayValue(value))
+      return () => cancelAnimationFrame(frame)
     }
 
     let frame = 0
@@ -596,12 +596,21 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
   const [estimateService, setEstimateService] = useState("Plomberie")
   const [estimateSize, setEstimateSize] = useState(1)
   const [recentSearches, setRecentSearches] = useState<string[]>([])
+  const [realizations, setRealizations] = useState<any[]>([])
+  const [voiceStatus, setVoiceStatus] = useState<'idle' | 'listening' | 'recognized' | 'unsupported' | 'error'>('idle')
 
   useEffect(() => {
     fetch('/api/artisans?location=Cotonou&limit=10')
       .then((r) => r.json())
       .then((data) => setRegisteredArtisans(Array.isArray(data.artisans) ? data.artisans : []))
       .catch(() => setRegisteredArtisans([]))
+  }, [])
+
+  useEffect(() => {
+    fetch('/api/social/posts?realizations=1&limit=6', { cache: 'no-store' })
+      .then((response) => response.json())
+      .then((data) => setRealizations(Array.isArray(data.posts) ? data.posts : []))
+      .catch(() => setRealizations([]))
   }, [])
 
   useEffect(() => {
@@ -635,15 +644,32 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
   const startVoiceSearch = () => {
     const SpeechRecognition = (window as typeof window & { SpeechRecognition?: new () => any; webkitSpeechRecognition?: new () => any }).SpeechRecognition || (window as typeof window & { webkitSpeechRecognition?: new () => any }).webkitSpeechRecognition
     if (!SpeechRecognition) {
-      setLocationError("La recherche vocale n’est pas disponible sur ce navigateur.")
+      setVoiceStatus('unsupported')
+      setLocationError("Recherche vocale indisponible sur ce navigateur. Vous pouvez saisir votre recherche normalement.")
       return
     }
     const recognition = new SpeechRecognition()
     recognition.lang = "fr-FR"
-    recognition.interimResults = false
-    recognition.onresult = (event: any) => setSearchQuery(event.results[0][0].transcript)
-    recognition.onerror = () => setLocationError("Impossible de reconnaître votre demande. Réessayez ou saisissez-la.")
-    recognition.start()
+    recognition.interimResults = true
+    recognition.continuous = false
+    recognition.maxAlternatives = 1
+    recognition.onstart = () => setVoiceStatus('listening')
+    recognition.onresult = (event: any) => {
+      const transcript = Array.from(event.results as ArrayLike<any>).map((result: any) => result[0]?.transcript || '').join(' ').trim()
+      if (transcript) setSearchQuery(transcript.replace(/\s+/g, ' ').trim())
+      if (event.results[event.results.length - 1]?.isFinal) setVoiceStatus('recognized')
+    }
+    recognition.onerror = (event: { error?: string }) => {
+      setVoiceStatus('error')
+      setLocationError(event.error === 'not-allowed' ? 'Autorisez l’accès au microphone, puis réessayez.' : 'Impossible de reconnaître votre demande. Réessayez ou saisissez-la.')
+    }
+    recognition.onend = () => setVoiceStatus((current) => current === 'recognized' ? current : 'idle')
+    try {
+      recognition.start()
+    } catch {
+      setVoiceStatus('error')
+      setLocationError('La reconnaissance vocale est déjà active ou indisponible.')
+    }
   }
 
   const enableMissionNotifications = async () => {
@@ -760,10 +786,13 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
                         <button
                           type="button"
                           onClick={startVoiceSearch}
-                          className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-md text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-950"
-                          aria-label="Recherche vocale"
+                          className={`absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-md ${voiceStatus === 'listening' ? 'animate-pulse bg-red-100 text-red-600' : 'text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-950'}`}
+                          aria-label={voiceStatus === 'listening' ? 'Arrêter la reconnaissance vocale' : 'Démarrer la recherche vocale'}
                           title="Recherche vocale"
                         ><Mic className="h-4 w-4" /></button>
+                        {voiceStatus !== 'idle' && <p role="status" className="absolute left-0 top-full mt-1 text-xs font-medium text-muted-foreground">
+                          {voiceStatus === 'listening' ? 'Écoute en cours… parlez en français.' : voiceStatus === 'recognized' ? 'Texte reconnu. Vous pouvez corriger puis rechercher.' : voiceStatus === 'unsupported' ? 'Recherche vocale non prise en charge ici.' : 'Accès au microphone ou reconnaissance impossible.'}
+                        </p>}
                         {searchQuery.trim() && (
                           <div className="absolute z-30 left-0 right-0 top-[calc(100%+0.5rem)] max-h-52 overflow-auto rounded-xl border bg-background p-1 shadow-2xl">
                             {quickCategories.filter(category => category.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 6).map(category => (
@@ -1234,10 +1263,14 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
       {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ VERIFIED PHOTO REVIEWS & PARTNERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section className="py-20 sm:py-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-10 text-center"><Badge variant="outline"><Camera className="mr-1 h-3 w-3" />Preuves vérifiées</Badge><h2 className="mt-4 text-3xl font-bold sm:text-4xl">Des avis, mais surtout des réalisations.</h2><p className="mt-4 text-lg text-muted-foreground">Découvrez les retours accompagnés de photos de travaux vérifiées.</p></div>
-          <div className="grid gap-5 md:grid-cols-3">
-            {[{ service: "Salle de bain rénovée", name: "Awa S.", note: "Très professionnel, propre et ponctuel." }, { service: "Installation de climatisation", name: "Marc T.", note: "Conseils utiles et installation impeccable." }, { service: "Portail en menuiserie métallique", name: "Grâce A.", note: "Résultat fidèle au devis initial." }].map((review, index) => <Card key={review.service} className="overflow-hidden"><div className={`relative h-44 bg-gradient-to-br ${index === 0 ? "from-blue-100 to-cyan-200" : index === 1 ? "from-brand-100 to-emerald-200" : "from-violet-100 to-brand-200"}`}><div className="absolute inset-0 flex items-center justify-center"><Hammer className="h-12 w-12 text-neutral-700/40" /></div><Badge className="absolute left-4 top-4 bg-white text-emerald-700"><BadgeCheck className="mr-1 h-3 w-3" />Travail vérifié</Badge></div><CardContent className="p-5"><div className="flex items-center gap-1">{[1,2,3,4,5].map((star) => <Star key={star} className="h-4 w-4 fill-brand-400 text-brand-400" />)}</div><h3 className="mt-3 font-bold">{review.service}</h3><p className="mt-2 text-sm text-muted-foreground">« {review.note} »</p><p className="mt-4 text-xs font-semibold">{review.name} · Client FINDA</p></CardContent></Card>)}
-          </div>
+          <div className="mb-10 text-center"><Badge variant="outline"><Camera className="mr-1 h-3 w-3" />Réalisations publiées par les artisans</Badge><h2 className="mt-4 text-3xl font-bold sm:text-4xl">Découvrez leurs réalisations récentes.</h2><p className="mt-4 text-lg text-muted-foreground">Photos et descriptions publiées directement par des professionnels de FINDA.</p></div>
+          {realizations.length > 0 ? <div className="grid gap-5 md:grid-cols-3">
+            {realizations.map((realization) => {
+              const photo = realization.mediaUrls?.find((url: string, index: number) => realization.mediaTypes?.[index] !== 'video') || realization.mediaUrls?.[0]
+              return <Link key={realization.id} href="/social" className="group"><Card className="h-full overflow-hidden transition-transform group-hover:-translate-y-1 group-hover:shadow-lg"><div className="relative h-52 bg-muted">{photo ? <img src={photo} alt={realization.title || realization.serviceType || 'Réalisation artisanale'} className="h-full w-full object-cover" /> : <div className="flex h-full items-center justify-center"><Hammer className="h-12 w-12 text-muted-foreground" /></div>}<Badge className="absolute left-4 top-4 bg-white text-brand-700"><Camera className="mr-1 h-3 w-3" />Réalisation publiée</Badge></div><CardContent className="p-5"><h3 className="font-bold">{realization.title || realization.serviceType || realization.category || 'Travaux réalisés'}</h3><p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{realization.content}</p><div className="mt-4 flex items-center justify-between gap-3 text-xs font-semibold"><span>{realization.author?.name || 'Artisan FINDA'}</span>{realization.location && <span className="flex items-center gap-1 truncate text-muted-foreground"><MapPin className="h-3.5 w-3.5" />{realization.location}</span>}</div></CardContent></Card></Link>
+            })}
+          </div> : <Card className="mx-auto max-w-2xl border-dashed"><CardContent className="p-8 text-center"><Hammer className="mx-auto h-10 w-10 text-muted-foreground" /><h3 className="mt-4 font-bold">Aucune réalisation publiée pour le moment</h3><p className="mt-2 text-sm text-muted-foreground">Les prochaines réalisations publiées par les artisans apparaîtront ici.</p></CardContent></Card>}
+          
           <div className="mt-14 border-t pt-10"><p className="text-center text-sm font-semibold uppercase tracking-wider text-muted-foreground">Solutions disponibles avec des partenaires locaux</p><div className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-4">{["Orange Money", "MTN MoMo", "Wave", "Assurances partenaires"].map((partner) => <div key={partner} className="flex h-16 items-center justify-center rounded-xl border bg-background px-3 text-center text-sm font-bold text-muted-foreground">{partner}</div>)}</div></div>
         </div>
       </section>

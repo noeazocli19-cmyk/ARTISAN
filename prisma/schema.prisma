@@ -13,48 +13,48 @@ datasource db {
 // ============================================
 
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
+  id            String   @id @default(cuid())
+  email         String   @unique
   name          String?
   password      String?
   phone         String?
-  role          String    @default("client")
+  role          String   @default("client")
   avatar        String?
   location      String?
   country       String?
   bio           String?
-  isVerified    Boolean   @default(false)
-  emailVerified Boolean   @default(false)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  isVerified    Boolean  @default(false)
+  emailVerified Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
   image         String?
 
   // Relations
-  artisan       Artisan?
-  missions      Mission[]
-  bookings      Booking[]
-  lastActiveAt  DateTime? @default(now())
-  referralCode  String?  @unique
-  referralsMade Referral[] @relation("ReferralsMade")
-  referredBy    Referral?  @relation("ReferralsReceived")
-  accounts      Account[]
-  sessions      Session[]
-  reviews       Review[]
-  sentMessages  Message[]  @relation("SentMessages")
-  receivedMessages Message[] @relation("ReceivedMessages")
-  notifications Notification[]
+  artisan           Artisan?
+  missions          Mission[]
+  bookings          Booking[]
+  lastActiveAt      DateTime?          @default(now())
+  referralCode      String?            @unique
+  referralsMade     Referral[]         @relation("ReferralsMade")
+  referredBy        Referral?          @relation("ReferralsReceived")
+  accounts          Account[]
+  sessions          Session[]
+  reviews           Review[]
+  sentMessages      Message[]          @relation("SentMessages")
+  receivedMessages  Message[]          @relation("ReceivedMessages")
+  notifications     Notification[]
   pushSubscriptions PushSubscription[]
-  payments      Payment[]
-  favorites     Favorite[]
-  supportTickets SupportTicket[]
-  socialPosts   SocialPost[]
-  postComments  SocialComment[]
-  postReactions SocialReaction[]
-  savedPosts    SavedSocialPost[]
-  stories       SocialStory[]
-  reports       ContentReport[] @relation("ReporterReports")
-  moderatedReports ContentReport[] @relation("ModeratorReports")
-  quotesRequested Quote[] @relation("ClientQuotes")
+  payments          Payment[]
+  favorites         Favorite[]
+  supportTickets    SupportTicket[]
+  socialPosts       SocialPost[]
+  postComments      SocialComment[]
+  postReactions     SocialReaction[]
+  savedPosts        SavedSocialPost[]
+  stories           SocialStory[]
+  reports           ContentReport[]    @relation("ReporterReports")
+  moderatedReports  ContentReport[]    @relation("ModeratorReports")
+  quotesRequested   Quote[]            @relation("ClientQuotes")
 
   @@index([location])
   @@index([role])
@@ -122,44 +122,44 @@ model PasswordResetToken {
 // ============================================
 
 model Artisan {
-  id             String   @id @default(cuid())
-  userId         String   @unique
-  profession     String?
-  specialties    String   @default("[]")
-  skills         String   @default("[]")
-  hourlyRate     Int      @default(0)
-  experience     Int      @default(0)
-  badge          String   @default("Nouveau")
-  isPremium      Boolean  @default(false)
-  premiumUntil   DateTime?
+  id               String    @id @default(cuid())
+  userId           String    @unique
+  profession       String?
+  specialties      String    @default("[]")
+  skills           String    @default("[]")
+  hourlyRate       Int       @default(0)
+  experience       Int       @default(0)
+  badge            String    @default("Nouveau")
+  isPremium        Boolean   @default(false)
+  premiumUntil     DateTime?
   identityDocument String?
-  identityStatus   String  @default("non_soumis")
-  rating         Float    @default(0)
-  reviewCount    Int      @default(0)
-  missionCount   Int      @default(0)
-  isAvailable    Boolean  @default(true)
-  portfolio      String   @default("[]")
-  certifications String   @default("[]")
-  teamMembers    String   @default("[]")
-  latitude       Float?
-  longitude      Float?
-  address        String?
-  country        String?
-  location       String?
-  phone          String?
-  bio            String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  identityStatus   String    @default("non_soumis")
+  rating           Float     @default(0)
+  reviewCount      Int       @default(0)
+  missionCount     Int       @default(0)
+  isAvailable      Boolean   @default(true)
+  portfolio        String    @default("[]")
+  certifications   String    @default("[]")
+  teamMembers      String    @default("[]")
+  latitude         Float?
+  longitude        Float?
+  address          String?
+  country          String?
+  location         String?
+  phone            String?
+  bio              String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
   // Relations
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  reviews        Review[]
-  missions       Mission[]
-  bookings       Booking[]
-  favorites      Favorite[] 
-   payments       Payment[]  
-   quotes         Quote[]
-   stories        SocialStory[]
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reviews   Review[]
+  missions  Mission[]
+  bookings  Booking[]
+  favorites Favorite[]
+  payments  Payment[]
+  quotes    Quote[]
+  stories   SocialStory[]
 
   @@index([latitude])
   @@index([longitude])
@@ -186,29 +186,29 @@ model Category {
 // ============================================
 
 model Mission {
-  id          String   @id @default(cuid())
-  title       String
-  description String?
-  category    String?
-  status      String   @default("ouverte")
+  id            String   @id @default(cuid())
+  title         String
+  description   String?
+  category      String?
+  status        String   @default("ouverte")
   disputeReason String?
-  budget      Int      @default(0)
-  location    String?
-  latitude    Float?
-  longitude   Float?
-  clientId    String
-  artisanId   String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  budget        Int      @default(0)
+  location      String?
+  latitude      Float?
+  longitude     Float?
+  clientId      String
+  artisanId     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   // Relations
-  client      User     @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  artisan     Artisan? @relation(fields: [artisanId], references: [id])
-  reviews     Review[]
-  payments    Payment[]
-  messages    Message[]
-  milestones  MissionMilestone[]
-  quote       Quote?
+  client     User               @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  artisan    Artisan?           @relation(fields: [artisanId], references: [id])
+  reviews    Review[]
+  payments   Payment[]
+  messages   Message[]
+  milestones MissionMilestone[]
+  quote      Quote?
 
   @@index([status])
   @@index([clientId])
@@ -221,7 +221,7 @@ model Mission {
 
 model Review {
   id        String   @id @default(cuid())
-  rating    Int      // 1 ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  5 ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©toiles
+  rating    Int // 1 ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â  5 ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©toiles
   comment   String?
   clientId  String
   artisanId String
@@ -230,9 +230,9 @@ model Review {
   updatedAt DateTime @updatedAt
 
   // Relations
-  client    User     @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  artisan   Artisan  @relation(fields: [artisanId], references: [id], onDelete: Cascade)
-  mission   Mission? @relation(fields: [missionId], references: [id], onDelete: SetNull)
+  client  User     @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  artisan Artisan  @relation(fields: [artisanId], references: [id], onDelete: Cascade)
+  mission Mission? @relation(fields: [missionId], references: [id], onDelete: SetNull)
 
   @@index([artisanId])
   @@index([clientId])
@@ -253,9 +253,9 @@ model Message {
   createdAt  DateTime @default(now())
 
   // Relations
-  sender     User     @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
-  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
-  mission    Mission? @relation(fields: [missionId], references: [id], onDelete: SetNull)
+  sender   User     @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User     @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+  mission  Mission? @relation(fields: [missionId], references: [id], onDelete: SetNull)
 
   @@index([senderId])
   @@index([receiverId])
@@ -273,11 +273,11 @@ model Notification {
   message   String
   type      String   @default("info") // info, success, warning, mission, payment
   isRead    Boolean  @default(false)
-  link      String?  // lien vers la mission, le paiement, etc.
+  link      String? // lien vers la mission, le paiement, etc.
   createdAt DateTime @default(now())
 
   // Relations
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([isRead])
@@ -288,15 +288,15 @@ model Notification {
 // ============================================
 
 model PushSubscription {
-  id         String   @id @default(cuid())
-  userId     String
-  endpoint   String   @unique
-  p256dh     String
-  auth       String
-  ua         String?  // user agent / device info
-  createdAt  DateTime @default(now())
+  id        String   @id @default(cuid())
+  userId    String
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  ua        String? // user agent / device info
+  createdAt DateTime @default(now())
 
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
@@ -306,34 +306,34 @@ model PushSubscription {
 // ============================================
 
 model Payment {
-  id            String   @id @default(cuid())
-  amount        Int
-  netAmount     Int?
-  commission    Int      @default(0)
-  currency      String   @default("XAF")
-  status        String   @default("en_attente")
-  method        String?
-  type          String   @default("mission")
-  reference     String?
-  phoneNumber   String?
-  description   String?
-  recipientId   String?
-  recipientName String?
+  id                   String    @id @default(cuid())
+  amount               Int
+  netAmount            Int?
+  commission           Int       @default(0)
+  currency             String    @default("XAF")
+  status               String    @default("en_attente")
+  method               String?
+  type                 String    @default("mission")
+  reference            String?
+  phoneNumber          String?
+  description          String?
+  recipientId          String?
+  recipientName        String?
   kkiapayTransactionId String?
   cinetPayTransId      String?
-  metadata      String?
-  clientId      String
-  artisanId     String?
-  missionId     String?
-  paidAt        DateTime?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  metadata             String?
+  clientId             String
+  artisanId            String?
+  missionId            String?
+  paidAt               DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
 
   // Relations
-  client        User     @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  artisan       Artisan? @relation(fields: [artisanId], references: [id])
-  mission       Mission? @relation(fields: [missionId], references: [id], onDelete: SetNull)
-  milestoneId   String?
+  client      User     @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  artisan     Artisan? @relation(fields: [artisanId], references: [id])
+  mission     Mission? @relation(fields: [missionId], references: [id], onDelete: SetNull)
+  milestoneId String?
 
   @@index([clientId])
   @@index([artisanId])
@@ -352,8 +352,8 @@ model Favorite {
   createdAt DateTime @default(now())
 
   // Relations
-  client    User     @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  artisan   Artisan  @relation(fields: [artisanId], references: [id], onDelete: Cascade)
+  client  User    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  artisan Artisan @relation(fields: [artisanId], references: [id], onDelete: Cascade)
 
   @@unique([clientId, artisanId]) // un client ne peut pas favoriser 2 fois le mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âªme artisan
   @@index([clientId])
@@ -365,18 +365,23 @@ model Favorite {
 // ============================================
 
 model SocialPost {
-  id        String   @id @default(cuid())
-  authorId  String
-  content   String
-  title     String?
-  category  String?
-  location  String?
-  mediaUrls String[] @default([])
-  mediaTypes String[] @default([])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                String    @id @default(cuid())
+  authorId          String
+  content           String
+  title             String?
+  category          String?
+  location          String?
+  mediaUrls         String[]  @default([])
+  mediaTypes        String[]  @default([])
+  isRealization     Boolean   @default(false)
+  realizationStatus String    @default("ordinary")
+  serviceType       String?
+  completedAt       DateTime?
+  moderationNote    String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
-  author    User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  author    User              @relation(fields: [authorId], references: [id], onDelete: Cascade)
   comments  SocialComment[]
   reactions SocialReaction[]
   savedBy   SavedSocialPost[]
@@ -394,9 +399,9 @@ model SocialComment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  post      SocialPost @relation(fields: [postId], references: [id], onDelete: Cascade)
-  author    User @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  reports   ContentReport[]
+  post    SocialPost      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author  User            @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  reports ContentReport[]
 
   @@index([postId])
   @@index([authorId])
@@ -408,8 +413,8 @@ model SocialReaction {
   userId    String
   createdAt DateTime @default(now())
 
-  post      SocialPost @relation(fields: [postId], references: [id], onDelete: Cascade)
-  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post SocialPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([postId, userId])
   @@index([postId])
@@ -417,23 +422,23 @@ model SocialReaction {
 }
 
 model Quote {
-  id          String   @id @default(cuid())
-  missionId   String?  @unique
+  id          String    @id @default(cuid())
+  missionId   String?   @unique
   clientId    String
   artisanId   String
   title       String
   description String?
-  amount      Int      @default(0)
-  currency    String   @default("XAF")
-  status      String   @default("en_attente") // en_attente | accepte | refuse | expire
+  amount      Int       @default(0)
+  currency    String    @default("XAF")
+  status      String    @default("en_attente") // en_attente | accepte | refuse | expire
   validUntil  DateTime?
   artisanNote String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
-  mission     Mission? @relation(fields: [missionId], references: [id], onDelete: SetNull)
-  client      User     @relation("ClientQuotes", fields: [clientId], references: [id], onDelete: Cascade)
-  artisan     Artisan  @relation(fields: [artisanId], references: [id], onDelete: Cascade)
+  mission Mission? @relation(fields: [missionId], references: [id], onDelete: SetNull)
+  client  User     @relation("ClientQuotes", fields: [clientId], references: [id], onDelete: Cascade)
+  artisan Artisan  @relation(fields: [artisanId], references: [id], onDelete: Cascade)
 
   @@index([clientId])
   @@index([artisanId])
@@ -446,8 +451,8 @@ model SavedSocialPost {
   postId    String
   createdAt DateTime @default(now())
 
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  post      SocialPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post SocialPost @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   @@unique([userId, postId])
   @@index([userId])
@@ -464,8 +469,8 @@ model SocialStory {
   expiresAt DateTime
   createdAt DateTime @default(now())
 
-  author    User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  artisan   Artisan @relation(fields: [artisanId], references: [id], onDelete: Cascade)
+  author  User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  artisan Artisan @relation(fields: [artisanId], references: [id], onDelete: Cascade)
 
   @@index([artisanId])
   @@index([expiresAt])
@@ -484,10 +489,10 @@ model ContentReport {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  reporter    User  @relation("ReporterReports", fields: [reporterId], references: [id], onDelete: Cascade)
-  moderator   User? @relation("ModeratorReports", fields: [moderatorId], references: [id], onDelete: SetNull)
-  post         SocialPost? @relation(fields: [postId], references: [id], onDelete: SetNull)
-  comment      SocialComment? @relation(fields: [commentId], references: [id], onDelete: SetNull)
+  reporter  User           @relation("ReporterReports", fields: [reporterId], references: [id], onDelete: Cascade)
+  moderator User?          @relation("ModeratorReports", fields: [moderatorId], references: [id], onDelete: SetNull)
+  post      SocialPost?    @relation(fields: [postId], references: [id], onDelete: SetNull)
+  comment   SocialComment? @relation(fields: [commentId], references: [id], onDelete: SetNull)
 
   @@index([status])
   @@index([reporterId])
@@ -495,59 +500,58 @@ model ContentReport {
 }
 
 model MissionMilestone {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   missionId   String
   title       String
   description String?
   amount      Int
-  status      String   @default("en_attente") // en_attente | paye | termine
+  status      String    @default("en_attente") // en_attente | paye | termine
   dueAt       DateTime?
   paidAt      DateTime?
-  createdAt   DateTime @default(now())
-  mission     Mission  @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  mission     Mission   @relation(fields: [missionId], references: [id], onDelete: Cascade)
+
   @@index([missionId])
   @@index([status])
 }
 
 model SupportTicket {
-  id          String   @id @default(cuid())
-  userId      String
-  subject     String
-  message     String
-  category    String   @default("general")
-  status      String   @default("ouvert") // ouvert | en_cours | resolu
-  response    String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  userId    String
+  subject   String
+  message   String
+  category  String   @default("general")
+  status    String   @default("ouvert") // ouvert | en_cours | resolu
+  response  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId])
   @@index([status])
 }
 
 model Booking {
-  id           String   @id @default(cuid())
-  clientId     String
-  artisanId    String?
-  service      String
-  category     String?
-  date         DateTime
-  status       String   @default("en_attente") // en_attente | confirmee | terminee | annulee
-  notes        String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id        String   @id @default(cuid())
+  clientId  String
+  artisanId String?
+  service   String
+  category  String?
+  date      DateTime
+  status    String   @default("en_attente") // en_attente | confirmee | terminee | annulee
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
-  client       User     @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  artisan      Artisan? @relation(fields: [artisanId], references: [id], onDelete: Cascade)
+  client  User     @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  artisan Artisan? @relation(fields: [artisanId], references: [id], onDelete: Cascade)
 
   @@index([clientId])
   @@index([artisanId])
   @@index([date])
   @@index([status])
 }
-
-
-
 
 // ============================================
 // PARRAINAGE
@@ -565,4 +569,3 @@ model Referral {
 
   @@index([referrerId])
 }
-
