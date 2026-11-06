@@ -89,7 +89,6 @@ import {
   Mic,
   Calculator,
   Bell,
-  Camera,
 } from "lucide-react"
 
 // Import our new components
