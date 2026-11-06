@@ -89,6 +89,7 @@ import {
   Mic,
   Calculator,
   Bell,
+  Play,
 } from "lucide-react"
 
 // Import our new components
@@ -1044,17 +1045,33 @@ function LandingPage({ onOpenAuth, onSearch, onViewMap }: { onOpenAuth: (tab?: '
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={fadeInUp}
-            className="mx-auto mb-14 max-w-4xl overflow-hidden rounded-3xl border border-border/50 bg-black shadow-2xl"
+            className="mx-auto mb-14 max-w-4xl"
           >
-            <video
-              controls
-              playsInline
-              preload="metadata"
-              poster="/images/hero-family.png"
-              className="aspect-video w-full bg-black object-contain"
-            >
-              <source src="/finda_promo_video_16x9.mp4" type="video/mp4" />
-            </video>
+            <div className="mb-5 flex items-end justify-between gap-4 text-left">
+              <div>
+                <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-brand-600 dark:text-brand-400">
+                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand-100 dark:bg-brand-950/50">
+                    <Play className="h-4 w-4 fill-current" aria-hidden="true" />
+                  </span>
+                  Découvrez FINDA en vidéo
+                </div>
+                <h3 className="text-2xl font-bold sm:text-3xl">Le bon artisan, plus simplement</h3>
+              </div>
+              <Badge variant="secondary" className="hidden shrink-0 sm:inline-flex">Présentation FINDA</Badge>
+            </div>
+            <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-neutral-950 shadow-[0_24px_80px_-24px_rgba(0,0,0,.55)] ring-1 ring-border/50">
+              <video
+                controls
+                playsInline
+                preload="metadata"
+                poster="/images/hero-family.png"
+                className="aspect-video w-full bg-black object-contain"
+              >
+                <source src="/finda_promo_video_16x9.mp4" type="video/mp4" />
+                Votre navigateur ne prend pas en charge la lecture vidéo.
+              </video>
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+            </div>
           </motion.div>
 
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
